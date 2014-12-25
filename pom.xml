@@ -6,7 +6,7 @@
 	<version>1.1.2</version>
 	<name>net.sourceforge.streamsupport:streamsupport</name>
 	<description>streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams) API for users of Java 6 or 7</description>
-	<url>https://sourceforge.net/projects/streamsupport/</url>
+	<url>http://sourceforge.net/projects/streamsupport/</url>
 	<licenses>
 		<license>
 			<name>GNU General Public License, version 2, with the Classpath Exception</name>
@@ -18,12 +18,12 @@
 			<name>Stefan Zobel</name>
 			<email>stefan-zobel@users.sourceforge.net</email>
 			<organization>net.sourceforge.streamsupport</organization>
-			<organizationUrl>https://sourceforge.net/projects/streamsupport/</organizationUrl>
+			<organizationUrl>http://sourceforge.net/projects/streamsupport/</organizationUrl>
 		</developer>
 	</developers>
 	<scm>
-		<url>https://hg.code.sf.net/p/streamsupport/code</url>
-		<connection>scm:hg:https://hg.code.sf.net/p/streamsupport/code</connection>
+		<url>http://hg.code.sf.net/p/streamsupport/code</url>
+		<connection>scm:hg:http://hg.code.sf.net/p/streamsupport/code</connection>
 		<developerConnection>scm:hg:https://hg.code.sf.net/p/streamsupport/code</developerConnection>
 	</scm>
 
@@ -40,7 +40,7 @@
 			<plugin>
 				<groupId>net.orfjackal.retrolambda</groupId>
 				<artifactId>retrolambda-maven-plugin</artifactId>
-				<version>1.6.1</version>
+				<version>1.8.0</version>
 				<executions>
 					<execution>
 						<goals>
@@ -49,7 +49,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<java8home>F:/Java/sun-jdk1.8.0_05-64bit/</java8home>
+					<java8home>F:/Java/sun-jdk1.8.0_25-64bit/</java8home>
 					<target>1.6</target>
 				</configuration>
 			</plugin>
