@@ -16,7 +16,7 @@
 	<developers>
 		<developer>
 			<name>Stefan Zobel</name>
-			<email>stefan-zobel@users.sourceforge.net</email>
+			<email>Spliterator@gmail.com</email>
 			<organization>net.sourceforge.streamsupport</organization>
 			<organizationUrl>http://sourceforge.net/projects/streamsupport/</organizationUrl>
 		</developer>
@@ -52,6 +52,32 @@
 					<java8home>F:/Java/sun-jdk1.8.0_25-64bit/</java8home>
 					<target>1.6</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
