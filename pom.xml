@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.sourceforge.streamsupport</groupId>
+	<artifactId>streamsupport</artifactId>
+	<version>1.1.2</version>
+	<name>net.sourceforge.streamsupport:streamsupport</name>
+	<description>streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams) API for users of Java 6 or 7</description>
+	<url>https://sourceforge.net/projects/streamsupport/</url>
+	<licenses>
+		<license>
+			<name>GNU General Public License, version 2, with the Classpath Exception</name>
+			<url>http://openjdk.java.net/legal/gplv2+ce.html</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Stefan Zobel</name>
+			<email>stefan-zobel@users.sourceforge.net</email>
+			<organization>net.sourceforge.streamsupport</organization>
+			<organizationUrl>https://sourceforge.net/projects/streamsupport/</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://hg.code.sf.net/p/streamsupport/code</url>
+		<connection>scm:hg:https://hg.code.sf.net/p/streamsupport/code</connection>
+		<developerConnection>scm:hg:https://hg.code.sf.net/p/streamsupport/code</developerConnection>
+	</scm>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>net.orfjackal.retrolambda</groupId>
+				<artifactId>retrolambda-maven-plugin</artifactId>
+				<version>1.6.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>process-main</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<java8home>F:/Java/sun-jdk1.8.0_05-64bit/</java8home>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
