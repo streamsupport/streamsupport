@@ -5,7 +5,8 @@
 	<artifactId>streamsupport</artifactId>
 	<version>1.2.0-SNAPSHOT</version>
 	<name>net.sourceforge.streamsupport:streamsupport</name>
-	<description>streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams) API for users of Java 6 or 7</description>
+	<description>streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and
+ java.util.stream (streams) API for users of Java 6 or 7</description>
 	<url>http://sourceforge.net/projects/streamsupport/</url>
 	<licenses>
 		<license>
