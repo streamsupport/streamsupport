@@ -217,6 +217,7 @@ public final class StreamSupport {
 	 * <li>java.util.LinkedHashSet</li>
 	 * <li>java.util.PriorityQueue</li>
 	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
+	 * <li>java.util.concurrent.LinkedBlockingQueue</li>
 	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
 	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
 	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
@@ -265,6 +266,7 @@ public final class StreamSupport {
 	 * <li>java.util.LinkedHashSet</li>
 	 * <li>java.util.PriorityQueue</li>
 	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
+	 * <li>java.util.concurrent.LinkedBlockingQueue</li>
 	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
 	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
 	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
