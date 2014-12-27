@@ -41,6 +41,7 @@ import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -831,6 +832,7 @@ public final class Spliterators {
 	 * <li>java.util.PriorityQueue</li>
 	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
 	 * <li>java.util.concurrent.LinkedBlockingQueue</li>
+	 * <li>java.util.concurrent.LinkedBlockingDeque</li>
 	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
 	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
 	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
@@ -926,6 +928,9 @@ public final class Spliterators {
 		}
 		if (c instanceof ArrayDeque) {
 			return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
+		}
+		if (c instanceof LinkedBlockingDeque) {
+			return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
 		}
 		if (c instanceof PriorityBlockingQueue) {
 			return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
