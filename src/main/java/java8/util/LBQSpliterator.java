@@ -24,9 +24,9 @@
  */
 package java8.util;
 
-import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
 
 import java8.util.function.Consumer;
 
@@ -48,6 +48,8 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 
 	private static final int MAX_BATCH = 1 << 25; // max batch array size
 	private final LinkedBlockingQueue<E> queue;
+	private final ReentrantLock putLock;
+	private final ReentrantLock takeLock;
 	private Object current; // current node; null until initialized
 	private int batch; // batch size for splits
 	private boolean exhausted; // true when no more nodes
@@ -56,6 +58,8 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 	private LBQSpliterator(LinkedBlockingQueue<E> queue) {
 		this.queue = queue;
 		this.est = queue.size();
+		this.putLock = getPutLock(queue);
+		this.takeLock = getTakeLock(queue);
 	}
 
 	static <T> Spliterator<T> spliterator(LinkedBlockingQueue<T> queue) {
@@ -82,7 +86,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 			Object p = current;
 			do {
 				E e = null;
-				fullyLock(q);
+				fullyLock();
 				try {
 					if (p == null) {
 						p = getHeadNext(q);
@@ -95,7 +99,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 						}
 					}
 				} finally {
-					fullyUnlock(q);
+					fullyUnlock();
 				}
 				if (e != null) {
 					action.accept(e);
@@ -125,7 +129,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 		LinkedBlockingQueue<E> q = this.queue;
 		if (!exhausted) {
 			E e = null;
-			fullyLock(q);
+			fullyLock();
 			try {
 				if (current == null) {
 					current = getHeadNext(q);
@@ -138,7 +142,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 					}
 				}
 			} finally {
-				fullyUnlock(q);
+				fullyUnlock();
 			}
 			if (current == null) {
 				exhausted = true;
@@ -163,7 +167,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 			Object[] a = new Object[n];
 			int i = 0;
 			Object p = current;
-			fullyLock(q);
+			fullyLock();
 			try {
 				if (p != null || (p = getHeadNext(q)) != null) {
 					do {
@@ -173,7 +177,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 					} while ((p = getNextNode(p)) != null && i < n);
 				}
 			} finally {
-				fullyUnlock(q);
+				fullyUnlock();
 			}
 			if ((current = p) == null) {
 				est = 0L;
@@ -193,23 +197,25 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 	/**
 	 * Lock to prevent both puts and takes.
 	 */
-	private static <T> void fullyLock(LinkedBlockingQueue<T> queue) {
-		try {
-			FULLY_LOCK_METH.invoke(queue);
-		} catch (Exception e) {
-			throw new Error(e);
-		}
+	private void fullyLock() {
+        putLock.lock();
+        takeLock.lock();
 	}
 
 	/**
 	 * Unlock to allow both puts and takes.
 	 */
-	private static <T> void fullyUnlock(LinkedBlockingQueue<T> queue) {
-		try {
-			FULLY_UNLOCK_METH.invoke(queue);
-		} catch (Exception e) {
-			throw new Error(e);
-		}
+	private void fullyUnlock() {
+        takeLock.unlock();
+        putLock.unlock();
+	}
+
+	private static ReentrantLock getPutLock(LinkedBlockingQueue<?> queue) {
+		return (ReentrantLock) UNSAFE.getObject(queue, PUT_LOCK_OFF);
+	}
+
+	private static ReentrantLock getTakeLock(LinkedBlockingQueue<?> queue) {
+		return (ReentrantLock) UNSAFE.getObject(queue, TAKE_LOCK_OFF);
 	}
 
 	/**
@@ -238,8 +244,8 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 	private static final long HEAD_OFF;
 	private static final long NODE_ITEM_OFF;
 	private static final long NODE_NEXT_OFF;
-	private static final Method FULLY_LOCK_METH;
-	private static final Method FULLY_UNLOCK_METH;
+	private static final long PUT_LOCK_OFF;
+	private static final long TAKE_LOCK_OFF;
 	static {
 		try {
 			UNSAFE = UnsafeAccess.unsafe;
@@ -251,10 +257,8 @@ final class LBQSpliterator<E> implements Spliterator<E> {
 					.getDeclaredField("item"));
 			NODE_NEXT_OFF = UNSAFE.objectFieldOffset(nc
 					.getDeclaredField("next"));
-			FULLY_LOCK_METH = lbqc.getDeclaredMethod("fullyLock");
-			FULLY_LOCK_METH.setAccessible(true);
-			FULLY_UNLOCK_METH = lbqc.getDeclaredMethod("fullyUnlock");
-			FULLY_UNLOCK_METH.setAccessible(true);
+			PUT_LOCK_OFF = UNSAFE.objectFieldOffset(lbqc.getDeclaredField("putLock"));
+			TAKE_LOCK_OFF = UNSAFE.objectFieldOffset(lbqc.getDeclaredField("takeLock"));
 		} catch (Exception e) {
 			throw new Error(e);
 		}
