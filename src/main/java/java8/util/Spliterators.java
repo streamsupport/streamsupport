@@ -66,7 +66,9 @@ public final class Spliterators {
 	private static final String NATIVE_OPT_ENABLED_PROP = Spliterators.class.getName() + ".assume.oracle.collections.impl";
 	private static final String JRE8_DELEGATION_ENABLED_PROP = Spliterators.class.getName() + ".jre8.delegation.enabled";
 
+	// defaults to true
 	static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
+	// defaults to true
 	static final boolean JRE8_DELEGATION = getBooleanPropertyValue(JRE8_DELEGATION_ENABLED_PROP);
 
     // Suppresses default constructor, ensuring non-instantiability.
@@ -881,20 +883,20 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> listSpliterator(List<? extends T> c) {
-		if (c instanceof ArrayList) {
+		if (NATIVE_SPECIALIZATION && c instanceof ArrayList) {
 			return ArrayListSpliterator.spliterator((ArrayList<T>) c);
 		}
 
 		String className = c.getClass().getName();
-		if ("java.util.Arrays$ArrayList".equals(className)) {
+		if (NATIVE_SPECIALIZATION && "java.util.Arrays$ArrayList".equals(className)) {
 			return ArraysArrayListSpliterator.spliterator((List<T>) c);
 		}
 
-		if (c instanceof CopyOnWriteArrayList) {
+		if (NATIVE_SPECIALIZATION && c instanceof CopyOnWriteArrayList) {
 			return CopyOnWriteArrayListSpliterator
 					.spliterator((CopyOnWriteArrayList<T>) c);
 		}
-		if (c instanceof Vector) {
+		if (NATIVE_SPECIALIZATION && c instanceof Vector) {
 			return VectorSpliterator.spliterator((Vector<T>) c);
 		}
 
@@ -917,7 +919,7 @@ public final class Spliterators {
 			};
 		}
 
-		if (c instanceof CopyOnWriteArraySet) {
+		if (NATIVE_SPECIALIZATION && c instanceof CopyOnWriteArraySet) {
 			return CopyOnWriteArraySetSpliterator
 					.spliterator((CopyOnWriteArraySet<T>) c);
 		}
@@ -931,19 +933,19 @@ public final class Spliterators {
 			return spliterator(c, Spliterator.ORDERED | Spliterator.NONNULL
 					| Spliterator.CONCURRENT);
 		}
-		if (c instanceof LinkedBlockingQueue) {
+		if (NATIVE_SPECIALIZATION && c instanceof LinkedBlockingQueue) {
 			return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
 		}
-		if (c instanceof ArrayDeque) {
+		if (NATIVE_SPECIALIZATION && c instanceof ArrayDeque) {
 			return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
 		}
-		if (c instanceof LinkedBlockingDeque) {
+		if (NATIVE_SPECIALIZATION && c instanceof LinkedBlockingDeque) {
 			return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
 		}
-		if (c instanceof PriorityBlockingQueue) {
+		if (NATIVE_SPECIALIZATION && c instanceof PriorityBlockingQueue) {
 			return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
 		}
-		if (c instanceof PriorityQueue) {
+		if (NATIVE_SPECIALIZATION && c instanceof PriorityQueue) {
 			return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
 		}
 
