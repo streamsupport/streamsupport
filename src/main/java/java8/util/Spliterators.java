@@ -24,6 +24,8 @@
  */
 package java8.util;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +62,12 @@ import java8.util.function.LongConsumer;
  * @since 1.8
  */
 public final class Spliterators {
+
+	private static final String NATIVE_OPT_ENABLED_PROP = Spliterators.class.getName() + ".assume.oracle.collections.impl";
+	private static final String JRE8_DELEGATION_ENABLED_PROP = Spliterators.class.getName() + ".jre8.delegation.enabled";
+
+	static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
+	static final boolean JRE8_DELEGATION = getBooleanPropertyValue(JRE8_DELEGATION_ENABLED_PROP);
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -2952,5 +2960,21 @@ public final class Spliterators {
             }
             throw new IllegalStateException();
         }
+    }
+
+    private static boolean getBooleanPropertyValue(final String property) {
+    	return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+			@Override
+			public Boolean run() {
+		        boolean value = true;
+		        try {
+		        	String s = System.getProperty(property, Boolean.TRUE.toString());
+		            value = (s == null) || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
+		        } catch (IllegalArgumentException ignore) {
+		        } catch (NullPointerException ignore) {
+		        }
+		        return value;
+			}
+		});
     }
 }
