@@ -70,6 +70,8 @@ public final class Spliterators {
 	static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
 	// defaults to true
 	static final boolean JRE8_DELEGATION = getBooleanPropertyValue(JRE8_DELEGATION_ENABLED_PROP);
+	// defaults to false
+	static final boolean IS_ANDROID = isAndroidRuntime();
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -2978,5 +2980,15 @@ public final class Spliterators {
 		        return value;
 			}
 		});
+    }
+
+    private static boolean isAndroidRuntime() {
+    	Class<?> clazz = null;
+    	try {
+    		clazz = Class.forName("android.util.DisplayMetrics");
+    	} catch (Throwable notPresent) {
+    		// ignore
+    	}
+    	return clazz != null;
     }
 }
