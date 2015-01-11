@@ -71,7 +71,7 @@ public final class Spliterators {
 	// defaults to true
 	static final boolean JRE8_DELEGATION = getBooleanPropertyValue(JRE8_DELEGATION_ENABLED_PROP);
 	// defaults to false
-	static final boolean IS_ANDROID = isAndroidRuntime();
+	static final boolean IS_ANDROID = isAndroid();
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -2982,7 +2982,10 @@ public final class Spliterators {
 		});
     }
 
-    private static boolean isAndroidRuntime() {
+    /**
+     * Are we running on a Dalvik VM or maybe even ART? 
+     */
+    private static boolean isAndroid() {
     	Class<?> clazz = null;
     	try {
     		clazz = Class.forName("android.util.DisplayMetrics");
