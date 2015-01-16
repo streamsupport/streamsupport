@@ -134,8 +134,9 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     public void forEachRemaining(Consumer<? super E> action) {
         int i, hi, mc; // hoist accesses and checks from loop
         ArrayList<E> lst; Object[] a;
-        if (action == null)
+        if (action == null) {
             throw new NullPointerException();
+        }
         if ((lst = list) != null && (a = getData(lst)) != null) {
             if ((hi = fence) < 0) {
                 mc = getModCount(lst);
@@ -206,8 +207,10 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 					.getDeclaredField("modCount"));
 			Class<?> al = ArrayList.class;
 			SIZE_OFF = UNSAFE.objectFieldOffset(al.getDeclaredField("size"));
+			String arrayFieldName = Spliterators.IS_ANDROID ? "array"
+					: "elementData";
 			DATA_OFF = UNSAFE.objectFieldOffset(al
-					.getDeclaredField("elementData"));
+					.getDeclaredField(arrayFieldName));
 		} catch (Exception e) {
 			throw new Error(e);
 		}

@@ -885,7 +885,7 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> listSpliterator(List<? extends T> c) {
-		if (NATIVE_SPECIALIZATION && c instanceof ArrayList) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof ArrayList) {
 			return ArrayListSpliterator.spliterator((ArrayList<T>) c);
 		}
 
