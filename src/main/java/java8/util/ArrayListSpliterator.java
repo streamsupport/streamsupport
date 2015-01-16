@@ -113,9 +113,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 
     @Override
     public boolean tryAdvance(Consumer<? super E> action) {
-        if (action == null) {
-            throw new NullPointerException();
-        }
+    	Objects.requireNonNull(action);
         int hi = getFence(), i = index;
         if (i < hi) {
             index = i + 1;
@@ -132,11 +130,10 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 
     @Override
     public void forEachRemaining(Consumer<? super E> action) {
+    	Objects.requireNonNull(action);
         int i, hi, mc; // hoist accesses and checks from loop
-        ArrayList<E> lst; Object[] a;
-        if (action == null) {
-            throw new NullPointerException();
-        }
+        ArrayList<E> lst;
+        Object[] a;
         if ((lst = list) != null && (a = getData(lst)) != null) {
             if ((hi = fence) < 0) {
                 mc = getModCount(lst);
