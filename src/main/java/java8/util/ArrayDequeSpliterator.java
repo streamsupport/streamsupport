@@ -73,9 +73,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
 
     @Override
     public void forEachRemaining(Consumer<? super E> consumer) {
-        if (consumer == null) {
-            throw new NullPointerException();
-        }
+    	Objects.requireNonNull(consumer);
         Object[] a = getData(deq);
         int m = a.length - 1, f = getFence(), i = index;
         index = f;
@@ -91,9 +89,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
 
     @Override
     public boolean tryAdvance(Consumer<? super E> consumer) {
-        if (consumer == null) {
-            throw new NullPointerException();
-        }
+    	Objects.requireNonNull(consumer);
         Object[] a = getData(deq);
         int m = a.length - 1, f = getFence(), i = index;
         if (i != fence) {
