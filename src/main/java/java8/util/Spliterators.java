@@ -890,7 +890,7 @@ public final class Spliterators {
 		}
 
 		String className = c.getClass().getName();
-		if (NATIVE_SPECIALIZATION && "java.util.Arrays$ArrayList".equals(className)) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && "java.util.Arrays$ArrayList".equals(className)) {
 			return ArraysArrayListSpliterator.spliterator((List<T>) c);
 		}
 
