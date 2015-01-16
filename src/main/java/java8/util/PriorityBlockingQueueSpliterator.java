@@ -68,11 +68,9 @@ final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public void forEachRemaining(Consumer<? super E> action) {
+		Objects.requireNonNull(action);
 		Object[] a;
 		int i, hi; // hoist accesses and checks from loop
-		if (action == null) {
-			throw new NullPointerException();
-		}
 		if ((a = array) == null) {
 			fence = (a = queue.toArray()).length;
 		}
@@ -85,9 +83,7 @@ final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
 
 	@Override
 	public boolean tryAdvance(Consumer<? super E> action) {
-		if (action == null) {
-			throw new NullPointerException();
-		}
+		Objects.requireNonNull(action);
 		if (getFence() > index && index >= 0) {
 			@SuppressWarnings("unchecked")
 			E e = (E) array[index++];
