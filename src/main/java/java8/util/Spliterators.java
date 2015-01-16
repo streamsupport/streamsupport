@@ -938,7 +938,7 @@ public final class Spliterators {
 		if (NATIVE_SPECIALIZATION && c instanceof LinkedBlockingQueue) {
 			return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
 		}
-		if (NATIVE_SPECIALIZATION && c instanceof ArrayDeque) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof ArrayDeque) {
 			return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
 		}
 		if (NATIVE_SPECIALIZATION && c instanceof LinkedBlockingDeque) {
