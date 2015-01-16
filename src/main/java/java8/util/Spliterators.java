@@ -898,7 +898,7 @@ public final class Spliterators {
 			return CopyOnWriteArrayListSpliterator
 					.spliterator((CopyOnWriteArrayList<T>) c);
 		}
-		if (NATIVE_SPECIALIZATION && c instanceof Vector) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof Vector) {
 			return VectorSpliterator.spliterator((Vector<T>) c);
 		}
 
