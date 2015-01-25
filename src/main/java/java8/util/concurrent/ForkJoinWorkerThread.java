@@ -65,11 +65,14 @@ public class ForkJoinWorkerThread extends Thread {
      * owning thread.
      *
      * Support for (non-public) subclass InnocuousForkJoinWorkerThread
-     * requires that we break quite a lot of encapulation (via Unsafe)
+     * requires that we break quite a lot of encapsulation (via Unsafe)
      * both here and in the subclass to access and set Thread fields.
      */
 
-    final ForkJoinPool pool;                // the pool this thread works in
+	// A placeholder name until a useful name can be set in registerWorker
+    private static final String NAME_PLACEHOLDER = "aForkJoinWorkerThread";
+
+	final ForkJoinPool pool;                // the pool this thread works in
     final ForkJoinPool.WorkQueue workQueue; // work-stealing mechanics
 
     /**
@@ -80,17 +83,18 @@ public class ForkJoinWorkerThread extends Thread {
      */
     protected ForkJoinWorkerThread(ForkJoinPool pool) {
         // Use a placeholder until a useful name can be set in registerWorker
-        super("aForkJoinWorkerThread");
+        super(NAME_PLACEHOLDER);
         this.pool = pool;
         this.workQueue = pool.registerWorker(this);
     }
 
+    // note that this will never get called on Android
     /**
      * Version for InnocuousForkJoinWorkerThread
      */
     ForkJoinWorkerThread(ForkJoinPool pool, ThreadGroup threadGroup,
                          AccessControlContext acc) {
-        super(threadGroup, null, "aForkJoinWorkerThread");
+        super(threadGroup, NAME_PLACEHOLDER);
         U.putOrderedObject(this, INHERITEDACCESSCONTROLCONTEXT, acc);
         eraseThreadLocals(); // clear before registering
         this.pool = pool;
@@ -170,6 +174,7 @@ public class ForkJoinWorkerThread extends Thread {
         }
     }
 
+    // note that this will never get called on Android
     /**
      * Erases ThreadLocals by nulling out Thread maps
      */
@@ -184,6 +189,19 @@ public class ForkJoinWorkerThread extends Thread {
     void afterTopLevelExec() {
     }
 
+    /**
+     * Are we running on a Dalvik VM or maybe even ART? 
+     */
+    private static boolean isAndroid() {
+    	Class<?> clazz = null;
+    	try {
+    		clazz = Class.forName("android.util.DisplayMetrics");
+    	} catch (Throwable notPresent) {
+    		// ignore
+    	}
+    	return clazz != null;
+    }
+
     // Set up to allow setting thread fields in constructor
     private static final sun.misc.Unsafe U;
     private static final long THREADLOCALS;
@@ -193,18 +211,25 @@ public class ForkJoinWorkerThread extends Thread {
         try {
         	U = UnsafeAccess.unsafe;
             Class<?> tk = Thread.class;
-            THREADLOCALS = U.objectFieldOffset
-                (tk.getDeclaredField("threadLocals"));
-            INHERITABLETHREADLOCALS = U.objectFieldOffset
-                (tk.getDeclaredField("inheritableThreadLocals"));
-            INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset
-                (tk.getDeclaredField("inheritedAccessControlContext"));
-
+			if (!isAndroid()) {
+				THREADLOCALS = U.objectFieldOffset(tk
+						.getDeclaredField("threadLocals"));
+				INHERITABLETHREADLOCALS = U.objectFieldOffset(tk
+						.getDeclaredField("inheritableThreadLocals"));
+				INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset(tk
+						.getDeclaredField("inheritedAccessControlContext"));
+			} else {
+				// we don't need these offsets when on Android
+				THREADLOCALS = 0L;
+				INHERITABLETHREADLOCALS = 0L;
+				INHERITEDACCESSCONTROLCONTEXT = 0L;
+			}
         } catch (Exception e) {
             throw new Error(e);
         }
     }
 
+    // note that this will never get called on Android
     /**
      * A worker thread that has no permissions, is not a member of any
      * user-defined ThreadGroup, and erases all ThreadLocals after
@@ -259,7 +284,7 @@ public class ForkJoinWorkerThread extends Thread {
                 ThreadGroup group = (ThreadGroup)
                     u.getObject(Thread.currentThread(), tg);
                 while (group != null) {
-                    ThreadGroup parent = (ThreadGroup)u.getObject(group, gp);
+                    ThreadGroup parent = (ThreadGroup) u.getObject(group, gp);
                     if (parent == null) {
                         return new ThreadGroup(group,
                                                "InnocuousForkJoinWorkerThreadGroup");

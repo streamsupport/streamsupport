@@ -588,12 +588,13 @@ public class ForkJoinPool extends AbstractExecutorService {
      * Default ForkJoinWorkerThreadFactory implementation; creates a
      * new ForkJoinWorkerThread.
      */
-    static final class DefaultForkJoinWorkerThreadFactory
-        implements ForkJoinWorkerThreadFactory {
-        public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
-            return new ForkJoinWorkerThread(pool);
-        }
-    }
+	static final class DefaultForkJoinWorkerThreadFactory implements
+			ForkJoinWorkerThreadFactory {
+
+		public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+			return new ForkJoinWorkerThread(pool);
+		}
+	}
 
     /**
      * Class for artificial tasks that are used to replace the target
@@ -3375,10 +3376,12 @@ public class ForkJoinPool extends AbstractExecutorService {
         } catch (Exception ignore) {
         }
         if (factory == null) {
-            if (System.getSecurityManager() == null)
+            if (System.getSecurityManager() == null) {
                 factory = defaultForkJoinWorkerThreadFactory;
-            else // use security-managed default
+            } else { // use security-managed default
+            	// note that this will never get called on Android!
                 factory = new InnocuousForkJoinWorkerThreadFactory();
+            }
         }
         if (parallelism < 0 && // default 1 less than #cores
             (parallelism = Runtime.getRuntime().availableProcessors() - 1) <= 0)
@@ -3412,14 +3415,15 @@ public class ForkJoinPool extends AbstractExecutorService {
                 });
         }
 
-        public final ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
-            return (ForkJoinWorkerThread.InnocuousForkJoinWorkerThread)
-                java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedAction<ForkJoinWorkerThread>() {
-                    public ForkJoinWorkerThread run() {
-                        return new ForkJoinWorkerThread.
-                            InnocuousForkJoinWorkerThread(pool);
-                    }}, innocuousAcc);
-        }
+		public final ForkJoinWorkerThread newThread(final ForkJoinPool pool) {
+			return (ForkJoinWorkerThread.InnocuousForkJoinWorkerThread) java.security.AccessController
+					.doPrivileged(
+							new java.security.PrivilegedAction<ForkJoinWorkerThread>() {
+								public ForkJoinWorkerThread run() {
+									return new ForkJoinWorkerThread.InnocuousForkJoinWorkerThread(
+											pool);
+								}
+							}, innocuousAcc);
+		}
     }
 }
