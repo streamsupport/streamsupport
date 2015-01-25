@@ -131,7 +131,7 @@ class SpinedBuffer<E>
         long capacity = capacity();
         if (targetSize > capacity) {
             inflateSpine();
-            for (int i=spineIndex+1; targetSize > capacity; i++) {
+            for (int i = spineIndex + 1; targetSize > capacity; i++) {
                 if (i >= spine.length) {
                     int newSpineSize = spine.length * 2;
                     spine = Arrays.copyOf(spine, newSpineSize);
