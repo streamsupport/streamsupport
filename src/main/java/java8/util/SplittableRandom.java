@@ -25,6 +25,7 @@
 package java8.util;
 
 import java.net.NetworkInterface;
+import java.security.PrivilegedAction;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicLong;
@@ -230,14 +231,18 @@ public final class SplittableRandom {
     private static final AtomicLong defaultGen = new AtomicLong(initialSeed());
 
     private static long initialSeed() {
-        String pp = java.security.AccessController.doPrivileged(
-                new sun.security.action.GetPropertyAction(
-                        "java.util.secureRandomSeed"));
+		String pp = java.security.AccessController
+				.doPrivileged(new PrivilegedAction<String>() {
+					@Override
+					public String run() {
+						return System.getProperty("java.util.secureRandomSeed");
+					}
+				});
         if (pp != null && pp.equalsIgnoreCase("true")) {
             byte[] seedBytes = java.security.SecureRandom.getSeed(8);
             long s = (long)(seedBytes[0]) & 0xffL;
             for (int i = 1; i < 8; ++i)
-                s = (s << 8) | ((long)(seedBytes[i]) & 0xffL);
+                s = (s << 8) | ((long) (seedBytes[i]) & 0xffL);
             return s;
         }
         long h = 0L;
