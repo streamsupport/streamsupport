@@ -246,12 +246,12 @@ import java.util.concurrent.atomic.AtomicLong;
 		localSeeds.get().threadSecondarySeed = secondary;
 	}
 
-	private static void setUncontendedToTrue(Boolean isUncontended) {
-		UNSAFE.putBoolean(isUncontended, VALUE_OFF, true);
+	private static void setUncontendedToTrue(Integer isUncontended) {
+		UNSAFE.putInt(isUncontended, VALUE_OFF, 1); // true
 	}
 
 	// only called via reflection from Striped64 
-	private static int getInitializedProbe(Boolean uncontended) {
+	private static int getInitializedProbe(Integer uncontended) {
 		int p = getThreadLocalRandomProbe();
 		if (p == 0) {
 			localInit();
@@ -264,14 +264,13 @@ import java.util.concurrent.atomic.AtomicLong;
     // Unsafe mechanics
     private static final sun.misc.Unsafe UNSAFE;
     private static final long VALUE_OFF;
-    static {
-        try {
-        	UNSAFE = UnsafeAccess.unsafe;
-            Class<?> bk = Boolean.class;
-            VALUE_OFF = UNSAFE.objectFieldOffset
-                (bk.getDeclaredField("value"));
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-    }
+	static {
+		try {
+			UNSAFE = UnsafeAccess.unsafe;
+			Class<?> ik = Integer.class;
+			VALUE_OFF = UNSAFE.objectFieldOffset(ik.getDeclaredField("value"));
+		} catch (Exception e) {
+			throw new Error(e);
+		}
+	}
 }

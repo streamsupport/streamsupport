@@ -191,7 +191,7 @@ abstract class Striped64 extends Number {
 		}
     }
 
-    private static final int getInitializedProbe(Boolean uncontended) {
+    private static final int getInitializedProbe(Integer uncontended) {
     	try {
 			return ((Integer) GET_INIT_PROBE_METHOD.invoke(null, uncontended)).intValue();
 		} catch (Exception e) {
@@ -235,9 +235,9 @@ abstract class Striped64 extends Number {
     final void longAccumulate(long x, LongBinaryOperator fn,
                               boolean wasUncontended) {
 
-    	Boolean uncontended = new Boolean(false);
+    	Integer uncontended = new Integer(0); // false
     	int h = getInitializedProbe(uncontended);
-    	if (uncontended.booleanValue()) {
+    	if (uncontended.intValue() == 1) {
     		wasUncontended = true;
     	}
     	/*
@@ -268,8 +268,9 @@ abstract class Striped64 extends Number {
                             } finally {
                                 cellsBusy = 0;
                             }
-                            if (created)
+                            if (created) {
                                 break;
+                            }
                             continue;           // Slot is now non-empty
                         }
                     }
@@ -312,8 +313,9 @@ abstract class Striped64 extends Number {
                 } finally {
                     cellsBusy = 0;
                 }
-                if (init)
+                if (init) {
                     break;
+                }
             }
             else if (casBase(v = base, ((fn == null) ? v + x :
                                         fn.applyAsLong(v, x))))
@@ -330,9 +332,9 @@ abstract class Striped64 extends Number {
     final void doubleAccumulate(double x, DoubleBinaryOperator fn,
                                 boolean wasUncontended) {
 
-    	Boolean uncontended = new Boolean(false);
+    	Integer uncontended = new Integer(0); // false
     	int h = getInitializedProbe(uncontended);
-    	if (uncontended.booleanValue()) {
+    	if (uncontended.intValue() == 1) {
     		wasUncontended = true;
     	}
     	/*
@@ -363,8 +365,9 @@ abstract class Striped64 extends Number {
                             } finally {
                                 cellsBusy = 0;
                             }
-                            if (created)
+                            if (created) {
                                 break;
+                            }
                             continue;           // Slot is now non-empty
                         }
                     }
@@ -412,8 +415,9 @@ abstract class Striped64 extends Number {
                 } finally {
                     cellsBusy = 0;
                 }
-                if (init)
+                if (init) {
                     break;
+                }
             }
             else if (casBase(v = base,
                              ((fn == null) ?
@@ -446,7 +450,7 @@ abstract class Striped64 extends Number {
             Class<?> tlrk = Class.forName("java8.util.concurrent.TLRandom");
             Method getProbe = tlrk.getDeclaredMethod("getThreadLocalRandomProbe");
             getProbe.setAccessible(true);
-            Method getInitProbe = tlrk.getDeclaredMethod("getInitializedProbe", Boolean.class);
+            Method getInitProbe = tlrk.getDeclaredMethod("getInitializedProbe", Integer.class);
             getInitProbe.setAccessible(true);
             Method setProbe = tlrk.getDeclaredMethod("setThreadLocalRandomProbe", int.class);
             setProbe.setAccessible(true);
