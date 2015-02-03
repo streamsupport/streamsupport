@@ -48,8 +48,10 @@ final class CopyOnWriteArrayListSpliterator {
 		try {
 			UNSAFE = UnsafeAccess.unsafe;
 			Class<?> cowAl = CopyOnWriteArrayList.class;
+			String arrayFieldName = Spliterators.IS_ANDROID ? "elements"
+					: "array";
 			ARRAY_OFF = UNSAFE.objectFieldOffset(cowAl
-					.getDeclaredField("array"));
+					.getDeclaredField(arrayFieldName));
 		} catch (Exception e) {
 			throw new Error(e);
 		}
