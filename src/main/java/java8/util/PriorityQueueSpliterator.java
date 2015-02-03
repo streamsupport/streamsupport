@@ -152,6 +152,9 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
 	}
 
 	private static <T> int getModCount(PriorityQueue<T> pq) {
+		if (IS_ANDROID) {
+			return 0;
+		}
 		return UNSAFE.getInt(pq, MODCOUNT_OFF);
 	}
 
@@ -164,14 +167,22 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
 	private static final long SIZE_OFF;
 	private static final long MODCOUNT_OFF;
 	private static final long QUEUE_OFF;
+	private static final boolean IS_ANDROID;
 	static {
 		try {
+			IS_ANDROID = Spliterators.IS_ANDROID;
 			UNSAFE = UnsafeAccess.unsafe;
 			Class<?> pq = PriorityQueue.class;
 			SIZE_OFF = UNSAFE.objectFieldOffset(pq.getDeclaredField("size"));
-			MODCOUNT_OFF = UNSAFE.objectFieldOffset(pq
-					.getDeclaredField("modCount"));
-			QUEUE_OFF = UNSAFE.objectFieldOffset(pq.getDeclaredField("queue"));
+			if (!IS_ANDROID) {
+				MODCOUNT_OFF = UNSAFE.objectFieldOffset(pq
+						.getDeclaredField("modCount"));
+			} else {
+				MODCOUNT_OFF = 0L; // unused
+			}
+			String queueFieldName = IS_ANDROID ? "elements" : "queue";
+			QUEUE_OFF = UNSAFE.objectFieldOffset(pq
+					.getDeclaredField(queueFieldName));
 		} catch (Exception e) {
 			throw new Error(e);
 		}

@@ -894,7 +894,7 @@ public final class Spliterators {
 			return ArraysArrayListSpliterator.spliterator((List<T>) c);
 		}
 
-		if (NATIVE_SPECIALIZATION && c instanceof CopyOnWriteArrayList) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof CopyOnWriteArrayList) {
 			return CopyOnWriteArrayListSpliterator
 					.spliterator((CopyOnWriteArrayList<T>) c);
 		}
@@ -921,7 +921,7 @@ public final class Spliterators {
 			};
 		}
 
-		if (NATIVE_SPECIALIZATION && c instanceof CopyOnWriteArraySet) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof CopyOnWriteArraySet) {
 			return CopyOnWriteArraySetSpliterator
 					.spliterator((CopyOnWriteArraySet<T>) c);
 		}
@@ -935,19 +935,19 @@ public final class Spliterators {
 			return spliterator(c, Spliterator.ORDERED | Spliterator.NONNULL
 					| Spliterator.CONCURRENT);
 		}
-		if (NATIVE_SPECIALIZATION && c instanceof LinkedBlockingQueue) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof LinkedBlockingQueue) {
 			return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
 		}
 		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof ArrayDeque) {
 			return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
 		}
-		if (NATIVE_SPECIALIZATION && c instanceof LinkedBlockingDeque) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof LinkedBlockingDeque) {
 			return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
 		}
-		if (NATIVE_SPECIALIZATION && c instanceof PriorityBlockingQueue) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof PriorityBlockingQueue) {
 			return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
 		}
-		if (NATIVE_SPECIALIZATION && c instanceof PriorityQueue) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof PriorityQueue) {
 			return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
 		}
 
