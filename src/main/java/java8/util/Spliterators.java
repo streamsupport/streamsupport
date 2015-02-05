@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
@@ -840,6 +841,7 @@ public final class Spliterators {
 	 * <li>java.util.Arrays.ArrayList</li>
 	 * <li>java.util.ArrayDeque</li>
 	 * <li>java.util.Vector</li>
+	 * <li>java.util.LinkedList</li>
 	 * <li>java.util.LinkedHashSet</li>
 	 * <li>java.util.PriorityQueue</li>
 	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
@@ -897,6 +899,9 @@ public final class Spliterators {
 		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof CopyOnWriteArrayList) {
 			return CopyOnWriteArrayListSpliterator
 					.spliterator((CopyOnWriteArrayList<T>) c);
+		}
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof LinkedList) {
+			return LinkedListSpliterator.spliterator((LinkedList<T>) c);
 		}
 		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof Vector) {
 			return VectorSpliterator.spliterator((Vector<T>) c);
