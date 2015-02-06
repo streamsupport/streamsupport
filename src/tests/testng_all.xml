@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="streamsupport-OpenJDK-TestSuite">
+  <test verbose="2" name="streamsupport_all_tests">
+    <classes>
+      <class name="java8.util.stream.FlagOpTest"/> <!-- block 1 -->
+      <class name="java8.util.stream.StreamOpFlagsTest"/>
+      <class name="java8.util.stream.StreamFlagsTest"/>
+      <class name="java8.util.stream.NodeBuilderTest"/>
+      <class name="java8.util.stream.IntNodeTest"/>
+      <class name="java8.util.stream.LongNodeTest"/>
+      <class name="java8.util.stream.DoubleNodeTest"/>
+      <class name="java8.util.stream.NodeTest"/>
+      <class name="java8.util.stream.UnorderedTest"/>
+      <class name="java8.util.stream.SpinedBufferTest"/>
+      <class name="java8.util.stream.SliceSpliteratorTest"/>
+      <class name="java8.util.stream.StreamReuseTest"/>
+
+      <class name="org.openjdk.tests.java.util.arrays.ParallelPrefix"/> <!-- block 2 -->
+      <class name="org.openjdk.tests.java.util.arrays.ParallelSorting"/>
+      <class name="org.openjdk.tests.java.util.arrays.SetAllTest"/>
+      <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
+      <class name="org.openjdk.tests.java.util.comparator.TypeTest"/>
+      <class name="org.openjdk.tests.java.util.map.DefaultsTest"/>
+      <class name="org.openjdk.tests.java.util.concurrent.Basic"/>
+      <class name="org.openjdk.tests.java.util.concurrent.ThenComposeAsyncTest"/>
+
+      <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/> <!-- block 3 -->
+      <class name="org.openjdk.tests.java.util.stream.SummaryStatisticsTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ForEachOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.IntUniqOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.SpliteratorTest"/>
+      <class name="org.openjdk.tests.java.util.stream.StreamSpliteratorTest"/>
+      <class name="org.openjdk.tests.java.util.stream.CountTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ConcatOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.GroupByOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.CountLargeTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ReduceByOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.RangeTest"/>
+	  <class name="org.openjdk.tests.java.util.stream.InfiniteStreamWithLimitOpTest"/>
+
+      <class name="org.openjdk.tests.java.util.stream.IntPrimitiveOpsTests"/> <!-- block 4 -->
+      <class name="org.openjdk.tests.java.util.stream.LongPrimitiveOpsTests"/>
+      <class name="org.openjdk.tests.java.util.stream.DoublePrimitiveOpsTests"/>
+      <class name="org.openjdk.tests.java.util.stream.PrimitiveAverageOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.PrimitiveSumTest"/>
+      <class name="org.openjdk.tests.java.util.stream.IntReduceTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ReduceTest"/>
+      <class name="org.openjdk.tests.java.util.stream.CollectionAndMapModifyStreamTest"/>
+
+      <class name="org.openjdk.tests.java.util.stream.SequentialOpTest"/> <!-- block 5 -->
+      <class name="org.openjdk.tests.java.util.stream.MinMaxTest"/>
+      <class name="org.openjdk.tests.java.util.stream.StreamParSeqTest"/>
+      <class name="org.openjdk.tests.java.util.stream.IntSliceOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.StreamLinkTest"/>
+      <class name="org.openjdk.tests.java.util.stream.SortedOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.TeeOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.MatchOpTest"/>
+
+      <class name="org.openjdk.tests.java.util.stream.DistinctOpTest"/>  <!-- block 6 (takes long on KitKat) -->
+      <class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
+      <class name="org.openjdk.tests.java.util.stream.FindAnyOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.StreamBuilderTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.SliceOpTest"/>
+
+      <class name="org.openjdk.tests.java.util.stream.FilterOpTest"/> <!-- block 7 -->
+      <class name="org.openjdk.tests.java.util.stream.ToArrayOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.FindFirstOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.MapOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ConcatTest"/>
+
+      <class name="org.openjdk.other.tests.function.BasicTest"/> <!-- block 8 -->
+      <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
+      <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
+      <class name="org.openjdk.other.tests.java.util.miscellaneous.MapTest"/>
+      <class name="org.openjdk.other.tests.java.util.miscellaneous.NullArgsTestCase"/>
+      <class name="org.openjdk.other.tests.java.util.stream.CollectionAndMapModifyStreamTest"/>
+      <class name="org.openjdk.other.tests.java.util.stream.COWCollectionsTest"/>
+      <class name="org.openjdk.other.tests.java.util.stream.DoublePrimitiveOpsTests"/>
+      <class name="org.openjdk.other.tests.java.util.stream.IntPrimitiveOpsTests"/>
+      <class name="org.openjdk.other.tests.java.util.stream.LongPrimitiveOpsTests"/>
+      <class name="org.openjdk.other.tests.java.util.stream.StreamParSeqTest"/>
+      <class name="org.openjdk.other.tests.objects.BasicObjectsTest"/>
+      <class name="org.openjdk.other.tests.optional.Basic"/>
+      <class name="org.openjdk.other.tests.optional.BasicDouble"/>
+      <class name="org.openjdk.other.tests.optional.BasicInt"/>
+      <class name="org.openjdk.other.tests.optional.BasicLong"/>
+      <class name="org.openjdk.other.tests.phaser.Basic"/>
+      <class name="org.openjdk.other.tests.phaser.FickleRegister"/>
+      <class name="org.openjdk.other.tests.phaser.PhaseOverflow"/>
+      <class name="org.openjdk.other.tests.phaser.TieredArriveLoops"/>
+      <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
+      <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
+      <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
+      <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
+
+      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/> <!-- block 9 -->
+      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
+      <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
+
+    </classes>
+  </test>
+</suite>
