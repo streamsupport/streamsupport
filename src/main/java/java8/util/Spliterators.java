@@ -73,6 +73,8 @@ public final class Spliterators {
 	static final boolean JRE8_DELEGATION = getBooleanPropertyValue(JRE8_DELEGATION_ENABLED_PROP);
 	// defaults to false
 	static final boolean IS_ANDROID = isAndroid();
+	// defaults to false
+	static final boolean IS_JAVA6 = isJava6();
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -2988,7 +2990,7 @@ public final class Spliterators {
     }
 
     /**
-     * Are we running on a Dalvik VM or maybe even ART? 
+     * Are we running on a Dalvik VM or maybe even ART?
      */
     private static boolean isAndroid() {
     	Class<?> clazz = null;
@@ -2999,4 +3001,17 @@ public final class Spliterators {
     	}
     	return clazz != null;
     }
+
+    /**
+     * Are we running on a Java 6 JRE?
+     */
+	private static boolean isJava6() {
+		String classVersion = System.getProperty("java.class.version");
+		if (classVersion != null && classVersion.length() >= 2) {
+			if (classVersion.startsWith("50")) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
