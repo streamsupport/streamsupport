@@ -104,7 +104,7 @@ public abstract class OpTestCase extends LoggingTestCase {
 
     // Run multiple versions of exercise(), returning the result of the first, and asserting that others return the same result
     // If the first version is s -> s.foo(), can be used with s -> s.mapToInt(i -> i).foo().mapToObj(i -> i) to test all shape variants
-    @SafeVarargs
+    //@SafeVarargs
     public final<T, U, S_IN extends BaseStream<T, S_IN>, S_OUT extends BaseStream<U, S_OUT>>
     Collection<U> exerciseOpsMulti(TestData<T, S_IN> data,
                                    Function<S_IN, S_OUT>... ms) {

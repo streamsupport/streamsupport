@@ -318,7 +318,7 @@ public class SliceOpTest extends OpTestCase {
         testSliceMulti(data, expectedSize, ms);
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     private final void testSliceMulti(TestData.OfRef<Integer> data,
                                       int expectedSize,
                                       Function<Stream<Integer>, Stream<Integer>>... ms) {
