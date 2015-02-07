@@ -282,7 +282,7 @@ public class ParallelPrefix {
             " Failed to throw " + throwable.getCanonicalName());
     }
 
-    @SafeVarargs
+    //@SafeVarargs
 	public static <T extends Throwable> void assertThrows(Class<T> throwable, String message, Thrower<T>... throwers) {
         for(Thrower<T> thrower : throwers) {
             assertThrows(thrower, throwable, message);

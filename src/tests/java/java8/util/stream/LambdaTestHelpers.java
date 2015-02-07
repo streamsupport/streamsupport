@@ -299,7 +299,7 @@ public class LambdaTestHelpers {
         assertEquals(toBoxedList(actual), toBoxedList(expected));
     }
 
-    @SafeVarargs
+    //@SafeVarargs
     public static<T> void assertContents(Iterator<T> actual, T... expected) {
         assertContents(actual, Arrays.asList(expected).iterator());
     }
