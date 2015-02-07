@@ -10,7 +10,12 @@ class UnsafeHelper {
 
 	static {
 		try {
-			Field field = Unsafe.class.getDeclaredField("theUnsafe");
+			Field field = null;
+			try {
+				field = Unsafe.class.getDeclaredField("theUnsafe");
+			} catch (NoSuchFieldException oldAndroid) {
+				field = Unsafe.class.getDeclaredField("THE_ONE");
+			}
 			field.setAccessible(true);
 			unsafe = (Unsafe) field.get(null);
 		} catch (Exception e) {
