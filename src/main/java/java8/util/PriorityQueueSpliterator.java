@@ -42,7 +42,7 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
     private int expectedModCount; // initialized when fence set
 
     /** Creates new spliterator covering the given range */
-    PriorityQueueSpliterator(PriorityQueue<E> pq, int origin, int fence,
+    private PriorityQueueSpliterator(PriorityQueue<E> pq, int origin, int fence,
                          int expectedModCount) {
         this.pq = pq;
         this.index = origin;
