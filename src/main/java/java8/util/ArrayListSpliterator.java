@@ -76,7 +76,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     private int expectedModCount; // initialized when fence set
 
     /** Create new spliterator covering the given range */
-    ArrayListSpliterator(ArrayList<E> list, int origin, int fence,
+    private ArrayListSpliterator(ArrayList<E> list, int origin, int fence,
                          int expectedModCount) {
         this.list = list; // OK if null unless traversed
 //        this.elementData = (this.list != null) ? getData(this.list) : null;

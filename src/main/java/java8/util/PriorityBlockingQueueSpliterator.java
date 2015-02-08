@@ -38,7 +38,7 @@ final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
 	private int index;
 	private int fence;
 
-	PriorityBlockingQueueSpliterator(PriorityBlockingQueue<E> queue,
+	private PriorityBlockingQueueSpliterator(PriorityBlockingQueue<E> queue,
 			Object[] array, int index, int fence) {
 		this.queue = queue;
 		this.array = array;

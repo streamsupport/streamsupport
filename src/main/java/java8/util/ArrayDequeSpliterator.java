@@ -39,7 +39,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
     private int index;  // current index, modified on traverse/split
 
     /** Creates new spliterator covering the given array and range */
-    ArrayDequeSpliterator(ArrayDeque<E> deq, int origin, int fence) {
+    private ArrayDequeSpliterator(ArrayDeque<E> deq, int origin, int fence) {
         this.deq = deq;
 //        this.elements = getData(this.deq);
         this.index = origin;

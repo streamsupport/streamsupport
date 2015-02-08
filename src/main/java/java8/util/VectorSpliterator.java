@@ -42,7 +42,7 @@ final class VectorSpliterator<E> implements Spliterator<E> {
     private int expectedModCount; // initialized when fence set
 
     /** Create new spliterator covering the given range */
-    VectorSpliterator(Vector<E> list, Object[] array, int origin, int fence,
+    private VectorSpliterator(Vector<E> list, Object[] array, int origin, int fence,
                       int expectedModCount) {
         this.list = list;
         this.array = array;
