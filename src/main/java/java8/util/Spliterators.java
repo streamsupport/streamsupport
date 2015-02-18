@@ -24,6 +24,7 @@
  */
 package java8.util;
 
+import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayDeque;
@@ -65,16 +66,18 @@ import java8.util.function.LongConsumer;
 public final class Spliterators {
 
 	private static final String NATIVE_OPT_ENABLED_PROP = Spliterators.class.getName() + ".assume.oracle.collections.impl";
-	private static final String JRE8_DELEGATION_ENABLED_PROP = Spliterators.class.getName() + ".jre8.delegation.enabled";
+	private static final String JRE_DELEGATION_ENABLED_PROP = Spliterators.class.getName() + ".jre.delegation.enabled";
 
 	// defaults to true
 	static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
 	// defaults to true
-	static final boolean JRE8_DELEGATION = getBooleanPropertyValue(JRE8_DELEGATION_ENABLED_PROP);
+	static final boolean JRE_DELEGATION_ENABLED = getBooleanPropertyValue(JRE_DELEGATION_ENABLED_PROP);
 	// defaults to false
 	static final boolean IS_ANDROID = isAndroid();
-	// defaults to false
+	// defaults to false (Caution: Android is also Java6)
 	static final boolean IS_JAVA6 = isJava6();
+	// defaults to false
+	static final boolean JRE_HAS_STREAMS = isStreamEnabledJRE();
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -874,6 +877,10 @@ public final class Spliterators {
     public static <T> Spliterator<T> spliterator(Collection<? extends T> c) {
 		Objects.requireNonNull(c);
 
+		if (JRE_HAS_STREAMS && JRE_DELEGATION_ENABLED) {
+			return jreDelegatingSpliterator(c);
+		}
+
 		if (c instanceof List) {
 			return listSpliterator((List<T>) c);
 		}
@@ -960,6 +967,10 @@ public final class Spliterators {
 
 		// default from j.u.Collection
 		return spliterator(c, 0);
+    }
+
+    private static <T> Spliterator<T> jreDelegatingSpliterator(Collection<? extends T> c) {
+    	return new DelegatingSpliterator<T>(((Collection<T>) c).spliterator());
     }
 
     // Iterator-based spliterators
@@ -2991,6 +3002,7 @@ public final class Spliterators {
 
     /**
      * Are we running on a Dalvik VM or maybe even ART?
+     * @return {@code true} if yes, otherwise {@code false}.
      */
     private static boolean isAndroid() {
     	Class<?> clazz = null;
@@ -3004,6 +3016,7 @@ public final class Spliterators {
 
     /**
      * Are we running on a Java 6 JRE?
+     * @return {@code true} if yes, otherwise {@code false}.
      */
 	private static boolean isJava6() {
 		String classVersion = System.getProperty("java.class.version");
@@ -3013,5 +3026,41 @@ public final class Spliterators {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Does the current JRE have the JSR 335 libraries?
+	 * @return {@code true} if yes, otherwise {@code false}.
+	 */
+	private static boolean isStreamEnabledJRE() {
+		// a) must have at least major version number 52 (Java 8)
+		String ver = System.getProperty("java.class.version", "45");
+		if (ver != null && ver.length() >= 2) {
+			ver = ver.substring(0, 2);
+			if ("52".compareTo(ver) > 0) {
+				return false;
+			}
+		}
+		// b) j.u.f.Consumer & j.u.Spliterator must exist
+		Class<?> c = null;
+		for (String cn : new String[] { "java.util.function.Consumer",
+				"java.util.Spliterator" }) {
+			try {
+				c = Class.forName(cn);
+			} catch (Exception ignore) {
+				return false;
+			}
+		}
+		// c) j.u.Collection must have a spliterator() method
+		Method m = null;
+		if (c != null) {
+			try {
+				m = Collection.class.getDeclaredMethod("spliterator",
+						new Class<?>[0]);
+			} catch (Exception ignore) {
+				return false;
+			}
+		}
+		return m != null;
 	}
 }
