@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2014, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -266,6 +266,7 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public final LongStream flatMap(final LongFunction<? extends LongStream> mapper) {
+    	Objects.requireNonNull(mapper);
         return new StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                      StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT | StreamOpFlag.NOT_SIZED) {
             @Override
@@ -281,7 +282,7 @@ abstract class LongPipeline<E_IN>
                     	LongStream result = null;
                     	try {
                     		result = mapper.apply(t);
-                            // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
+                            // We can do better than this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(i -> downstream.accept(i));
                             }
@@ -298,8 +299,9 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public LongStream unordered() {
-        if (!isOrdered())
+        if (!isOrdered()) {
             return this;
+        }
         return new StatelessOp<Long>(this, StreamShape.LONG_VALUE, StreamOpFlag.NOT_ORDERED) {
             @Override
             Sink<Long> opWrapSink(int flags, Sink<Long> sink) {
@@ -449,6 +451,7 @@ abstract class LongPipeline<E_IN>
     public final <R> R collect(Supplier<R> supplier,
                                ObjLongConsumer<R> accumulator,
                                final BiConsumer<R, R> combiner) {
+    	Objects.requireNonNull(combiner);
         BinaryOperator<R> operator = (left, right) -> {
             combiner.accept(left, right);
             return left;
