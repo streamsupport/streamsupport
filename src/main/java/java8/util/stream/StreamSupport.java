@@ -103,7 +103,7 @@ public final class StreamSupport {
      *
      * @param <T> the type of stream elements
      * @param seed the initial element
-     * @param f a function to be applied to to the previous element to produce
+     * @param f a function to be applied to the previous element to produce
      *          a new element
      * @return a new sequential {@code Stream}
      */

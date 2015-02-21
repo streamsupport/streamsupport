@@ -92,7 +92,7 @@ public final class DoubleStreams {
      *  to the element at position {@code n - 1}.
      *
      * @param seed the initial element
-     * @param f a function to be applied to to the previous element to produce
+     * @param f a function to be applied to the previous element to produce
      *          a new element
      * @return a new sequential {@code DoubleStream}
      */
