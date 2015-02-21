@@ -697,9 +697,9 @@ final class SliceOps {
          * @return return the number of completed elements
          */
         private long completedSize(long target) {
-            if (completed)
+            if (completed) {
                 return thisNodeSize;
-            else {
+            } else {
                 SliceTask<P_IN, P_OUT> left = leftChild;
                 SliceTask<P_IN, P_OUT> right = rightChild;
                 if (left == null || right == null) {

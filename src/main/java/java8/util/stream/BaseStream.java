@@ -47,7 +47,7 @@ import java8.util.Spliterator;
  * parallelism, which governs the behavior of all stream types.
  *
  * @param <T> the type of the stream elements
- * @param <S> the type of of the stream implementing {@code BaseStream}
+ * @param <S> the type of the stream implementing {@code BaseStream}
  * @since 1.8
  * @see Stream
  * @see IntStream
