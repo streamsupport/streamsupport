@@ -786,7 +786,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      * <p>The first element (position {@code 0}) in the {@code DoubleStream}
      * will be the provided {@code seed}.  For {@code n > 0}, the element at
      * position {@code n}, will be the result of applying the function {@code f}
-     *  to the element at position {@code n - 1}.
+     * to the element at position {@code n - 1}.
      *
      * @param seed the initial element
      * @param f a function to be applied to the previous element to produce
