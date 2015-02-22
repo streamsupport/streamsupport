@@ -436,12 +436,14 @@ public class TabulatorsTest extends OpTestCase {
         try {
             exerciseMapTabulation(data, toConcurrentMap(keyFn, valueFn),
                                   new ToMapAssertion<>(keyFn, valueFn, sum, ConcurrentHashMap.class));
-            if (dataAsList.size() != dataAsSet.size())
+            if (dataAsList.size() != dataAsSet.size()) {
                 fail("Expected ISE on input with duplicates");
+            }
         }
         catch (IllegalStateException e) {
-            if (dataAsList.size() == dataAsSet.size())
+            if (dataAsList.size() == dataAsSet.size()) {
                 fail("Expected no ISE on input without duplicates");
+            }
         }
 
         exerciseMapTabulation(data, toConcurrentMap(keyFn, valueFn, sum),
