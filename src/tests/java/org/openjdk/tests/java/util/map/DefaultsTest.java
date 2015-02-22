@@ -923,12 +923,12 @@ public class DefaultsTest {
 
         // ConcurrentMap reabstracts these methods
 
-        public V replace(K k, V v) { return map.replace(k, v); };
+        public V replace(K k, V v) { return ((ConcurrentMap<K, V>) map).replace(k, v); };
 
-        public boolean replace(K k, V v, V vv) { return map.replace(k, v, vv); };
+        public boolean replace(K k, V v, V vv) { return ((ConcurrentMap<K, V>) map).replace(k, v, vv); };
 
-        public boolean remove(Object k, Object v) { return map.remove(k, v); }
+        public boolean remove(Object k, Object v) { return ((ConcurrentMap<K, V>) map).remove(k, v); }
 
-        public V putIfAbsent(K k, V v) { return map.putIfAbsent(k, v); }
+        public V putIfAbsent(K k, V v) { return ((ConcurrentMap<K, V>) map).putIfAbsent(k, v); }
     }
 }
