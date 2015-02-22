@@ -202,8 +202,82 @@ public final class Collectors {
      * @param <T> the type of input arguments to the merge function
      * @return a merge function which always throw {@code IllegalStateException}
      */
-    private static <T> BinaryOperator<T> throwingMerger() {
-        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
+//    private static <T> BinaryOperator<T> throwingMerger() {
+//        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
+//    }
+
+    /**
+     * Construct an {@code IllegalStateException} with appropriate message.
+     *
+     * @param k the duplicate key
+     * @param u 1st value to be accumulated/merged
+     * @param v 2nd value to be accumulated/merged
+     */
+    private static IllegalStateException duplicateKeyException(
+            Object k, Object u, Object v) {
+        return new IllegalStateException(String.format(
+            "Duplicate key %s (attempted merging values %s and %s)",
+            k, u, v));
+    }
+
+    /**
+     * {@code BinaryOperator<Map>} that merges the contents of its right
+     * argument into its left argument, throwing {@code IllegalStateException}
+     * if duplicate keys are encountered.
+     *
+     * @param <K> type of the map keys
+     * @param <V> type of the map values
+     * @param <M> type of the map
+     * @return a merge function for two maps
+     */
+    private static <K, V, M extends Map<K,V>>
+    BinaryOperator<M> uniqKeysMapMerger() {
+        return (m1, m2) -> {
+            for (Map.Entry<K,V> e : m2.entrySet()) {
+                K k = e.getKey();
+                V v = Objects.requireNonNull(e.getValue());
+                V u = null;
+                if (m1 instanceof ConcurrentMap) {
+                	u = ((ConcurrentMap<K, V>) m1).putIfAbsent(k, v);
+                } else {
+                	u = Maps.putIfAbsent(m1, k, v);
+                }
+                if (u != null) {
+                	throw duplicateKeyException(k, u, v);
+                }
+            }
+            return m1;
+        };
+    }
+
+    /**
+     * {@code BiConsumer<Map, T>} that accumulates (key, value) pairs
+     * extracted from elements into the map, throwing {@code IllegalStateException}
+     * if duplicate keys are encountered.
+     *
+     * @param keyMapper a function that maps an element into a key
+     * @param valueMapper a function that maps an element into a value
+     * @param <T> type of elements
+     * @param <K> type of map keys
+     * @param <V> type of map values
+     * @return an accumulating consumer
+     */
+    private static <T, K, V>
+    BiConsumer<Map<K, V>, T> uniqKeysMapAccumulator(Function<? super T, ? extends K> keyMapper,
+                                                    Function<? super T, ? extends V> valueMapper) {
+        return (map, element) -> {
+            K k = keyMapper.apply(element);
+            V v = Objects.requireNonNull(valueMapper.apply(element));
+            V u = null;
+            if (map instanceof ConcurrentMap) {
+            	u = ((ConcurrentMap<K, V>) map).putIfAbsent(k, v);
+            } else {
+            	u = Maps.putIfAbsent(map, k, v);
+            }
+            if (u != null) {
+            	throw duplicateKeyException(k, u, v);
+            }
+        };
     }
 
 //    @SuppressWarnings("unchecked")
@@ -464,9 +538,9 @@ public final class Collectors {
                                                                 Function<R,RR> finisher) {
         Set<Collector.Characteristics> characteristics = downstream.characteristics();
         if (characteristics.contains(Collector.Characteristics.IDENTITY_FINISH)) {
-            if (characteristics.size() == 1)
+            if (characteristics.size() == 1) {
                 characteristics = Collectors.CH_NOID;
-            else {
+            } else {
                 characteristics = EnumSet.copyOf(characteristics);
                 characteristics.remove(Collector.Characteristics.IDENTITY_FINISH);
                 characteristics = Collections.unmodifiableSet(characteristics);
@@ -638,10 +712,11 @@ public final class Collectors {
         // Better error bounds to add both terms as the final sum
         double tmp = summands[0] + summands[1];
         double simpleSum = summands[summands.length - 1];
-        if (Double.isNaN(tmp) && Double.isInfinite(simpleSum))
+        if (Double.isNaN(tmp) && Double.isInfinite(simpleSum)) {
             return simpleSum;
-        else
+        } else {
             return tmp;
+        }
     }
 
     /**
@@ -1301,7 +1376,11 @@ public final class Collectors {
     public static <T, K, U>
     Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
                                     Function<? super T, ? extends U> valueMapper) {
-        return toMap(keyMapper, valueMapper, throwingMerger(), HashMap::new);
+//      return toMap(keyMapper, valueMapper, throwingMerger(), HashMap::new);
+        return new CollectorImpl<>(HashMap::new,
+                uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
+                uniqKeysMapMerger(),
+                CH_ID);
     }
 
     /**
@@ -1469,7 +1548,11 @@ public final class Collectors {
     public static <T, K, U>
     Collector<T, ?, ConcurrentMap<K,U>> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
                                                         Function<? super T, ? extends U> valueMapper) {
-        return toConcurrentMap(keyMapper, valueMapper, throwingMerger(), ConcurrentHashMap::new);
+        return new CollectorImpl<>(ConcurrentHashMap::new,
+                uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
+                uniqKeysMapMerger(),
+                CH_CONCURRENT_ID);
+//        return toConcurrentMap(keyMapper, valueMapper, throwingMerger(), ConcurrentHashMap::new);
     }
 
     /**
