@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -881,26 +882,31 @@ public final class Spliterators {
 			return jreDelegatingSpliterator(c);
 		}
 
+		String className = c.getClass().getName();
+
 		if (c instanceof List) {
-			return listSpliterator((List<T>) c);
+			return listSpliterator((List<T>) c, className);
 		}
 		if (c instanceof Set) {
-			return setSpliterator((Set<T>) c);
+			return setSpliterator((Set<T>) c, className);
 		}
 		if (c instanceof Queue) {
 			return queueSpliterator((Queue<T>) c);
+		}
+
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && "java.util.HashMap$Values".equals(className)) {
+			return HMSpliterators.getValuesSpliterator((Collection<T>) c);
 		}
 
 		// default (anything else)
 		return spliterator(c, 0);
     }
 
-    private static <T> Spliterator<T> listSpliterator(List<? extends T> c) {
+    private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String className) {
 		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof ArrayList) {
 			return ArrayListSpliterator.spliterator((ArrayList<T>) c);
 		}
 
-		String className = c.getClass().getName();
 		if ((NATIVE_SPECIALIZATION || IS_ANDROID) && "java.util.Arrays$ArrayList".equals(className)) {
 			return ArraysArrayListSpliterator.spliterator((List<T>) c);
 		}
@@ -920,7 +926,17 @@ public final class Spliterators {
 		return spliterator(c, Spliterator.ORDERED);
     }
 
-    private static <T> Spliterator<T> setSpliterator(Set<? extends T> c) {
+    private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
+    	if ((NATIVE_SPECIALIZATION || IS_ANDROID)) {
+			if ("java.util.HashMap$EntrySet".equals(className)) {
+				return (Spliterator<T>) HMSpliterators
+						.<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
+			}
+    		if ("java.util.HashMap$KeySet".equals(className)) {
+    			return HMSpliterators.getKeySetSpliterator((Set<T>) c);
+    		}
+    	}
+
 		if (c instanceof LinkedHashSet) {
 			return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
 		}
