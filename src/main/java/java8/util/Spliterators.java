@@ -927,15 +927,15 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
-    	if ((NATIVE_SPECIALIZATION || IS_ANDROID)) {
+		if ((NATIVE_SPECIALIZATION || IS_ANDROID)) {
 			if ("java.util.HashMap$EntrySet".equals(className)) {
 				return (Spliterator<T>) HMSpliterators
 						.<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
 			}
-    		if ("java.util.HashMap$KeySet".equals(className)) {
-    			return HMSpliterators.getKeySetSpliterator((Set<T>) c);
-    		}
-    	}
+			if ("java.util.HashMap$KeySet".equals(className)) {
+				return HMSpliterators.getKeySetSpliterator((Set<T>) c);
+			}
+		}
 
 		if (c instanceof LinkedHashSet) {
 			return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
