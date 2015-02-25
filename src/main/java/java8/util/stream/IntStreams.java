@@ -210,7 +210,7 @@ public final class IntStreams {
      * <p><b>Implementation Note:</b><br>
      * Use caution when constructing streams from repeated concatenation.
      * Accessing an element of a deeply concatenated stream can result in deep
-     * call chains, or even {@code StackOverflowException}.
+     * call chains, or even {@code StackOverflowError}.
      *
      * @param a the first stream
      * @param b the second stream
