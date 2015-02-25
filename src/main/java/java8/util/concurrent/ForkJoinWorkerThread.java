@@ -202,22 +202,49 @@ public class ForkJoinWorkerThread extends Thread {
     	return clazz != null;
     }
 
+    /**
+     * Are we running on a pre-Java8 IBM VM?
+     * @return
+     */
+    private static boolean isIBMPre8() {
+    	Class<?> clazz = null;
+    	try {
+    		clazz = Class.forName("com.ibm.misc.JarVersion");
+    	} catch (Throwable notPresent) {
+    		// ignore
+    	}
+    	if (clazz != null) {
+            String ver = System.getProperty("java.class.version", "45");
+            if (ver != null && ver.length() >= 2) {
+                ver = ver.substring(0, 2);
+                if ("52".compareTo(ver) > 0) {
+                    return true;
+                }
+            }
+    	}
+    	return false;
+    }
+
     // Set up to allow setting thread fields in constructor
     private static final sun.misc.Unsafe U;
+    static final boolean IS_PRE8_IBM;
     private static final long THREADLOCALS;
     private static final long INHERITABLETHREADLOCALS;
     private static final long INHERITEDACCESSCONTROLCONTEXT;
     static {
         try {
         	U = UnsafeAccess.unsafe;
+        	IS_PRE8_IBM = isIBMPre8();
             Class<?> tk = Thread.class;
 			if (!isAndroid()) {
 				THREADLOCALS = U.objectFieldOffset(tk
 						.getDeclaredField("threadLocals"));
 				INHERITABLETHREADLOCALS = U.objectFieldOffset(tk
 						.getDeclaredField("inheritableThreadLocals"));
+				String accFieldname = IS_PRE8_IBM ? "accessControlContext"
+						: "inheritedAccessControlContext";
 				INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset(tk
-						.getDeclaredField("inheritedAccessControlContext"));
+						.getDeclaredField(accFieldname));
 			} else {
 				// we don't need these offsets when on Android
 				THREADLOCALS = 0L;
@@ -279,7 +306,8 @@ public class ForkJoinWorkerThread extends Thread {
             	sun.misc.Unsafe u = UnsafeAccess.unsafe;
                 Class<?> tk = Thread.class;
                 Class<?> gk = ThreadGroup.class;
-                long tg = u.objectFieldOffset(tk.getDeclaredField("group"));
+                String groupFieldName = IS_PRE8_IBM ? "threadGroup" : "group";
+                long tg = u.objectFieldOffset(tk.getDeclaredField(groupFieldName));
                 long gp = u.objectFieldOffset(gk.getDeclaredField("parent"));
                 ThreadGroup group = (ThreadGroup)
                     u.getObject(Thread.currentThread(), tg);
