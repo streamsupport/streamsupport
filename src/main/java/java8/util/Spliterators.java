@@ -903,31 +903,33 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String className) {
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof ArrayList) {
-            return ArrayListSpliterator.spliterator((ArrayList<T>) c);
-        }
+		if (NATIVE_SPECIALIZATION || IS_ANDROID) {
+			if (c instanceof ArrayList) {
+				return ArrayListSpliterator.spliterator((ArrayList<T>) c);
+			}
 
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && "java.util.Arrays$ArrayList".equals(className)) {
-            return ArraysArrayListSpliterator.spliterator((List<T>) c);
-        }
+			if ("java.util.Arrays$ArrayList".equals(className)) {
+				return ArraysArrayListSpliterator.spliterator((List<T>) c);
+			}
 
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof CopyOnWriteArrayList) {
-            return CopyOnWriteArrayListSpliterator
-                    .spliterator((CopyOnWriteArrayList<T>) c);
-        }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof LinkedList) {
-            return LinkedListSpliterator.spliterator((LinkedList<T>) c);
-        }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof Vector) {
-            return VectorSpliterator.spliterator((Vector<T>) c);
-        }
+			if (c instanceof CopyOnWriteArrayList) {
+				return CopyOnWriteArrayListSpliterator
+						.spliterator((CopyOnWriteArrayList<T>) c);
+			}
+			if (c instanceof LinkedList) {
+				return LinkedListSpliterator.spliterator((LinkedList<T>) c);
+			}
+			if (c instanceof Vector) {
+				return VectorSpliterator.spliterator((Vector<T>) c);
+			}
+		}
 
         // default from j.u.List
         return spliterator(c, Spliterator.ORDERED);
     }
 
     private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID)) {
+        if (NATIVE_SPECIALIZATION || IS_ANDROID) {
             if ("java.util.HashMap$EntrySet".equals(className)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
@@ -965,20 +967,23 @@ public final class Spliterators {
             return spliterator(c, Spliterator.ORDERED | Spliterator.NONNULL
                     | Spliterator.CONCURRENT);
         }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof LinkedBlockingQueue) {
-            return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
-        }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof ArrayDeque) {
-            return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
-        }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof LinkedBlockingDeque) {
-            return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
-        }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof PriorityBlockingQueue) {
-            return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
-        }
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof PriorityQueue) {
-            return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
+
+        if (NATIVE_SPECIALIZATION || IS_ANDROID) {
+        	if (c instanceof LinkedBlockingQueue) {
+        		return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
+        	}
+        	if (c instanceof ArrayDeque) {
+        		return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
+        	}
+        	if (c instanceof LinkedBlockingDeque) {
+        		return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
+        	}
+        	if (c instanceof PriorityBlockingQueue) {
+        		return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
+        	}
+        	if (c instanceof PriorityQueue) {
+        		return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
+        	}
         }
 
         // default from j.u.Collection
