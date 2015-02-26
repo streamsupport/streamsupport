@@ -224,6 +224,8 @@ public final class StreamSupport {
 	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
 	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
 	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
+	 * <li>The collections returned from the java.util.HashMap methods
+	 * #keySet(), #entrySet() and #values()</li>
 	 * </ul>
 	 *
 	 * <p>
@@ -276,6 +278,8 @@ public final class StreamSupport {
 	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
 	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
 	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
+	 * <li>The collections returned from the java.util.HashMap methods
+	 * #keySet(), #entrySet() and #values()</li>
 	 * </ul>
 	 *
 	 * <p>
