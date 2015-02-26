@@ -241,10 +241,10 @@ public class ForkJoinWorkerThread extends Thread {
 						.getDeclaredField("threadLocals"));
 				INHERITABLETHREADLOCALS = U.objectFieldOffset(tk
 						.getDeclaredField("inheritableThreadLocals"));
-				String accFieldname = IS_PRE8_IBM ? "accessControlContext"
+				String accFieldName = IS_PRE8_IBM ? "accessControlContext"
 						: "inheritedAccessControlContext";
 				INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset(tk
-						.getDeclaredField(accFieldname));
+						.getDeclaredField(accFieldName));
 			} else {
 				// we don't need these offsets when on Android
 				THREADLOCALS = 0L;
