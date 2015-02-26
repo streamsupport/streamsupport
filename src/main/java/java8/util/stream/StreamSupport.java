@@ -215,6 +215,7 @@ public final class StreamSupport {
 	 * <li>java.util.ArrayDeque</li>
 	 * <li>java.util.Vector</li>
 	 * <li>java.util.LinkedList</li>
+	 * <li>java.util.HashSet</li>
 	 * <li>java.util.LinkedHashSet</li>
 	 * <li>java.util.PriorityQueue</li>
 	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
@@ -266,6 +267,7 @@ public final class StreamSupport {
 	 * <li>java.util.ArrayDeque</li>
 	 * <li>java.util.Vector</li>
 	 * <li>java.util.LinkedList</li>
+	 * <li>java.util.HashSet</li>
 	 * <li>java.util.LinkedHashSet</li>
 	 * <li>java.util.PriorityQueue</li>
 	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
