@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -936,6 +937,10 @@ public final class Spliterators {
             }
             if ("java.util.HashMap$KeySet".equals(className)) {
                 return HMSpliterators.getKeySetSpliterator((Set<T>) c);
+            }
+
+            if (c instanceof HashSet) {
+            	return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
             }
         }
 
