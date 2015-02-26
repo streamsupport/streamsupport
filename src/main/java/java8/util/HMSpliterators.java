@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -53,6 +54,11 @@ final class HMSpliterators {
 
 	static <V> Spliterator<V> getValuesSpliterator(Collection<V> values) {
 		return new ValueSpliterator<Object, V>(getHashMapFromValues(values), 0,
+				-1, 0, 0);
+	}
+
+	static <E> Spliterator<E> getHashSetSpliterator(HashSet<E> hashSet) {
+		return new KeySpliterator<E, Object>(getHashMapFromHashSet(hashSet), 0,
 				-1, 0, 0);
 	}
 
@@ -408,23 +414,33 @@ final class HMSpliterators {
 		return (HashMap<K, V>) UNSAFE.getObject(values, VALUES_$0_OFF);
 	}
 
+	private static <K, V> HashMap<K, V> getHashMapFromHashSet(HashSet<K> hashSet) {
+		return (HashMap<K, V>) UNSAFE.getObject(hashSet, HASHSET_MAP_OFF);
+	}
+
 	// Unsafe mechanics
 	private static final sun.misc.Unsafe UNSAFE;
 	private static final long VALUES_$0_OFF;
 	private static final long KEYSET_$0_OFF;
 	private static final long ENTRYSET_$0_OFF;
+	private static final long HASHSET_MAP_OFF;
 	static {
 		try {
 			UNSAFE = UnsafeAccess.unsafe;
+			Class<?> hsc = HashSet.class;
 			Class<?> vc = Class.forName("java.util.HashMap$Values");
 			Class<?> ksc = Class.forName("java.util.HashMap$KeySet");
 			Class<?> esc = Class.forName("java.util.HashMap$EntrySet");
+			String hsMapFieldName = Spliterators.IS_ANDROID ? "backingMap"
+					: "map";
 			VALUES_$0_OFF = UNSAFE.objectFieldOffset(vc
 					.getDeclaredField("this$0"));
 			KEYSET_$0_OFF = UNSAFE.objectFieldOffset(ksc
 					.getDeclaredField("this$0"));
 			ENTRYSET_$0_OFF = UNSAFE.objectFieldOffset(esc
 					.getDeclaredField("this$0"));
+			HASHSET_MAP_OFF = UNSAFE.objectFieldOffset(hsc
+					.getDeclaredField(hsMapFieldName));
 		} catch (Exception e) {
 			throw new Error(e);
 		}
