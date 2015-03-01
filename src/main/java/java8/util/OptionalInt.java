@@ -60,6 +60,18 @@ public final class OptionalInt {
     private final boolean isPresent;
     private final int value;
 
+    private static final class OICache {
+        private OICache() {}
+
+        static final OptionalInt cache[] = new OptionalInt[-(-128) + 127 + 1];
+
+        static {
+            for (int i = 0; i < cache.length; i++) {
+                cache[i] = new OptionalInt(i - 128);
+            }
+        }
+    }
+
     /**
      * Construct an empty instance.
      *
@@ -103,6 +115,10 @@ public final class OptionalInt {
      * @return an {@code OptionalInt} with the value present
      */
     public static OptionalInt of(int value) {
+        int offset = 128;
+        if (value >= -128 && value <= 127) { // will cache
+            return OICache.cache[value + offset];
+        }
         return new OptionalInt(value);
     }
 
