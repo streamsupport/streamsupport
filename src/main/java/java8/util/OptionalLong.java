@@ -61,6 +61,18 @@ public final class OptionalLong {
     private final boolean isPresent;
     private final long value;
 
+    private static final class OLCache {
+        private OLCache() {}
+
+        static final OptionalLong cache[] = new OptionalLong[-(-128) + 127 + 1];
+
+        static {
+            for (int i = 0; i < cache.length; i++) {
+                cache[i] = new OptionalLong(i - 128);
+            }
+        }
+    }
+
     /**
      * Construct an empty instance.
      *
@@ -104,6 +116,10 @@ public final class OptionalLong {
      * @return an {@code OptionalLong} with the value present
      */
     public static OptionalLong of(long value) {
+        int offset = 128;
+        if (value >= -128L && value <= 127L) { // will cache
+            return OLCache.cache[(int) value + offset];
+        }
         return new OptionalLong(value);
     }
 
