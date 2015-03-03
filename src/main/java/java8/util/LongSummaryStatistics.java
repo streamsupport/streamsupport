@@ -55,7 +55,7 @@ import java8.util.stream.Collector;
  *
  * <p><b>Implementation Note:</b><br> This implementation is not thread safe. However, it is safe to use
  * {@link java.util.stream.Collectors#summarizingLong(java.util.function.ToLongFunction)
- * Collectors.toLongStatistics()} on a parallel stream, because the parallel
+ * Collectors.summarizingLong()} on a parallel stream, because the parallel
  * implementation of {@link java.util.stream.Stream#collect Stream.collect()}
  * provides the necessary partitioning, isolation, and merging of results for
  * safe and efficient parallel execution.
