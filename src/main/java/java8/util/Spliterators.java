@@ -941,15 +941,18 @@ public final class Spliterators {
             if ("java.util.HashMap$KeySet".equals(className)) {
                 return HMSpliterators.getKeySetSpliterator((Set<T>) c);
             }
-
-            if (c instanceof HashSet) {
-            	return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
-            }
         }
 
         if (c instanceof LinkedHashSet) {
             return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
         }
+
+        if (NATIVE_SPECIALIZATION || IS_ANDROID) {
+            if (c instanceof HashSet) {
+            	return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
+            }
+        }
+
         // default from j.u.SortedSet
         if (c instanceof SortedSet) {
             return new IteratorSpliterator<T>(c, Spliterator.DISTINCT
