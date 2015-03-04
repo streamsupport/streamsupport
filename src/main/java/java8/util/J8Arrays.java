@@ -1105,6 +1105,14 @@ public final class J8Arrays {
      * <p>If the generator function throws an exception, it is relayed to
      * the caller and the array is left in an indeterminate state.
      *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, using a generator function to compute
+     * each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .forEach(i -> array[i] = generator.apply(i));
+     * }</pre>
+     *
      * @param <T> type of elements of the array
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
@@ -1127,6 +1135,15 @@ public final class J8Arrays {
      * is thrown from {@code parallelSetAll} and the array is left in an
      * indeterminate state.
      *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, in parallel, using a generator function
+     * to compute each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .parallel()
+     *          .forEach(i -> array[i] = generator.apply(i));
+     * }</pre>
+     *
      * @param <T> type of elements of the array
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
@@ -1145,6 +1162,14 @@ public final class J8Arrays {
      *
      * <p>If the generator function throws an exception, it is relayed to
      * the caller and the array is left in an indeterminate state.
+     *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, using a generator function to compute
+     * each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .forEach(i -> array[i] = generator.applyAsInt(i));
+     * }</pre>
      *
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
@@ -1167,6 +1192,15 @@ public final class J8Arrays {
      * is thrown from {@code parallelSetAll} and the array is left in an
      * indeterminate state.
      *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, in parallel, using a generator function
+     * to compute each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .parallel()
+     *          .forEach(i -> array[i] = generator.applyAsInt(i));
+     * }</pre>
+     *
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
      * value for that position
@@ -1184,6 +1218,14 @@ public final class J8Arrays {
      *
      * <p>If the generator function throws an exception, it is relayed to
      * the caller and the array is left in an indeterminate state.
+     *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, using a generator function to compute
+     * each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .forEach(i -> array[i] = generator.applyAsLong(i));
+     * }</pre>
      *
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
@@ -1206,6 +1248,15 @@ public final class J8Arrays {
      * is thrown from {@code parallelSetAll} and the array is left in an
      * indeterminate state.
      *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, in parallel, using a generator function
+     * to compute each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .parallel()
+     *          .forEach(i -> array[i] = generator.applyAsLong(i));
+     * }</pre>
+     *
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
      *        value for that position
@@ -1223,6 +1274,14 @@ public final class J8Arrays {
      *
      * <p>If the generator function throws an exception, it is relayed to
      * the caller and the array is left in an indeterminate state.
+     *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, using a generator function to compute
+     * each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .forEach(i -> array[i] = generator.applyAsDouble(i));
+     * }</pre>
      *
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
@@ -1244,6 +1303,15 @@ public final class J8Arrays {
      * <p>If the generator function throws an exception, an unchecked exception
      * is thrown from {@code parallelSetAll} and the array is left in an
      * indeterminate state.
+     *
+     * <p><b>API Note:</b><br>
+     * Setting a subrange of an array, in parallel, using a generator function
+     * to compute each element, can be written as follows:
+     * <pre>{@code
+     * IntStreams.range(startInclusive, endExclusive)
+     *          .parallel()
+     *          .forEach(i -> array[i] = generator.applyAsDouble(i));
+     * }</pre>
      *
      * @param array array to be initialized
      * @param generator a function accepting an index and producing the desired
