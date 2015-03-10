@@ -898,7 +898,7 @@ public final class Spliterators {
             return queueSpliterator((Queue<T>) c);
         }
 
-        if ((NATIVE_SPECIALIZATION || IS_ANDROID) && "java.util.HashMap$Values".equals(className)) {
+        if ((NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) && "java.util.HashMap$Values".equals(className)) {
             return HMSpliterators.getValuesSpliterator((Collection<T>) c);
         }
 
@@ -933,7 +933,7 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
-        if (NATIVE_SPECIALIZATION || IS_ANDROID) {
+        if (NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) {
             if ("java.util.HashMap$EntrySet".equals(className)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
@@ -947,7 +947,7 @@ public final class Spliterators {
             return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
         }
 
-        if (NATIVE_SPECIALIZATION || IS_ANDROID) {
+        if (NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) {
             if (c instanceof HashSet) {
             	return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
             }
