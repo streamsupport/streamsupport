@@ -3,9 +3,9 @@ SET JAVA6=F:/Java/sun-jdk1.6.0_45-64bit/bin/java
 
 SET JAVA7=F:/Java/sun-jdk1.7.0_76-64bit/bin/java
 
-SET JAVA8=F:/Java/sun-jdk1.8.0_31-64bit/bin/java
+SET JAVA8=F:/Java/sun-jdk1.8.0_40-64bit/bin/java
 
-SET ARGS=org.testng.TestNG testng_all.xml -testjar streamsupport-tests-1.1.4.jar
+SET ARGS=org.testng.TestNG testng_all.xml -testjar streamsupport-tests-1.1.5.jar
 
 SET JIT_BUG=-XX:CompileCommand="exclude,java8/util/stream/SpinedBuffer$OfPrimitive.ensureCapacity,(J)V"
 
