@@ -5,9 +5,11 @@ SET JAVA7=F:/Java/sun-jdk1.7.0_76-64bit/bin/java
 
 SET JAVA8=F:/Java/sun-jdk1.8.0_40-64bit/bin/java
 
-SET ARGS=org.testng.TestNG testng_all.xml -testjar streamsupport-tests-1.1.5.jar
+SET ARGS=org.testng.TestNG testng_all.xml -testjar streamsupport-tests-1.2.jar
 
 SET JIT_BUG=-XX:CompileCommand="exclude,java8/util/stream/SpinedBuffer$OfPrimitive.ensureCapacity,(J)V"
+
+SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 
 
@@ -16,3 +18,6 @@ SET JIT_BUG=-XX:CompileCommand="exclude,java8/util/stream/SpinedBuffer$OfPrimiti
 %JAVA7% -cp .;./* %ARGS%
 
 %JAVA8% -cp .;./* %ARGS%
+
+%JAVA8% %NO_DELEG% -cp .;./* %ARGS%
+
