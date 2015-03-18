@@ -162,6 +162,25 @@ public final class OptionalInt {
     }
 
     /**
+     * If a value is present, perform the given action with the value,
+     * otherwise perform the given empty-based action.
+     *
+     * @param action the action to be performed if a value is present
+     * @param emptyAction the empty-based action to be performed if a value is
+     * not present
+     * @throws NullPointerException if a value is present and {@code action} is
+     * null, or a value is not present and {@code emptyAction} is null.
+     * @since 1.9
+     */
+    public void ifPresentOrElse(IntConsumer action, Runnable emptyAction) {
+        if (isPresent) {
+            action.accept(value);
+        } else {
+            emptyAction.run();
+        }
+    }
+
+    /**
      * Return the value if present, otherwise return {@code other}.
      *
      * @param other the value to be returned if there is no value present
