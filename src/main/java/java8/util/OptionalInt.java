@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,8 +38,8 @@ import java8.util.function.Supplier;
  * <p>Additional methods that depend on the presence or absence of a contained
  * value are provided, such as {@link #orElse(int) orElse()}
  * (return a default value if value not present) and
- * {@link #ifPresent(java8.util.function.IntConsumer) ifPresent()} (execute a block
- * of code if the value is present).
+ * {@link #ifPresent(java8.util.function.IntConsumer) ifPresent()} (perform an
+ * action if the value is present).
  *
  * <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a>
  * class; use of identity-sensitive operations (including reference equality
@@ -148,16 +148,17 @@ public final class OptionalInt {
     }
 
     /**
-     * Have the specified consumer accept the value if a value is present,
+     * If a value is present, perform the given action with the value,
      * otherwise do nothing.
      *
-     * @param consumer block to be executed if a value is present
-     * @throws NullPointerException if value is present and {@code consumer} is
+     * @param action the action to be performed if a value is present
+     * @throws NullPointerException if a value is present and {@code action} is
      * null
      */
-    public void ifPresent(IntConsumer consumer) {
-        if (isPresent)
-            consumer.accept(value);
+    public void ifPresent(IntConsumer action) {
+        if (isPresent) {
+            action.accept(value);
+        }
     }
 
     /**
