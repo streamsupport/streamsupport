@@ -164,6 +164,25 @@ public final class Optional<T> {
     }
 
     /**
+     * If a value is present, perform the given action with the value,
+     * otherwise perform the given empty-based action.
+     *
+     * @param action the action to be performed if a value is present
+     * @param emptyAction the empty-based action to be performed if a value is
+     * not present
+     * @throws NullPointerException if a value is present and {@code action} is
+     * null, or a value is not present and {@code emptyAction} is null.
+     * @since 1.9
+     */
+    public void ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction) {
+        if (value != null) {
+            action.accept(value);
+        } else {
+            emptyAction.run();
+        }
+    }
+
+    /**
      * If a value is present, and the value matches the given predicate,
      * return an {@code Optional} describing the value, otherwise return an
      * empty {@code Optional}.
