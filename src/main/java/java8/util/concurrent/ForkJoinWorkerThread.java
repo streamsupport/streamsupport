@@ -69,10 +69,10 @@ public class ForkJoinWorkerThread extends Thread {
      * both here and in the subclass to access and set Thread fields.
      */
 
-	// A placeholder name until a useful name can be set in registerWorker
+    // A placeholder name until a useful name can be set in registerWorker
     private static final String NAME_PLACEHOLDER = "aForkJoinWorkerThread";
 
-	final ForkJoinPool pool;                // the pool this thread works in
+    final ForkJoinPool pool;                // the pool this thread works in
     final ForkJoinPool.WorkQueue workQueue; // work-stealing mechanics
 
     /**
@@ -121,7 +121,7 @@ public class ForkJoinWorkerThread extends Thread {
      * @return the index number
      */
     public int getPoolIndex() {
-        return workQueue.poolIndex >>> 1; // ignore odd/even tag bit
+        return workQueue.getPoolIndex();
     }
 
     /**
@@ -190,16 +190,16 @@ public class ForkJoinWorkerThread extends Thread {
     }
 
     /**
-     * Are we running on a Dalvik VM or maybe even ART? 
+     * Are we running on Android? 
      */
     private static boolean isAndroid() {
-    	Class<?> clazz = null;
-    	try {
-    		clazz = Class.forName("android.util.DisplayMetrics");
-    	} catch (Throwable notPresent) {
-    		// ignore
-    	}
-    	return clazz != null;
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("android.util.DisplayMetrics");
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
     }
 
     /**
@@ -207,13 +207,13 @@ public class ForkJoinWorkerThread extends Thread {
      * @return
      */
     private static boolean isIBMPre8() {
-    	Class<?> clazz = null;
-    	try {
-    		clazz = Class.forName("com.ibm.misc.JarVersion");
-    	} catch (Throwable notPresent) {
-    		// ignore
-    	}
-    	if (clazz != null) {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("com.ibm.misc.JarVersion");
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        if (clazz != null) {
             String ver = System.getProperty("java.class.version", "45");
             if (ver != null && ver.length() >= 2) {
                 ver = ver.substring(0, 2);
@@ -221,8 +221,8 @@ public class ForkJoinWorkerThread extends Thread {
                     return true;
                 }
             }
-    	}
-    	return false;
+        }
+        return false;
     }
 
     // Set up to allow setting thread fields in constructor
@@ -233,24 +233,24 @@ public class ForkJoinWorkerThread extends Thread {
     private static final long INHERITEDACCESSCONTROLCONTEXT;
     static {
         try {
-        	U = UnsafeAccess.unsafe;
-        	IS_PRE8_IBM = isIBMPre8();
+            U = UnsafeAccess.unsafe;
+            IS_PRE8_IBM = isIBMPre8();
             Class<?> tk = Thread.class;
-			if (!isAndroid()) {
-				THREADLOCALS = U.objectFieldOffset(tk
-						.getDeclaredField("threadLocals"));
-				INHERITABLETHREADLOCALS = U.objectFieldOffset(tk
-						.getDeclaredField("inheritableThreadLocals"));
-				String accFieldName = IS_PRE8_IBM ? "accessControlContext"
-						: "inheritedAccessControlContext";
-				INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset(tk
-						.getDeclaredField(accFieldName));
-			} else {
-				// we don't need these offsets when on Android
-				THREADLOCALS = 0L;
-				INHERITABLETHREADLOCALS = 0L;
-				INHERITEDACCESSCONTROLCONTEXT = 0L;
-			}
+            if (!isAndroid()) {
+                THREADLOCALS = U.objectFieldOffset(tk
+                        .getDeclaredField("threadLocals"));
+                INHERITABLETHREADLOCALS = U.objectFieldOffset(tk
+                        .getDeclaredField("inheritableThreadLocals"));
+                String accFieldName = IS_PRE8_IBM ? "accessControlContext"
+                        : "inheritedAccessControlContext";
+                INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset(tk
+                        .getDeclaredField(accFieldName));
+            } else {
+                // we don't need these offsets when on Android
+                THREADLOCALS = 0L;
+                INHERITABLETHREADLOCALS = 0L;
+                INHERITEDACCESSCONTROLCONTEXT = 0L;
+            }
         } catch (Exception e) {
             throw new Error(e);
         }
@@ -298,12 +298,12 @@ public class ForkJoinWorkerThread extends Thread {
 
         /**
          * Returns a new group with the system ThreadGroup (the
-         * topmost, parentless group) as parent.  Uses Unsafe to
-         * traverse Thread group and ThreadGroup parent fields.
+         * topmost, parent-less group) as parent.  Uses Unsafe to
+         * traverse Thread.group and ThreadGroup.parent fields.
          */
         private static ThreadGroup createThreadGroup() {
             try {
-            	sun.misc.Unsafe u = UnsafeAccess.unsafe;
+                sun.misc.Unsafe u = UnsafeAccess.unsafe;
                 Class<?> tk = Thread.class;
                 Class<?> gk = ThreadGroup.class;
                 String groupFieldName = IS_PRE8_IBM ? "threadGroup" : "group";
@@ -327,4 +327,3 @@ public class ForkJoinWorkerThread extends Thread {
         }
     }
 }
-
