@@ -239,7 +239,7 @@ public final class OptionalLong {
      * </ul>
      *
      * @param obj an object to be tested for equality
-     * @return {code true} if the other object is "equal to" this object
+     * @return {@code true} if the other object is "equal to" this object
      * otherwise {@code false}
      */
     @Override
