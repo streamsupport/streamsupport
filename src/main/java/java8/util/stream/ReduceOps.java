@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -81,31 +81,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public void combine(ReducingSink other) {
                 state = combiner.apply(state, other.state);
             }
@@ -150,31 +150,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public Optional<T> get() {
                 return empty ? Optional.empty() : Optional.of(state);
             }
@@ -204,7 +204,7 @@ final class ReduceOps {
      */
     public static <T, I> TerminalOp<T, I>
     makeRef(final Collector<? super T, I, ?> collector) {
-    	final Supplier<I> supplier = Objects.requireNonNull(collector).supplier();
+        final Supplier<I> supplier = Objects.requireNonNull(collector).supplier();
         final BiConsumer<I, ? super T> accumulator = collector.accumulator();
         final BinaryOperator<I> combiner = collector.combiner();
         class ReducingSink extends Box<I>
@@ -220,31 +220,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public void combine(ReducingSink other) {
                 state = combiner.apply(state, other.state);
             }
@@ -278,8 +278,8 @@ final class ReduceOps {
      */
     public static <T, R> TerminalOp<T, R>
     makeRef(final Supplier<R> seedFactory,
-    		final BiConsumer<R, ? super T> accumulator,
-    		final BiConsumer<R,R> reducer) {
+            final BiConsumer<R, ? super T> accumulator,
+            final BiConsumer<R,R> reducer) {
         Objects.requireNonNull(seedFactory);
         Objects.requireNonNull(accumulator);
         Objects.requireNonNull(reducer);
@@ -296,31 +296,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public void combine(ReducingSink other) {
                 reducer.accept(state, other.state);
             }
@@ -329,6 +329,40 @@ final class ReduceOps {
             @Override
             public ReducingSink makeSink() {
                 return new ReducingSink();
+            }
+        };
+    }
+
+    /**
+     * Constructs a {@code TerminalOp} that counts the number of stream
+     * elements.  If the size of the pipeline is known then count is the size
+     * and there is no need to evaluate the pipeline.  If the size of the
+     * pipeline is non known then count is produced, via reduction, using a
+     * {@link CountingSink}.
+     *
+     * @param <T> the type of the input elements
+     * @return a {@code TerminalOp} implementing the counting
+     */
+    public static <T> TerminalOp<T, Long>
+    makeRefCounting() {
+        return new ReduceOp<T, Long, CountingSink<T>>(StreamShape.REFERENCE) {
+            @Override
+            public CountingSink<T> makeSink() { return new CountingSink.OfRef<>(); }
+
+            @Override
+            public <P_IN> Long evaluateSequential(PipelineHelper<T> helper,
+                                                  Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateSequential(helper, spliterator);
+            }
+
+            @Override
+            public <P_IN> Long evaluateParallel(PipelineHelper<T> helper,
+                                                Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateParallel(helper, spliterator);
             }
         };
     }
@@ -359,31 +393,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void accept(Integer t) {
-				SinkDefaults.OfInt.accept(this, t);
-			}
+            public void accept(Integer t) {
+                SinkDefaults.OfInt.accept(this, t);
+            }
 
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public Integer get() {
                 return state;
             }
@@ -433,31 +467,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void accept(Integer t) {
-				SinkDefaults.OfInt.accept(this, t);
-			}
+            public void accept(Integer t) {
+                SinkDefaults.OfInt.accept(this, t);
+            }
 
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public OptionalInt get() {
                 return empty ? OptionalInt.empty() : OptionalInt.of(state);
             }
@@ -489,8 +523,8 @@ final class ReduceOps {
      */
     public static <R> TerminalOp<Integer, R>
     makeInt(final Supplier<R> supplier,
-    		final ObjIntConsumer<R> accumulator,
-    		final BinaryOperator<R> combiner) {
+            final ObjIntConsumer<R> accumulator,
+            final BinaryOperator<R> combiner) {
         Objects.requireNonNull(supplier);
         Objects.requireNonNull(accumulator);
         Objects.requireNonNull(combiner);
@@ -507,31 +541,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void accept(Integer t) {
-				SinkDefaults.OfInt.accept(this, t);
-			}
+            public void accept(Integer t) {
+                SinkDefaults.OfInt.accept(this, t);
+            }
 
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public void combine(ReducingSink other) {
                 state = combiner.apply(state, other.state);
             }
@@ -540,6 +574,39 @@ final class ReduceOps {
             @Override
             public ReducingSink makeSink() {
                 return new ReducingSink();
+            }
+        };
+    }
+
+    /**
+     * Constructs a {@code TerminalOp} that counts the number of stream
+     * elements.  If the size of the pipeline is known then count is the size
+     * and there is no need to evaluate the pipeline.  If the size of the
+     * pipeline is non known then count is produced, via reduction, using a
+     * {@link CountingSink}.
+     *
+     * @return a {@code TerminalOp} implementing the counting
+     */
+    public static TerminalOp<Integer, Long>
+    makeIntCounting() {
+        return new ReduceOp<Integer, Long, CountingSink<Integer>>(StreamShape.INT_VALUE) {
+            @Override
+            public CountingSink<Integer> makeSink() { return new CountingSink.OfInt(); }
+
+            @Override
+            public <P_IN> Long evaluateSequential(PipelineHelper<Integer> helper,
+                                                  Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateSequential(helper, spliterator);
+            }
+
+            @Override
+            public <P_IN> Long evaluateParallel(PipelineHelper<Integer> helper,
+                                                Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateParallel(helper, spliterator);
             }
         };
     }
@@ -570,31 +637,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void accept(Long t) {
-				SinkDefaults.OfLong.accept(this, t);
-			}
+            public void accept(Long t) {
+                SinkDefaults.OfLong.accept(this, t);
+            }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public Long get() {
                 return state;
             }
@@ -644,31 +711,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void accept(Long t) {
-				SinkDefaults.OfLong.accept(this, t);
-			}
+            public void accept(Long t) {
+                SinkDefaults.OfLong.accept(this, t);
+            }
 
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public OptionalLong get() {
                 return empty ? OptionalLong.empty() : OptionalLong.of(state);
             }
@@ -700,8 +767,8 @@ final class ReduceOps {
      */
     public static <R> TerminalOp<Long, R>
     makeLong(final Supplier<R> supplier,
-    		final ObjLongConsumer<R> accumulator,
-    		final BinaryOperator<R> combiner) {
+            final ObjLongConsumer<R> accumulator,
+            final BinaryOperator<R> combiner) {
         Objects.requireNonNull(supplier);
         Objects.requireNonNull(accumulator);
         Objects.requireNonNull(combiner);
@@ -718,31 +785,31 @@ final class ReduceOps {
             }
 
             @Override
-			public void accept(Long t) {
-				SinkDefaults.OfLong.accept(this, t);
-			}
+            public void accept(Long t) {
+                SinkDefaults.OfLong.accept(this, t);
+            }
 
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public void combine(ReducingSink other) {
                 state = combiner.apply(state, other.state);
             }
@@ -751,6 +818,39 @@ final class ReduceOps {
             @Override
             public ReducingSink makeSink() {
                 return new ReducingSink();
+            }
+        };
+    }
+
+    /**
+     * Constructs a {@code TerminalOp} that counts the number of stream
+     * elements.  If the size of the pipeline is known then count is the size
+     * and there is no need to evaluate the pipeline.  If the size of the
+     * pipeline is non known then count is produced, via reduction, using a
+     * {@link CountingSink}.
+     *
+     * @return a {@code TerminalOp} implementing the counting
+     */
+    public static TerminalOp<Long, Long>
+    makeLongCounting() {
+        return new ReduceOp<Long, Long, CountingSink<Long>>(StreamShape.LONG_VALUE) {
+            @Override
+            public CountingSink<Long> makeSink() { return new CountingSink.OfLong(); }
+
+            @Override
+            public <P_IN> Long evaluateSequential(PipelineHelper<Long> helper,
+                                                  Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateSequential(helper, spliterator);
+            }
+
+            @Override
+            public <P_IN> Long evaluateParallel(PipelineHelper<Long> helper,
+                                                Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateParallel(helper, spliterator);
             }
         };
     }
@@ -780,32 +880,32 @@ final class ReduceOps {
                 state = operator.applyAsDouble(state, t);
             }
 
-    		@Override
-    		public void accept(Double i) {
-    			SinkDefaults.OfDouble.accept(this, i);
-    		}
+            @Override
+            public void accept(Double i) {
+                SinkDefaults.OfDouble.accept(this, i);
+            }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public Double get() {
                 return state;
             }
@@ -854,32 +954,32 @@ final class ReduceOps {
                 }
             }
 
-    		@Override
-    		public void accept(Double i) {
-    			SinkDefaults.OfDouble.accept(this, i);
-    		}
+            @Override
+            public void accept(Double i) {
+                SinkDefaults.OfDouble.accept(this, i);
+            }
 
             @Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
+            @Override
             public OptionalDouble get() {
                 return empty ? OptionalDouble.empty() : OptionalDouble.of(state);
             }
@@ -911,8 +1011,8 @@ final class ReduceOps {
      */
     public static <R> TerminalOp<Double, R>
     makeDouble(final Supplier<R> supplier,
-    		final ObjDoubleConsumer<R> accumulator,
-    		final BinaryOperator<R> combiner) {
+            final ObjDoubleConsumer<R> accumulator,
+            final BinaryOperator<R> combiner) {
         Objects.requireNonNull(supplier);
         Objects.requireNonNull(accumulator);
         Objects.requireNonNull(combiner);
@@ -928,35 +1028,35 @@ final class ReduceOps {
                 accumulator.accept(state, t);
             }
 
-    		@Override
-    		public void accept(Double i) {
-    			SinkDefaults.OfDouble.accept(this, i);
-    		}
+            @Override
+            public void accept(Double i) {
+                SinkDefaults.OfDouble.accept(this, i);
+            }
 
             @Override
             public void combine(ReducingSink other) {
                 state = combiner.apply(state, other.state);
             }
 
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
 
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
 
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
 
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
         }
         return new ReduceOp<Double, R, ReducingSink>(StreamShape.DOUBLE_VALUE) {
             @Override
@@ -964,6 +1064,131 @@ final class ReduceOps {
                 return new ReducingSink();
             }
         };
+    }
+
+    /**
+     * Constructs a {@code TerminalOp} that counts the number of stream
+     * elements.  If the size of the pipeline is known then count is the size
+     * and there is no need to evaluate the pipeline.  If the size of the
+     * pipeline is non known then count is produced, via reduction, using a
+     * {@link CountingSink}.
+     *
+     * @return a {@code TerminalOp} implementing the counting
+     */
+    public static TerminalOp<Double, Long>
+    makeDoubleCounting() {
+        return new ReduceOp<Double, Long, CountingSink<Double>>(StreamShape.DOUBLE_VALUE) {
+            @Override
+            public CountingSink<Double> makeSink() { return new CountingSink.OfDouble(); }
+
+            @Override
+            public <P_IN> Long evaluateSequential(PipelineHelper<Double> helper,
+                                                  Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateSequential(helper, spliterator);
+            }
+
+            @Override
+            public <P_IN> Long evaluateParallel(PipelineHelper<Double> helper,
+                                                Spliterator<P_IN> spliterator) {
+                if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
+                    return spliterator.getExactSizeIfKnown();
+                return super.evaluateParallel(helper, spliterator);
+            }
+        };
+    }
+
+    /**
+     * A sink that counts elements
+     */
+    static abstract class CountingSink<T>
+            extends Box<Long>
+            implements AccumulatingSink<T, Long, CountingSink<T>> {
+        long count;
+
+        @Override
+        public void begin(long size) {
+            count = 0L;
+        }
+
+        @Override
+        public Long get() {
+            return count;
+        }
+
+        @Override
+        public void combine(CountingSink<T> other) {
+            count += other.count;
+        }
+
+        @Override
+        public void end() {
+            SinkDefaults.end(this);
+        }
+
+        @Override
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
+
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
+
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
+
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
+
+        static final class OfRef<T> extends CountingSink<T> {
+            @Override
+            public void accept(T t) {
+                count++;
+            }
+        }
+
+        static final class OfInt extends CountingSink<Integer> implements Sink.OfInt {
+            @Override
+            public void accept(int t) {
+                count++;
+            }
+
+            @Override
+            public void accept(Integer i) {
+                SinkDefaults.OfInt.accept(this, i);
+            }
+        }
+
+        static final class OfLong extends CountingSink<Long> implements Sink.OfLong {
+            @Override
+            public void accept(long t) {
+                count++;
+            }
+
+            @Override
+            public void accept(Long l) {
+                SinkDefaults.OfLong.accept(this, l);
+            }
+        }
+
+        static final class OfDouble extends CountingSink<Double> implements Sink.OfDouble {
+            @Override
+            public void accept(double t) {
+                count++;
+            }
+
+            @Override
+            public void accept(Double d) {
+                SinkDefaults.OfDouble.accept(this, d);
+            }
+        }
     }
 
     /**
@@ -977,7 +1202,7 @@ final class ReduceOps {
      */
     private interface AccumulatingSink<T, R, K extends AccumulatingSink<T, R, K>>
             extends TerminalSink<T, R> {
-        public void combine(K other);
+        void combine(K other);
     }
 
     /**
@@ -1028,11 +1253,11 @@ final class ReduceOps {
         }
 
         @Override
-		public int getOpFlags() {
-			return TerminalOpDefaults.getOpFlags();
-		}
+        public int getOpFlags() {
+            return TerminalOpDefaults.getOpFlags();
+        }
 
-		@Override
+        @Override
         public <P_IN> R evaluateSequential(PipelineHelper<T> helper,
                                            Spliterator<P_IN> spliterator) {
             return helper.wrapAndCopyInto(makeSink(), spliterator).get();
