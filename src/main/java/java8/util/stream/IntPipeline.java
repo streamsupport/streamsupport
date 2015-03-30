@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -285,7 +285,7 @@ abstract class IntPipeline<E_IN>
 
     @Override
     public final IntStream flatMap(final IntFunction<? extends IntStream> mapper) {
-    	Objects.requireNonNull(mapper);
+        Objects.requireNonNull(mapper);
         return new StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                         StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT | StreamOpFlag.NOT_SIZED) {
             @Override
@@ -298,18 +298,18 @@ abstract class IntPipeline<E_IN>
 
                     @Override
                     public void accept(int t) {
-                    	IntStream result = null;
-                    	try {
-                    		result = mapper.apply(t);
+                        IntStream result = null;
+                        try {
+                            result = mapper.apply(t);
                             // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(i -> downstream.accept(i));
                             }
-                    	} finally {
-                    		if (result != null) {
-                    			result.close();
-                    		}
-                    	}
+                        } finally {
+                            if (result != null) {
+                                result.close();
+                            }
+                        }
                     }
                 };
             }
@@ -429,7 +429,8 @@ abstract class IntPipeline<E_IN>
 
     @Override
     public final long count() {
-        return mapToLong(e -> 1L).sum();
+        //return mapToLong(e -> 1L).sum();
+        return evaluate(ReduceOps.makeIntCounting());
     }
 
     @Override
@@ -468,7 +469,7 @@ abstract class IntPipeline<E_IN>
     public final <R> R collect(Supplier<R> supplier,
                                ObjIntConsumer<R> accumulator,
                                final BiConsumer<R, R> combiner) {
-    	Objects.requireNonNull(combiner);
+        Objects.requireNonNull(combiner);
         BinaryOperator<R> operator = (left, right) -> {
             combiner.accept(left, right);
             return left;

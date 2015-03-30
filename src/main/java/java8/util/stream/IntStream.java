@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -500,6 +500,24 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
      * }</pre>
      *
      * <p>This is a <a href="package-summary.html#StreamOps">terminal operation</a>.
+     *
+     * <p><b>API Note:</b><br>
+     * An implementation may choose to not execute the stream pipeline (either
+     * sequentially or in parallel) if it is capable of computing the count
+     * directly from the stream source.  In such cases no source elements will
+     * be traversed and no intermediate operations will be evaluated.
+     * Behavioral parameters with side-effects, which are strongly discouraged
+     * except for harmless cases such as debugging, may be affected.  For
+     * example, consider the following stream:
+     * <pre>{@code
+     *     IntStream s = IntStream.of(1, 2, 3, 4);
+     *     long count = s.peek(System.out::println).count();
+     * }</pre>
+     * The number of elements covered by the stream source is known and the
+     * intermediate operation, {@code peek}, does not inject into or remove
+     * elements from the stream (as may be the case for {@code flatMap} or
+     * {@code filter} operations).  Thus the count is 4 and there is no need to
+     * execute the pipeline and, as a side-effect, print out the elements.
      *
      * @return the count of elements in this stream
      */

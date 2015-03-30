@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -265,18 +265,18 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
                     @Override
                     public void accept(P_OUT u) {
-                    	Stream<? extends R> result = null;
-                    	try {
-                    		result = mapper.apply(u);
+                        Stream<? extends R> result = null;
+                        try {
+                            result = mapper.apply(u);
                             // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstream);
                             }
-                    	} finally {
-                    		if (result != null) {
-                    			result.close();
-                    		}
-                    	}
+                        } finally {
+                            if (result != null) {
+                                result.close();
+                            }
+                        }
                     }
                 };
             }
@@ -300,18 +300,18 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
                     @Override
                     public void accept(P_OUT u) {
-                    	IntStream result = null;
-                    	try {
-                    		result = mapper.apply(u);
+                        IntStream result = null;
+                        try {
+                            result = mapper.apply(u);
                             // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstreamAsInt);
                             }
-                    	} finally {
-                    		if (result != null) {
-                    			result.close();
-                    		}
-                    	}
+                        } finally {
+                            if (result != null) {
+                                result.close();
+                            }
+                        }
                     }
                 };
             }
@@ -335,18 +335,18 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
                     @Override
                     public void accept(P_OUT u) {
-                    	DoubleStream result = null;
-                    	try {
-                    		result = mapper.apply(u);
+                        DoubleStream result = null;
+                        try {
+                            result = mapper.apply(u);
                             // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstreamAsDouble);
                             }
-                    	} finally {
-                    		if (result != null) {
-                    			result.close();
-                    		}
-                    	}
+                        } finally {
+                            if (result != null) {
+                                result.close();
+                            }
+                        }
                     }
                 };
             }
@@ -370,18 +370,18 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
                     @Override
                     public void accept(P_OUT u) {
-                    	LongStream result = null;
-                    	try {
-                    		result = mapper.apply(u);
+                        LongStream result = null;
+                        try {
+                            result = mapper.apply(u);
                             // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstreamAsLong);
                             }
-                    	} finally {
-                    		if (result != null) {
-                    			result.close();
-                    		}
-                    	}
+                        } finally {
+                            if (result != null) {
+                                result.close();
+                            }
+                        }
                     }
                 };
             }
@@ -552,7 +552,8 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
     @Override
     public final long count() {
-        return mapToLong(e -> 1L).sum();
+        //return mapToLong(e -> 1L).sum();
+        return evaluate(ReduceOps.makeRefCounting());
     }
 
 
