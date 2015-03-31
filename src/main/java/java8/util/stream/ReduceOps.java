@@ -364,6 +364,11 @@ final class ReduceOps {
                     return spliterator.getExactSizeIfKnown();
                 return super.evaluateParallel(helper, spliterator);
             }
+
+            @Override
+            public int getOpFlags() {
+                return StreamOpFlag.NOT_ORDERED;
+            }
         };
     }
 
@@ -607,6 +612,11 @@ final class ReduceOps {
                 if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
                     return spliterator.getExactSizeIfKnown();
                 return super.evaluateParallel(helper, spliterator);
+            }
+
+            @Override
+            public int getOpFlags() {
+                return StreamOpFlag.NOT_ORDERED;
             }
         };
     }
@@ -852,6 +862,11 @@ final class ReduceOps {
                     return spliterator.getExactSizeIfKnown();
                 return super.evaluateParallel(helper, spliterator);
             }
+
+            @Override
+            public int getOpFlags() {
+                return StreamOpFlag.NOT_ORDERED;
+            }
         };
     }
 
@@ -1095,6 +1110,11 @@ final class ReduceOps {
                 if (StreamOpFlag.SIZED.isKnown(helper.getStreamAndOpFlags()))
                     return spliterator.getExactSizeIfKnown();
                 return super.evaluateParallel(helper, spliterator);
+            }
+
+            @Override
+            public int getOpFlags() {
+                return StreamOpFlag.NOT_ORDERED;
             }
         };
     }
