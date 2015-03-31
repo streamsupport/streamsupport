@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -226,10 +226,10 @@ public class UnorderedTest extends OpTestCase {
             return sink;
         }
 
-		@Override
-		public int opGetFlags() {
-			return StatelessTestOps.opGetFlags();
-		}
+        @Override
+        public int opGetFlags() {
+            return StatelessTestOps.opGetFlags();
+        }
     }
 
     static class CheckSetOrderedOp<T> extends CheckClearOrderedOp<T> {
@@ -257,7 +257,9 @@ public class UnorderedTest extends OpTestCase {
 
         final int lastLimitIndex = l;
         return s -> {
-            if (lastLimitIndex == -1)
+            // @bug 8075307
+            //if (lastLimitIndex == -1)
+            if (lastLimitIndex == -1 && fs.size() > 0)
                 s = fi.apply(s);
             for (int i = 0; i < fs.size(); i++) {
                 s = fs.get(i).apply(s);
