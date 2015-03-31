@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -321,7 +321,7 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     @Override
     @SuppressWarnings("unchecked")
     public S onClose(Runnable closeHandler) {
-    	Objects.requireNonNull(closeHandler);
+        Objects.requireNonNull(closeHandler);
         Runnable existingHandler = sourceStage.sourceCloseAction;
         sourceStage.sourceCloseAction =
                 (existingHandler == null)
@@ -386,49 +386,49 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
      *
      * @param terminalFlags Operation flags for the terminal operation
      */
-    private void parallelPrepare(int terminalFlags) {
-        @SuppressWarnings("rawtypes")
-        AbstractPipeline backPropagationHead = sourceStage;
-        if (sourceStage.sourceAnyStateful) {
-            int depth = 1;
-            for (AbstractPipeline u = sourceStage, p = sourceStage.nextStage;
-                 p != null;
-                 u = p, p = p.nextStage) {
-                int thisOpFlags = p.sourceOrOpFlags;
-                if (p.opIsStateful()) {
-                    // If the stateful operation is a short-circuit operation
-                    // then move the back propagation head forwards
-                    // NOTE: there are no size-injecting ops
-                    if (StreamOpFlag.SHORT_CIRCUIT.isKnown(thisOpFlags)) {
-                        backPropagationHead = p;
-                        // Clear the short circuit flag for next pipeline stage
-                        // This stage encapsulates short-circuiting, the next
-                        // stage may not have any short-circuit operations, and
-                        // if so spliterator.forEachRemaining should be used
-                        // for traversal
-                        thisOpFlags = thisOpFlags & ~StreamOpFlag.IS_SHORT_CIRCUIT;
-                    }
-
-                    depth = 0;
-                    // The following injects size, it is equivalent to:
-                    // StreamOpFlag.combineOpFlags(StreamOpFlag.IS_SIZED, p.combinedFlags);
-                    thisOpFlags = (thisOpFlags & ~StreamOpFlag.NOT_SIZED) | StreamOpFlag.IS_SIZED;
-                }
-                p.depth = depth++;
-                p.combinedFlags = StreamOpFlag.combineOpFlags(thisOpFlags, u.combinedFlags);
-            }
-        }
-
-        // Apply the upstream terminal flags
-        if (terminalFlags != 0) {
-            int upstreamTerminalFlags = terminalFlags & StreamOpFlag.UPSTREAM_TERMINAL_OP_MASK;
-            for ( @SuppressWarnings("rawtypes") AbstractPipeline p = backPropagationHead; p.nextStage != null; p = p.nextStage) {
-                p.combinedFlags = StreamOpFlag.combineOpFlags(upstreamTerminalFlags, p.combinedFlags);
-            }
-
-            combinedFlags = StreamOpFlag.combineOpFlags(terminalFlags, combinedFlags);
-        }
-    }
+//    private void parallelPrepare(int terminalFlags) {
+//        @SuppressWarnings("rawtypes")
+//        AbstractPipeline backPropagationHead = sourceStage;
+//        if (sourceStage.sourceAnyStateful) {
+//            int depth = 1;
+//            for (AbstractPipeline u = sourceStage, p = sourceStage.nextStage;
+//                 p != null;
+//                 u = p, p = p.nextStage) {
+//                int thisOpFlags = p.sourceOrOpFlags;
+//                if (p.opIsStateful()) {
+//                    // If the stateful operation is a short-circuit operation
+//                    // then move the back propagation head forwards
+//                    // NOTE: there are no size-injecting ops
+//                    if (StreamOpFlag.SHORT_CIRCUIT.isKnown(thisOpFlags)) {
+//                        backPropagationHead = p;
+//                        // Clear the short circuit flag for next pipeline stage
+//                        // This stage encapsulates short-circuiting, the next
+//                        // stage may not have any short-circuit operations, and
+//                        // if so spliterator.forEachRemaining should be used
+//                        // for traversal
+//                        thisOpFlags = thisOpFlags & ~StreamOpFlag.IS_SHORT_CIRCUIT;
+//                    }
+//
+//                    depth = 0;
+//                    // The following injects size, it is equivalent to:
+//                    // StreamOpFlag.combineOpFlags(StreamOpFlag.IS_SIZED, p.combinedFlags);
+//                    thisOpFlags = (thisOpFlags & ~StreamOpFlag.NOT_SIZED) | StreamOpFlag.IS_SIZED;
+//                }
+//                p.depth = depth++;
+//                p.combinedFlags = StreamOpFlag.combineOpFlags(thisOpFlags, u.combinedFlags);
+//            }
+//        }
+//
+//        // Apply the upstream terminal flags
+//        if (terminalFlags != 0) {
+//            int upstreamTerminalFlags = terminalFlags & StreamOpFlag.UPSTREAM_TERMINAL_OP_MASK;
+//            for ( @SuppressWarnings("rawtypes") AbstractPipeline p = backPropagationHead; p.nextStage != null; p = p.nextStage) {
+//                p.combinedFlags = StreamOpFlag.combineOpFlags(upstreamTerminalFlags, p.combinedFlags);
+//            }
+//
+//            combinedFlags = StreamOpFlag.combineOpFlags(terminalFlags, combinedFlags);
+//        }
+//    }
 
     /**
      * Get the source spliterator for this pipeline stage.  For a sequential or
@@ -453,24 +453,70 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
             throw new IllegalStateException(MSG_CONSUMED);
         }
 
-        if (isParallel()) {
-            // @@@ Merge parallelPrepare with the loop below and use the
-            //     spliterator characteristics to determine if SIZED
-            //     should be injected
-            parallelPrepare(terminalFlags);
+        boolean hasTerminalFlags = terminalFlags != 0;
+        if (isParallel() && sourceStage.sourceAnyStateful) {
+            // Adjust pipeline stages if there are stateful ops,
+            // and find the last short circuiting op, if any, that
+            // defines the head stage for back-propagation of terminal flags
+            @SuppressWarnings("rawtypes")
+            AbstractPipeline backPropagationHead = sourceStage;
+            int depth = 1;
+            for (@SuppressWarnings("rawtypes") AbstractPipeline p = sourceStage.nextStage;
+                 p != null;
+                 p = p.nextStage) {
+                if (p.opIsStateful()) {
+                    if (StreamOpFlag.SHORT_CIRCUIT.isKnown(p.sourceOrOpFlags)) {
+                        // If the stateful operation is a short-circuit operation
+                        // then move the back propagation head forwards
+                        // NOTE: there are no size-injecting ops
+                        backPropagationHead = p;
+                    }
+
+                    depth = 0;
+                }
+                p.depth = depth++;
+            }
 
             // Adapt the source spliterator, evaluating each stateful op
             // in the pipeline up to and including this pipeline stage
+            // Flags for each pipeline stage are adjusted accordingly
+            boolean backPropagate = false;
+            int upstreamTerminalFlags = terminalFlags & StreamOpFlag.UPSTREAM_TERMINAL_OP_MASK;
             for (AbstractPipeline u = sourceStage, p = sourceStage.nextStage, e = this;
                  u != e;
                  u = p, p = p.nextStage) {
 
-                if (p.opIsStateful()) {
-                    spliterator = p.opEvaluateParallelLazy(u, spliterator);
+                if (hasTerminalFlags &&
+                    (backPropagate || (backPropagate = (u == backPropagationHead)))) {
+                    // Back-propagate flags from the terminal operation
+                    u.combinedFlags = StreamOpFlag.combineOpFlags(upstreamTerminalFlags, u.combinedFlags);
                 }
+
+                int thisOpFlags = p.sourceOrOpFlags;
+                if (p.opIsStateful()) {
+                    if (StreamOpFlag.SHORT_CIRCUIT.isKnown(thisOpFlags)) {
+                        // Clear the short circuit flag for next pipeline stage
+                        // This stage encapsulates short-circuiting, the next
+                        // stage may not have any short-circuit operations, and
+                        // if so spliterator.forEachRemaining should be used
+                        // for traversal
+                        thisOpFlags = thisOpFlags & ~StreamOpFlag.IS_SHORT_CIRCUIT;
+                    }
+
+                    spliterator = p.opEvaluateParallelLazy(u, spliterator);
+
+                    // Inject or clear SIZED on the source pipeline stage
+                    // based on the stage's spliterator
+                    thisOpFlags = spliterator.hasCharacteristics(Spliterator.SIZED)
+                            ? (thisOpFlags & ~StreamOpFlag.NOT_SIZED) | StreamOpFlag.IS_SIZED
+                            : (thisOpFlags & ~StreamOpFlag.IS_SIZED) | StreamOpFlag.NOT_SIZED;
+                }
+                p.combinedFlags = StreamOpFlag.combineOpFlags(thisOpFlags, u.combinedFlags);
             }
         }
-        else if (terminalFlags != 0)  {
+
+        if (hasTerminalFlags)  {
+            // Apply flags from the terminal operation to last pipeline stage
             combinedFlags = StreamOpFlag.combineOpFlags(terminalFlags, combinedFlags);
         }
 
@@ -558,39 +604,39 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     final <P_IN> Sink<P_IN> wrapSink(final SinkConsumer<E_OUT> sink) {
         Objects.requireNonNull(sink);
 
-    	Sink<E_OUT> trampoline = new Sink<E_OUT>() {
-			@Override
-			public void accept(E_OUT t) {
-				sink.accept(t);
-			}
-			@Override
-			public void begin(long size) {
-				SinkDefaults.begin(this, size);
-			}
-			@Override
-			public void end() {
-				SinkDefaults.end(this);
-			}
-			@Override
-			public boolean cancellationRequested() {
-				return SinkDefaults.cancellationRequested(this);
-			}
-			@Override
-			public void accept(int value) {
-				SinkDefaults.accept(this, value);
-			}
-			@Override
-			public void accept(long value) {
-				SinkDefaults.accept(this, value);
-			}
-			@Override
-			public void accept(double value) {
-				SinkDefaults.accept(this, value);
-			}
-		};
+        Sink<E_OUT> trampoline = new Sink<E_OUT>() {
+            @Override
+            public void accept(E_OUT t) {
+                sink.accept(t);
+            }
+            @Override
+            public void begin(long size) {
+                SinkDefaults.begin(this, size);
+            }
+            @Override
+            public void end() {
+                SinkDefaults.end(this);
+            }
+            @Override
+            public boolean cancellationRequested() {
+                return SinkDefaults.cancellationRequested(this);
+            }
+            @Override
+            public void accept(int value) {
+                SinkDefaults.accept(this, value);
+            }
+            @Override
+            public void accept(long value) {
+                SinkDefaults.accept(this, value);
+            }
+            @Override
+            public void accept(double value) {
+                SinkDefaults.accept(this, value);
+            }
+        };
 
         for (@SuppressWarnings("rawtypes") AbstractPipeline p = AbstractPipeline.this; p.depth > 0; p = p.previousStage) {
-        	trampoline = p.opWrapSink(p.previousStage.combinedFlags, trampoline);
+            trampoline = p.opWrapSink(p.previousStage.combinedFlags, trampoline);
         }
         return (Sink<P_IN>) trampoline;
     }
