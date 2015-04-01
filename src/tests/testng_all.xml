@@ -61,9 +61,11 @@
 
       <class name="org.openjdk.tests.java.util.stream.DistinctOpTest"/>  <!-- block 6 (takes long on KitKat) -->
       <class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
+      <class name="org.openjdk.tests.java.util.stream.CollectorsTest"/>
       <class name="org.openjdk.tests.java.util.stream.FindAnyOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.StreamBuilderTest"/>
       <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.FlatMapOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.SliceOpTest"/>
 
       <class name="org.openjdk.tests.java.util.stream.FilterOpTest"/> <!-- block 7 -->
