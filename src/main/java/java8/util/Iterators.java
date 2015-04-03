@@ -57,7 +57,7 @@ public final class Iterators {
      * @since 1.8
      */
     public static <E> void forEachRemaining(Iterator<E> it, Consumer<? super E> action) {
-    	Objects.requireNonNull(it);
+        Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
             action.accept(it.next());
@@ -83,7 +83,7 @@ public final class Iterators {
      * @since 1.8
      */
     public static void forEachRemaining(PrimitiveIterator.OfInt it, IntConsumer action) {
-    	Objects.requireNonNull(it);
+        Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
             action.accept(it.next());
@@ -109,7 +109,7 @@ public final class Iterators {
      * @since 1.8
      */
     public static void forEachRemaining(PrimitiveIterator.OfLong it, LongConsumer action) {
-    	Objects.requireNonNull(it);
+        Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
             action.accept(it.next());
@@ -135,14 +135,14 @@ public final class Iterators {
      * @since 1.8
      */
     public static void forEachRemaining(PrimitiveIterator.OfDouble it, DoubleConsumer action) {
-    	Objects.requireNonNull(it);
+        Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
             action.accept(it.next());
         }
     }
 
-	private Iterators() {
-		throw new AssertionError();
-	}
+    private Iterators() {
+        throw new AssertionError();
+    }
 }
