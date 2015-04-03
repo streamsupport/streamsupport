@@ -43,7 +43,9 @@ public class StreamLinkTest extends OpTestCase {
         };
     }
 
-    private List<Integer> sizes = Arrays.asList(0, 1, 2, 3, 4, 5, 255, 1000);
+    // sized down for tests on Dalvik VM (ticket#31)
+    //private List<Integer> sizes = Arrays.asList(0, 1, 2, 3, 4, 5, 255, 1000);
+    private List<Integer> sizes = Arrays.asList(0, 1, 2, 3, 4, 5, 255, 256);
 
     @Test(dataProvider = "StreamTestData<Integer>", dataProviderClass = StreamTestDataProvider.class)
     public void testManyStreams(String name, TestData.OfRef<Integer> data) {
