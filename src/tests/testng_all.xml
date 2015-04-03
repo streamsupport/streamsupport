@@ -3,7 +3,8 @@
 <suite name="streamsupport-OpenJDK-TestSuite">
   <test verbose="2" name="streamsupport_all_tests">
     <classes>
-      <class name="java8.util.stream.FlagOpTest"/> <!-- block 1 -->
+      <!-- block 1 -->
+      <class name="java8.util.stream.FlagOpTest"/>
       <class name="java8.util.stream.StreamOpFlagsTest"/>
       <class name="java8.util.stream.StreamFlagsTest"/>
       <class name="java8.util.stream.NodeBuilderTest"/>
@@ -16,7 +17,8 @@
       <class name="java8.util.stream.SliceSpliteratorTest"/>
       <class name="java8.util.stream.StreamReuseTest"/>
 
-      <class name="org.openjdk.tests.java.util.arrays.ParallelPrefix"/> <!-- block 2 -->
+      <!-- block 2 -->
+      <class name="org.openjdk.tests.java.util.arrays.ParallelPrefix"/>
       <class name="org.openjdk.tests.java.util.arrays.ParallelSorting"/>
       <class name="org.openjdk.tests.java.util.arrays.SetAllTest"/>
       <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
@@ -25,7 +27,8 @@
       <class name="org.openjdk.tests.java.util.concurrent.Basic"/>
       <class name="org.openjdk.tests.java.util.concurrent.ThenComposeAsyncTest"/>
 
-      <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/> <!-- block 3 -->
+      <!-- block 3 -->
+      <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/>
       <class name="org.openjdk.tests.java.util.stream.SummaryStatisticsTest"/>
       <class name="org.openjdk.tests.java.util.stream.ForEachOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.IntUniqOpTest"/>
@@ -41,7 +44,8 @@
       <class name="org.openjdk.tests.java.util.stream.RangeTest"/>
       <class name="org.openjdk.tests.java.util.stream.InfiniteStreamWithLimitOpTest"/>
 
-      <class name="org.openjdk.tests.java.util.stream.IntPrimitiveOpsTests"/> <!-- block 4 -->
+      <!-- block 4 -->
+      <class name="org.openjdk.tests.java.util.stream.IntPrimitiveOpsTests"/>
       <class name="org.openjdk.tests.java.util.stream.LongPrimitiveOpsTests"/>
       <class name="org.openjdk.tests.java.util.stream.DoublePrimitiveOpsTests"/>
       <class name="org.openjdk.tests.java.util.stream.PrimitiveAverageOpTest"/>
@@ -50,7 +54,8 @@
       <class name="org.openjdk.tests.java.util.stream.ReduceTest"/>
       <class name="org.openjdk.tests.java.util.stream.CollectionAndMapModifyStreamTest"/>
 
-      <class name="org.openjdk.tests.java.util.stream.SequentialOpTest"/> <!-- block 5 -->
+      <!-- block 5 -->
+      <class name="org.openjdk.tests.java.util.stream.SequentialOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.MinMaxTest"/>
       <class name="org.openjdk.tests.java.util.stream.StreamParSeqTest"/>
       <class name="org.openjdk.tests.java.util.stream.IntSliceOpTest"/>
@@ -59,22 +64,23 @@
       <class name="org.openjdk.tests.java.util.stream.TeeOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.MatchOpTest"/>
 
-      <class name="org.openjdk.tests.java.util.stream.DistinctOpTest"/>  <!-- block 6 (takes long on KitKat) -->
-      <!--class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/-->
+      <!-- block 6 (takes long on KitKat) -->
+      <class name="org.openjdk.tests.java.util.stream.DistinctOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.CollectorsTest"/>
       <class name="org.openjdk.tests.java.util.stream.FindAnyOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.StreamBuilderTest"/>
-      <!--class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/-->
       <class name="org.openjdk.tests.java.util.stream.FlatMapOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.SliceOpTest"/>
 
-      <class name="org.openjdk.tests.java.util.stream.FilterOpTest"/> <!-- block 7 -->
+      <!-- block 7 -->
+      <class name="org.openjdk.tests.java.util.stream.FilterOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.ToArrayOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.FindFirstOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.MapOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.ConcatTest"/>
 
-      <class name="org.openjdk.other.tests.function.BasicTest"/> <!-- block 8 -->
+      <!-- block 8 -->
+      <class name="org.openjdk.other.tests.function.BasicTest"/>
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.MapTest"/>
@@ -99,9 +105,14 @@
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
 
-      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/> <!-- block 9 -->
+      <!-- block 9 -->
+      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
+
+      <!-- block 10 (superseded tests) -->
+      <!--class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
+      <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/-->
 
     </classes>
   </test>
