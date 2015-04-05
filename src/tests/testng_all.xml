@@ -34,11 +34,9 @@
       <class name="org.openjdk.tests.java.util.stream.IntUniqOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.SpliteratorTest"/>
       <class name="org.openjdk.tests.java.util.stream.StreamSpliteratorTest"/>
-      <class name="org.openjdk.tests.java.util.stream.CountTest"/>
       <class name="org.openjdk.tests.java.util.stream.CountTest2"/>
       <class name="org.openjdk.tests.java.util.stream.ConcatOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.GroupByOpTest"/>
-      <class name="org.openjdk.tests.java.util.stream.CountLargeTest"/>
       <class name="org.openjdk.tests.java.util.stream.CountLargeTest2"/>
       <class name="org.openjdk.tests.java.util.stream.ReduceByOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.RangeTest"/>
@@ -111,7 +109,9 @@
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
 
       <!-- block 10 (superseded tests) -->
-      <!--class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
+      <!--class name="org.openjdk.tests.java.util.stream.CountTest"/>
+      <class name="org.openjdk.tests.java.util.stream.CountLargeTest"/>
+      <class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
       <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/-->
 
     </classes>
