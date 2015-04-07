@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,6 +37,7 @@ import java8.util.function.Consumer;
 import java8.util.function.Function;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
+import java8.util.stream.Stream;
 
 import org.testng.annotations.Test;
 
@@ -337,6 +338,26 @@ public class Basic {
             }
         });
         assertSame(l, fixture);
+    }
+
+    @Test(groups = "unit")
+    public void testStream() {
+        {
+            Stream<String> s = Optional.<String>empty().stream();
+            assertFalse(s.isParallel());
+
+            Object[] es = s.toArray();
+            assertEquals(es.length, 0);
+        }
+
+        {
+            Stream<String> s = Optional.of("Duke").stream();
+            assertFalse(s.isParallel());
+
+            String[] es = s.toArray(String[]::new);
+            assertEquals(es.length, 1);
+            assertEquals(es[0], "Duke");
+        }
     }
 
     private static class ObscureException extends RuntimeException {

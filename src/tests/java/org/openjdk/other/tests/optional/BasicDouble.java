@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,6 +35,7 @@ import java8.util.function.DoubleConsumer;
 import java8.util.function.DoubleSupplier;
 import java8.util.function.Supplier;
 import java8.util.OptionalDouble;
+import java8.util.stream.DoubleStream;
 
 import static org.testng.Assert.*;
 
@@ -69,40 +70,40 @@ public class BasicDouble {
         }));
     }
 
-        @Test(expectedExceptions=NoSuchElementException.class)
-        public void testEmptyGet() {
-            OptionalDouble empty = OptionalDouble.empty();
+    @Test(expectedExceptions=NoSuchElementException.class)
+    public void testEmptyGet() {
+        OptionalDouble empty = OptionalDouble.empty();
 
-            double got = empty.getAsDouble();
-        }
+        double got = empty.getAsDouble();
+    }
 
-        @Test(expectedExceptions=NullPointerException.class)
-        public void testEmptyOrElseGetNull() {
-            OptionalDouble empty = OptionalDouble.empty();
+    @Test(expectedExceptions=NullPointerException.class)
+    public void testEmptyOrElseGetNull() {
+        OptionalDouble empty = OptionalDouble.empty();
 
-            double got = empty.orElseGet(null);
-        }
+        double got = empty.orElseGet(null);
+    }
 
-        @Test(expectedExceptions=NullPointerException.class)
-        public void testEmptyOrElseThrowNull() throws Throwable {
-            OptionalDouble empty = OptionalDouble.empty();
+    @Test(expectedExceptions=NullPointerException.class)
+    public void testEmptyOrElseThrowNull() throws Throwable {
+        OptionalDouble empty = OptionalDouble.empty();
 
-            double got = empty.orElseThrow(null);
-        }
+        double got = empty.orElseThrow(null);
+    }
 
-        @Test(expectedExceptions=ObscureException.class)
-        public void testEmptyOrElseThrow() throws Exception {
-            OptionalDouble empty = OptionalDouble.empty();
-            double got = empty.orElseThrow(new Supplier<ObscureException>() {
-                @Override
-                public ObscureException get() {
-                    return new ObscureException();
-                }
-            });
-        }
+    @Test(expectedExceptions=ObscureException.class)
+    public void testEmptyOrElseThrow() throws Exception {
+        OptionalDouble empty = OptionalDouble.empty();
+        double got = empty.orElseThrow(new Supplier<ObscureException>() {
+            @Override
+            public ObscureException get() {
+                return new ObscureException();
+            }
+        });
+    }
 
-        @Test(groups = "unit")
-        public void testPresent() {
+    @Test(groups = "unit")
+    public void testPresent() {
         OptionalDouble empty = OptionalDouble.empty();
         OptionalDouble present = OptionalDouble.of(1.0);
 
@@ -147,6 +148,26 @@ public class BasicDouble {
                 return new ObscureException();
             }
         }));
+    }
+
+    @Test(groups = "unit")
+    public void testStream() {
+        {
+            DoubleStream s = OptionalDouble.empty().stream();
+            assertFalse(s.isParallel());
+
+            double[] es = s.toArray();
+            assertEquals(es.length, 0);
+        }
+
+        {
+            DoubleStream s = OptionalDouble.of(42.0).stream();
+            assertFalse(s.isParallel());
+
+            double[] es = s.toArray();
+            assertEquals(es.length, 1);
+            assertEquals(es[0], 42.0);
+        }
     }
 
     private static class ObscureException extends RuntimeException {

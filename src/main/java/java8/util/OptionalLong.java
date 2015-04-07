@@ -30,6 +30,8 @@ import java8.lang.Longs;
 import java8.util.function.LongConsumer;
 import java8.util.function.LongSupplier;
 import java8.util.function.Supplier;
+import java8.util.stream.LongStream;
+import java8.util.stream.LongStreams;
 
 /**
  * A container object which may or may not contain a {@code long} value.
@@ -178,6 +180,30 @@ public final class OptionalLong {
             action.accept(value);
         } else {
             emptyAction.run();
+        }
+    }
+
+    /**
+     * If a value is present return a sequential {@link LongStream} containing
+     * only that value, otherwise return an empty {@code LongStream}.
+     *
+     * <p><b>API Note:</b><br>
+     * This method can be used to transform a {@code Stream} of
+     * optional longs to a {@code LongStream} of present longs:
+     *
+     * <pre>{@code
+     *     Stream<OptionalLong> os = ..
+     *     LongStream s = os.flatMapToLong(OptionalLong::stream)
+     * }</pre>
+     *
+     * @return the optional value as a {@code LongStream}
+     * @since 1.9
+     */
+    public LongStream stream() {
+        if (isPresent) {
+            return LongStreams.of(value);
+        } else {
+            return LongStreams.empty();
         }
     }
 

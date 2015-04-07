@@ -31,6 +31,8 @@ import java8.util.function.Consumer;
 import java8.util.function.Function;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
+import java8.util.stream.Stream;
+import java8.util.stream.StreamSupport;
 
 /**
  * A container object which may or may not contain a non-null value.
@@ -195,10 +197,11 @@ public final class Optional<T> {
      */
     public Optional<T> filter(Predicate<? super T> predicate) {
         Objects.requireNonNull(predicate);
-        if (!isPresent())
+        if (!isPresent()) {
             return this;
-        else
+        } else {
             return predicate.test(value) ? this : empty();
+        }
     }
 
     /**
@@ -232,9 +235,9 @@ public final class Optional<T> {
      */
     public<U> Optional<U> map(Function<? super T, ? extends U> mapper) {
         Objects.requireNonNull(mapper);
-        if (!isPresent())
+        if (!isPresent()) {
             return empty();
-        else {
+        } else {
             return Optional.ofNullable(mapper.apply(value));
         }
     }
@@ -258,10 +261,34 @@ public final class Optional<T> {
      */
     public<U> Optional<U> flatMap(Function<? super T, Optional<U>> mapper) {
         Objects.requireNonNull(mapper);
-        if (!isPresent())
+        if (!isPresent()) {
             return empty();
-        else {
+        } else {
             return Objects.requireNonNull(mapper.apply(value));
+        }
+    }
+
+    /**
+     * If a value is present return a sequential {@link Stream} containing only
+     * that value, otherwise return an empty {@code Stream}.
+     *
+     * <p><b>API Note:</b><br>
+     * This method can be used to transform a {@code Stream} of
+     * optional elements to a {@code Stream} of present value elements:
+     *
+     * <pre>{@code
+     *     Stream<Optional<T>> os = ..
+     *     Stream<T> s = os.flatMap(Optional::stream)
+     * }</pre>
+     *
+     * @return the optional value as a {@code Stream}
+     * @since 1.9
+     */
+    public Stream<T> stream() {
+        if (!isPresent()) {
+            return StreamSupport.empty();
+        } else {
+            return StreamSupport.of(value);
         }
     }
 
