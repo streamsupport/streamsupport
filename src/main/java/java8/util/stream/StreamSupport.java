@@ -80,6 +80,21 @@ public final class StreamSupport {
     }
 
     /**
+     * Returns a sequential {@code Stream} containing a single element, if
+     * non-null, otherwise returns an empty {@code Stream}.
+     *
+     * @param t the single element
+     * @param <T> the type of stream elements
+     * @return a stream with a single element if the specified element
+     *         is non-null, otherwise an empty stream
+     * @since 1.9
+     */
+    public static<T> Stream<T> ofNullable(T t) {
+        return t == null ? StreamSupport.empty()
+                         : StreamSupport.stream(new Streams.StreamBuilderImpl<>(t), false);
+    }
+
+    /**
      * Returns a sequential ordered stream whose elements are the specified values.
      *
      * @param <T> the type of stream elements
@@ -123,10 +138,10 @@ public final class StreamSupport {
                 return t = (t == Streams.NONE) ? seed : f.apply(t);
             }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("remove");
-			}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
+            }
         };
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
                 iterator,
@@ -200,194 +215,194 @@ public final class StreamSupport {
         return builder;
     }
 
-	/**
-	 * Creates a new sequential {@code Stream} using either the given
-	 * collection's {@link java.util.Collection#iterator()} as the source of
-	 * elements for an internally created {@code Spliterator} which will report
-	 * the collection's {@link java.util.Collection#size()} as its initial size
-	 * or a specialized {@code Spliterator} implementation (effectively the same
-	 * one that Java 8 uses) if the passed {@code Collection} is one of the
-	 * types listed below.
-	 *
-	 * <ul>
-	 * <li>java.util.ArrayList</li>
-	 * <li>java.util.Arrays.ArrayList</li>
-	 * <li>java.util.ArrayDeque</li>
-	 * <li>java.util.Vector</li>
-	 * <li>java.util.LinkedList</li>
-	 * <li>java.util.HashSet</li>
-	 * <li>java.util.LinkedHashSet</li>
-	 * <li>java.util.PriorityQueue</li>
-	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
-	 * <li>java.util.concurrent.LinkedBlockingQueue</li>
-	 * <li>java.util.concurrent.LinkedBlockingDeque</li>
-	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
-	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
-	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
-	 * <li>The collections returned from the java.util.HashMap methods
-	 * #keySet(), #entrySet() and #values()</li>
-	 * </ul>
-	 *
-	 * <p>
-	 * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
-	 * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
-	 * collection when the {@code Stream} was created, otherwise the created
-	 * spliterator is
-	 * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
-	 * the <em>fail-fast</em> properties of the collection's iterator, and
-	 * implements {@code trySplit} to permit limited parallelism.
-	 *
-	 * <p>
-	 * The created spliterator is only traversed, split, or queried for
-	 * estimated size after the terminal operation of the stream pipeline
-	 * commences.
-	 * 
-	 * @param <T>
-	 *            Type of elements
-	 * @param c
-	 *            The collection
-	 * @return a new sequential {@code Stream}
-	 * @throws NullPointerException
-	 *             if the given collection is {@code null}
-	 */
-	public static <T> Stream<T> stream(Collection<? extends T> c) {
-		return stream(Spliterators.spliterator(c), false);
-	}
-
-	/**
-	 * Creates a new possibly parallel {@code Stream} using either the given
-	 * collection's {@link java.util.Collection#iterator()} as the source of
-	 * elements for an internally created {@code Spliterator} which will report
-	 * the collection's {@link java.util.Collection#size()} as its initial size
-	 * or a specialized {@code Spliterator} implementation (effectively the same
-	 * one that Java 8 uses) if the passed {@code Collection} is one of the
-	 * types listed below.
-	 *
-	 * <ul>
-	 * <li>java.util.ArrayList</li>
-	 * <li>java.util.Arrays.ArrayList</li>
-	 * <li>java.util.ArrayDeque</li>
-	 * <li>java.util.Vector</li>
-	 * <li>java.util.LinkedList</li>
-	 * <li>java.util.HashSet</li>
-	 * <li>java.util.LinkedHashSet</li>
-	 * <li>java.util.PriorityQueue</li>
-	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
-	 * <li>java.util.concurrent.LinkedBlockingQueue</li>
-	 * <li>java.util.concurrent.LinkedBlockingDeque</li>
-	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
-	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
-	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
-	 * <li>The collections returned from the java.util.HashMap methods
-	 * #keySet(), #entrySet() and #values()</li>
-	 * </ul>
-	 *
-	 * <p>
-	 * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
-	 * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
-	 * collection when the {@code Stream} was created, otherwise the created
-	 * spliterator is
-	 * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
-	 * the <em>fail-fast</em> properties of the collection's iterator, and
-	 * implements {@code trySplit} to permit limited parallelism.
-	 *
-	 * <p>
-	 * The created spliterator is only traversed, split, or queried for
-	 * estimated size after the terminal operation of the stream pipeline
-	 * commences.
-	 * 
-	 * @param <T>
-	 *            Type of elements
-	 * @param c
-	 *            The collection
-	 * @return a new possibly parallel {@code Stream}
-	 * @throws NullPointerException
-	 *             if the given collection is {@code null}
-	 */
-	public static <T> Stream<T> parallelStream(Collection<? extends T> c) {
-		return stream(Spliterators.spliterator(c), true);
-	}
-
-	/**
-	 * Creates a new sequential {@code Stream} using the given collection's
-	 * {@link java.util.Collection#iterator()} as the source of elements for an
-	 * internally created {@code Spliterator} which will report the collection's
-	 * {@link java.util.Collection#size()} as its initial size.
-	 *
-	 * <p>
-	 * The created spliterator is
-	 * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
-	 * the <em>fail-fast</em> properties of the collection's iterator, and
-	 * implements {@code trySplit} to permit limited parallelism.
-	 *
-	 * <p>
-	 * The created spliterator is only traversed, split, or queried for
-	 * estimated size after the terminal operation of the stream pipeline
-	 * commences.
-	 * 
-	 * <p>
-	 * If the collection is immutable it is recommended to report a
-	 * characteristic of {@code IMMUTABLE}. The characteristics {@code SIZED}
-	 * and {@code SUBSIZED} are additionally (automatically) reported unless
-	 * {@code CONCURRENT} is supplied.
-	 * 
-	 * @param <T>
-	 *            Type of elements
-	 * @param c
-	 *            The collection
-	 * @param characteristics
-	 *            Characteristics of the source collection's iterator or
-	 *            elements. The characteristics {@code SIZED} and
-	 *            {@code SUBSIZED} are additionally reported unless
-	 *            {@code CONCURRENT} is supplied.
-	 * @return a new sequential {@code Stream}
-	 * @throws NullPointerException if the given collection is {@code null}
-	 */
-    public static <T> Stream<T> stream(Collection<? extends T> c, int characteristics) {
-    	return stream(c, characteristics, false);
+    /**
+     * Creates a new sequential {@code Stream} using either the given
+     * collection's {@link java.util.Collection#iterator()} as the source of
+     * elements for an internally created {@code Spliterator} which will report
+     * the collection's {@link java.util.Collection#size()} as its initial size
+     * or a specialized {@code Spliterator} implementation (effectively the same
+     * one that Java 8 uses) if the passed {@code Collection} is one of the
+     * types listed below.
+     *
+     * <ul>
+     * <li>java.util.ArrayList</li>
+     * <li>java.util.Arrays.ArrayList</li>
+     * <li>java.util.ArrayDeque</li>
+     * <li>java.util.Vector</li>
+     * <li>java.util.LinkedList</li>
+     * <li>java.util.HashSet</li>
+     * <li>java.util.LinkedHashSet</li>
+     * <li>java.util.PriorityQueue</li>
+     * <li>java.util.concurrent.ArrayBlockingQueue</li>
+     * <li>java.util.concurrent.LinkedBlockingQueue</li>
+     * <li>java.util.concurrent.LinkedBlockingDeque</li>
+     * <li>java.util.concurrent.PriorityBlockingQueue</li>
+     * <li>java.util.concurrent.CopyOnWriteArrayList</li>
+     * <li>java.util.concurrent.CopyOnWriteArraySet</li>
+     * <li>The collections returned from the java.util.HashMap methods
+     * #keySet(), #entrySet() and #values()</li>
+     * </ul>
+     *
+     * <p>
+     * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
+     * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
+     * collection when the {@code Stream} was created, otherwise the created
+     * spliterator is
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * the <em>fail-fast</em> properties of the collection's iterator, and
+     * implements {@code trySplit} to permit limited parallelism.
+     *
+     * <p>
+     * The created spliterator is only traversed, split, or queried for
+     * estimated size after the terminal operation of the stream pipeline
+     * commences.
+     * 
+     * @param <T>
+     *            Type of elements
+     * @param c
+     *            The collection
+     * @return a new sequential {@code Stream}
+     * @throws NullPointerException
+     *             if the given collection is {@code null}
+     */
+    public static <T> Stream<T> stream(Collection<? extends T> c) {
+        return stream(Spliterators.spliterator(c), false);
     }
 
-	/**
-	 * Creates a new sequential or parallel {@code Stream} using the given
-	 * collection's {@link java.util.Collection#iterator()} as the source of
-	 * elements for an internally created {@code Spliterator} which will report
-	 * the collection's {@link java.util.Collection#size()} as its initial size.
-	 *
-	 * <p>
-	 * The created spliterator is
-	 * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
-	 * the <em>fail-fast</em> properties of the collection's iterator, and
-	 * implements {@code trySplit} to permit limited parallelism.
-	 *
-	 * <p>
-	 * The created spliterator is only traversed, split, or queried for
-	 * estimated size after the terminal operation of the stream pipeline
-	 * commences.
-	 * <p>
-	 * If possible for the collection, it is strongly recommended to report a
-	 * characteristic of {@code IMMUTABLE} or {@code CONCURRENT} especially if
-	 * you want a parallel {@code Stream}. The characteristics {@code SIZED} and
-	 * {@code SUBSIZED} are additionally (automatically) reported unless
-	 * {@code CONCURRENT} is supplied.
-	 * 
-	 * @param <T>
-	 *            Type of elements
-	 * @param c
-	 *            The collection
-	 * @param characteristics
-	 *            Characteristics of the source collection's iterator or
-	 *            elements. The characteristics {@code SIZED} and
-	 *            {@code SUBSIZED} are additionally reported unless
-	 *            {@code CONCURRENT} is supplied.
-	 * @param parallel
-	 *            if {@code true} then the returned stream is a parallel stream;
-	 *            if {@code false} the returned stream is a sequential stream.
-	 * @return a new sequential or parallel {@code Stream}
-	 * @throws NullPointerException if the given collection is {@code null}
-	 */
+    /**
+     * Creates a new possibly parallel {@code Stream} using either the given
+     * collection's {@link java.util.Collection#iterator()} as the source of
+     * elements for an internally created {@code Spliterator} which will report
+     * the collection's {@link java.util.Collection#size()} as its initial size
+     * or a specialized {@code Spliterator} implementation (effectively the same
+     * one that Java 8 uses) if the passed {@code Collection} is one of the
+     * types listed below.
+     *
+     * <ul>
+     * <li>java.util.ArrayList</li>
+     * <li>java.util.Arrays.ArrayList</li>
+     * <li>java.util.ArrayDeque</li>
+     * <li>java.util.Vector</li>
+     * <li>java.util.LinkedList</li>
+     * <li>java.util.HashSet</li>
+     * <li>java.util.LinkedHashSet</li>
+     * <li>java.util.PriorityQueue</li>
+     * <li>java.util.concurrent.ArrayBlockingQueue</li>
+     * <li>java.util.concurrent.LinkedBlockingQueue</li>
+     * <li>java.util.concurrent.LinkedBlockingDeque</li>
+     * <li>java.util.concurrent.PriorityBlockingQueue</li>
+     * <li>java.util.concurrent.CopyOnWriteArrayList</li>
+     * <li>java.util.concurrent.CopyOnWriteArraySet</li>
+     * <li>The collections returned from the java.util.HashMap methods
+     * #keySet(), #entrySet() and #values()</li>
+     * </ul>
+     *
+     * <p>
+     * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
+     * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
+     * collection when the {@code Stream} was created, otherwise the created
+     * spliterator is
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * the <em>fail-fast</em> properties of the collection's iterator, and
+     * implements {@code trySplit} to permit limited parallelism.
+     *
+     * <p>
+     * The created spliterator is only traversed, split, or queried for
+     * estimated size after the terminal operation of the stream pipeline
+     * commences.
+     * 
+     * @param <T>
+     *            Type of elements
+     * @param c
+     *            The collection
+     * @return a new possibly parallel {@code Stream}
+     * @throws NullPointerException
+     *             if the given collection is {@code null}
+     */
+    public static <T> Stream<T> parallelStream(Collection<? extends T> c) {
+        return stream(Spliterators.spliterator(c), true);
+    }
+
+    /**
+     * Creates a new sequential {@code Stream} using the given collection's
+     * {@link java.util.Collection#iterator()} as the source of elements for an
+     * internally created {@code Spliterator} which will report the collection's
+     * {@link java.util.Collection#size()} as its initial size.
+     *
+     * <p>
+     * The created spliterator is
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * the <em>fail-fast</em> properties of the collection's iterator, and
+     * implements {@code trySplit} to permit limited parallelism.
+     *
+     * <p>
+     * The created spliterator is only traversed, split, or queried for
+     * estimated size after the terminal operation of the stream pipeline
+     * commences.
+     * 
+     * <p>
+     * If the collection is immutable it is recommended to report a
+     * characteristic of {@code IMMUTABLE}. The characteristics {@code SIZED}
+     * and {@code SUBSIZED} are additionally (automatically) reported unless
+     * {@code CONCURRENT} is supplied.
+     * 
+     * @param <T>
+     *            Type of elements
+     * @param c
+     *            The collection
+     * @param characteristics
+     *            Characteristics of the source collection's iterator or
+     *            elements. The characteristics {@code SIZED} and
+     *            {@code SUBSIZED} are additionally reported unless
+     *            {@code CONCURRENT} is supplied.
+     * @return a new sequential {@code Stream}
+     * @throws NullPointerException if the given collection is {@code null}
+     */
+    public static <T> Stream<T> stream(Collection<? extends T> c, int characteristics) {
+        return stream(c, characteristics, false);
+    }
+
+    /**
+     * Creates a new sequential or parallel {@code Stream} using the given
+     * collection's {@link java.util.Collection#iterator()} as the source of
+     * elements for an internally created {@code Spliterator} which will report
+     * the collection's {@link java.util.Collection#size()} as its initial size.
+     *
+     * <p>
+     * The created spliterator is
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * the <em>fail-fast</em> properties of the collection's iterator, and
+     * implements {@code trySplit} to permit limited parallelism.
+     *
+     * <p>
+     * The created spliterator is only traversed, split, or queried for
+     * estimated size after the terminal operation of the stream pipeline
+     * commences.
+     * <p>
+     * If possible for the collection, it is strongly recommended to report a
+     * characteristic of {@code IMMUTABLE} or {@code CONCURRENT} especially if
+     * you want a parallel {@code Stream}. The characteristics {@code SIZED} and
+     * {@code SUBSIZED} are additionally (automatically) reported unless
+     * {@code CONCURRENT} is supplied.
+     * 
+     * @param <T>
+     *            Type of elements
+     * @param c
+     *            The collection
+     * @param characteristics
+     *            Characteristics of the source collection's iterator or
+     *            elements. The characteristics {@code SIZED} and
+     *            {@code SUBSIZED} are additionally reported unless
+     *            {@code CONCURRENT} is supplied.
+     * @param parallel
+     *            if {@code true} then the returned stream is a parallel stream;
+     *            if {@code false} the returned stream is a sequential stream.
+     * @return a new sequential or parallel {@code Stream}
+     * @throws NullPointerException if the given collection is {@code null}
+     */
     public static <T> Stream<T> stream(Collection<? extends T> c, int characteristics, boolean parallel) {
-    	Objects.requireNonNull(c);
-    	return stream(Spliterators.spliterator(c, characteristics), parallel);
+        Objects.requireNonNull(c);
+        return stream(Spliterators.spliterator(c, characteristics), parallel);
     }
 
     /**
