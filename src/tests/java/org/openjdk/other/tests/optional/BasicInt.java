@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,6 +35,7 @@ import java8.util.OptionalInt;
 import java8.util.function.IntConsumer;
 import java8.util.function.IntSupplier;
 import java8.util.function.Supplier;
+import java8.util.stream.IntStream;
 
 import org.testng.annotations.Test;
 
@@ -69,40 +70,40 @@ public class BasicInt {
         }));
     }
 
-        @Test(expectedExceptions=NoSuchElementException.class)
-        public void testEmptyGet() {
-            OptionalInt empty = OptionalInt.empty();
+    @Test(expectedExceptions=NoSuchElementException.class)
+    public void testEmptyGet() {
+        OptionalInt empty = OptionalInt.empty();
 
-            int got = empty.getAsInt();
-        }
+        int got = empty.getAsInt();
+    }
 
-        @Test(expectedExceptions=NullPointerException.class)
-        public void testEmptyOrElseGetNull() {
-            OptionalInt empty = OptionalInt.empty();
+    @Test(expectedExceptions=NullPointerException.class)
+    public void testEmptyOrElseGetNull() {
+        OptionalInt empty = OptionalInt.empty();
 
-            int got = empty.orElseGet(null);
-        }
+        int got = empty.orElseGet(null);
+    }
 
-        @Test(expectedExceptions=NullPointerException.class)
-        public void testEmptyOrElseThrowNull() throws Throwable {
-            OptionalInt empty = OptionalInt.empty();
+    @Test(expectedExceptions=NullPointerException.class)
+    public void testEmptyOrElseThrowNull() throws Throwable {
+        OptionalInt empty = OptionalInt.empty();
 
-            int got = empty.orElseThrow(null);
-        }
+        int got = empty.orElseThrow(null);
+    }
 
-        @Test(expectedExceptions=ObscureException.class)
-        public void testEmptyOrElseThrow() throws Exception {
-            OptionalInt empty = OptionalInt.empty();
-            int got = empty.orElseThrow(new Supplier<ObscureException>() {
-                @Override
-                public ObscureException get() {
-                    return new ObscureException();
-                }
-            });
-        }
+    @Test(expectedExceptions=ObscureException.class)
+    public void testEmptyOrElseThrow() throws Exception {
+        OptionalInt empty = OptionalInt.empty();
+        int got = empty.orElseThrow(new Supplier<ObscureException>() {
+            @Override
+            public ObscureException get() {
+                return new ObscureException();
+            }
+        });
+    }
 
-        @Test(groups = "unit")
-        public void testPresent() {
+    @Test(groups = "unit")
+    public void testPresent() {
         OptionalInt empty = OptionalInt.empty();
         OptionalInt present = OptionalInt.of(1);
 
@@ -147,6 +148,26 @@ public class BasicInt {
                 return new ObscureException();
             }
         }));
+    }
+
+    @Test(groups = "unit")
+    public void testStream() {
+        {
+            IntStream s = OptionalInt.empty().stream();
+            assertFalse(s.isParallel());
+
+            int[] es = s.toArray();
+            assertEquals(es.length, 0);
+        }
+
+        {
+            IntStream s = OptionalInt.of(42).stream();
+            assertFalse(s.isParallel());
+
+            int[] es = OptionalInt.of(42).stream().toArray();
+            assertEquals(es.length, 1);
+            assertEquals(es[0], 42);
+        }
     }
 
     private static class ObscureException extends RuntimeException {

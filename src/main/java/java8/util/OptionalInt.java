@@ -29,6 +29,8 @@ import java.util.NoSuchElementException;
 import java8.util.function.IntConsumer;
 import java8.util.function.IntSupplier;
 import java8.util.function.Supplier;
+import java8.util.stream.IntStream;
+import java8.util.stream.IntStreams;
 
 /**
  * A container object which may or may not contain a {@code int} value.
@@ -177,6 +179,30 @@ public final class OptionalInt {
             action.accept(value);
         } else {
             emptyAction.run();
+        }
+    }
+
+    /**
+     * If a value is present return a sequential {@link IntStream} containing
+     * only that value, otherwise return an empty {@code IntStream}.
+     *
+     * <p><b>API Note:</b><br>
+     * This method can be used to transform a {@code Stream} of
+     * optional integers to an {@code IntStream} of present integers:
+     *
+     * <pre>{@code
+     *     Stream<OptionalInt> os = ..
+     *     IntStream s = os.flatMapToInt(OptionalInt::stream)
+     * }</pre>
+     *
+     * @return the optional value as an {@code IntStream}
+     * @since 1.9
+     */
+    public IntStream stream() {
+        if (isPresent) {
+            return IntStreams.of(value);
+        } else {
+            return IntStreams.empty();
         }
     }
 

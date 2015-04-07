@@ -30,6 +30,8 @@ import java8.lang.Doubles;
 import java8.util.function.DoubleConsumer;
 import java8.util.function.DoubleSupplier;
 import java8.util.function.Supplier;
+import java8.util.stream.DoubleStream;
+import java8.util.stream.DoubleStreams;
 
 /**
  * A container object which may or may not contain a {@code double} value.
@@ -162,6 +164,30 @@ public final class OptionalDouble {
             action.accept(value);
         } else {
             emptyAction.run();
+        }
+    }
+
+    /**
+     * If a value is present return a sequential {@link DoubleStream} containing
+     * only that value, otherwise return an empty {@code DoubleStream}.
+     *
+     * <p><b>API Note:</b><br>
+     * This method can be used to transform a {@code Stream} of
+     * optional doubles to a {@code DoubleStream} of present doubles:
+     *
+     * <pre>{@code
+     *     Stream<OptionalDouble> os = ..
+     *     DoubleStream s = os.flatMapToDouble(OptionalDouble::stream)
+     * }</pre>
+     *
+     * @return the optional value as a {@code DoubleStream}
+     * @since 1.9
+     */
+    public DoubleStream stream() {
+        if (isPresent) {
+            return DoubleStreams.of(value);
+        } else {
+            return DoubleStreams.empty();
         }
     }
 

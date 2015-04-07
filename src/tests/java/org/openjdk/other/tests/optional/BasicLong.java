@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.optional;
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -35,6 +35,7 @@ import java8.util.OptionalLong;
 import java8.util.function.LongConsumer;
 import java8.util.function.LongSupplier;
 import java8.util.function.Supplier;
+import java8.util.stream.LongStream;
 
 import static org.testng.Assert.*;
 
@@ -69,40 +70,40 @@ public class BasicLong {
         }));
     }
 
-        @Test(expectedExceptions=NoSuchElementException.class)
-        public void testEmptyGet() {
-            OptionalLong empty = OptionalLong.empty();
+    @Test(expectedExceptions=NoSuchElementException.class)
+    public void testEmptyGet() {
+        OptionalLong empty = OptionalLong.empty();
 
-            long got = empty.getAsLong();
-        }
+        long got = empty.getAsLong();
+    }
 
-        @Test(expectedExceptions=NullPointerException.class)
-        public void testEmptyOrElseGetNull() {
-            OptionalLong empty = OptionalLong.empty();
+    @Test(expectedExceptions=NullPointerException.class)
+    public void testEmptyOrElseGetNull() {
+        OptionalLong empty = OptionalLong.empty();
 
-            long got = empty.orElseGet(null);
-        }
+        long got = empty.orElseGet(null);
+    }
 
-        @Test(expectedExceptions=NullPointerException.class)
-        public void testEmptyOrElseThrowNull() throws Throwable {
-            OptionalLong empty = OptionalLong.empty();
+    @Test(expectedExceptions=NullPointerException.class)
+    public void testEmptyOrElseThrowNull() throws Throwable {
+        OptionalLong empty = OptionalLong.empty();
 
-            long got = empty.orElseThrow(null);
-        }
+        long got = empty.orElseThrow(null);
+    }
 
-        @Test(expectedExceptions=ObscureException.class)
-        public void testEmptyOrElseThrow() throws Exception {
-            OptionalLong empty = OptionalLong.empty();
-            long got = empty.orElseThrow(new Supplier<ObscureException>() {
-                @Override
-                public ObscureException get() {
-                    return new ObscureException();
-                }
-            });
-        }
+    @Test(expectedExceptions=ObscureException.class)
+    public void testEmptyOrElseThrow() throws Exception {
+        OptionalLong empty = OptionalLong.empty();
+        long got = empty.orElseThrow(new Supplier<ObscureException>() {
+            @Override
+            public ObscureException get() {
+                return new ObscureException();
+            }
+        });
+    }
 
-        @Test(groups = "unit")
-        public void testPresent() {
+    @Test(groups = "unit")
+    public void testPresent() {
         OptionalLong empty = OptionalLong.empty();
         OptionalLong present = OptionalLong.of(1L);
 
@@ -147,6 +148,24 @@ public class BasicLong {
                 return new ObscureException();
             }
         }));
+    }
+
+    @Test(groups = "unit")
+    public void testStream() {
+        {
+            LongStream s = OptionalLong.empty().stream();
+
+            long[] es = s.toArray();
+            assertEquals(es.length, 0);
+        }
+
+        {
+            LongStream s = OptionalLong.of(42L).stream();
+
+            long[] es = s.toArray();
+            assertEquals(es.length, 1);
+            assertEquals(es[0], 42L);
+        }
     }
 
     private static class ObscureException extends RuntimeException {
