@@ -377,60 +377,6 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     }
 
     /**
-     * Prepare the pipeline for a parallel execution.  As the pipeline is built,
-     * the flags and depth indicators are set up for a sequential execution.
-     * If the execution is parallel, and there are any stateful operations, then
-     * some of these need to be adjusted, as well as adjusting for flags from
-     * the terminal operation (such as back-propagating UNORDERED).
-     * Need not be called for a sequential execution.
-     *
-     * @param terminalFlags Operation flags for the terminal operation
-     */
-//    private void parallelPrepare(int terminalFlags) {
-//        @SuppressWarnings("rawtypes")
-//        AbstractPipeline backPropagationHead = sourceStage;
-//        if (sourceStage.sourceAnyStateful) {
-//            int depth = 1;
-//            for (AbstractPipeline u = sourceStage, p = sourceStage.nextStage;
-//                 p != null;
-//                 u = p, p = p.nextStage) {
-//                int thisOpFlags = p.sourceOrOpFlags;
-//                if (p.opIsStateful()) {
-//                    // If the stateful operation is a short-circuit operation
-//                    // then move the back propagation head forwards
-//                    // NOTE: there are no size-injecting ops
-//                    if (StreamOpFlag.SHORT_CIRCUIT.isKnown(thisOpFlags)) {
-//                        backPropagationHead = p;
-//                        // Clear the short circuit flag for next pipeline stage
-//                        // This stage encapsulates short-circuiting, the next
-//                        // stage may not have any short-circuit operations, and
-//                        // if so spliterator.forEachRemaining should be used
-//                        // for traversal
-//                        thisOpFlags = thisOpFlags & ~StreamOpFlag.IS_SHORT_CIRCUIT;
-//                    }
-//
-//                    depth = 0;
-//                    // The following injects size, it is equivalent to:
-//                    // StreamOpFlag.combineOpFlags(StreamOpFlag.IS_SIZED, p.combinedFlags);
-//                    thisOpFlags = (thisOpFlags & ~StreamOpFlag.NOT_SIZED) | StreamOpFlag.IS_SIZED;
-//                }
-//                p.depth = depth++;
-//                p.combinedFlags = StreamOpFlag.combineOpFlags(thisOpFlags, u.combinedFlags);
-//            }
-//        }
-//
-//        // Apply the upstream terminal flags
-//        if (terminalFlags != 0) {
-//            int upstreamTerminalFlags = terminalFlags & StreamOpFlag.UPSTREAM_TERMINAL_OP_MASK;
-//            for ( @SuppressWarnings("rawtypes") AbstractPipeline p = backPropagationHead; p.nextStage != null; p = p.nextStage) {
-//                p.combinedFlags = StreamOpFlag.combineOpFlags(upstreamTerminalFlags, p.combinedFlags);
-//            }
-//
-//            combinedFlags = StreamOpFlag.combineOpFlags(terminalFlags, combinedFlags);
-//        }
-//    }
-
-    /**
      * Get the source spliterator for this pipeline stage.  For a sequential or
      * stateless parallel pipeline, this is the source spliterator.  For a
      * stateful parallel pipeline, this is a spliterator describing the results
