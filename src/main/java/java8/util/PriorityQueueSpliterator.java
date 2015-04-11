@@ -51,7 +51,7 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
     }
 
     static <T> Spliterator<T> spliterator(PriorityQueue<T> pq) {
-    	return new PriorityQueueSpliterator<T>(pq, 0, -1, 0);
+        return new PriorityQueueSpliterator<T>(pq, 0, -1, 0);
     }
 
     private int getFence() { // initialize fence to size on first use
@@ -71,10 +71,10 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
                                             expectedModCount);
     }
 
-	@Override
+    @Override
     @SuppressWarnings("unchecked")
     public void forEachRemaining(Consumer<? super E> action) {
-		Objects.requireNonNull(action);
+        Objects.requireNonNull(action);
         int i, hi, mc; // hoist accesses and checks from loop
         PriorityQueue<E> q;
         Object[] a;
@@ -103,9 +103,9 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
         throw new ConcurrentModificationException();
     }
 
-	@Override
+    @Override
     public boolean tryAdvance(Consumer<? super E> action) {
-		Objects.requireNonNull(action);
+        Objects.requireNonNull(action);
         int hi = getFence(), lo = index;
         if (lo >= 0 && lo < hi) {
             index = lo + 1;
@@ -122,69 +122,69 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
         return false;
     }
 
-	@Override
+    @Override
     public long estimateSize() {
         return (long) (getFence() - index);
     }
 
-	@Override
+    @Override
     public int characteristics() {
         return Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.NONNULL;
     }
 
-	@Override
-	public Comparator<? super E> getComparator() {
-		return Spliterators.getComparator(this);
-	}
+    @Override
+    public Comparator<? super E> getComparator() {
+        return Spliterators.getComparator(this);
+    }
 
-	@Override
-	public long getExactSizeIfKnown() {
-		return Spliterators.getExactSizeIfKnown(this);
-	}
+    @Override
+    public long getExactSizeIfKnown() {
+        return Spliterators.getExactSizeIfKnown(this);
+    }
 
-	@Override
-	public boolean hasCharacteristics(int characteristics) {
-		return Spliterators.hasCharacteristics(this, characteristics);
-	}
+    @Override
+    public boolean hasCharacteristics(int characteristics) {
+        return Spliterators.hasCharacteristics(this, characteristics);
+    }
 
-	private static <T> int getSize(PriorityQueue<T> pq) {
-		return UNSAFE.getInt(pq, SIZE_OFF);
-	}
+    private static <T> int getSize(PriorityQueue<T> pq) {
+        return UNSAFE.getInt(pq, SIZE_OFF);
+    }
 
-	private static <T> int getModCount(PriorityQueue<T> pq) {
-		if (IS_ANDROID) {
-			return 0;
-		}
-		return UNSAFE.getInt(pq, MODCOUNT_OFF);
-	}
+    private static <T> int getModCount(PriorityQueue<T> pq) {
+        if (IS_ANDROID) {
+            return 0;
+        }
+        return UNSAFE.getInt(pq, MODCOUNT_OFF);
+    }
 
-	private static <T> Object[] getQueue(PriorityQueue<T> pq) {
-		return (Object[]) UNSAFE.getObject(pq, QUEUE_OFF);
-	}
+    private static <T> Object[] getQueue(PriorityQueue<T> pq) {
+        return (Object[]) UNSAFE.getObject(pq, QUEUE_OFF);
+    }
 
     // Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long SIZE_OFF;
-	private static final long MODCOUNT_OFF;
-	private static final long QUEUE_OFF;
-	private static final boolean IS_ANDROID;
-	static {
-		try {
-			IS_ANDROID = Spliterators.IS_ANDROID;
-			UNSAFE = UnsafeAccess.unsafe;
-			Class<?> pq = PriorityQueue.class;
-			SIZE_OFF = UNSAFE.objectFieldOffset(pq.getDeclaredField("size"));
-			if (!IS_ANDROID) {
-				MODCOUNT_OFF = UNSAFE.objectFieldOffset(pq
-						.getDeclaredField("modCount"));
-			} else {
-				MODCOUNT_OFF = 0L; // unused
-			}
-			String queueFieldName = IS_ANDROID ? "elements" : "queue";
-			QUEUE_OFF = UNSAFE.objectFieldOffset(pq
-					.getDeclaredField(queueFieldName));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long SIZE_OFF;
+    private static final long MODCOUNT_OFF;
+    private static final long QUEUE_OFF;
+    private static final boolean IS_ANDROID;
+    static {
+        try {
+            IS_ANDROID = Spliterators.IS_ANDROID;
+            UNSAFE = UnsafeAccess.unsafe;
+            Class<?> pq = PriorityQueue.class;
+            SIZE_OFF = UNSAFE.objectFieldOffset(pq.getDeclaredField("size"));
+            if (!IS_ANDROID) {
+                MODCOUNT_OFF = UNSAFE.objectFieldOffset(pq
+                        .getDeclaredField("modCount"));
+            } else {
+                MODCOUNT_OFF = 0L; // unused
+            }
+            String queueFieldName = IS_ANDROID ? "elements" : "queue";
+            QUEUE_OFF = UNSAFE.objectFieldOffset(pq
+                    .getDeclaredField(queueFieldName));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

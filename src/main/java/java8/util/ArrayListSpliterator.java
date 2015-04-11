@@ -86,7 +86,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     }
 
     static <T> Spliterator<T> spliterator(ArrayList<T> list) {
-    	return new ArrayListSpliterator<T>(list, 0, -1, 0);
+        return new ArrayListSpliterator<T>(list, 0, -1, 0);
     }
 
     private int getFence() { // initialize fence to size on first use
@@ -113,7 +113,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 
     @Override
     public boolean tryAdvance(Consumer<? super E> action) {
-    	Objects.requireNonNull(action);
+        Objects.requireNonNull(action);
         int hi = getFence(), i = index;
         if (i < hi) {
             index = i + 1;
@@ -130,7 +130,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 
     @Override
     public void forEachRemaining(Consumer<? super E> action) {
-    	Objects.requireNonNull(action);
+        Objects.requireNonNull(action);
         int i, hi, mc; // hoist accesses and checks from loop
         ArrayList<E> lst;
         Object[] a;
@@ -165,51 +165,51 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
         return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
     }
 
-	@Override
-	public Comparator<? super E> getComparator() {
-		return Spliterators.getComparator(this);
-	}
+    @Override
+    public Comparator<? super E> getComparator() {
+        return Spliterators.getComparator(this);
+    }
 
-	@Override
-	public long getExactSizeIfKnown() {
-		return Spliterators.getExactSizeIfKnown(this);
-	}
+    @Override
+    public long getExactSizeIfKnown() {
+        return Spliterators.getExactSizeIfKnown(this);
+    }
 
-	@Override
-	public boolean hasCharacteristics(int characteristics) {
-		return Spliterators.hasCharacteristics(this, characteristics);
-	}
+    @Override
+    public boolean hasCharacteristics(int characteristics) {
+        return Spliterators.hasCharacteristics(this, characteristics);
+    }
 
-	private static <T> int getSize(ArrayList<T> lst) {
-		return UNSAFE.getInt(lst, SIZE_OFF);
-	}
+    private static <T> int getSize(ArrayList<T> lst) {
+        return UNSAFE.getInt(lst, SIZE_OFF);
+    }
 
-	private static <T> int getModCount(ArrayList<T> lst) {
-		return UNSAFE.getInt(lst, MODCOUNT_OFF);
-	}
+    private static <T> int getModCount(ArrayList<T> lst) {
+        return UNSAFE.getInt(lst, MODCOUNT_OFF);
+    }
 
-	private static <T> Object[] getData(ArrayList<T> lst) {
-		return (Object[]) UNSAFE.getObject(lst, DATA_OFF);
-	}
+    private static <T> Object[] getData(ArrayList<T> lst) {
+        return (Object[]) UNSAFE.getObject(lst, DATA_OFF);
+    }
 
     // Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long SIZE_OFF;
-	private static final long MODCOUNT_OFF;
-	private static final long DATA_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
-					.getDeclaredField("modCount"));
-			Class<?> al = ArrayList.class;
-			SIZE_OFF = UNSAFE.objectFieldOffset(al.getDeclaredField("size"));
-			String arrayFieldName = Spliterators.IS_ANDROID ? "array"
-					: "elementData";
-			DATA_OFF = UNSAFE.objectFieldOffset(al
-					.getDeclaredField(arrayFieldName));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long SIZE_OFF;
+    private static final long MODCOUNT_OFF;
+    private static final long DATA_OFF;
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
+                    .getDeclaredField("modCount"));
+            Class<?> al = ArrayList.class;
+            SIZE_OFF = UNSAFE.objectFieldOffset(al.getDeclaredField("size"));
+            String arrayFieldName = Spliterators.IS_ANDROID ? "array"
+                    : "elementData";
+            DATA_OFF = UNSAFE.objectFieldOffset(al
+                    .getDeclaredField(arrayFieldName));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

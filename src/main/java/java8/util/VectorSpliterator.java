@@ -52,7 +52,7 @@ final class VectorSpliterator<E> implements Spliterator<E> {
     }
 
     static <T> Spliterator<T> spliterator(Vector<T> vec) {
-    	return new VectorSpliterator<T>(vec, null, 0, -1, 0);
+        return new VectorSpliterator<T>(vec, null, 0, -1, 0);
     }
 
     private int getFence() { // initialize on first use
@@ -67,7 +67,7 @@ final class VectorSpliterator<E> implements Spliterator<E> {
         return hi;
     }
 
-	@Override
+    @Override
     public Spliterator<E> trySplit() {
         int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
         return (lo >= mid) ? null :
@@ -75,7 +75,7 @@ final class VectorSpliterator<E> implements Spliterator<E> {
                                      expectedModCount);
     }
 
-	@Override
+    @Override
     @SuppressWarnings("unchecked")
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
@@ -91,10 +91,10 @@ final class VectorSpliterator<E> implements Spliterator<E> {
         return false;
     }
 
-	@Override
+    @Override
     @SuppressWarnings("unchecked")
     public void forEachRemaining(Consumer<? super E> action) {
-		Objects.requireNonNull(action);
+        Objects.requireNonNull(action);
         int i, hi; // hoist accesses and checks from loop
         Vector<E> lst;
         Object[] a;
@@ -120,59 +120,59 @@ final class VectorSpliterator<E> implements Spliterator<E> {
         throw new ConcurrentModificationException();
     }
 
-	@Override
+    @Override
     public long estimateSize() {
         return (long) (getFence() - index);
     }
 
-	@Override
+    @Override
     public int characteristics() {
         return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
     }
 
-	@Override
-	public Comparator<? super E> getComparator() {
-		return Spliterators.getComparator(this);
-	}
+    @Override
+    public Comparator<? super E> getComparator() {
+        return Spliterators.getComparator(this);
+    }
 
-	@Override
-	public long getExactSizeIfKnown() {
-		return Spliterators.getExactSizeIfKnown(this);
-	}
+    @Override
+    public long getExactSizeIfKnown() {
+        return Spliterators.getExactSizeIfKnown(this);
+    }
 
-	@Override
-	public boolean hasCharacteristics(int characteristics) {
-		return Spliterators.hasCharacteristics(this, characteristics);
-	}
+    @Override
+    public boolean hasCharacteristics(int characteristics) {
+        return Spliterators.hasCharacteristics(this, characteristics);
+    }
 
-	private static <T> int getSize(Vector<T> lst) {
-		return UNSAFE.getInt(lst, SIZE_OFF);
-	}
+    private static <T> int getSize(Vector<T> lst) {
+        return UNSAFE.getInt(lst, SIZE_OFF);
+    }
 
-	private static <T> int getModCount(Vector<T> lst) {
-		return UNSAFE.getInt(lst, MODCOUNT_OFF);
-	}
+    private static <T> int getModCount(Vector<T> lst) {
+        return UNSAFE.getInt(lst, MODCOUNT_OFF);
+    }
 
-	private static <T> Object[] getData(Vector<T> lst) {
-		return (Object[]) UNSAFE.getObject(lst, DATA_OFF);
-	}
+    private static <T> Object[] getData(Vector<T> lst) {
+        return (Object[]) UNSAFE.getObject(lst, DATA_OFF);
+    }
 
     // Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long SIZE_OFF;
-	private static final long MODCOUNT_OFF;
-	private static final long DATA_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
-					.getDeclaredField("modCount"));
-			Class<?> vc = Vector.class;
-			SIZE_OFF = UNSAFE.objectFieldOffset(vc.getDeclaredField("elementCount"));
-			DATA_OFF = UNSAFE.objectFieldOffset(vc
-					.getDeclaredField("elementData"));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long SIZE_OFF;
+    private static final long MODCOUNT_OFF;
+    private static final long DATA_OFF;
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
+                    .getDeclaredField("modCount"));
+            Class<?> vc = Vector.class;
+            SIZE_OFF = UNSAFE.objectFieldOffset(vc.getDeclaredField("elementCount"));
+            DATA_OFF = UNSAFE.objectFieldOffset(vc
+                    .getDeclaredField("elementData"));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

@@ -57,7 +57,7 @@ public final class Iterables {
      * @since 1.8
      */
     public static <T> void forEach(Iterable<? extends T> it, Consumer<? super T> action) {
-    	Objects.requireNonNull(it);
+        Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         for (T t : it) {
             action.accept(t);
@@ -91,7 +91,7 @@ public final class Iterables {
         return Spliterators.spliteratorUnknownSize(it.iterator(), 0);
     }
 
-	private Iterables() {
-		throw new AssertionError();
-	}
+    private Iterables() {
+        throw new AssertionError();
+    }
 }

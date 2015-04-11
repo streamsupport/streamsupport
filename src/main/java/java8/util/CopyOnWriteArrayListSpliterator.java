@@ -28,32 +28,32 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 final class CopyOnWriteArrayListSpliterator {
 
-	private CopyOnWriteArrayListSpliterator() {
-		throw new AssertionError();
-	}
+    private CopyOnWriteArrayListSpliterator() {
+        throw new AssertionError();
+    }
 
-	static <T> Spliterator<T> spliterator(CopyOnWriteArrayList<T> list) {
-		return Spliterators.spliterator(getArray(list), Spliterator.IMMUTABLE
-				| Spliterator.ORDERED);
-	}
+    static <T> Spliterator<T> spliterator(CopyOnWriteArrayList<T> list) {
+        return Spliterators.spliterator(getArray(list), Spliterator.IMMUTABLE
+                | Spliterator.ORDERED);
+    }
 
-	static <T> Object[] getArray(CopyOnWriteArrayList<T> list) {
-		return (Object[]) UNSAFE.getObject(list, ARRAY_OFF);
-	}
+    static <T> Object[] getArray(CopyOnWriteArrayList<T> list) {
+        return (Object[]) UNSAFE.getObject(list, ARRAY_OFF);
+    }
 
-	// Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long ARRAY_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			Class<?> cowAl = CopyOnWriteArrayList.class;
-			String arrayFieldName = Spliterators.IS_ANDROID ? "elements"
-					: "array";
-			ARRAY_OFF = UNSAFE.objectFieldOffset(cowAl
-					.getDeclaredField(arrayFieldName));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    // Unsafe mechanics
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long ARRAY_OFF;
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            Class<?> cowAl = CopyOnWriteArrayList.class;
+            String arrayFieldName = Spliterators.IS_ANDROID ? "elements"
+                    : "array";
+            ARRAY_OFF = UNSAFE.objectFieldOffset(cowAl
+                    .getDeclaredField(arrayFieldName));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }
