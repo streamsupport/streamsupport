@@ -337,7 +337,7 @@ public class LambdaTestHelpers {
 
     /**
      * Convert an iterator to a list using forEach with an implementation of
-     * {@link java.util.stream.LambdaTestHelpers.OmnivorousConsumer}.
+     * {@link java8.util.stream.LambdaTestHelpers.OmnivorousConsumer}.
      *
      * This ensures equality comparisons for test results do not trip
      * the boxing trip-wires.
@@ -350,7 +350,7 @@ public class LambdaTestHelpers {
 
     /**
      * Convert a spliterator to a list using forEach with an implementation of
-     * {@link java.util.stream.LambdaTestHelpers.OmnivorousConsumer}.
+     * {@link java8.util.stream.LambdaTestHelpers.OmnivorousConsumer}.
      *
      * This ensures equality comparisons for test results do not trip
      * the boxing trip-wires.
@@ -363,7 +363,7 @@ public class LambdaTestHelpers {
 
     /**
      * Convert an iterator to a multi-set, represented as a Map, using forEach with an implementation of
-     * {@link java.util.stream.LambdaTestHelpers.OmnivorousConsumer}.
+     * {@link java8.util.stream.LambdaTestHelpers.OmnivorousConsumer}.
      *
      * This ensures equality comparisons for test results do not trip
      * the boxing trip-wires.

@@ -522,7 +522,7 @@ public final class Collectors {
      * to each input element before accumulation.  The flat mapping function
      * maps an input element to a {@link Stream stream} covering zero or more
      * output elements that are then accumulated downstream.  Each mapped stream
-     * is {@link java.util.stream.BaseStream#close() closed} after its contents
+     * is {@link java8.util.stream.BaseStream#close() closed} after its contents
      * have been placed downstream.  (If a mapped stream is {@code null}
      * an empty stream is used, instead.)
      *
@@ -1394,7 +1394,7 @@ public final class Collectors {
      * <p><b>API Note:</b><br>
      * It is common for either the key or the value to be the input elements.
      * In this case, the utility method
-     * {@link java.util.function.Function#identity()} may be helpful.
+     * {@link java8.util.function.Functions#identity()} may be helpful.
      * For example, the following produces a {@code Map} mapping
      * students to their grade point average:
      * <pre>{@code
@@ -1570,7 +1570,7 @@ public final class Collectors {
      * <p><b>API Note:</b><br>
      * It is common for either the key or the value to be the input elements.
      * In this case, the utility method
-     * {@link java.util.function.Function#identity()} may be helpful.
+     * {@link java8.util.function.Functions#identity()} may be helpful.
      * For example, the following produces a {@code Map} mapping
      * students to their grade point average:
      * <pre>{@code

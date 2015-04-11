@@ -50,7 +50,7 @@ package java8.util;
  * <p>
  * A {@code StringJoiner} may be employed to create formatted output from a
  * {@link java8.util.stream.Stream} using
- * {@link java.util.stream.Collectors#joining(CharSequence)}. For example:
+ * {@link java8.util.stream.Collectors#joining(CharSequence)}. For example:
  *
  * <pre> {@code
  * List<Integer> numbers = Arrays.asList(1, 2, 3, 4);

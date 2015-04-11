@@ -604,8 +604,8 @@ public interface Spliterator<T> {
      * type must be a wrapper type for a primitive type, such as {@code Integer}
      * for the primitive {@code int} type.
      * @param <T_CONS> the type of primitive consumer.  The type must be a
-     * primitive specialization of {@link java.util.function.Consumer} for
-     * {@code T}, such as {@link java.util.function.IntConsumer} for
+     * primitive specialization of {@link java8.util.function.Consumer} for
+     * {@code T}, such as {@link java8.util.function.IntConsumer} for
      * {@code Integer}.
      * @param <T_SPLITR> the type of primitive Spliterator.  The type must be
      * a primitive specialization of Spliterator for {@code T}, such as

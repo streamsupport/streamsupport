@@ -53,9 +53,9 @@ import java8.util.stream.Collector;
  * maximum, sum, and average of their number of dependents.
  *
  * <p><b>Implementation Note:</b><br> This implementation is not thread safe. However, it is safe to use
- * {@link java.util.stream.Collectors#summarizingInt(java.util.function.ToIntFunction)
+ * {@link java8.util.stream.Collectors#summarizingInt(java8.util.function.ToIntFunction)
  * Collectors.summarizingInt()} on a parallel stream, because the parallel
- * implementation of {@link java.util.stream.Stream#collect Stream.collect()}
+ * implementation of {@link java8.util.stream.Stream#collect Stream.collect()}
  * provides the necessary partitioning, isolation, and merging of results for
  * safe and efficient parallel execution.
  *

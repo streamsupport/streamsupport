@@ -262,7 +262,7 @@ public final class Objects {
      * returns {@code false}.
      *
      * <p><b>API Note:</b><br> This method exists to be used as a
-     * {@link java.util.function.Predicate}, {@code filter(Objects::isNull)}
+     * {@link java8.util.function.Predicate}, {@code filter(Objects::isNull)}
      *
      * @param obj a reference to be checked against {@code null}
      * @return {@code true} if the provided reference is {@code null} otherwise
@@ -280,7 +280,7 @@ public final class Objects {
      * otherwise returns {@code false}.
      *
      * <p><b>API Note:</b><br> This method exists to be used as a
-     * {@link java.util.function.Predicate}, {@code filter(Objects::nonNull)}
+     * {@link java8.util.function.Predicate}, {@code filter(Objects::nonNull)}
      *
      * @param obj a reference to be checked against {@code null}
      * @return {@code true} if the provided reference is non-{@code null}
