@@ -71,40 +71,40 @@
  *
  * <ul>
  *     <li>There are several basic function shapes, including
- *     {@link java.util.function.Function} (unary function from {@code T} to {@code R}),
- *     {@link java.util.function.Consumer} (unary function from {@code T} to {@code void}),
- *     {@link java.util.function.Predicate} (unary function from {@code T} to {@code boolean}),
- *     and {@link java.util.function.Supplier} (nilary function to {@code R}).
+ *     {@link java8.util.function.Function} (unary function from {@code T} to {@code R}),
+ *     {@link java8.util.function.Consumer} (unary function from {@code T} to {@code void}),
+ *     {@link java8.util.function.Predicate} (unary function from {@code T} to {@code boolean}),
+ *     and {@link java8.util.function.Supplier} (nilary function to {@code R}).
  *     </li>
  *
  *     <li>Function shapes have a natural arity based on how they are most
  *     commonly used.  The basic shapes can be modified by an arity prefix to
  *     indicate a different arity, such as
- *     {@link java.util.function.BiFunction} (binary function from {@code T} and
+ *     {@link java8.util.function.BiFunction} (binary function from {@code T} and
  *     {@code U} to {@code R}).
  *     </li>
  *
  *     <li>There are additional derived function shapes which extend the basic
- *     function shapes, including {@link java.util.function.UnaryOperator}
- *     (extends {@code Function}) and {@link java.util.function.BinaryOperator}
+ *     function shapes, including {@link java8.util.function.UnaryOperator}
+ *     (extends {@code Function}) and {@link java8.util.function.BinaryOperator}
  *     (extends {@code BiFunction}).
  *     </li>
  *
  *     <li>Type parameters of functional interfaces can be specialized to
  *     primitives with additional type prefixes.  To specialize the return type
  *     for a type that has both generic return type and generic arguments, we
- *     prefix {@code ToXxx}, as in {@link java.util.function.ToIntFunction}.
+ *     prefix {@code ToXxx}, as in {@link java8.util.function.ToIntFunction}.
  *     Otherwise, type arguments are specialized left-to-right, as in
- *     {@link java.util.function.DoubleConsumer}
- *     or {@link java.util.function.ObjIntConsumer}.
+ *     {@link java8.util.function.DoubleConsumer}
+ *     or {@link java8.util.function.ObjIntConsumer}.
  *     (The type prefix {@code Obj} is used to indicate that we don't want to
  *     specialize this parameter, but want to move on to the next parameter,
- *     as in {@link java.util.function.ObjIntConsumer}.)
+ *     as in {@link java8.util.function.ObjIntConsumer}.)
  *     These schemes can be combined, as in {@code IntToDoubleFunction}.
  *     </li>
  *
  *     <li>If there are specialization prefixes for all arguments, the arity
- *     prefix may be left out (as in {@link java.util.function.ObjIntConsumer}).
+ *     prefix may be left out (as in {@link java8.util.function.ObjIntConsumer}).
  *     </li>
  * </ul>
  *

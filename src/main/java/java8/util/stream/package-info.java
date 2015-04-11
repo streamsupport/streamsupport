@@ -77,7 +77,7 @@
  * <ul>
  *     <li>From a {@link java.util.Collection} via the {@code stream()} and
  *     {@code parallelStream()} methods;</li>
- *     <li>From an array via {@link java.util.Arrays#stream(Object[])};</li>
+ *     <li>From an array via {@link java8.util.J8Arrays#stream(Object[])};</li>
  *     <li>From static factory methods on the stream classes, such as
  *     {@link java8.util.stream.StreamSupport#of(Object[])},
  *     {@link java8.util.stream.IntStreams#range(int, int)}
@@ -679,7 +679,7 @@
  * <h2><a name="StreamSources">Low-level stream construction</a></h2>
  *
  * So far, all the stream examples have used methods like
- * {@link java.util.Collection#stream()} or {@link java.util.Arrays#stream(Object[])}
+ * {@link java.util.Collection#stream()} or {@link java8.util.J8Arrays#stream(Object[])}
  * to obtain a stream.  How are those stream-bearing methods implemented?
  *
  * <p>The class {@link java8.util.stream.StreamSupport} has a number of
