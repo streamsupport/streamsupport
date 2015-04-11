@@ -178,7 +178,7 @@ public final class Integers {
         return Math.min(a, b);
     }
 
-	private Integers() {
-		throw new AssertionError();
-	}
+    private Integers() {
+        throw new AssertionError();
+    }
 }

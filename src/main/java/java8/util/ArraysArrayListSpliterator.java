@@ -31,28 +31,28 @@ import java8.util.Spliterators;
 
 final class ArraysArrayListSpliterator {
 
-	private ArraysArrayListSpliterator() {
-		throw new AssertionError();
-	}
+    private ArraysArrayListSpliterator() {
+        throw new AssertionError();
+    }
 
-	static <T> Spliterator<T> spliterator(List<T> list) {
-		return Spliterators.spliterator(getArray(list), Spliterator.ORDERED);
-	}
+    static <T> Spliterator<T> spliterator(List<T> list) {
+        return Spliterators.spliterator(getArray(list), Spliterator.ORDERED);
+    }
 
-	private static <T> Object[] getArray(List<T> list) {
-		return (Object[]) UNSAFE.getObject(list, ARRAY_OFF);
-	}
+    private static <T> Object[] getArray(List<T> list) {
+        return (Object[]) UNSAFE.getObject(list, ARRAY_OFF);
+    }
 
     // Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long ARRAY_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			Class<?> aal = Class.forName("java.util.Arrays$ArrayList");
-			ARRAY_OFF = UNSAFE.objectFieldOffset(aal.getDeclaredField("a"));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long ARRAY_OFF;
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            Class<?> aal = Class.forName("java.util.Arrays$ArrayList");
+            ARRAY_OFF = UNSAFE.objectFieldOffset(aal.getDeclaredField("a"));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

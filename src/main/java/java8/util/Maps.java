@@ -88,7 +88,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> V putIfAbsent(Map<K, V> map, K key, V value) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         V v = map.get(key);
         if (v == null) {
             v = map.put(key, value);
@@ -160,7 +160,7 @@ public final class Maps {
      */
     public static <K, V> V mergeConcurrent(ConcurrentMap<K, V> map, K key, V value,
             BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
         V oldValue = map.get(key);
@@ -248,7 +248,7 @@ public final class Maps {
      */
     public static <K, V> V computeIfAbsentConcurrent(ConcurrentMap<K, V> map, K key,
             Function<? super K, ? extends V> mappingFunction) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(mappingFunction);
         V v, newValue;
         return ((v = map.get(key)) == null &&
@@ -306,7 +306,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> void replaceAllConcurrent(ConcurrentMap<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(function);
         forEachConcurrent(map, (k,v) -> {
             while (!map.replace(k, v, function.apply(k, v))) {
@@ -344,7 +344,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> V getOrDefaultConcurrent(ConcurrentMap<K, V> map, Object key, V defaultValue) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         V v;
         return ((v = map.get(key)) != null) ? v : defaultValue;
     }
@@ -375,7 +375,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> V getOrDefault(Map<K, V> map, Object key, V defaultValue) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         V v;
         return (((v = map.get(key)) != null) || map.containsKey(key))
             ? v
@@ -411,7 +411,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> void forEachConcurrent(ConcurrentMap<K, V> map, BiConsumer<? super K, ? super V> action) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(action);
         for (Map.Entry<K, V> entry : map.entrySet()) {
             K k;
@@ -456,7 +456,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> void forEach(Map<K, V> map, BiConsumer<? super K, ? super V> action) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(action);
         for (Map.Entry<K, V> entry : map.entrySet()) {
             K k;
@@ -535,16 +535,16 @@ public final class Maps {
      */
     public static <K, V> V merge(Map<K, V> map, K key, V value,
             BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
         V oldValue = map.get(key);
         V newValue = (oldValue == null) ? value :
                    remappingFunction.apply(oldValue, value);
         if (newValue == null) {
-        	map.remove(key);
+            map.remove(key);
         } else {
-        	map.put(key, newValue);
+            map.put(key, newValue);
         }
         return newValue;
     }
@@ -613,13 +613,13 @@ public final class Maps {
      */
     public static <K, V> V computeIfAbsent(Map<K, V> map, K key,
             Function<? super K, ? extends V> mappingFunction) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(mappingFunction);
         V v;
         if ((v = map.get(key)) == null) {
             V newValue;
             if ((newValue = mappingFunction.apply(key)) != null) {
-            	map.put(key, newValue);
+                map.put(key, newValue);
                 return newValue;
             }
         }
@@ -672,7 +672,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> boolean replace(Map<K, V> map, K key, V oldValue, V newValue) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Object curValue = map.get(key);
         if (!Objects.equals(curValue, oldValue) ||
             (curValue == null && !map.containsKey(key))) {
@@ -724,7 +724,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> V replace(Map<K, V> map, K key, V value) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         V curValue;
         if (((curValue = map.get(key)) != null) || map.containsKey(key)) {
             curValue = map.put(key, value);
@@ -775,7 +775,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> void replaceAll(Map<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(function);
         for (Map.Entry<K, V> entry : map.entrySet()) {
             K k;
@@ -785,8 +785,8 @@ public final class Maps {
                 v = entry.getValue();
             } catch (IllegalStateException ise) {
                 // this usually means the entry is no longer in the map.
-            	ConcurrentModificationException cmex = new ConcurrentModificationException();
-            	cmex.initCause(ise);
+                ConcurrentModificationException cmex = new ConcurrentModificationException();
+                cmex.initCause(ise);
                 throw cmex;
             }
 
@@ -797,8 +797,8 @@ public final class Maps {
                 entry.setValue(v);
             } catch (IllegalStateException ise) {
                 // this usually means the entry is no longer in the map.
-            	ConcurrentModificationException cmex = new ConcurrentModificationException();
-            	cmex.initCause(ise);
+                ConcurrentModificationException cmex = new ConcurrentModificationException();
+                cmex.initCause(ise);
                 throw cmex;
             }
         }
@@ -867,7 +867,7 @@ public final class Maps {
      */
     public static <K, V> V compute(Map<K, V> map, K key,
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         V oldValue = map.get(key);
 
@@ -940,7 +940,7 @@ public final class Maps {
      */
     public static <K, V> V computeIfPresent(Map<K, V> map, K key,
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         V oldValue;
         if ((oldValue = map.get(key)) != null) {
@@ -995,7 +995,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> boolean remove(Map<K, V> map, Object key, Object value) {
-    	Objects.requireNonNull(map);
+        Objects.requireNonNull(map);
         Object curValue = map.get(key);
         if (!Objects.equals(curValue, value) ||
             (curValue == null && !map.containsKey(key))) {
@@ -1005,110 +1005,110 @@ public final class Maps {
         return true;
     }
 
-	/**
-	 * A place for the static interface methods of the Java 8 {@link Map.Entry}
-	 * interface.
-	 */
-	public static final class Entry {
-		/**
-		 * Returns a comparator that compares {@link Map.Entry} in natural order
-		 * on key.
-		 *
-		 * <p>
-		 * The returned comparator is serializable and throws
-		 * {@link NullPointerException} when comparing an entry with a null key.
-		 *
-		 * @param <K>
-		 *            the {@link Comparable} type of then map keys
-		 * @param <V>
-		 *            the type of the map values
-		 * @return a comparator that compares {@link Map.Entry} in natural order
-		 *         on key.
-		 * @see Comparable
-		 * @since 1.8
-		 */
-		public static <K extends Comparable<? super K>, V> Comparator<Map.Entry<K, V>> comparingByKey() {
-			return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> c1
-					.getKey().compareTo(c2.getKey());
-		}
+    /**
+     * A place for the static interface methods of the Java 8 {@link Map.Entry}
+     * interface.
+     */
+    public static final class Entry {
+        /**
+         * Returns a comparator that compares {@link Map.Entry} in natural order
+         * on key.
+         *
+         * <p>
+         * The returned comparator is serializable and throws
+         * {@link NullPointerException} when comparing an entry with a null key.
+         *
+         * @param <K>
+         *            the {@link Comparable} type of then map keys
+         * @param <V>
+         *            the type of the map values
+         * @return a comparator that compares {@link Map.Entry} in natural order
+         *         on key.
+         * @see Comparable
+         * @since 1.8
+         */
+        public static <K extends Comparable<? super K>, V> Comparator<Map.Entry<K, V>> comparingByKey() {
+            return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> c1
+                    .getKey().compareTo(c2.getKey());
+        }
 
-		/**
-		 * Returns a comparator that compares {@link Map.Entry} in natural order
-		 * on value.
-		 *
-		 * <p>
-		 * The returned comparator is serializable and throws
-		 * {@link NullPointerException} when comparing an entry with null
-		 * values.
-		 *
-		 * @param <K>
-		 *            the type of the map keys
-		 * @param <V>
-		 *            the {@link Comparable} type of the map values
-		 * @return a comparator that compares {@link Map.Entry} in natural order
-		 *         on value.
-		 * @see Comparable
-		 * @since 1.8
-		 */
-		public static <K, V extends Comparable<? super V>> Comparator<Map.Entry<K, V>> comparingByValue() {
-			return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> c1
-					.getValue().compareTo(c2.getValue());
-		}
+        /**
+         * Returns a comparator that compares {@link Map.Entry} in natural order
+         * on value.
+         *
+         * <p>
+         * The returned comparator is serializable and throws
+         * {@link NullPointerException} when comparing an entry with null
+         * values.
+         *
+         * @param <K>
+         *            the type of the map keys
+         * @param <V>
+         *            the {@link Comparable} type of the map values
+         * @return a comparator that compares {@link Map.Entry} in natural order
+         *         on value.
+         * @see Comparable
+         * @since 1.8
+         */
+        public static <K, V extends Comparable<? super V>> Comparator<Map.Entry<K, V>> comparingByValue() {
+            return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> c1
+                    .getValue().compareTo(c2.getValue());
+        }
 
-		/**
-		 * Returns a comparator that compares {@link Map.Entry} by key using the
-		 * given {@link Comparator}.
-		 *
-		 * <p>
-		 * The returned comparator is serializable if the specified comparator
-		 * is also serializable.
-		 *
-		 * @param <K>
-		 *            the type of the map keys
-		 * @param <V>
-		 *            the type of the map values
-		 * @param cmp
-		 *            the key {@link Comparator}
-		 * @return a comparator that compares {@link Map.Entry} by the key.
-		 * @since 1.8
-		 */
-		public static <K, V> Comparator<Map.Entry<K, V>> comparingByKey(
-				Comparator<? super K> cmp) {
-			Objects.requireNonNull(cmp);
-			return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> cmp
-					.compare(c1.getKey(), c2.getKey());
-		}
+        /**
+         * Returns a comparator that compares {@link Map.Entry} by key using the
+         * given {@link Comparator}.
+         *
+         * <p>
+         * The returned comparator is serializable if the specified comparator
+         * is also serializable.
+         *
+         * @param <K>
+         *            the type of the map keys
+         * @param <V>
+         *            the type of the map values
+         * @param cmp
+         *            the key {@link Comparator}
+         * @return a comparator that compares {@link Map.Entry} by the key.
+         * @since 1.8
+         */
+        public static <K, V> Comparator<Map.Entry<K, V>> comparingByKey(
+                Comparator<? super K> cmp) {
+            Objects.requireNonNull(cmp);
+            return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> cmp
+                    .compare(c1.getKey(), c2.getKey());
+        }
 
-		/**
-		 * Returns a comparator that compares {@link Map.Entry} by value using
-		 * the given {@link Comparator}.
-		 *
-		 * <p>
-		 * The returned comparator is serializable if the specified comparator
-		 * is also serializable.
-		 *
-		 * @param <K>
-		 *            the type of the map keys
-		 * @param <V>
-		 *            the type of the map values
-		 * @param cmp
-		 *            the value {@link Comparator}
-		 * @return a comparator that compares {@link Map.Entry} by the value.
-		 * @since 1.8
-		 */
-		public static <K, V> Comparator<Map.Entry<K, V>> comparingByValue(
-				Comparator<? super V> cmp) {
-			Objects.requireNonNull(cmp);
-			return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> cmp
-					.compare(c1.getValue(), c2.getValue());
-		}
+        /**
+         * Returns a comparator that compares {@link Map.Entry} by value using
+         * the given {@link Comparator}.
+         *
+         * <p>
+         * The returned comparator is serializable if the specified comparator
+         * is also serializable.
+         *
+         * @param <K>
+         *            the type of the map keys
+         * @param <V>
+         *            the type of the map values
+         * @param cmp
+         *            the value {@link Comparator}
+         * @return a comparator that compares {@link Map.Entry} by the value.
+         * @since 1.8
+         */
+        public static <K, V> Comparator<Map.Entry<K, V>> comparingByValue(
+                Comparator<? super V> cmp) {
+            Objects.requireNonNull(cmp);
+            return (Comparator<Map.Entry<K, V>> & Serializable) (c1, c2) -> cmp
+                    .compare(c1.getValue(), c2.getValue());
+        }
 
-		private Entry() {
-			throw new AssertionError();
-		}
-	}
+        private Entry() {
+            throw new AssertionError();
+        }
+    }
 
     private Maps() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

@@ -47,7 +47,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
     }
 
     static <T> Spliterator<T> spliterator(ArrayDeque<T> deque) {
-    	return new ArrayDequeSpliterator<T>(deque, -1, -1);
+        return new ArrayDequeSpliterator<T>(deque, -1, -1);
     }
 
     private int getFence() { // force initialization
@@ -73,7 +73,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
 
     @Override
     public void forEachRemaining(Consumer<? super E> consumer) {
-    	Objects.requireNonNull(consumer);
+        Objects.requireNonNull(consumer);
         Object[] a = getData(deq);
         int m = a.length - 1, f = getFence(), i = index;
         index = f;
@@ -89,7 +89,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
 
     @Override
     public boolean tryAdvance(Consumer<? super E> consumer) {
-    	Objects.requireNonNull(consumer);
+        Objects.requireNonNull(consumer);
         Object[] a = getData(deq);
         int m = a.length - 1, f = getFence(), i = index;
         if (i != fence) {
@@ -119,48 +119,48 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
             Spliterator.NONNULL | Spliterator.SUBSIZED;
     }
 
-	@Override
-	public Comparator<? super E> getComparator() {
-		return Spliterators.getComparator(this);
-	}
+    @Override
+    public Comparator<? super E> getComparator() {
+        return Spliterators.getComparator(this);
+    }
 
-	@Override
-	public long getExactSizeIfKnown() {
-		return Spliterators.getExactSizeIfKnown(this);
-	}
+    @Override
+    public long getExactSizeIfKnown() {
+        return Spliterators.getExactSizeIfKnown(this);
+    }
 
-	@Override
-	public boolean hasCharacteristics(int characteristics) {
-		return Spliterators.hasCharacteristics(this, characteristics);
-	}
+    @Override
+    public boolean hasCharacteristics(int characteristics) {
+        return Spliterators.hasCharacteristics(this, characteristics);
+    }
 
-	private static <T> int getTail(ArrayDeque<T> deq) {
-		return UNSAFE.getInt(deq, TAIL_OFF);
-	}
+    private static <T> int getTail(ArrayDeque<T> deq) {
+        return UNSAFE.getInt(deq, TAIL_OFF);
+    }
 
-	private static <T> int getHead(ArrayDeque<T> deq) {
-		return UNSAFE.getInt(deq, HEAD_OFF);
-	}
+    private static <T> int getHead(ArrayDeque<T> deq) {
+        return UNSAFE.getInt(deq, HEAD_OFF);
+    }
 
-	private static <T> Object[] getData(ArrayDeque<T> deq) {
-		return (Object[]) UNSAFE.getObject(deq, DATA_OFF);
-	}
+    private static <T> Object[] getData(ArrayDeque<T> deq) {
+        return (Object[]) UNSAFE.getObject(deq, DATA_OFF);
+    }
 
     // Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long TAIL_OFF;
-	private static final long HEAD_OFF;
-	private static final long DATA_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			Class<?> ad = ArrayDeque.class;
-			TAIL_OFF = UNSAFE.objectFieldOffset(ad.getDeclaredField("tail"));
-			HEAD_OFF = UNSAFE.objectFieldOffset(ad.getDeclaredField("head"));
-			DATA_OFF = UNSAFE
-					.objectFieldOffset(ad.getDeclaredField("elements"));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long TAIL_OFF;
+    private static final long HEAD_OFF;
+    private static final long DATA_OFF;
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            Class<?> ad = ArrayDeque.class;
+            TAIL_OFF = UNSAFE.objectFieldOffset(ad.getDeclaredField("tail"));
+            HEAD_OFF = UNSAFE.objectFieldOffset(ad.getDeclaredField("head"));
+            DATA_OFF = UNSAFE
+                    .objectFieldOffset(ad.getDeclaredField("elements"));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

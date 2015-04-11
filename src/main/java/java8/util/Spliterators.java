@@ -822,63 +822,63 @@ public final class Spliterators {
     }
 
     /**
-	 * Creates either a specialized {@code Spliterator} (effectively the same
-	 * one that Java 8 uses) for the given collection provided it is one of the
-	 * types listed below or a {@code Spliterator} using the given collection's
-	 * {@link java.util.Collection#iterator()} as the source of elements, and
-	 * reporting its {@link java.util.Collection#size()} as its initial size.
-	 *
-	 * <p>
-	 * In the latter case, if the given collection implements one of the
-	 * interfaces {@link java.util.List}, {@link java.util.Set} or
-	 * {@link java.util.SortedSet} the returned {@code Spliterator} will
-	 * resemble the corresponding interface default implementation of the
-	 * respective {@code spliterator()} method from Java 8. Otherwise the Java 8
-	 * default implementation of {@code java.util.Collection.spliterator()} is
-	 * used (which is essentially the same as calling
-	 * {@link #spliterator(Collection, int)} with a {@code characteristics}
-	 * value equal to {@code 0}).
-	 *
-	 * <p>
-	 * Currently, the collections that have specializations available are the
-	 * following:
-	 *
-	 * <ul>
-	 * <li>java.util.ArrayList</li>
-	 * <li>java.util.Arrays.ArrayList</li>
-	 * <li>java.util.ArrayDeque</li>
-	 * <li>java.util.Vector</li>
-	 * <li>java.util.LinkedList</li>
-	 * <li>java.util.HashSet</li>
-	 * <li>java.util.LinkedHashSet</li>
-	 * <li>java.util.PriorityQueue</li>
-	 * <li>java.util.concurrent.ArrayBlockingQueue</li>
-	 * <li>java.util.concurrent.LinkedBlockingQueue</li>
-	 * <li>java.util.concurrent.LinkedBlockingDeque</li>
-	 * <li>java.util.concurrent.PriorityBlockingQueue</li>
-	 * <li>java.util.concurrent.CopyOnWriteArrayList</li>
-	 * <li>java.util.concurrent.CopyOnWriteArraySet</li>
-	 * <li>The collections returned from the java.util.HashMap methods
-	 * #keySet(), #entrySet() and #values()</li>
-	 * </ul>
-	 *
-	 * <p>
-	 * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
-	 * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
-	 * collection when the Spliterator was created, otherwise the spliterator is
-	 * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
-	 * the <em>fail-fast</em> properties of the collection's iterator, and
-	 * implements {@code trySplit} to permit limited parallelism.
-	 *
-	 * @param <T>
-	 *            Type of elements
-	 * @param c
-	 *            The collection
-	 * @return Either a specialized spliterator if the given collection is one
-	 *         of the types listed above or a spliterator from an iterator
-	 * @throws NullPointerException
-	 *             if the given collection is {@code null}
-	 */
+     * Creates either a specialized {@code Spliterator} (effectively the same
+     * one that Java 8 uses) for the given collection provided it is one of the
+     * types listed below or a {@code Spliterator} using the given collection's
+     * {@link java.util.Collection#iterator()} as the source of elements, and
+     * reporting its {@link java.util.Collection#size()} as its initial size.
+     *
+     * <p>
+     * In the latter case, if the given collection implements one of the
+     * interfaces {@link java.util.List}, {@link java.util.Set} or
+     * {@link java.util.SortedSet} the returned {@code Spliterator} will
+     * resemble the corresponding interface default implementation of the
+     * respective {@code spliterator()} method from Java 8. Otherwise the Java 8
+     * default implementation of {@code java.util.Collection.spliterator()} is
+     * used (which is essentially the same as calling
+     * {@link #spliterator(Collection, int)} with a {@code characteristics}
+     * value equal to {@code 0}).
+     *
+     * <p>
+     * Currently, the collections that have specializations available are the
+     * following:
+     *
+     * <ul>
+     * <li>java.util.ArrayList</li>
+     * <li>java.util.Arrays.ArrayList</li>
+     * <li>java.util.ArrayDeque</li>
+     * <li>java.util.Vector</li>
+     * <li>java.util.LinkedList</li>
+     * <li>java.util.HashSet</li>
+     * <li>java.util.LinkedHashSet</li>
+     * <li>java.util.PriorityQueue</li>
+     * <li>java.util.concurrent.ArrayBlockingQueue</li>
+     * <li>java.util.concurrent.LinkedBlockingQueue</li>
+     * <li>java.util.concurrent.LinkedBlockingDeque</li>
+     * <li>java.util.concurrent.PriorityBlockingQueue</li>
+     * <li>java.util.concurrent.CopyOnWriteArrayList</li>
+     * <li>java.util.concurrent.CopyOnWriteArraySet</li>
+     * <li>The collections returned from the java.util.HashMap methods
+     * #keySet(), #entrySet() and #values()</li>
+     * </ul>
+     *
+     * <p>
+     * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
+     * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
+     * collection when the Spliterator was created, otherwise the spliterator is
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * the <em>fail-fast</em> properties of the collection's iterator, and
+     * implements {@code trySplit} to permit limited parallelism.
+     *
+     * @param <T>
+     *            Type of elements
+     * @param c
+     *            The collection
+     * @return Either a specialized spliterator if the given collection is one
+     *         of the types listed above or a spliterator from an iterator
+     * @throws NullPointerException
+     *             if the given collection is {@code null}
+     */
     public static <T> Spliterator<T> spliterator(Collection<? extends T> c) {
         Objects.requireNonNull(c);
 
@@ -907,26 +907,26 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String className) {
-		if (NATIVE_SPECIALIZATION || IS_ANDROID) {
-			if (c instanceof ArrayList) {
-				return ArrayListSpliterator.spliterator((ArrayList<T>) c);
-			}
+        if (NATIVE_SPECIALIZATION || IS_ANDROID) {
+            if (c instanceof ArrayList) {
+                return ArrayListSpliterator.spliterator((ArrayList<T>) c);
+            }
 
-			if ("java.util.Arrays$ArrayList".equals(className)) {
-				return ArraysArrayListSpliterator.spliterator((List<T>) c);
-			}
+            if ("java.util.Arrays$ArrayList".equals(className)) {
+                return ArraysArrayListSpliterator.spliterator((List<T>) c);
+            }
 
-			if (c instanceof CopyOnWriteArrayList) {
-				return CopyOnWriteArrayListSpliterator
-						.spliterator((CopyOnWriteArrayList<T>) c);
-			}
-			if (c instanceof LinkedList) {
-				return LinkedListSpliterator.spliterator((LinkedList<T>) c);
-			}
-			if (c instanceof Vector) {
-				return VectorSpliterator.spliterator((Vector<T>) c);
-			}
-		}
+            if (c instanceof CopyOnWriteArrayList) {
+                return CopyOnWriteArrayListSpliterator
+                        .spliterator((CopyOnWriteArrayList<T>) c);
+            }
+            if (c instanceof LinkedList) {
+                return LinkedListSpliterator.spliterator((LinkedList<T>) c);
+            }
+            if (c instanceof Vector) {
+                return VectorSpliterator.spliterator((Vector<T>) c);
+            }
+        }
 
         // default from j.u.List
         return spliterator(c, Spliterator.ORDERED);
@@ -949,7 +949,7 @@ public final class Spliterators {
 
         if (NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) {
             if (c instanceof HashSet) {
-            	return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
+                return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
             }
         }
 
@@ -980,21 +980,21 @@ public final class Spliterators {
         }
 
         if (NATIVE_SPECIALIZATION || IS_ANDROID) {
-        	if (c instanceof LinkedBlockingQueue) {
-        		return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
-        	}
-        	if (c instanceof ArrayDeque) {
-        		return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
-        	}
-        	if (c instanceof LinkedBlockingDeque) {
-        		return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
-        	}
-        	if (c instanceof PriorityBlockingQueue) {
-        		return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
-        	}
-        	if (c instanceof PriorityQueue) {
-        		return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
-        	}
+            if (c instanceof LinkedBlockingQueue) {
+                return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
+            }
+            if (c instanceof ArrayDeque) {
+                return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
+            }
+            if (c instanceof LinkedBlockingDeque) {
+                return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
+            }
+            if (c instanceof PriorityBlockingQueue) {
+                return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
+            }
+            if (c instanceof PriorityQueue) {
+                return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
+            }
         }
 
         // default from j.u.Collection

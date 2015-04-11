@@ -96,7 +96,7 @@ public final class Comparators {
         @Override
         public Comparator<T> reversed() {
 //            return new NullComparator<>(!nullFirst, real == null ? null : real.reversed());
-        	return new NullComparator<T>(!nullFirst, real == null ? null : Collections.reverseOrder(real));
+            return new NullComparator<T>(!nullFirst, real == null ? null : Collections.reverseOrder(real));
         }
     }
 
@@ -297,10 +297,10 @@ public final class Comparators {
      * @since 1.8
      */
     public static <T> Comparator<T> thenComparing(Comparator<? super T> this_, Comparator<? super T> other) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         if (this_ instanceof NullComparator) {
-        	return ((NullComparator<T>) this_).thenComparing(other);
+            return ((NullComparator<T>) this_).thenComparing(other);
         }
         return (Comparator<T> & Serializable) (c1, c2) -> {
             int res = this_.compare(c1, c2);
@@ -328,7 +328,7 @@ public final class Comparators {
      * @since 1.8
      */
     public static <T, U> Comparator<T> thenComparing(
-    		Comparator<? super T> this_,
+            Comparator<? super T> this_,
             Function<? super T, ? extends U> keyExtractor,
             Comparator<? super U> keyComparator)
     {
@@ -355,7 +355,7 @@ public final class Comparators {
      * @since 1.8
      */
     public static <T, U extends Comparable<? super U>> Comparator<T> thenComparing(
-    		Comparator<? super T> this_,
+            Comparator<? super T> this_,
             Function<? super T, ? extends U> keyExtractor)
     {
         return thenComparing(this_, comparing(keyExtractor));
@@ -435,9 +435,9 @@ public final class Comparators {
      * @since 1.8
      */
     public static <T> Comparator<T> reversed(Comparator<T> comparator) {
-    	if (comparator instanceof NullComparator) {
-    		return ((NullComparator<T>) comparator).reversed();
-    	}
+        if (comparator instanceof NullComparator) {
+            return ((NullComparator<T>) comparator).reversed();
+        }
         return Collections.reverseOrder(comparator);
     }
 
@@ -484,6 +484,6 @@ public final class Comparators {
     }
 
     private Comparators() {
-    	throw new AssertionError("no instances");
+        throw new AssertionError("no instances");
     }
 }

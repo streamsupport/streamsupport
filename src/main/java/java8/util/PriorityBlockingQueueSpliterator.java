@@ -33,88 +33,88 @@ import java8.util.Spliterator;
 // Avoids commitment to toArray() until needed
 final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
 
-	private final PriorityBlockingQueue<E> queue;
-	private Object[] array;
-	private int index;
-	private int fence;
+    private final PriorityBlockingQueue<E> queue;
+    private Object[] array;
+    private int index;
+    private int fence;
 
-	private PriorityBlockingQueueSpliterator(PriorityBlockingQueue<E> queue,
-			Object[] array, int index, int fence) {
-		this.queue = queue;
-		this.array = array;
-		this.index = index;
-		this.fence = fence;
-	}
+    private PriorityBlockingQueueSpliterator(PriorityBlockingQueue<E> queue,
+            Object[] array, int index, int fence) {
+        this.queue = queue;
+        this.array = array;
+        this.index = index;
+        this.fence = fence;
+    }
 
-	static <T> Spliterator<T> spliterator(PriorityBlockingQueue<T> queue) {
-		return new PriorityBlockingQueueSpliterator<T>(queue, null, 0, -1);
-	}
+    static <T> Spliterator<T> spliterator(PriorityBlockingQueue<T> queue) {
+        return new PriorityBlockingQueueSpliterator<T>(queue, null, 0, -1);
+    }
 
-	private int getFence() {
-		int hi;
-		if ((hi = fence) < 0) {
-			hi = fence = (array = queue.toArray()).length;
-		}
-		return hi;
-	}
+    private int getFence() {
+        int hi;
+        if ((hi = fence) < 0) {
+            hi = fence = (array = queue.toArray()).length;
+        }
+        return hi;
+    }
 
-	@Override
-	public Spliterator<E> trySplit() {
-		int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
-		return (lo >= mid) ? null : new PriorityBlockingQueueSpliterator<E>(
-				queue, array, lo, index = mid);
-	}
+    @Override
+    public Spliterator<E> trySplit() {
+        int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
+        return (lo >= mid) ? null : new PriorityBlockingQueueSpliterator<E>(
+                queue, array, lo, index = mid);
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public void forEachRemaining(Consumer<? super E> action) {
-		Objects.requireNonNull(action);
-		Object[] a;
-		int i, hi; // hoist accesses and checks from loop
-		if ((a = array) == null) {
-			fence = (a = queue.toArray()).length;
-		}
-		if ((hi = fence) <= a.length && (i = index) >= 0 && i < (index = hi)) {
-			do {
-				action.accept((E) a[i]);
-			} while (++i < hi);
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public void forEachRemaining(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        Object[] a;
+        int i, hi; // hoist accesses and checks from loop
+        if ((a = array) == null) {
+            fence = (a = queue.toArray()).length;
+        }
+        if ((hi = fence) <= a.length && (i = index) >= 0 && i < (index = hi)) {
+            do {
+                action.accept((E) a[i]);
+            } while (++i < hi);
+        }
+    }
 
-	@Override
-	public boolean tryAdvance(Consumer<? super E> action) {
-		Objects.requireNonNull(action);
-		if (getFence() > index && index >= 0) {
-			@SuppressWarnings("unchecked")
-			E e = (E) array[index++];
-			action.accept(e);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public boolean tryAdvance(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
+        if (getFence() > index && index >= 0) {
+            @SuppressWarnings("unchecked")
+            E e = (E) array[index++];
+            action.accept(e);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public long estimateSize() {
-		return (long) (getFence() - index);
-	}
+    @Override
+    public long estimateSize() {
+        return (long) (getFence() - index);
+    }
 
-	@Override
-	public int characteristics() {
-		return Spliterator.NONNULL | Spliterator.SIZED | Spliterator.SUBSIZED;
-	}
+    @Override
+    public int characteristics() {
+        return Spliterator.NONNULL | Spliterator.SIZED | Spliterator.SUBSIZED;
+    }
 
-	@Override
-	public Comparator<? super E> getComparator() {
-		return Spliterators.getComparator(this);
-	}
+    @Override
+    public Comparator<? super E> getComparator() {
+        return Spliterators.getComparator(this);
+    }
 
-	@Override
-	public long getExactSizeIfKnown() {
-		return Spliterators.getExactSizeIfKnown(this);
-	}
+    @Override
+    public long getExactSizeIfKnown() {
+        return Spliterators.getExactSizeIfKnown(this);
+    }
 
-	@Override
-	public boolean hasCharacteristics(int characteristics) {
-		return Spliterators.hasCharacteristics(this, characteristics);
-	}
+    @Override
+    public boolean hasCharacteristics(int characteristics) {
+        return Spliterators.hasCharacteristics(this, characteristics);
+    }
 }

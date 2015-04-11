@@ -29,33 +29,33 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 final class CopyOnWriteArraySetSpliterator {
 
-	private CopyOnWriteArraySetSpliterator() {
-		throw new AssertionError();
-	}
+    private CopyOnWriteArraySetSpliterator() {
+        throw new AssertionError();
+    }
 
-	static <T> Spliterator<T> spliterator(CopyOnWriteArraySet<T> set) {
-		Object[] array = CopyOnWriteArrayListSpliterator
-				.getArray(getCowArrayList(set));
-		return Spliterators.spliterator(array, Spliterator.IMMUTABLE
-				| Spliterator.DISTINCT);
-	}
+    static <T> Spliterator<T> spliterator(CopyOnWriteArraySet<T> set) {
+        Object[] array = CopyOnWriteArrayListSpliterator
+                .getArray(getCowArrayList(set));
+        return Spliterators.spliterator(array, Spliterator.IMMUTABLE
+                | Spliterator.DISTINCT);
+    }
 
-	private static <T> CopyOnWriteArrayList<T> getCowArrayList(
-			CopyOnWriteArraySet<T> set) {
-		return (CopyOnWriteArrayList<T>) UNSAFE.getObject(set, COW_ARRAY_OFF);
-	}
+    private static <T> CopyOnWriteArrayList<T> getCowArrayList(
+            CopyOnWriteArraySet<T> set) {
+        return (CopyOnWriteArrayList<T>) UNSAFE.getObject(set, COW_ARRAY_OFF);
+    }
 
-	// Unsafe mechanics
-	private static final sun.misc.Unsafe UNSAFE;
-	private static final long COW_ARRAY_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			Class<?> cowSet = CopyOnWriteArraySet.class;
-			COW_ARRAY_OFF = UNSAFE.objectFieldOffset(cowSet
-					.getDeclaredField("al"));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    // Unsafe mechanics
+    private static final sun.misc.Unsafe UNSAFE;
+    private static final long COW_ARRAY_OFF;
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            Class<?> cowSet = CopyOnWriteArraySet.class;
+            COW_ARRAY_OFF = UNSAFE.objectFieldOffset(cowSet
+                    .getDeclaredField("al"));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

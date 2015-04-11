@@ -228,13 +228,13 @@ public final class SplittableRandom {
     private static final AtomicLong defaultGen = new AtomicLong(initialSeed());
 
     private static long initialSeed() {
-		String pp = java.security.AccessController
-				.doPrivileged(new PrivilegedAction<String>() {
-					@Override
-					public String run() {
-						return System.getProperty("java.util.secureRandomSeed");
-					}
-				});
+        String pp = java.security.AccessController
+                .doPrivileged(new PrivilegedAction<String>() {
+                    @Override
+                    public String run() {
+                        return System.getProperty("java.util.secureRandomSeed");
+                    }
+                });
         if (pp != null && pp.equalsIgnoreCase("true")) {
             byte[] seedBytes = java.security.SecureRandom.getSeed(8);
             long s = (long)(seedBytes[0]) & 0xffL;
@@ -886,42 +886,42 @@ public final class SplittableRandom {
         /**
          * {@inheritDoc}
          */
-		@Override
-		public long getExactSizeIfKnown() {
-			return Spliterators.getExactSizeIfKnown(this);
-		}
+        @Override
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public Comparator<? super Integer> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super Integer> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public boolean tryAdvance(Consumer<? super Integer> action) {
-			return Spliterators.OfInt.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Integer> action) {
+            return Spliterators.OfInt.tryAdvance(this, action);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public void forEachRemaining(Consumer<? super Integer> action) {
-			Spliterators.OfInt.forEachRemaining(this, action);
-		}
+        @Override
+        public void forEachRemaining(Consumer<? super Integer> action) {
+            Spliterators.OfInt.forEachRemaining(this, action);
+        }
     }
 
     /**
@@ -981,42 +981,42 @@ public final class SplittableRandom {
         /**
          * {@inheritDoc}
          */
-		@Override
-		public long getExactSizeIfKnown() {
-			return Spliterators.getExactSizeIfKnown(this);
-		}
+        @Override
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public Comparator<? super Long> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super Long> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public boolean tryAdvance(Consumer<? super Long> action) {
-			return Spliterators.OfLong.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return Spliterators.OfLong.tryAdvance(this, action);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public void forEachRemaining(Consumer<? super Long> action) {
-			Spliterators.OfLong.forEachRemaining(this, action);
-		}
+        @Override
+        public void forEachRemaining(Consumer<? super Long> action) {
+            Spliterators.OfLong.forEachRemaining(this, action);
+        }
     }
 
     /**
@@ -1076,41 +1076,41 @@ public final class SplittableRandom {
         /**
          * {@inheritDoc}
          */
-		@Override
-		public long getExactSizeIfKnown() {
-			return Spliterators.getExactSizeIfKnown(this);
-		}
+        @Override
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public Comparator<? super Double> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super Double> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public boolean tryAdvance(Consumer<? super Double> action) {
-			return Spliterators.OfDouble.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Double> action) {
+            return Spliterators.OfDouble.tryAdvance(this, action);
+        }
 
         /**
          * {@inheritDoc}
          */
-		@Override
-		public void forEachRemaining(Consumer<? super Double> action) {
-			Spliterators.OfDouble.forEachRemaining(this, action);
-		}
+        @Override
+        public void forEachRemaining(Consumer<? super Double> action) {
+            Spliterators.OfDouble.forEachRemaining(this, action);
+        }
     }
 }
