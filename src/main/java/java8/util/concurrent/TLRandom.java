@@ -46,7 +46,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 /*package*/ final class TLRandom {
 
-	/** Generates per-thread initialization/probe field */
+    /** Generates per-thread initialization/probe field */
     private static final AtomicInteger probeGenerator =
         new AtomicInteger();
 
@@ -56,13 +56,13 @@ import java.util.concurrent.atomic.AtomicLong;
     private static final AtomicLong seeder = new AtomicLong(initialSeed());
 
     private static long initialSeed() {
-		String pp = java.security.AccessController
-				.doPrivileged(new PrivilegedAction<String>() {
-					@Override
-					public String run() {
-						return System.getProperty("java.util.secureRandomSeed");
-					}
-				});
+        String pp = java.security.AccessController
+                .doPrivileged(new PrivilegedAction<String>() {
+                    @Override
+                    public String run() {
+                        return System.getProperty("java.util.secureRandomSeed");
+                    }
+                });
         if (pp != null && pp.equalsIgnoreCase("true")) {
             byte[] seedBytes = java.security.SecureRandom.getSeed(8);
             long s = (long)(seedBytes[0]) & 0xffL;
@@ -97,7 +97,7 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     private TLRandom() {
-    	throw new AssertionError(); 
+        throw new AssertionError(); 
     }
 
     /**
@@ -143,7 +143,7 @@ import java.util.concurrent.atomic.AtomicLong;
      * can be used to force initialization on zero return.
      */
     static final int getProbe() {
-    	return getThreadLocalRandomProbe();
+        return getThreadLocalRandomProbe();
     }
 
     /**
@@ -166,82 +166,82 @@ import java.util.concurrent.atomic.AtomicLong;
         if ((r = getThreadLocalRandomSecondarySeed()) != 0) {
             r ^= r << 13;   // xorshift
             r ^= r >>> 17;
-            r ^= r << 5;        	
+            r ^= r << 5;
         }
         else {
             localInit();
             if ((r = (int) getThreadLocalRandomSeed()) == 0) {
-            	r = 1; // avoid zero
+                r = 1; // avoid zero
             }
         }
         setThreadLocalRandomSecondarySeed(r);
         return r;
     }
 
-	private static final class SeedsHolder {
-		long threadSeed;
-		int threadProbe;
-		int threadSecondarySeed;
-	}
+    private static final class SeedsHolder {
+        long threadSeed;
+        int threadProbe;
+        int threadSecondarySeed;
+    }
 
-	private static final ThreadLocal<SeedsHolder> localSeeds = new ThreadLocal<SeedsHolder>() {
-		@Override
-		protected SeedsHolder initialValue() {
-			return new SeedsHolder();
-		}
-	};
+    private static final ThreadLocal<SeedsHolder> localSeeds = new ThreadLocal<SeedsHolder>() {
+        @Override
+        protected SeedsHolder initialValue() {
+            return new SeedsHolder();
+        }
+    };
 
-	// package-private for access from ThreadLocalRandom
-	static long getThreadLocalRandomSeed() {
-		return localSeeds.get().threadSeed;
-	}
+    // package-private for access from ThreadLocalRandom
+    static long getThreadLocalRandomSeed() {
+        return localSeeds.get().threadSeed;
+    }
 
-	private static void setThreadLocalRandomSeed(long seed) {
-		localSeeds.get().threadSeed = seed;
-	}
+    private static void setThreadLocalRandomSeed(long seed) {
+        localSeeds.get().threadSeed = seed;
+    }
 
-	// package-private for access from ThreadLocalRandom
-	static int getThreadLocalRandomProbe() {
-		return localSeeds.get().threadProbe;
-	}
+    // package-private for access from ThreadLocalRandom
+    static int getThreadLocalRandomProbe() {
+        return localSeeds.get().threadProbe;
+    }
 
-	private static void setThreadLocalRandomProbe(int probe) {
-		localSeeds.get().threadProbe = probe;
-	}
+    private static void setThreadLocalRandomProbe(int probe) {
+        localSeeds.get().threadProbe = probe;
+    }
 
-	private static int getThreadLocalRandomSecondarySeed() {
-		return localSeeds.get().threadSecondarySeed;
-	}
+    private static int getThreadLocalRandomSecondarySeed() {
+        return localSeeds.get().threadSecondarySeed;
+    }
 
-	private static void setThreadLocalRandomSecondarySeed(int secondary) {
-		localSeeds.get().threadSecondarySeed = secondary;
-	}
+    private static void setThreadLocalRandomSecondarySeed(int secondary) {
+        localSeeds.get().threadSecondarySeed = secondary;
+    }
 
-	private static void setUncontendedToTrue(Integer isUncontended) {
-		UNSAFE.putInt(isUncontended, VALUE_OFF, 1); // true
-	}
+    private static void setUncontendedToTrue(Integer isUncontended) {
+        UNSAFE.putInt(isUncontended, VALUE_OFF, 1); // true
+    }
 
-	// only called via reflection from Striped64 
-	private static int getInitializedProbe(Integer uncontended) {
-		int p = getThreadLocalRandomProbe();
-		if (p == 0) {
-			localInit();
-			p = getThreadLocalRandomProbe();
-			setUncontendedToTrue(uncontended);
-		}
-		return p;
-	}
+    // only called via reflection from Striped64 
+    private static int getInitializedProbe(Integer uncontended) {
+        int p = getThreadLocalRandomProbe();
+        if (p == 0) {
+            localInit();
+            p = getThreadLocalRandomProbe();
+            setUncontendedToTrue(uncontended);
+        }
+        return p;
+    }
 
     // Unsafe mechanics
     private static final sun.misc.Unsafe UNSAFE;
     private static final long VALUE_OFF;
-	static {
-		try {
-			UNSAFE = UnsafeAccess.unsafe;
-			Class<?> ik = Integer.class;
-			VALUE_OFF = UNSAFE.objectFieldOffset(ik.getDeclaredField("value"));
-		} catch (Exception e) {
-			throw new Error(e);
-		}
-	}
+    static {
+        try {
+            UNSAFE = UnsafeAccess.unsafe;
+            Class<?> ik = Integer.class;
+            VALUE_OFF = UNSAFE.objectFieldOffset(ik.getDeclaredField("value"));
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
 }

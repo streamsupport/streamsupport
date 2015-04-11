@@ -47,12 +47,12 @@ public final class DoubleConsumers {
      * @throws NullPointerException if {@code after} is null
      */
     public static DoubleConsumer andThen(final DoubleConsumer this_, final DoubleConsumer after) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (double t) -> { this_.accept(t); after.accept(t); };
     }
 
     private DoubleConsumers() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

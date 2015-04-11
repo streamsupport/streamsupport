@@ -49,7 +49,7 @@ public final class BiConsumers {
      * @throws NullPointerException if {@code after} is null
      */
     public static <T, U> BiConsumer<T, U> andThen(final BiConsumer<? super T, ? super U> this_, final BiConsumer<? super T, ? super U> after) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
 
         return (l, r) -> {
@@ -59,6 +59,6 @@ public final class BiConsumers {
     }
 
     private BiConsumers() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

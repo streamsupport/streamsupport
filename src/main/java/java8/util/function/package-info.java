@@ -51,7 +51,7 @@
  * are used.
  *
  * <p>The interfaces in this package are annotated with
- * {@link java.lang.FunctionalInterface}. This annotation is not a requirement
+ * {@link java8.lang.FunctionalInterface}. This annotation is not a requirement
  * for the compiler to recognize an interface as a functional interface, but
  * merely an aid to capture design intent and enlist the help of the compiler in
  * identifying accidental violations of design intent.

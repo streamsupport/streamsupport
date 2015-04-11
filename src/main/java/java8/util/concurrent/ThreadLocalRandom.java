@@ -126,7 +126,7 @@ public class ThreadLocalRandom extends Random {
      * but we provide identical statistical properties.
      */
 
-	// Constants from SplittableRandom
+    // Constants from SplittableRandom
     private static final double DOUBLE_UNIT = 0x1.0p-53;  // 1.0  / (1L << 53)
     private static final float  FLOAT_UNIT  = 0x1.0p-24f; // 1.0f / (1 << 24)
 
@@ -165,9 +165,9 @@ public class ThreadLocalRandom extends Random {
      * @return the current thread's {@code ThreadLocalRandom}
      */
     public static ThreadLocalRandom current() {
-    	if (TLRandom.getThreadLocalRandomProbe() == 0) {
-    		TLRandom.localInit();
-    	}
+        if (TLRandom.getThreadLocalRandomProbe() == 0) {
+            TLRandom.localInit();
+        }
         return instance;
     }
 
@@ -187,7 +187,7 @@ public class ThreadLocalRandom extends Random {
     }
 
     private final long nextSeed() {
-    	return TLRandom.nextSeed();
+        return TLRandom.nextSeed();
     }
 
     // IllegalArgumentException messages
@@ -813,21 +813,21 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-        	return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
-		public Comparator<? super Integer> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super Integer> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
-		public boolean tryAdvance(IntConsumer consumer) {
+        public boolean tryAdvance(IntConsumer consumer) {
             if (consumer == null) throw new NullPointerException();
             long i = index, f = fence;
             if (i < f) {
@@ -838,10 +838,10 @@ public class ThreadLocalRandom extends Random {
             return false;
         }
 
-		@Override
-		public boolean tryAdvance(Consumer<? super Integer> action) {
-			return Spliterators.OfInt.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Integer> action) {
+            return Spliterators.OfInt.tryAdvance(this, action);
+        }
 
         public void forEachRemaining(IntConsumer consumer) {
             if (consumer == null) throw new NullPointerException();
@@ -857,9 +857,9 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Integer> action) {
-			Spliterators.OfInt.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Integer> action) {
+            Spliterators.OfInt.forEachRemaining(this, action);
+        }
     }
 
     /**
@@ -892,21 +892,21 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-        	return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
-		public Comparator<? super Long> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super Long> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
-		public boolean tryAdvance(LongConsumer consumer) {
+        public boolean tryAdvance(LongConsumer consumer) {
             if (consumer == null) throw new NullPointerException();
             long i = index, f = fence;
             if (i < f) {
@@ -918,9 +918,9 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Long> action) {
-			return Spliterators.OfLong.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return Spliterators.OfLong.tryAdvance(this, action);
+        }
 
         public void forEachRemaining(LongConsumer consumer) {
             if (consumer == null) throw new NullPointerException();
@@ -936,9 +936,9 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Long> action) {
-			Spliterators.OfLong.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Long> action) {
+            Spliterators.OfLong.forEachRemaining(this, action);
+        }
     }
 
     /**
@@ -971,21 +971,21 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-        	return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
-		public Comparator<? super Double> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super Double> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
-		public boolean tryAdvance(DoubleConsumer consumer) {
+        public boolean tryAdvance(DoubleConsumer consumer) {
             if (consumer == null) throw new NullPointerException();
             long i = index, f = fence;
             if (i < f) {
@@ -997,9 +997,9 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Double> action) {
-			return Spliterators.OfDouble.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Double> action) {
+            return Spliterators.OfDouble.tryAdvance(this, action);
+        }
 
         public void forEachRemaining(DoubleConsumer consumer) {
             if (consumer == null) throw new NullPointerException();
@@ -1015,13 +1015,13 @@ public class ThreadLocalRandom extends Random {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Double> action) {
-			Spliterators.OfDouble.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Double> action) {
+            Spliterators.OfDouble.forEachRemaining(this, action);
+        }
     }
 
     // Serialization support
-	private static final long serialVersionUID = 9123313859120073139L;
+    private static final long serialVersionUID = 9123313859120073139L;
 
     /**
      * @serialField rnd long

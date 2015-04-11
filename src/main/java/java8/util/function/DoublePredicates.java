@@ -51,7 +51,7 @@ public final class DoublePredicates {
      * @throws NullPointerException if other is null
      */
     public static DoublePredicate and(final DoublePredicate this_, final DoublePredicate other) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (value) -> this_.test(value) && other.test(value);
     }
@@ -66,7 +66,7 @@ public final class DoublePredicates {
      * @throws NullPointerException if {@code this_} is null
      */
     public static DoublePredicate negate(final DoublePredicate this_) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         return (value) -> !this_.test(value);
     }
 
@@ -89,12 +89,12 @@ public final class DoublePredicates {
      * @throws NullPointerException if other is null
      */
     public static DoublePredicate or(final DoublePredicate this_, final DoublePredicate other) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (value) -> this_.test(value) || other.test(value);
     }
 
     private DoublePredicates() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }
