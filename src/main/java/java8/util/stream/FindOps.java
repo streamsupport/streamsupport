@@ -187,31 +187,31 @@ final class FindOps {
         }
 
         @Override
-		public void begin(long size) {
-        	SinkDefaults.begin(this, size);
-		}
+        public void begin(long size) {
+            SinkDefaults.begin(this, size);
+        }
 
-		@Override
-		public void end() {
-			SinkDefaults.end(this);
-		}
+        @Override
+        public void end() {
+            SinkDefaults.end(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		/** Specialization of {@code FindSink} for reference streams */
+        /** Specialization of {@code FindSink} for reference streams */
         static final class OfRef<T> extends FindSink<T, Optional<T>> {
             @Override
             public Optional<T> get() {

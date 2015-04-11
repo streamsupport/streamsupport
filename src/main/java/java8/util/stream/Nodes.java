@@ -151,9 +151,9 @@ final class Nodes {
             return boxed;
         }
 
-    	private OfPrimitive() {
-    		throw new AssertionError();
-    	}
+        private OfPrimitive() {
+            throw new AssertionError();
+        }
     }
 
     static final class OfDouble {
@@ -181,7 +181,7 @@ final class Nodes {
          */
         static void forEach(Node.OfDouble this_, Consumer<? super Double> consumer) {
             if (consumer instanceof DoubleConsumer) {
-            	this_.forEach((DoubleConsumer) consumer);
+                this_.forEach((DoubleConsumer) consumer);
             }
             else {
                 this_.spliterator().forEachRemaining(consumer);
@@ -217,9 +217,9 @@ final class Nodes {
             return StreamShape.DOUBLE_VALUE;
         }
 
-    	private OfDouble () {
-    		throw new AssertionError();
-    	}
+        private OfDouble () {
+            throw new AssertionError();
+        }
     }
 
     static final class OfLong {
@@ -247,7 +247,7 @@ final class Nodes {
          */
         static void forEach(Node.OfLong this_, Consumer<? super Long> consumer) {
             if (consumer instanceof LongConsumer) {
-            	this_.forEach((LongConsumer) consumer);
+                this_.forEach((LongConsumer) consumer);
             }
             else {
                 this_.spliterator().forEachRemaining(consumer);
@@ -282,9 +282,9 @@ final class Nodes {
             return StreamShape.LONG_VALUE;
         }
 
-    	private OfLong() {
-    		throw new AssertionError();
-    	}
+        private OfLong() {
+            throw new AssertionError();
+        }
     }
 
     static final class OfInt {
@@ -312,7 +312,7 @@ final class Nodes {
          */
         static void forEach(Node.OfInt this_, Consumer<? super Integer> consumer) {
             if (consumer instanceof IntConsumer) {
-            	this_.forEach((IntConsumer) consumer);
+                this_.forEach((IntConsumer) consumer);
             }
             else {
                 this_.spliterator().forEachRemaining(consumer);
@@ -347,9 +347,9 @@ final class Nodes {
             return StreamShape.INT_VALUE;
         }
 
-    	private OfInt() {
-    		throw new AssertionError();
-    	}
+        private OfInt() {
+            throw new AssertionError();
+        }
     }
 
     // General shape-based node creation methods
@@ -853,26 +853,26 @@ final class Nodes {
         }
 
         @Override
-		public StreamShape getShape() {
-			return Nodes.getShape(this);
-		}
+        public StreamShape getShape() {
+            return Nodes.getShape(this);
+        }
 
-		@Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        @Override
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public Node<T> getChild(int i) {
-			return Nodes.getChild(this, i);
-		}
+        @Override
+        public Node<T> getChild(int i) {
+            return Nodes.getChild(this, i);
+        }
 
-		@Override
-		public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
-			return Nodes.truncate(this, from, to, generator);
-		}
+        @Override
+        public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
+            return Nodes.truncate(this, from, to, generator);
+        }
 
-		public void forEach(T_CONS consumer) { }
+        public void forEach(T_CONS consumer) { }
 
         private static class OfRef<T> extends EmptyNode<T, T[], Consumer<? super T>> {
             private OfRef() {
@@ -892,9 +892,9 @@ final class Nodes {
             OfInt() { } // Avoid creation of special accessor
 
             @Override
-    		public void forEach(Consumer<? super Integer> consumer) {
-    			Nodes.OfInt.forEach(this, consumer);
-    		}
+            public void forEach(Consumer<? super Integer> consumer) {
+                Nodes.OfInt.forEach(this, consumer);
+            }
 
             @Override
             public Spliterator.OfInt spliterator() {
@@ -902,30 +902,30 @@ final class Nodes {
             }
 
             @Override
-			public Node.OfInt getChild(int i) {
-				return Nodes.OfPrimitive.getChild(this, i);
-			}
+            public Node.OfInt getChild(int i) {
+                return Nodes.OfPrimitive.getChild(this, i);
+            }
 
-			@Override
-			public Node.OfInt truncate(long from, long to,
-					IntFunction<Integer[]> generator) {
-				return Nodes.OfInt.truncate(this, from, to, generator);
-			}
+            @Override
+            public Node.OfInt truncate(long from, long to,
+                    IntFunction<Integer[]> generator) {
+                return Nodes.OfInt.truncate(this, from, to, generator);
+            }
 
-			@Override
+            @Override
             public int[] asPrimitiveArray() {
                 return EMPTY_INT_ARRAY;
             }
 
-			@Override
-			public void copyInto(Integer[] boxed, int offset) {
-				Nodes.OfInt.copyInto(this, boxed, offset);
-			}
+            @Override
+            public void copyInto(Integer[] boxed, int offset) {
+                Nodes.OfInt.copyInto(this, boxed, offset);
+            }
 
-			@Override
-			public int[] newArray(int count) {
-				return Nodes.OfInt.newArray(this, count);
-			}
+            @Override
+            public int[] newArray(int count) {
+                return Nodes.OfInt.newArray(this, count);
+            }
         }
 
         private static final class OfLong
@@ -935,9 +935,9 @@ final class Nodes {
             OfLong() { } // Avoid creation of special accessor
 
             @Override
-    		public void forEach(Consumer<? super Long> consumer) {
-    			Nodes.OfLong.forEach(this, consumer);
-    		}
+            public void forEach(Consumer<? super Long> consumer) {
+                Nodes.OfLong.forEach(this, consumer);
+            }
 
             @Override
             public Spliterator.OfLong spliterator() {
@@ -945,30 +945,30 @@ final class Nodes {
             }
 
             @Override
-			public Node.OfLong getChild(int i) {
-				return Nodes.OfPrimitive.getChild(this, i);
-			}
+            public Node.OfLong getChild(int i) {
+                return Nodes.OfPrimitive.getChild(this, i);
+            }
 
-			@Override
-			public Node.OfLong truncate(long from, long to,
-					IntFunction<Long[]> generator) {
-				return Nodes.OfLong.truncate(this, from, to, generator);
-			}
+            @Override
+            public Node.OfLong truncate(long from, long to,
+                    IntFunction<Long[]> generator) {
+                return Nodes.OfLong.truncate(this, from, to, generator);
+            }
 
-			@Override
+            @Override
             public long[] asPrimitiveArray() {
                 return EMPTY_LONG_ARRAY;
             }
 
-			@Override
-			public void copyInto(Long[] boxed, int offset) {
-				Nodes.OfLong.copyInto(this, boxed, offset);
-			}
+            @Override
+            public void copyInto(Long[] boxed, int offset) {
+                Nodes.OfLong.copyInto(this, boxed, offset);
+            }
 
-			@Override
-			public long[] newArray(int count) {
-				return Nodes.OfLong.newArray(this, count);
-			}
+            @Override
+            public long[] newArray(int count) {
+                return Nodes.OfLong.newArray(this, count);
+            }
         }
 
         private static final class OfDouble
@@ -978,40 +978,40 @@ final class Nodes {
             OfDouble() { } // Avoid creation of special accessor
 
             @Override
-    		public void forEach(Consumer<? super Double> consumer) {
-    			Nodes.OfDouble.forEach(this, consumer);
-    		}
+            public void forEach(Consumer<? super Double> consumer) {
+                Nodes.OfDouble.forEach(this, consumer);
+            }
 
             @Override
-			public Node.OfDouble getChild(int i) {
-				return Nodes.OfPrimitive.getChild(this, i);
-			}
+            public Node.OfDouble getChild(int i) {
+                return Nodes.OfPrimitive.getChild(this, i);
+            }
 
-			@Override
-			public Node.OfDouble truncate(long from, long to,
-					IntFunction<Double[]> generator) {
-				return Nodes.OfDouble.truncate(this, from, to, generator);
-			}
+            @Override
+            public Node.OfDouble truncate(long from, long to,
+                    IntFunction<Double[]> generator) {
+                return Nodes.OfDouble.truncate(this, from, to, generator);
+            }
 
-			@Override
+            @Override
             public Spliterator.OfDouble spliterator() {
                 return Spliterators.emptyDoubleSpliterator();
             }
 
-			@Override
-			public void copyInto(Double[] boxed, int offset) {
-				Nodes.OfDouble.copyInto(this, boxed, offset);
-			}
+            @Override
+            public void copyInto(Double[] boxed, int offset) {
+                Nodes.OfDouble.copyInto(this, boxed, offset);
+            }
 
             @Override
             public double[] asPrimitiveArray() {
                 return EMPTY_DOUBLE_ARRAY;
             }
 
-    		@Override
-    		public double[] newArray(int count) {
-    			return Nodes.OfDouble.newArray(this, count);
-    		}
+            @Override
+            public double[] newArray(int count) {
+                return Nodes.OfDouble.newArray(this, count);
+            }
         }
     }
 
@@ -1040,26 +1040,26 @@ final class Nodes {
         }
 
         @Override
-		public StreamShape getShape() {
-			return Nodes.getShape(this);
-		}
+        public StreamShape getShape() {
+            return Nodes.getShape(this);
+        }
 
-		@Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        @Override
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public Node<T> getChild(int i) {
-			return Nodes.getChild(this, i);
-		}
+        @Override
+        public Node<T> getChild(int i) {
+            return Nodes.getChild(this, i);
+        }
 
-		@Override
-		public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
-			return Nodes.truncate(this, from, to, generator);
-		}
+        @Override
+        public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
+            return Nodes.truncate(this, from, to, generator);
+        }
 
-		@Override
+        @Override
         public void copyInto(T[] dest, int destOffset) {
             System.arraycopy(array, 0, dest, destOffset, curSize);
         }
@@ -1106,31 +1106,31 @@ final class Nodes {
 
         @Override
         public Spliterator<T> spliterator() {
-        	return Spliterators.spliterator(c);
+            return Spliterators.spliterator(c);
 //            return c.stream().spliterator(); // original Java 8 code
         }
 
         @Override
-		public StreamShape getShape() {
-			return Nodes.getShape(this);
-		}
+        public StreamShape getShape() {
+            return Nodes.getShape(this);
+        }
 
-		@Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        @Override
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public Node<T> getChild(int i) {
-			return Nodes.getChild(this, i);
-		}
+        @Override
+        public Node<T> getChild(int i) {
+            return Nodes.getChild(this, i);
+        }
 
-		@Override
-		public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
-			return Nodes.truncate(this, from, to, generator);
-		}
+        @Override
+        public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
+            return Nodes.truncate(this, from, to, generator);
+        }
 
-		@Override
+        @Override
         public void copyInto(T[] array, int offset) {
             for (T t : c) {
                 array[offset++] = t;
@@ -1151,7 +1151,7 @@ final class Nodes {
         public void forEach(Consumer<? super T> consumer) {
             Objects.requireNonNull(consumer);
             for (T t : c) {
-            	consumer.accept(t);
+                consumer.accept(t);
             }
         }
 
@@ -1187,11 +1187,11 @@ final class Nodes {
         }
 
         @Override
-		public StreamShape getShape() {
-			return Nodes.getShape(this);
-		}
+        public StreamShape getShape() {
+            return Nodes.getShape(this);
+        }
 
-		@Override
+        @Override
         public T_NODE getChild(int i) {
             if (i == 0) return left;
             if (i == 1) return right;
@@ -1301,11 +1301,11 @@ final class Nodes {
             }
 
             @Override
-			public E[] asArray(IntFunction<E[]> generator) {
-				return Nodes.OfPrimitive.asArray(this, generator);
-			}
+            public E[] asArray(IntFunction<E[]> generator) {
+                return Nodes.OfPrimitive.asArray(this, generator);
+            }
 
-			@Override
+            @Override
             public String toString() {
                 if (count() < 32)
                     return String.format("%s[%s.%s]", this.getClass().getName(), left, right);
@@ -1323,9 +1323,9 @@ final class Nodes {
             }
 
             @Override
-    		public void forEach(Consumer<? super Integer> consumer) {
-    			Nodes.OfInt.forEach(this, consumer);
-    		}
+            public void forEach(Consumer<? super Integer> consumer) {
+                Nodes.OfInt.forEach(this, consumer);
+            }
 
             @Override
             public Spliterator.OfInt spliterator() {
@@ -1333,20 +1333,20 @@ final class Nodes {
             }
 
             @Override
-    		public Node.OfInt truncate(long from, long to,
-    				IntFunction<Integer[]> generator) {
-    			return Nodes.OfInt.truncate(this, from, to, generator);
-    		}
+            public Node.OfInt truncate(long from, long to,
+                    IntFunction<Integer[]> generator) {
+                return Nodes.OfInt.truncate(this, from, to, generator);
+            }
 
-    		@Override
-    		public void copyInto(Integer[] boxed, int offset) {
-    			Nodes.OfInt.copyInto(this, boxed, offset);
-    		}
+            @Override
+            public void copyInto(Integer[] boxed, int offset) {
+                Nodes.OfInt.copyInto(this, boxed, offset);
+            }
 
-			@Override
-			public int[] newArray(int count) {
-				return Nodes.OfInt.newArray(this, count);
-			}
+            @Override
+            public int[] newArray(int count) {
+                return Nodes.OfInt.newArray(this, count);
+            }
         }
 
         static final class OfLong
@@ -1358,30 +1358,30 @@ final class Nodes {
             }
 
             @Override
-    		public void forEach(Consumer<? super Long> consumer) {
-    			Nodes.OfLong.forEach(this, consumer);
-    		}
+            public void forEach(Consumer<? super Long> consumer) {
+                Nodes.OfLong.forEach(this, consumer);
+            }
 
-    		@Override
-    		public java8.util.stream.Node.OfLong truncate(long from, long to,
-    				IntFunction<Long[]> generator) {
-    			return Nodes.OfLong.truncate(this, from, to, generator);
-    		}
+            @Override
+            public java8.util.stream.Node.OfLong truncate(long from, long to,
+                    IntFunction<Long[]> generator) {
+                return Nodes.OfLong.truncate(this, from, to, generator);
+            }
 
             @Override
             public Spliterator.OfLong spliterator() {
                 return new InternalNodeSpliterator.OfLong(this);
             }
 
-    		@Override
-    		public void copyInto(Long[] boxed, int offset) {
-    			Nodes.OfLong.copyInto(this, boxed, offset);
-    		}
+            @Override
+            public void copyInto(Long[] boxed, int offset) {
+                Nodes.OfLong.copyInto(this, boxed, offset);
+            }
 
-			@Override
-			public long[] newArray(int count) {
-				return Nodes.OfLong.newArray(this, count);
-			}                        
+            @Override
+            public long[] newArray(int count) {
+                return Nodes.OfLong.newArray(this, count);
+            }
         }
 
         static final class OfDouble
@@ -1393,30 +1393,30 @@ final class Nodes {
             }
 
             @Override
-    		public void forEach(Consumer<? super Double> consumer) {
-    			Nodes.OfDouble.forEach(this, consumer);
-    		}
+            public void forEach(Consumer<? super Double> consumer) {
+                Nodes.OfDouble.forEach(this, consumer);
+            }
 
-    		@Override
-    		public Node.OfDouble truncate(long from, long to,
-    				IntFunction<Double[]> generator) {
-    			return Nodes.OfDouble.truncate(this, from, to, generator);
-    		}
+            @Override
+            public Node.OfDouble truncate(long from, long to,
+                    IntFunction<Double[]> generator) {
+                return Nodes.OfDouble.truncate(this, from, to, generator);
+            }
 
             @Override
             public Spliterator.OfDouble spliterator() {
                 return new InternalNodeSpliterator.OfDouble(this);
             }
 
-    		@Override
-    		public void copyInto(Double[] boxed, int offset) {
-    			Nodes.OfDouble.copyInto(this, boxed, offset);
-    		}
+            @Override
+            public void copyInto(Double[] boxed, int offset) {
+                Nodes.OfDouble.copyInto(this, boxed, offset);
+            }
 
-    		@Override
-    		public double[] newArray(int count) {
-    			return Nodes.OfDouble.newArray(this, count);
-    		}
+            @Override
+            public double[] newArray(int count) {
+                return Nodes.OfDouble.newArray(this, count);
+            }
         }
     }
 
@@ -1599,20 +1599,20 @@ final class Nodes {
                     while(tryAdvance(consumer)) { }
             }
 
-			@Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            @Override
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super T> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super T> getComparator() {
+                return Spliterators.getComparator(this);
+            }
         }
 
         private static abstract class OfPrimitive<T, T_CONS, T_ARR,
@@ -1668,20 +1668,20 @@ final class Nodes {
                     while(tryAdvance(consumer)) { }
             }
 
-			@Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            @Override
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super T> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super T> getComparator() {
+                return Spliterators.getComparator(this);
+            }
         }
 
         private static final class OfInt
@@ -1692,15 +1692,15 @@ final class Nodes {
                 super(cur);
             }
 
-    		@Override
-    		public boolean tryAdvance(Consumer<? super Integer> action) {
-    			return Spliterators.OfInt.tryAdvance(this, action);
-    		}
+            @Override
+            public boolean tryAdvance(Consumer<? super Integer> action) {
+                return Spliterators.OfInt.tryAdvance(this, action);
+            }
 
             @Override
-    		public void forEachRemaining(Consumer<? super Integer> action) {
-    			Spliterators.OfInt.forEachRemaining(this, action);
-    		}
+            public void forEachRemaining(Consumer<? super Integer> action) {
+                Spliterators.OfInt.forEachRemaining(this, action);
+            }
         }
 
         private static final class OfLong
@@ -1712,14 +1712,14 @@ final class Nodes {
             }
 
             @Override
-    		public boolean tryAdvance(Consumer<? super Long> action) {
-    			return Spliterators.OfLong.tryAdvance(this, action);
-    		}
+            public boolean tryAdvance(Consumer<? super Long> action) {
+                return Spliterators.OfLong.tryAdvance(this, action);
+            }
 
             @Override
-    		public void forEachRemaining(Consumer<? super Long> action) {
-    			Spliterators.OfLong.forEachRemaining(this, action);
-    		}
+            public void forEachRemaining(Consumer<? super Long> action) {
+                Spliterators.OfLong.forEachRemaining(this, action);
+            }
         }
 
         private static final class OfDouble
@@ -1731,14 +1731,14 @@ final class Nodes {
             }
 
             @Override
-    		public boolean tryAdvance(Consumer<? super Double> action) {
-    			return Spliterators.OfDouble.tryAdvance(this, action);
-    		}
+            public boolean tryAdvance(Consumer<? super Double> action) {
+                return Spliterators.OfDouble.tryAdvance(this, action);
+            }
 
             @Override
-    		public void forEachRemaining(Consumer<? super Double> action) {
-    			Spliterators.OfDouble.forEachRemaining(this, action);
-    		}
+            public void forEachRemaining(Consumer<? super Double> action) {
+                Spliterators.OfDouble.forEachRemaining(this, action);
+            }
         }
     }
 
@@ -1788,26 +1788,26 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
+        @Override
         public String toString() {
             return String.format("FixedNodeBuilder[%d][%s]",
                                  array.length - curSize, Arrays.toString(array));
@@ -1825,11 +1825,11 @@ final class Nodes {
         SpinedNodeBuilder() {} // Avoid creation of special accessor
 
         @Override
-		public Spliterator<T> spliterator() {
-			return getSpliterator();
-		}
+        public Spliterator<T> spliterator() {
+            return getSpliterator();
+        }
 
-		@Override
+        @Override
         public Spliterator<T> getSpliterator() {
             assert !building : "during building";
             return super.getSpliterator();
@@ -1842,26 +1842,26 @@ final class Nodes {
         }
 
         @Override
-		public StreamShape getShape() {
-			return Nodes.getShape(this);
-		}
+        public StreamShape getShape() {
+            return Nodes.getShape(this);
+        }
 
-		@Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        @Override
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public Node<T> getChild(int i) {
-			return Nodes.getChild(this, i);
-		}
+        @Override
+        public Node<T> getChild(int i) {
+            return Nodes.getChild(this, i);
+        }
 
-		@Override
-		public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
-			return Nodes.truncate(this, from, to, generator);
-		}
+        @Override
+        public Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
+            return Nodes.truncate(this, from, to, generator);
+        }
 
-		//
+        //
         @Override
         public void begin(long size) {
             assert !building : "was already building";
@@ -1877,24 +1877,24 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
         @Override
         public void end() {
@@ -1947,37 +1947,37 @@ final class Nodes {
         // Node
 
         @Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
         @Override
-		public void forEach(Consumer<? super Integer> consumer) {
-			Nodes.OfInt.forEach(this, consumer);
-		}
+        public void forEach(Consumer<? super Integer> consumer) {
+            Nodes.OfInt.forEach(this, consumer);
+        }
 
-		@Override
-		public OfInt getChild(int i) {
-			return Nodes.OfPrimitive.getChild(this, i);
-		}
+        @Override
+        public OfInt getChild(int i) {
+            return Nodes.OfPrimitive.getChild(this, i);
+        }
 
-		@Override
+        @Override
         public Spliterator.OfInt spliterator() {
             return java8.util.J8Arrays.spliterator(array, 0, curSize);
         }
 
         @Override
-		public OfInt truncate(long from, long to,
-				IntFunction<Integer[]> generator) {
-			return Nodes.OfInt.truncate(this, from, to, generator);
-		}
+        public OfInt truncate(long from, long to,
+                IntFunction<Integer[]> generator) {
+            return Nodes.OfInt.truncate(this, from, to, generator);
+        }
 
-		@Override
-		public void copyInto(Integer[] boxed, int offset) {
-			Nodes.OfInt.copyInto(this, boxed, offset);
-		}
+        @Override
+        public void copyInto(Integer[] boxed, int offset) {
+            Nodes.OfInt.copyInto(this, boxed, offset);
+        }
 
-		@Override
+        @Override
         public int[] asPrimitiveArray() {
             if (array.length == curSize) {
                 return array;
@@ -1987,21 +1987,21 @@ final class Nodes {
         }
 
         @Override
-		public Integer[] asArray(IntFunction<Integer[]> generator) {
-			return Nodes.OfPrimitive.asArray(this, generator);
-		}
+        public Integer[] asArray(IntFunction<Integer[]> generator) {
+            return Nodes.OfPrimitive.asArray(this, generator);
+        }
 
-		@Override
-		public int[] newArray(int count) {
-			return Nodes.OfInt.newArray(this, count);
-		}
+        @Override
+        public int[] newArray(int count) {
+            return Nodes.OfInt.newArray(this, count);
+        }
 
-		@Override
-		public StreamShape getShape() {
-			return Nodes.OfInt.getShape(this);
-		}
+        @Override
+        public StreamShape getShape() {
+            return Nodes.OfInt.getShape(this);
+        }
 
-		@Override
+        @Override
         public void copyInto(int[] dest, int destOffset) {
             System.arraycopy(array, 0, dest, destOffset, curSize);
         }
@@ -2042,32 +2042,32 @@ final class Nodes {
         }
 
         @Override
-		public void forEach(Consumer<? super Long> consumer) {
-			Nodes.OfLong.forEach(this, consumer);
-		}
-
-		@Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        public void forEach(Consumer<? super Long> consumer) {
+            Nodes.OfLong.forEach(this, consumer);
+        }
 
         @Override
-		public java8.util.stream.Node.OfLong getChild(int i) {
-			return Nodes.OfPrimitive.getChild(this, i);
-		}
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public void copyInto(Long[] boxed, int offset) {
-			Nodes.OfLong.copyInto(this, boxed, offset);
-		}
+        @Override
+        public java8.util.stream.Node.OfLong getChild(int i) {
+            return Nodes.OfPrimitive.getChild(this, i);
+        }
 
-		@Override
-		public java8.util.stream.Node.OfLong truncate(long from, long to,
-				IntFunction<Long[]> generator) {
-			return Nodes.OfLong.truncate(this, from, to, generator);
-		}
+        @Override
+        public void copyInto(Long[] boxed, int offset) {
+            Nodes.OfLong.copyInto(this, boxed, offset);
+        }
 
-		@Override
+        @Override
+        public java8.util.stream.Node.OfLong truncate(long from, long to,
+                IntFunction<Long[]> generator) {
+            return Nodes.OfLong.truncate(this, from, to, generator);
+        }
+
+        @Override
         public Spliterator.OfLong spliterator() {
             return java8.util.J8Arrays.spliterator(array, 0, curSize);
         }
@@ -2082,21 +2082,21 @@ final class Nodes {
         }
 
         @Override
-		public Long[] asArray(IntFunction<Long[]> generator) {
-			return Nodes.OfPrimitive.asArray(this, generator);
-		}
+        public Long[] asArray(IntFunction<Long[]> generator) {
+            return Nodes.OfPrimitive.asArray(this, generator);
+        }
 
-		@Override
-		public long[] newArray(int count) {
-			return Nodes.OfLong.newArray(this, count);
-		}
+        @Override
+        public long[] newArray(int count) {
+            return Nodes.OfLong.newArray(this, count);
+        }
 
-		@Override
-		public StreamShape getShape() {
-			return Nodes.OfLong.getShape(this);
-		}
+        @Override
+        public StreamShape getShape() {
+            return Nodes.OfLong.getShape(this);
+        }
 
-		@Override
+        @Override
         public void copyInto(long[] dest, int destOffset) {
             System.arraycopy(array, 0, dest, destOffset, curSize);
         }
@@ -2137,27 +2137,27 @@ final class Nodes {
         }
 
         @Override
-		public void forEach(Consumer<? super Double> consumer) {
-			Nodes.OfDouble.forEach(this, consumer);
-		}
+        public void forEach(Consumer<? super Double> consumer) {
+            Nodes.OfDouble.forEach(this, consumer);
+        }
 
-		@Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        @Override
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public OfDouble getChild(int i) {
-			return Nodes.OfPrimitive.getChild(this, i);
-		}
+        @Override
+        public OfDouble getChild(int i) {
+            return Nodes.OfPrimitive.getChild(this, i);
+        }
 
-		@Override
-		public OfDouble truncate(long from, long to,
-				IntFunction<Double[]> generator) {
-			return Nodes.OfDouble.truncate(this, from, to, generator);
-		}
+        @Override
+        public OfDouble truncate(long from, long to,
+                IntFunction<Double[]> generator) {
+            return Nodes.OfDouble.truncate(this, from, to, generator);
+        }
 
-		@Override
+        @Override
         public Spliterator.OfDouble spliterator() {
             return java8.util.J8Arrays.spliterator(array, 0, curSize);
         }
@@ -2172,26 +2172,26 @@ final class Nodes {
         }
 
         @Override
-		public Double[] asArray(IntFunction<Double[]> generator) {
-			return Nodes.OfPrimitive.asArray(this, generator);
-		}
+        public Double[] asArray(IntFunction<Double[]> generator) {
+            return Nodes.OfPrimitive.asArray(this, generator);
+        }
 
-		@Override
-		public double[] newArray(int count) {
-			return Nodes.OfDouble.newArray(this, count);
-		}
+        @Override
+        public double[] newArray(int count) {
+            return Nodes.OfDouble.newArray(this, count);
+        }
 
-		@Override
-		public void copyInto(Double[] boxed, int offset) {
-			Nodes.OfDouble.copyInto(this, boxed, offset);
-		}
+        @Override
+        public void copyInto(Double[] boxed, int offset) {
+            Nodes.OfDouble.copyInto(this, boxed, offset);
+        }
 
-		@Override
-		public StreamShape getShape() {
-			return Nodes.OfDouble.getShape(this);
-		}
+        @Override
+        public StreamShape getShape() {
+            return Nodes.OfDouble.getShape(this);
+        }
 
-		@Override
+        @Override
         public void copyInto(double[] dest, int destOffset) {
             System.arraycopy(array, 0, dest, destOffset, curSize);
         }
@@ -2255,11 +2255,11 @@ final class Nodes {
         }
 
         @Override
-		public void accept(Integer t) {
-			SinkDefaults.OfInt.accept(this, t);
-		}
+        public void accept(Integer t) {
+            SinkDefaults.OfInt.accept(this, t);
+        }
 
-		@Override
+        @Override
         public void end() {
             if (curSize < array.length) {
                 throw new IllegalStateException(String.format("End size %d is less than fixed size %d",
@@ -2268,21 +2268,21 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
+        @Override
         public String toString() {
             return String.format("IntFixedNodeBuilder[%d][%s]",
                                  array.length - curSize, Arrays.toString(array));
@@ -2329,11 +2329,11 @@ final class Nodes {
         }
 
         @Override
-		public void accept(Long t) {
-			SinkDefaults.OfLong.accept(this, t);
-		}
+        public void accept(Long t) {
+            SinkDefaults.OfLong.accept(this, t);
+        }
 
-		@Override
+        @Override
         public void end() {
             if (curSize < array.length) {
                 throw new IllegalStateException(String.format("End size %d is less than fixed size %d",
@@ -2342,21 +2342,21 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
+        @Override
         public String toString() {
             return String.format("LongFixedNodeBuilder[%d][%s]",
                                  array.length - curSize, Arrays.toString(array));
@@ -2402,10 +2402,10 @@ final class Nodes {
             }
         }
 
-		@Override
-		public void accept(Double i) {
-			SinkDefaults.OfDouble.accept(this, i);
-		}
+        @Override
+        public void accept(Double i) {
+            SinkDefaults.OfDouble.accept(this, i);
+        }
 
         @Override
         public void end() {
@@ -2416,21 +2416,21 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
+        @Override
         public String toString() {
             return String.format("DoubleFixedNodeBuilder[%d][%s]",
                                  array.length - curSize, Arrays.toString(array));
@@ -2472,9 +2472,9 @@ final class Nodes {
         }
 
         @Override
-		public void accept(Integer t) {
-			SinkDefaults.OfInt.accept(this, t);
-		}
+        public void accept(Integer t) {
+            SinkDefaults.OfInt.accept(this, t);
+        }
 
         @Override
         public void end() {
@@ -2484,19 +2484,19 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
         @Override
         public void copyInto(int[] array, int offset) throws IndexOutOfBoundsException {
@@ -2504,48 +2504,48 @@ final class Nodes {
             super.copyInto(array, offset);
         }
 
-		@Override
-		public void copyInto(Integer[] boxed, int offset) {
-			Nodes.OfInt.copyInto(this, boxed, offset);
-		}
+        @Override
+        public void copyInto(Integer[] boxed, int offset) {
+            Nodes.OfInt.copyInto(this, boxed, offset);
+        }
 
         @Override
-		public Node.OfInt truncate(long from, long to,
-				IntFunction<Integer[]> generator) {
-			return Nodes.OfInt.truncate(this, from, to, generator);
-		}
+        public Node.OfInt truncate(long from, long to,
+                IntFunction<Integer[]> generator) {
+            return Nodes.OfInt.truncate(this, from, to, generator);
+        }
 
-		@Override
+        @Override
         public int[] asPrimitiveArray() {
             assert !building : "during building";
             return super.asPrimitiveArray();
         }
 
         @Override
-		public Integer[] asArray(IntFunction<Integer[]> generator) {
-			return Nodes.OfPrimitive.asArray(this, generator);
-		}
+        public Integer[] asArray(IntFunction<Integer[]> generator) {
+            return Nodes.OfPrimitive.asArray(this, generator);
+        }
 
-		@Override
-		public StreamShape getShape() {
-			return Nodes.OfInt.getShape(this);
-		}
+        @Override
+        public StreamShape getShape() {
+            return Nodes.OfInt.getShape(this);
+        }
 
-		@Override
+        @Override
         public Node.OfInt build() {
             assert !building : "during building";
             return this;
         }
 
         @Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public java8.util.stream.Node.OfInt getChild(int i) {
-			return Nodes.OfPrimitive.getChild(this, i);
-		}
+        @Override
+        public java8.util.stream.Node.OfInt getChild(int i) {
+            return Nodes.OfPrimitive.getChild(this, i);
+        }
     }
 
     private static final class LongSpinedNodeBuilder
@@ -2555,13 +2555,13 @@ final class Nodes {
 
         LongSpinedNodeBuilder() {} // Avoid creation of special accessor
 
-		@Override
-		public java8.util.stream.Node.OfLong truncate(long from, long to,
-				IntFunction<Long[]> generator) {
-			return Nodes.OfLong.truncate(this, from, to, generator);
-		}
+        @Override
+        public java8.util.stream.Node.OfLong truncate(long from, long to,
+                IntFunction<Long[]> generator) {
+            return Nodes.OfLong.truncate(this, from, to, generator);
+        }
 
-		@Override
+        @Override
         public Spliterator.OfLong getSpliterator() {
             assert !building : "during building";
             return super.getSpliterator();
@@ -2589,9 +2589,9 @@ final class Nodes {
         }
 
         @Override
-		public void accept(Long t) {
-			SinkDefaults.OfLong.accept(this, t);
-		}
+        public void accept(Long t) {
+            SinkDefaults.OfLong.accept(this, t);
+        }
 
         @Override
         public void end() {
@@ -2601,19 +2601,19 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
         @Override
         public void copyInto(long[] array, int offset) {
@@ -2621,10 +2621,10 @@ final class Nodes {
             super.copyInto(array, offset);
         }
 
-		@Override
-		public void copyInto(Long[] boxed, int offset) {
-			Nodes.OfLong.copyInto(this, boxed, offset);
-		}
+        @Override
+        public void copyInto(Long[] boxed, int offset) {
+            Nodes.OfLong.copyInto(this, boxed, offset);
+        }
 
         @Override
         public long[] asPrimitiveArray() {
@@ -2633,30 +2633,30 @@ final class Nodes {
         }
 
         @Override
-		public Long[] asArray(IntFunction<Long[]> generator) {
-			return Nodes.OfPrimitive.asArray(this, generator);
-		}
+        public Long[] asArray(IntFunction<Long[]> generator) {
+            return Nodes.OfPrimitive.asArray(this, generator);
+        }
 
-		@Override
-		public StreamShape getShape() {
-			return Nodes.OfLong.getShape(this);
-		}
+        @Override
+        public StreamShape getShape() {
+            return Nodes.OfLong.getShape(this);
+        }
 
-		@Override
+        @Override
         public Node.OfLong build() {
             assert !building : "during building";
             return this;
         }
 
         @Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public java8.util.stream.Node.OfLong getChild(int i) {
-			return Nodes.OfPrimitive.getChild(this, i);
-		}
+        @Override
+        public java8.util.stream.Node.OfLong getChild(int i) {
+            return Nodes.OfPrimitive.getChild(this, i);
+        }
     }
 
     private static final class DoubleSpinedNodeBuilder
@@ -2666,13 +2666,13 @@ final class Nodes {
 
         DoubleSpinedNodeBuilder() {} // Avoid creation of special accessor
 
-		@Override
-		public Node.OfDouble truncate(long from, long to,
-				IntFunction<Double[]> generator) {
-			return Nodes.OfDouble.truncate(this, from, to, generator);
-		}
+        @Override
+        public Node.OfDouble truncate(long from, long to,
+                IntFunction<Double[]> generator) {
+            return Nodes.OfDouble.truncate(this, from, to, generator);
+        }
 
-		@Override
+        @Override
         public Spliterator.OfDouble getSpliterator() {
             assert !building : "during building";
             return super.getSpliterator();
@@ -2699,10 +2699,10 @@ final class Nodes {
             super.accept(i);
         }
 
-		@Override
-		public void accept(Double i) {
-			SinkDefaults.OfDouble.accept(this, i);
-		}
+        @Override
+        public void accept(Double i) {
+            SinkDefaults.OfDouble.accept(this, i);
+        }
 
         @Override
         public void end() {
@@ -2712,19 +2712,19 @@ final class Nodes {
         }
 
         @Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
         @Override
         public void copyInto(double[] array, int offset) {
@@ -2732,10 +2732,10 @@ final class Nodes {
             super.copyInto(array, offset);
         }
 
-		@Override
-		public void copyInto(Double[] boxed, int offset) {
-			Nodes.OfDouble.copyInto(this, boxed, offset);
-		}
+        @Override
+        public void copyInto(Double[] boxed, int offset) {
+            Nodes.OfDouble.copyInto(this, boxed, offset);
+        }
 
         @Override
         public double[] asPrimitiveArray() {
@@ -2744,30 +2744,30 @@ final class Nodes {
         }
 
         @Override
-		public Double[] asArray(IntFunction<Double[]> generator) {
-			return Nodes.OfPrimitive.asArray(this, generator);
-		}
+        public Double[] asArray(IntFunction<Double[]> generator) {
+            return Nodes.OfPrimitive.asArray(this, generator);
+        }
 
-		@Override
+        @Override
         public Node.OfDouble build() {
             assert !building : "during building";
             return this;
         }
 
         @Override
-		public int getChildCount() {
-			return Nodes.getChildCount(this);
-		}
+        public int getChildCount() {
+            return Nodes.getChildCount(this);
+        }
 
-		@Override
-		public java8.util.stream.Node.OfDouble getChild(int i) {
-			return Nodes.OfPrimitive.getChild(this, i);
-		}
+        @Override
+        public java8.util.stream.Node.OfDouble getChild(int i) {
+            return Nodes.OfPrimitive.getChild(this, i);
+        }
 
-		@Override
-		public StreamShape getShape() {
-			return Nodes.OfDouble.getShape(this);
-		}
+        @Override
+        public StreamShape getShape() {
+            return Nodes.OfDouble.getShape(this);
+        }
     }
 
     /*
@@ -2848,29 +2848,29 @@ final class Nodes {
         }
 
         @Override
-		public void end() {
-			SinkDefaults.end(this);
-		}
+        public void end() {
+            SinkDefaults.end(this);
+        }
 
-		@Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        @Override
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
         static final class OfRef<P_IN, P_OUT>
                 extends SizedCollectorTask<P_IN, P_OUT, Sink<P_OUT>, OfRef<P_IN, P_OUT>>
@@ -2933,10 +2933,10 @@ final class Nodes {
                 array[index++] = value;
             }
 
-			@Override
-			public void accept(Integer i) {
-				SinkDefaults.OfInt.accept(this, i);
-			}
+            @Override
+            public void accept(Integer i) {
+                SinkDefaults.OfInt.accept(this, i);
+            }
         }
 
         static final class OfLong<P_IN>
@@ -2969,10 +2969,10 @@ final class Nodes {
                 array[index++] = value;
             }
 
-			@Override
-			public void accept(Long i) {
-				SinkDefaults.OfLong.accept(this, i);
-			}
+            @Override
+            public void accept(Long i) {
+                SinkDefaults.OfLong.accept(this, i);
+            }
         }
 
         static final class OfDouble<P_IN>
@@ -3005,10 +3005,10 @@ final class Nodes {
                 array[index++] = value;
             }
 
-    		@Override
-    		public void accept(Double i) {
-    			SinkDefaults.OfDouble.accept(this, i);
-    		}
+            @Override
+            public void accept(Double i) {
+                SinkDefaults.OfDouble.accept(this, i);
+            }
         }
     }
 

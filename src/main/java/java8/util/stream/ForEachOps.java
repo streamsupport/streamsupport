@@ -142,41 +142,41 @@ final class ForEachOps {
         // TerminalOp
 
         @Override
-		public void begin(long size) {
-			SinkDefaults.begin(this, size);
-		}
+        public void begin(long size) {
+            SinkDefaults.begin(this, size);
+        }
 
-		@Override
-		public void end() {
-			SinkDefaults.end(this);
-		}
+        @Override
+        public void end() {
+            SinkDefaults.end(this);
+        }
 
-		@Override
-		public boolean cancellationRequested() {
-			return SinkDefaults.cancellationRequested(this);
-		}
+        @Override
+        public boolean cancellationRequested() {
+            return SinkDefaults.cancellationRequested(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public StreamShape inputShape() {
-			return TerminalOpDefaults.inputShape() ;
-		}
+        @Override
+        public StreamShape inputShape() {
+            return TerminalOpDefaults.inputShape() ;
+        }
 
-		@Override
+        @Override
         public int getOpFlags() {
             return ordered ? 0 : StreamOpFlag.NOT_ORDERED;
         }
@@ -242,10 +242,10 @@ final class ForEachOps {
                 consumer.accept(t);
             }
 
-			@Override
-			public void accept(Integer i) {
-				SinkDefaults.OfInt.accept(this, i);
-			}
+            @Override
+            public void accept(Integer i) {
+                SinkDefaults.OfInt.accept(this, i);
+            }
         }
 
         /** Implementation class for {@code LongStream} */
@@ -268,10 +268,10 @@ final class ForEachOps {
                 consumer.accept(t);
             }
 
-			@Override
-			public void accept(Long i) {
-				SinkDefaults.OfLong.accept(this, i);
-			}
+            @Override
+            public void accept(Long i) {
+                SinkDefaults.OfLong.accept(this, i);
+            }
         }
 
         /** Implementation class for {@code DoubleStream} */
@@ -294,10 +294,10 @@ final class ForEachOps {
                 consumer.accept(t);
             }
 
-    		@Override
-    		public void accept(Double i) {
-    			SinkDefaults.OfDouble.accept(this, i);
-    		}
+            @Override
+            public void accept(Double i) {
+                SinkDefaults.OfDouble.accept(this, i);
+            }
         }
     }
 
@@ -556,7 +556,7 @@ final class ForEachOps {
             ForEachOrderedTask<S, T> leftDescendant = completionMap.remove(this);
             if (leftDescendant != null) {
                 leftDescendant.tryComplete();
-			}
+            }
         }
     }
 }

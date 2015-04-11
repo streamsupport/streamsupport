@@ -50,7 +50,7 @@ interface TerminalOp<E_IN, R> {
      *
      * @return StreamShape of the input type of this operation
      */
-	StreamShape inputShape();
+    StreamShape inputShape();
 //    default StreamShape inputShape() { return StreamShape.REFERENCE; }
 
     /**
@@ -64,7 +64,7 @@ interface TerminalOp<E_IN, R> {
      * @return the stream flags for this operation
      * @see StreamOpFlag
      */
-	int getOpFlags();
+    int getOpFlags();
 //    default int getOpFlags() { return 0; }
 
     /**
@@ -79,7 +79,7 @@ interface TerminalOp<E_IN, R> {
      * @param spliterator the source spliterator
      * @return the result of the evaluation
      */
-	<P_IN> R evaluateParallel(PipelineHelper<E_IN> helper,
+    <P_IN> R evaluateParallel(PipelineHelper<E_IN> helper,
             Spliterator<P_IN> spliterator);
 //    default <P_IN> R evaluateParallel(PipelineHelper<E_IN> helper,
 //                                      Spliterator<P_IN> spliterator) {

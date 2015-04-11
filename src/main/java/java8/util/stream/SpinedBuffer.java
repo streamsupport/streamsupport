@@ -107,7 +107,7 @@ class SpinedBuffer<E>
         curChunk = (E[]) new Object[1 << initialChunkPower];
     }
 
-	/**
+    /**
      * Returns the current capacity of the buffer
      */
     protected long capacity() {
@@ -250,7 +250,7 @@ class SpinedBuffer<E>
     }
 
     private void forEach_(Consumer<? super E> consumer) {
-    	forEach(consumer);
+        forEach(consumer);
     }
 
     @Override
@@ -280,7 +280,7 @@ class SpinedBuffer<E>
      * Return a {@link Spliterator} describing the contents of the buffer.
      */
     Spliterator<E> spliterator() {
-    	return getSpliterator();
+        return getSpliterator();
     }
 
     /**
@@ -334,21 +334,21 @@ class SpinedBuffer<E>
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super E> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super E> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-			@Override
+            @Override
             public boolean tryAdvance(Consumer<? super E> consumer) {
                 Objects.requireNonNull(consumer);
 
@@ -755,7 +755,7 @@ class SpinedBuffer<E>
         	return getSpliterator();
         }
 
-		@Override
+        @Override
         public void forEach(Consumer<? super Integer> consumer) {
             if (consumer instanceof IntConsumer) {
                 forEach((IntConsumer) consumer);
@@ -835,30 +835,30 @@ class SpinedBuffer<E>
                     return java8.util.J8Arrays.spliterator(array, offset, offset+len);
                 }
 
-				@Override
-				public long getExactSizeIfKnown() {
-					return Spliterators.getExactSizeIfKnown(this);
-				}
+                @Override
+                public long getExactSizeIfKnown() {
+                    return Spliterators.getExactSizeIfKnown(this);
+                }
 
-				@Override
-				public boolean hasCharacteristics(int characteristics) {
-					return Spliterators.hasCharacteristics(this, characteristics);
-				}
+                @Override
+                public boolean hasCharacteristics(int characteristics) {
+                    return Spliterators.hasCharacteristics(this, characteristics);
+                }
 
-				@Override
-				public Comparator<? super Integer> getComparator() {
-					return Spliterators.getComparator(this);
-				}
+                @Override
+                public Comparator<? super Integer> getComparator() {
+                    return Spliterators.getComparator(this);
+                }
 
-				@Override
-				public boolean tryAdvance(Consumer<? super Integer> action) {
-					return Spliterators.OfInt.tryAdvance(this, action);
-				}
+                @Override
+                public boolean tryAdvance(Consumer<? super Integer> action) {
+                    return Spliterators.OfInt.tryAdvance(this, action);
+                }
 
-		        @Override
-				public void forEachRemaining(Consumer<? super Integer> action) {
-					Spliterators.OfInt.forEachRemaining(this, action);
-				}
+                @Override
+                public void forEachRemaining(Consumer<? super Integer> action) {
+                    Spliterators.OfInt.forEachRemaining(this, action);
+                }
             }
             return new Splitr(0, spineIndex, 0, elementIndex);
         }
@@ -892,10 +892,10 @@ class SpinedBuffer<E>
         }
 
         public Spliterator.OfLong spliterator() {
-        	return getSpliterator();
+            return getSpliterator();
         }
 
-		@Override
+        @Override
         public void forEach(Consumer<? super Long> consumer) {
             if (consumer instanceof LongConsumer) {
                 forEach((LongConsumer) consumer);
@@ -976,30 +976,30 @@ class SpinedBuffer<E>
                     return java8.util.J8Arrays.spliterator(array, offset, offset+len);
                 }
 
-				@Override
-				public long getExactSizeIfKnown() {
-					return Spliterators.getExactSizeIfKnown(this);
-				}
+                @Override
+                public long getExactSizeIfKnown() {
+                    return Spliterators.getExactSizeIfKnown(this);
+                }
 
-				@Override
-				public boolean hasCharacteristics(int characteristics) {
-					return Spliterators.hasCharacteristics(this, characteristics);
-				}
+                @Override
+                public boolean hasCharacteristics(int characteristics) {
+                    return Spliterators.hasCharacteristics(this, characteristics);
+                }
 
-				@Override
-				public Comparator<? super Long> getComparator() {
-					return Spliterators.getComparator(this);
-				}
+                @Override
+                public Comparator<? super Long> getComparator() {
+                    return Spliterators.getComparator(this);
+                }
 
-		        @Override
-				public boolean tryAdvance(Consumer<? super Long> action) {
-					return Spliterators.OfLong.tryAdvance(this, action);
-				}
+                @Override
+                public boolean tryAdvance(Consumer<? super Long> action) {
+                    return Spliterators.OfLong.tryAdvance(this, action);
+                }
 
-		        @Override
-				public void forEachRemaining(Consumer<? super Long> action) {
-					Spliterators.OfLong.forEachRemaining(this, action);
-				}
+                @Override
+                public void forEachRemaining(Consumer<? super Long> action) {
+                    Spliterators.OfLong.forEachRemaining(this, action);
+                }
             }
             return new Splitr(0, spineIndex, 0, elementIndex);
         }
@@ -1034,10 +1034,10 @@ class SpinedBuffer<E>
         }
 
         public Spliterator.OfDouble spliterator() {
-        	return getSpliterator();
+            return getSpliterator();
         }
 
-		@Override
+        @Override
         public void forEach(Consumer<? super Double> consumer) {
             if (consumer instanceof DoubleConsumer) {
                 forEach((DoubleConsumer) consumer);
@@ -1117,30 +1117,30 @@ class SpinedBuffer<E>
                     return java8.util.J8Arrays.spliterator(array, offset, offset+len);
                 }
 
-				@Override
-				public long getExactSizeIfKnown() {
-					return Spliterators.getExactSizeIfKnown(this);
-				}
+                @Override
+                public long getExactSizeIfKnown() {
+                    return Spliterators.getExactSizeIfKnown(this);
+                }
 
-				@Override
-				public boolean hasCharacteristics(int characteristics) {
-					return Spliterators.hasCharacteristics(this, characteristics);
-				}
+                @Override
+                public boolean hasCharacteristics(int characteristics) {
+                    return Spliterators.hasCharacteristics(this, characteristics);
+                }
 
-				@Override
-				public Comparator<? super Double> getComparator() {
-					return Spliterators.getComparator(this);
-				}
+                @Override
+                public Comparator<? super Double> getComparator() {
+                    return Spliterators.getComparator(this);
+                }
 
-		        @Override
-				public boolean tryAdvance(Consumer<? super Double> action) {
-					return Spliterators.OfDouble.tryAdvance(this, action);
-				}
+                @Override
+                public boolean tryAdvance(Consumer<? super Double> action) {
+                    return Spliterators.OfDouble.tryAdvance(this, action);
+                }
 
-		        @Override
-				public void forEachRemaining(Consumer<? super Double> action) {
-					Spliterators.OfDouble.forEachRemaining(this, action);
-				}
+                @Override
+                public void forEachRemaining(Consumer<? super Double> action) {
+                    Spliterators.OfDouble.forEachRemaining(this, action);
+                }
             }
             return new Splitr(0, spineIndex, 0, elementIndex);
         }
@@ -1162,4 +1162,3 @@ class SpinedBuffer<E>
         }
     }
 }
-

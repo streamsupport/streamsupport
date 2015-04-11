@@ -138,11 +138,11 @@ class StreamSpliterators {
         }
 
         @Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		/**
+        /**
          * Called before advancing to set up spliterator, if needed.
          */
         final void init() {
@@ -353,36 +353,36 @@ class StreamSpliterators {
             buffer = b;
 
             Sink.OfInt trampoline = new Sink.OfInt() {
-				@Override
-				public void end() {
-					SinkDefaults.end(this);
-				}
-				@Override
-				public boolean cancellationRequested() {
-					return SinkDefaults.cancellationRequested(this);
-				}
-				@Override
-				public void begin(long size) {
-					SinkDefaults.begin(this, size);
-				}
-				@Override
-				public void accept(double value) {
-					SinkDefaults.accept(this, value);
-				}
-				@Override
-				public void accept(long value) {
-					SinkDefaults.accept(this, value);
-				}
-				@Override
-				public void accept(Integer i) {
-					accept(i.intValue());
-				}
-				@Override
-				public void accept(int value) {
-					b.accept(value);
-				}
-			};
-			bufferSink = ph.wrapSink(trampoline);
+                @Override
+                public void end() {
+                    SinkDefaults.end(this);
+                }
+                @Override
+                public boolean cancellationRequested() {
+                    return SinkDefaults.cancellationRequested(this);
+                }
+                @Override
+                public void begin(long size) {
+                    SinkDefaults.begin(this, size);
+                }
+                @Override
+                public void accept(double value) {
+                    SinkDefaults.accept(this, value);
+                }
+                @Override
+                public void accept(long value) {
+                    SinkDefaults.accept(this, value);
+                }
+                @Override
+                public void accept(Integer i) {
+                    accept(i.intValue());
+                }
+                @Override
+                public void accept(int value) {
+                    b.accept(value);
+                }
+            };
+            bufferSink = ph.wrapSink(trampoline);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -400,10 +400,10 @@ class StreamSpliterators {
             return hasNext;
         }
 
-		@Override
-		public boolean tryAdvance(Consumer<? super Integer> action) {
-			return Spliterators.OfInt.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Integer> action) {
+            return Spliterators.OfInt.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(final IntConsumer consumer) {
@@ -412,36 +412,36 @@ class StreamSpliterators {
                 init();
 
                 Sink.OfInt trampoline = new Sink.OfInt() {
-    				@Override
-    				public void end() {
-    					SinkDefaults.end(this);
-    				}
-    				@Override
-    				public boolean cancellationRequested() {
-    					return SinkDefaults.cancellationRequested(this);
-    				}
-    				@Override
-    				public void begin(long size) {
-    					SinkDefaults.begin(this, size);
-    				}
-    				@Override
-    				public void accept(double value) {
-    					SinkDefaults.accept(this, value);
-    				}
-    				@Override
-    				public void accept(long value) {
-    					SinkDefaults.accept(this, value);
-    				}
-    				@Override
-    				public void accept(Integer i) {
-    					accept(i.intValue());
-    				}
-    				@Override
-    				public void accept(int value) {
-    					consumer.accept(value);
-    				}
-    			};
-    			ph.wrapAndCopyInto(trampoline, spliterator);
+                    @Override
+                    public void end() {
+                        SinkDefaults.end(this);
+                    }
+                    @Override
+                    public boolean cancellationRequested() {
+                        return SinkDefaults.cancellationRequested(this);
+                    }
+                    @Override
+                    public void begin(long size) {
+                        SinkDefaults.begin(this, size);
+                    }
+                    @Override
+                    public void accept(double value) {
+                        SinkDefaults.accept(this, value);
+                    }
+                    @Override
+                    public void accept(long value) {
+                        SinkDefaults.accept(this, value);
+                    }
+                    @Override
+                    public void accept(Integer i) {
+                        accept(i.intValue());
+                    }
+                    @Override
+                    public void accept(int value) {
+                        consumer.accept(value);
+                    }
+                };
+                ph.wrapAndCopyInto(trampoline, spliterator);
                 finished = true;
             }
             else {
@@ -450,9 +450,9 @@ class StreamSpliterators {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Integer> action) {
-			Spliterators.OfInt.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Integer> action) {
+            Spliterators.OfInt.forEachRemaining(this, action);
+        }
     }
 
     static final class LongWrappingSpliterator<P_IN>
@@ -482,36 +482,36 @@ class StreamSpliterators {
             buffer = b;
 
             Sink.OfLong trampoline = new Sink.OfLong() {
-				@Override
-				public void end() {
-					SinkDefaults.end(this);
-				}
-				@Override
-				public boolean cancellationRequested() {
-					return SinkDefaults.cancellationRequested(this);
-				}
-				@Override
-				public void begin(long size) {
-					SinkDefaults.begin(this, size);
-				}
-				@Override
-				public void accept(double value) {
-					SinkDefaults.accept(this, value);
-				}
-				@Override
-				public void accept(int value) {
-					SinkDefaults.accept(this, value);
-				}
-				@Override
-				public void accept(Long i) {
-					accept(i.longValue());
-				}
-				@Override
-				public void accept(long value) {
-					b.accept(value);
-				}
-			};
-			bufferSink = ph.wrapSink(trampoline);
+                @Override
+                public void end() {
+                    SinkDefaults.end(this);
+                }
+                @Override
+                public boolean cancellationRequested() {
+                    return SinkDefaults.cancellationRequested(this);
+                }
+                @Override
+                public void begin(long size) {
+                    SinkDefaults.begin(this, size);
+                }
+                @Override
+                public void accept(double value) {
+                    SinkDefaults.accept(this, value);
+                }
+                @Override
+                public void accept(int value) {
+                    SinkDefaults.accept(this, value);
+                }
+                @Override
+                public void accept(Long i) {
+                    accept(i.longValue());
+                }
+                @Override
+                public void accept(long value) {
+                    b.accept(value);
+                }
+            };
+            bufferSink = ph.wrapSink(trampoline);
             pusher = () -> spliterator.tryAdvance(bufferSink);
         }
 
@@ -530,9 +530,9 @@ class StreamSpliterators {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Long> action) {
-			return Spliterators.OfLong.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return Spliterators.OfLong.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(final LongConsumer consumer) {
@@ -541,36 +541,36 @@ class StreamSpliterators {
                 init();
 
                 Sink.OfLong trampoline = new Sink.OfLong() {
-    				@Override
-    				public void end() {
-    					SinkDefaults.end(this);
-    				}
-    				@Override
-    				public boolean cancellationRequested() {
-    					return SinkDefaults.cancellationRequested(this);
-    				}
-    				@Override
-    				public void begin(long size) {
-    					SinkDefaults.begin(this, size);
-    				}
-    				@Override
-    				public void accept(double value) {
-    					SinkDefaults.accept(this, value);
-    				}
-    				@Override
-    				public void accept(int value) {
-    					SinkDefaults.accept(this, value);
-    				}
-    				@Override
-    				public void accept(Long i) {
-    					accept(i.longValue());
-    				}
-    				@Override
-    				public void accept(long value) {
-    					consumer.accept(value);
-    				}
-    			};
-    			ph.wrapAndCopyInto(trampoline, spliterator);
+                    @Override
+                    public void end() {
+                        SinkDefaults.end(this);
+                    }
+                    @Override
+                    public boolean cancellationRequested() {
+                        return SinkDefaults.cancellationRequested(this);
+                    }
+                    @Override
+                    public void begin(long size) {
+                        SinkDefaults.begin(this, size);
+                    }
+                    @Override
+                    public void accept(double value) {
+                        SinkDefaults.accept(this, value);
+                    }
+                    @Override
+                    public void accept(int value) {
+                        SinkDefaults.accept(this, value);
+                    }
+                    @Override
+                    public void accept(Long i) {
+                        accept(i.longValue());
+                    }
+                    @Override
+                    public void accept(long value) {
+                        consumer.accept(value);
+                    }
+                };
+                ph.wrapAndCopyInto(trampoline, spliterator);
                 finished = true;
             }
             else {
@@ -579,9 +579,9 @@ class StreamSpliterators {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Long> action) {
-			Spliterators.OfLong.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Long> action) {
+            Spliterators.OfLong.forEachRemaining(this, action);
+        }
     }
 
     static final class DoubleWrappingSpliterator<P_IN>
@@ -611,34 +611,34 @@ class StreamSpliterators {
             buffer = b;
 
             Sink.OfDouble trampoline = new Sink.OfDouble() {
-				@Override
-				public void begin(long size) {
-					SinkDefaults.begin(this, size);
-				}
-				@Override
-				public void end() {
-					SinkDefaults.end(this);
-				}
-				@Override
-				public boolean cancellationRequested() {
-					return SinkDefaults.cancellationRequested(this);
-				}
-				@Override
-				public void accept(int value) {
-					SinkDefaults.accept(this, value);
-				}
-				@Override
-				public void accept(long value) {
-					SinkDefaults.accept(this, value);
-				}
-				@Override
-				public void accept(double value) {
-					b.accept(value);
-				}
-				@Override
-				public void accept(Double i) {
-					accept(i.doubleValue());
-				}
+                @Override
+                public void begin(long size) {
+                    SinkDefaults.begin(this, size);
+                }
+                @Override
+                public void end() {
+                    SinkDefaults.end(this);
+                }
+                @Override
+                public boolean cancellationRequested() {
+                    return SinkDefaults.cancellationRequested(this);
+                }
+                @Override
+                public void accept(int value) {
+                    SinkDefaults.accept(this, value);
+                }
+                @Override
+                public void accept(long value) {
+                    SinkDefaults.accept(this, value);
+                }
+                @Override
+                public void accept(double value) {
+                    b.accept(value);
+                }
+                @Override
+                public void accept(Double i) {
+                    accept(i.doubleValue());
+                }
             };
             bufferSink = ph.wrapSink(trampoline);
             pusher = () -> spliterator.tryAdvance(bufferSink);
@@ -659,9 +659,9 @@ class StreamSpliterators {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Double> action) {
-			return Spliterators.OfDouble.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Double> action) {
+            return Spliterators.OfDouble.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(final DoubleConsumer consumer) {
@@ -670,34 +670,34 @@ class StreamSpliterators {
                 init();
 
                 Sink.OfDouble trampoline = new Sink.OfDouble() {
-					@Override
-					public void begin(long size) {
-						SinkDefaults.begin(this, size);
-					}
-					@Override
-					public void end() {
-						SinkDefaults.end(this);
-					}
-					@Override
-					public boolean cancellationRequested() {
-						return SinkDefaults.cancellationRequested(this);
-					}
-					@Override
-					public void accept(int value) {
-						SinkDefaults.accept(this, value);
-					}
-					@Override
-					public void accept(long value) {
-						SinkDefaults.accept(this, value);
-					}
-					@Override
-					public void accept(double value) {
-						consumer.accept(value);
-					}
-					@Override
-					public void accept(Double i) {
-						accept(i.doubleValue());
-					}
+                    @Override
+                    public void begin(long size) {
+                        SinkDefaults.begin(this, size);
+                    }
+                    @Override
+                    public void end() {
+                        SinkDefaults.end(this);
+                    }
+                    @Override
+                    public boolean cancellationRequested() {
+                        return SinkDefaults.cancellationRequested(this);
+                    }
+                    @Override
+                    public void accept(int value) {
+                        SinkDefaults.accept(this, value);
+                    }
+                    @Override
+                    public void accept(long value) {
+                        SinkDefaults.accept(this, value);
+                    }
+                    @Override
+                    public void accept(double value) {
+                        consumer.accept(value);
+                    }
+                    @Override
+                    public void accept(Double i) {
+                        accept(i.doubleValue());
+                    }
                 };
                 ph.wrapAndCopyInto(trampoline, spliterator);
                 finished = true;
@@ -708,9 +708,9 @@ class StreamSpliterators {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Double> action) {
-			Spliterators.OfDouble.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Double> action) {
+            Spliterators.OfDouble.forEachRemaining(this, action);
+        }
     }
 
     /**
@@ -737,11 +737,11 @@ class StreamSpliterators {
         }
 
         @Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
+        @Override
         public T_SPLITR trySplit() {
             return (T_SPLITR) get().trySplit();
         }
@@ -976,20 +976,20 @@ class StreamSpliterators {
                 }
             }
 
-			@Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            @Override
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super T> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super T> getComparator() {
+                return Spliterators.getComparator(this);
+            }
         }
 
         static abstract class OfPrimitive<T,
@@ -1068,31 +1068,31 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super Integer> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super Integer> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-			@Override
-			public boolean tryAdvance(Consumer<? super Integer> action) {
-				return Spliterators.OfInt.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Integer> action) {
+                return Spliterators.OfInt.tryAdvance(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Integer> action) {
-				Spliterators.OfInt.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Integer> action) {
+                Spliterators.OfInt.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             protected Spliterator.OfInt makeSpliterator(Spliterator.OfInt s,
                                                         long sliceOrigin, long sliceFence,
                                                         long origin, long fence) {
@@ -1117,31 +1117,31 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super Long> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super Long> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-	        @Override
-			public boolean tryAdvance(Consumer<? super Long> action) {
-				return Spliterators.OfLong.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Long> action) {
+                return Spliterators.OfLong.tryAdvance(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Long> action) {
-				Spliterators.OfLong.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Long> action) {
+                Spliterators.OfLong.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             protected Spliterator.OfLong makeSpliterator(Spliterator.OfLong s,
                                                          long sliceOrigin, long sliceFence,
                                                          long origin, long fence) {
@@ -1166,31 +1166,31 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super Double> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super Double> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-	        @Override
-			public boolean tryAdvance(Consumer<? super Double> action) {
-				return Spliterators.OfDouble.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Double> action) {
+                return Spliterators.OfDouble.tryAdvance(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Double> action) {
-				Spliterators.OfDouble.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Double> action) {
+                Spliterators.OfDouble.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             protected Spliterator.OfDouble makeSpliterator(Spliterator.OfDouble s,
                                                            long sliceOrigin, long sliceFence,
                                                            long origin, long fence) {
@@ -1362,21 +1362,21 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super T> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super T> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-			@Override
+            @Override
             protected Spliterator<T> makeSpliterator(Spliterator<T> s) {
                 return new UnorderedSliceSpliterator.OfRef<>(s, this);
             }
@@ -1472,31 +1472,31 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super Integer> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super Integer> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-			@Override
-			public boolean tryAdvance(Consumer<? super Integer> action) {
-				return Spliterators.OfInt.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Integer> action) {
+                return Spliterators.OfInt.tryAdvance(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Integer> action) {
-				Spliterators.OfInt.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Integer> action) {
+                Spliterators.OfInt.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             protected void acceptConsumed(IntConsumer action) {
                 action.accept(tmpValue);
             }
@@ -1532,31 +1532,31 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super Long> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super Long> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-	        @Override
-			public boolean tryAdvance(Consumer<? super Long> action) {
-				return Spliterators.OfLong.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Long> action) {
+                return Spliterators.OfLong.tryAdvance(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Long> action) {
-				Spliterators.OfLong.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Long> action) {
+                Spliterators.OfLong.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             protected void acceptConsumed(LongConsumer action) {
                 action.accept(tmpValue);
             }
@@ -1592,31 +1592,31 @@ class StreamSpliterators {
             }
 
             @Override
-			public long getExactSizeIfKnown() {
-            	return Spliterators.getExactSizeIfKnown(this);
-			}
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
 
-			@Override
-			public Comparator<? super Double> getComparator() {
-				return Spliterators.getComparator(this);
-			}
+            @Override
+            public Comparator<? super Double> getComparator() {
+                return Spliterators.getComparator(this);
+            }
 
-	        @Override
-			public boolean tryAdvance(Consumer<? super Double> action) {
-				return Spliterators.OfDouble.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Double> action) {
+                return Spliterators.OfDouble.tryAdvance(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Double> action) {
-				Spliterators.OfDouble.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Double> action) {
+                Spliterators.OfDouble.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             protected void acceptConsumed(DoubleConsumer action) {
                 action.accept(tmpValue);
             }
@@ -1661,16 +1661,16 @@ class StreamSpliterators {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-			return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
+        @Override
         public void accept(T t) {
             this.tmpSlot = t;
         }
@@ -1753,21 +1753,21 @@ class StreamSpliterators {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-			return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
-		public Comparator<? super T> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super T> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
-		static final class OfRef<T> extends InfiniteSupplyingSpliterator<T> {
+        static final class OfRef<T> extends InfiniteSupplyingSpliterator<T> {
             final Supplier<T> s;
 
             OfRef(long size, Supplier<T> s) {
@@ -1776,11 +1776,11 @@ class StreamSpliterators {
             }
 
             @Override
-			public void forEachRemaining(Consumer<? super T> action) {
-				Spliterators.forEachRemaining(this, action);
-			}
+            public void forEachRemaining(Consumer<? super T> action) {
+                Spliterators.forEachRemaining(this, action);
+            }
 
-			@Override
+            @Override
             public boolean tryAdvance(Consumer<? super T> action) {
                 Objects.requireNonNull(action);
 
@@ -1820,20 +1820,20 @@ class StreamSpliterators {
                 return new InfiniteSupplyingSpliterator.OfInt(estimate = estimate >>> 1, s);
             }
 
-			@Override
-			public void forEachRemaining(IntConsumer action) {
-				Spliterators.OfInt.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(IntConsumer action) {
+                Spliterators.OfInt.forEachRemaining(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Integer> action) {
-				Spliterators.OfInt.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Integer> action) {
+                Spliterators.OfInt.forEachRemaining(this, action);
+            }
 
-			@Override
-			public boolean tryAdvance(Consumer<? super Integer> action) {
-				return Spliterators.OfInt.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Integer> action) {
+                return Spliterators.OfInt.tryAdvance(this, action);
+            }
         }
 
         static final class OfLong extends InfiniteSupplyingSpliterator<Long>
@@ -1860,20 +1860,20 @@ class StreamSpliterators {
                 return new InfiniteSupplyingSpliterator.OfLong(estimate = estimate >>> 1, s);
             }
 
-			@Override
-			public void forEachRemaining(LongConsumer action) {
-				Spliterators.OfLong.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(LongConsumer action) {
+                Spliterators.OfLong.forEachRemaining(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Long> action) {
-				Spliterators.OfLong.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Long> action) {
+                Spliterators.OfLong.forEachRemaining(this, action);
+            }
 
-	        @Override
-			public boolean tryAdvance(Consumer<? super Long> action) {
-				return Spliterators.OfLong.tryAdvance(this, action);
-			}
+            @Override
+            public boolean tryAdvance(Consumer<? super Long> action) {
+                return Spliterators.OfLong.tryAdvance(this, action);
+            }
         }
 
         static final class OfDouble extends InfiniteSupplyingSpliterator<Double>
@@ -1894,9 +1894,9 @@ class StreamSpliterators {
             }
 
             @Override
-    		public boolean tryAdvance(Consumer<? super Double> action) {
-    			return Spliterators.OfDouble.tryAdvance(this, action);
-    		}
+            public boolean tryAdvance(Consumer<? super Double> action) {
+                return Spliterators.OfDouble.tryAdvance(this, action);
+            }
 
             @Override
             public Spliterator.OfDouble trySplit() {
@@ -1905,15 +1905,15 @@ class StreamSpliterators {
                 return new InfiniteSupplyingSpliterator.OfDouble(estimate = estimate >>> 1, s);
             }
 
-			@Override
-			public void forEachRemaining(DoubleConsumer action) {
-				Spliterators.OfDouble.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(DoubleConsumer action) {
+                Spliterators.OfDouble.forEachRemaining(this, action);
+            }
 
-	        @Override
-			public void forEachRemaining(Consumer<? super Double> action) {
-				Spliterators.OfDouble.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Double> action) {
+                Spliterators.OfDouble.forEachRemaining(this, action);
+            }
         }
     }
 
@@ -2021,4 +2021,3 @@ class StreamSpliterators {
         }
     }
 }
-

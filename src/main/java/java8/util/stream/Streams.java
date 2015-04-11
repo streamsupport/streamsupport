@@ -99,10 +99,10 @@ final class Streams {
             return false;
         }
 
-		@Override
-		public boolean tryAdvance(Consumer<? super Integer> action) {
-			return Spliterators.OfInt.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Integer> action) {
+            return Spliterators.OfInt.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(IntConsumer consumer) {
@@ -123,9 +123,9 @@ final class Streams {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Integer> action) {
-			Spliterators.OfInt.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Integer> action) {
+            Spliterators.OfInt.forEachRemaining(this, action);
+        }
 
         @Override
         public long estimateSize() {
@@ -141,16 +141,16 @@ final class Streams {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-        	return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
+        @Override
         public Comparator<? super Integer> getComparator() {
             return null;
         }
@@ -245,9 +245,9 @@ final class Streams {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Long> action) {
-			return Spliterators.OfLong.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return Spliterators.OfLong.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(LongConsumer consumer) {
@@ -268,9 +268,9 @@ final class Streams {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Long> action) {
-			Spliterators.OfLong.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Long> action) {
+            Spliterators.OfLong.forEachRemaining(this, action);
+        }
 
         @Override
         public long estimateSize() {
@@ -285,16 +285,16 @@ final class Streams {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-        	return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
+        @Override
         public Comparator<? super Long> getComparator() {
             return null;
         }
@@ -362,21 +362,21 @@ final class Streams {
         }
 
         @Override
-		public long getExactSizeIfKnown() {
-			return Spliterators.getExactSizeIfKnown(this);
-		}
+        public long getExactSizeIfKnown() {
+            return Spliterators.getExactSizeIfKnown(this);
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			return Spliterators.hasCharacteristics(this, characteristics);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return Spliterators.hasCharacteristics(this, characteristics);
+        }
 
-		@Override
-		public Comparator<? super T> getComparator() {
-			return Spliterators.getComparator(this);
-		}
+        @Override
+        public Comparator<? super T> getComparator() {
+            return Spliterators.getComparator(this);
+        }
 
-		@Override
+        @Override
         public int characteristics() {
             return Spliterator.SIZED | Spliterator.SUBSIZED |
                    Spliterator.ORDERED | Spliterator.IMMUTABLE;
@@ -559,10 +559,10 @@ final class Streams {
             }
         }
 
-		@Override
-		public boolean tryAdvance(Consumer<? super Integer> action) {
-			return Spliterators.OfInt.tryAdvance(this, action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Integer> action) {
+            return Spliterators.OfInt.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(IntConsumer action) {
@@ -575,9 +575,9 @@ final class Streams {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Integer> action) {
-			Spliterators.OfInt.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Integer> action) {
+            Spliterators.OfInt.forEachRemaining(this, action);
+        }
     }
 
     static final class LongStreamBuilderImpl
@@ -661,9 +661,9 @@ final class Streams {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Long> action) {
-			return Spliterators.OfLong.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return Spliterators.OfLong.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(LongConsumer action) {
@@ -676,9 +676,9 @@ final class Streams {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Long> action) {
-			Spliterators.OfLong.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Long> action) {
+            Spliterators.OfLong.forEachRemaining(this, action);
+        }
     }
 
     static final class DoubleStreamBuilderImpl
@@ -762,9 +762,9 @@ final class Streams {
         }
 
         @Override
-		public boolean tryAdvance(Consumer<? super Double> action) {
-			return Spliterators.OfDouble.tryAdvance(this, action);
-		}
+        public boolean tryAdvance(Consumer<? super Double> action) {
+            return Spliterators.OfDouble.tryAdvance(this, action);
+        }
 
         @Override
         public void forEachRemaining(DoubleConsumer action) {
@@ -777,9 +777,9 @@ final class Streams {
         }
 
         @Override
-		public void forEachRemaining(Consumer<? super Double> action) {
-			Spliterators.OfDouble.forEachRemaining(this, action);
-		}
+        public void forEachRemaining(Consumer<? super Double> action) {
+            Spliterators.OfDouble.forEachRemaining(this, action);
+        }
     }
 
     abstract static class ConcatSpliterator<T, T_SPLITR extends Spliterator<T>>
@@ -867,15 +867,15 @@ final class Streams {
                 super(aSpliterator, bSpliterator);
             }
 
-			@Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            @Override
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
         }
 
         private static abstract class OfPrimitive<T, T_CONS, T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>>
@@ -907,15 +907,15 @@ final class Streams {
                 bSpliterator.forEachRemaining(action);
             }
 
-			@Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            @Override
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
         }
 
         static class OfInt
@@ -962,11 +962,11 @@ final class Streams {
                     catch (Throwable ignore) {
                     }
                     if (e1 instanceof RuntimeException) {
-                    	throw (RuntimeException) e1;
+                        throw (RuntimeException) e1;
                     } else if (e1 instanceof Error) {
-                    	throw (Error) e1;
+                        throw (Error) e1;
                     } else {
-                    	throw new IllegalStateException(e1);
+                        throw new IllegalStateException(e1);
                     }
                 }
                 b.run();
@@ -994,11 +994,11 @@ final class Streams {
                     catch (Throwable ignore) {
                     }
                     if (e1 instanceof RuntimeException) {
-                    	throw (RuntimeException) e1;
+                        throw (RuntimeException) e1;
                     } else if (e1 instanceof Error) {
-                    	throw (Error) e1;
+                        throw (Error) e1;
                     } else {
-                    	throw new IllegalStateException(e1);
+                        throw new IllegalStateException(e1);
                     }
                 }
                 b.close();

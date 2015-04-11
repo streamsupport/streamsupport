@@ -125,7 +125,7 @@ interface Sink<T> extends SinkConsumer<T> {
      * <p>Prior to this call, the sink must be in the initial state, and after
      * this call it is in the active state.
      */
-	void begin(long size);
+    void begin(long size);
 //    default void begin(long size) {}
 
     /**
@@ -136,7 +136,7 @@ interface Sink<T> extends SinkConsumer<T> {
      * <p>Prior to this call, the sink must be in the active state, and after
      * this call it is returned to the initial state.
      */
-	void end();
+    void end();
 //    default void end() {}
 
     /**
@@ -146,7 +146,7 @@ interface Sink<T> extends SinkConsumer<T> {
      *
      * @return true if cancellation is requested
      */
-	boolean cancellationRequested();
+    boolean cancellationRequested();
 //    default boolean cancellationRequested() {
 //        return false;
 //    }
@@ -158,7 +158,7 @@ interface Sink<T> extends SinkConsumer<T> {
      *
      * @throws IllegalStateException if this sink does not accept int values
      */
-	void accept(int value);
+    void accept(int value);
 //    default void accept(int value) {
 //        throw new IllegalStateException("called wrong accept method");
 //    }
@@ -170,7 +170,7 @@ interface Sink<T> extends SinkConsumer<T> {
      *
      * @throws IllegalStateException if this sink does not accept long values
      */
-	void accept(long value);
+    void accept(long value);
 //    default void accept(long value) {
 //        throw new IllegalStateException("called wrong accept method");
 //    }
@@ -182,7 +182,7 @@ interface Sink<T> extends SinkConsumer<T> {
      *
      * @throws IllegalStateException if this sink does not accept double values
      */
-	void accept(double value);
+    void accept(double value);
 //    default void accept(double value) {
 //        throw new IllegalStateException("called wrong accept method");
 //    }
@@ -275,20 +275,20 @@ interface Sink<T> extends SinkConsumer<T> {
             return downstream.cancellationRequested();
         }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
     }
 
     /**
@@ -322,20 +322,20 @@ interface Sink<T> extends SinkConsumer<T> {
             return downstream.cancellationRequested();
         }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(Integer i) {
-			SinkDefaults.OfInt.accept(this, i);
-		}
+        @Override
+        public void accept(Integer i) {
+            SinkDefaults.OfInt.accept(this, i);
+        }
     }
 
     /**
@@ -369,20 +369,20 @@ interface Sink<T> extends SinkConsumer<T> {
             return downstream.cancellationRequested();
         }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(Long i) {
-			SinkDefaults.OfLong.accept(this, i);
-		}
+        @Override
+        public void accept(Long i) {
+            SinkDefaults.OfLong.accept(this, i);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
     }
 
     /**
@@ -416,19 +416,19 @@ interface Sink<T> extends SinkConsumer<T> {
             return downstream.cancellationRequested();
         }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(Double i) {
-			SinkDefaults.OfDouble.accept(this, i);
-		}
+        @Override
+        public void accept(Double i) {
+            SinkDefaults.OfDouble.accept(this, i);
+        }
     }
 }
