@@ -113,20 +113,20 @@ public final class DoubleStreams {
                 return v;
             }
 
-			@Override
-			public Double next() {
-				return nextDouble();
-			}
+            @Override
+            public Double next() {
+                return nextDouble();
+            }
 
-			@Override
-			public void forEachRemaining(DoubleConsumer action) {
-				Iterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(DoubleConsumer action) {
+                Iterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("remove");
-			}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
+            }
         };
         return StreamSupport.doubleStream(Spliterators.spliteratorUnknownSize(
                 iterator,
@@ -179,8 +179,8 @@ public final class DoubleStreams {
      * default interface methods and static interface methods in the
      * {@link DoubleStream.Builder} interface. 
      */
-	public static final class J8Builder {
-	     /**
+    public static final class J8Builder {
+        /**
          * Adds an element to the stream being built.
          *
          * <p><b>Implementation Requirements:</b><br>
@@ -201,12 +201,12 @@ public final class DoubleStreams {
             return this_;
         }
 
-		private J8Builder() {
-			throw new AssertionError();
-		}
-	}
+        private J8Builder() {
+            throw new AssertionError();
+        }
+    }
 
-	private DoubleStreams() {
-		throw new AssertionError();
-	}
+    private DoubleStreams() {
+        throw new AssertionError();
+    }
 }

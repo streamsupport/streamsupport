@@ -238,12 +238,12 @@ public final class Collectors {
                 V v = Objects.requireNonNull(e.getValue());
                 V u = null;
                 if (m1 instanceof ConcurrentMap) {
-                	u = ((ConcurrentMap<K, V>) m1).putIfAbsent(k, v);
+                    u = ((ConcurrentMap<K, V>) m1).putIfAbsent(k, v);
                 } else {
-                	u = Maps.putIfAbsent(m1, k, v);
+                    u = Maps.putIfAbsent(m1, k, v);
                 }
                 if (u != null) {
-                	throw duplicateKeyException(k, u, v);
+                    throw duplicateKeyException(k, u, v);
                 }
             }
             return m1;
@@ -270,12 +270,12 @@ public final class Collectors {
             V v = Objects.requireNonNull(valueMapper.apply(element));
             V u = null;
             if (map instanceof ConcurrentMap) {
-            	u = ((ConcurrentMap<K, V>) map).putIfAbsent(k, v);
+                u = ((ConcurrentMap<K, V>) map).putIfAbsent(k, v);
             } else {
-            	u = Maps.putIfAbsent(map, k, v);
+                u = Maps.putIfAbsent(map, k, v);
             }
             if (u != null) {
-            	throw duplicateKeyException(k, u, v);
+                throw duplicateKeyException(k, u, v);
             }
         };
     }

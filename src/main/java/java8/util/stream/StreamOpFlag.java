@@ -412,18 +412,18 @@ enum StreamOpFlag {
         }
 
         Map<Type, Integer> build() {
-        	if (map instanceof ConcurrentMap) {
-        		ConcurrentMap<Type, Integer> concMap = (ConcurrentMap<Type, Integer>) map;
-	            for (Type t : Type.values()) {
-	            	concMap.putIfAbsent(t, 0);
-	            }
-	            return concMap;
-        	} else {
-	            for (Type t : Type.values()) {
-	            	Maps.putIfAbsent(map, t, 0);
-	            }
-	            return map;
-        	}
+            if (map instanceof ConcurrentMap) {
+                ConcurrentMap<Type, Integer> concMap = (ConcurrentMap<Type, Integer>) map;
+                for (Type t : Type.values()) {
+                    concMap.putIfAbsent(t, 0);
+                }
+                return concMap;
+            } else {
+                for (Type t : Type.values()) {
+                    Maps.putIfAbsent(map, t, 0);
+                }
+                return map;
+            }
         }
     }
 

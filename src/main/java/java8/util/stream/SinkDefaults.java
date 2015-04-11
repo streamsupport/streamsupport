@@ -26,40 +26,40 @@ package java8.util.stream;
 
 final class SinkDefaults {
 
-	static final class OfInt {
+    static final class OfInt {
 
         static void accept(Sink.OfInt this_, Integer i) {
             this_.accept(i.intValue());
         }
 
-		private OfInt() {
-			throw new AssertionError();
-		}
-	}
+        private OfInt() {
+            throw new AssertionError();
+        }
+    }
 
-	static final class OfLong {
+    static final class OfLong {
 
         static void accept(Sink.OfLong this_, Long i) {
             this_.accept(i.longValue());
         }
 
-		private OfLong() {
-			throw new AssertionError();
-		}
-	}
+        private OfLong() {
+            throw new AssertionError();
+        }
+    }
 
-	static final class OfDouble {
+    static final class OfDouble {
 
         static void accept(Sink.OfDouble this_, Double i) {
             this_.accept(i.doubleValue());
         }
 
-		private OfDouble() {
-			throw new AssertionError();
-		}
-	}
+        private OfDouble() {
+            throw new AssertionError();
+        }
+    }
 
-	/**
+    /**
      * Resets the sink state to receive a fresh data set.  This must be called
      * before sending any data to the sink.  After calling {@link #end()},
      * you may call this method to reset the sink for another calculation.
@@ -125,7 +125,7 @@ final class SinkDefaults {
         throw new IllegalStateException("called wrong accept method");
     }
 
-	private SinkDefaults() {
-		throw new AssertionError();
-	}
+    private SinkDefaults() {
+        throw new AssertionError();
+    }
 }

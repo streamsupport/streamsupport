@@ -113,20 +113,20 @@ public final class IntStreams {
                 return v;
             }
 
-			@Override
-			public Integer next() {
-				return nextInt();
-			}
+            @Override
+            public Integer next() {
+                return nextInt();
+            }
 
-			@Override
-			public void forEachRemaining(IntConsumer action) {
-				Iterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(IntConsumer action) {
+                Iterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("remove");
-			}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
+            }
         };
         return StreamSupport.intStream(Spliterators.spliteratorUnknownSize(
                 iterator,
@@ -231,8 +231,8 @@ public final class IntStreams {
      * default interface methods and static interface methods in the
      * {@link IntStream.Builder} interface. 
      */
-	public static final class J8Builder {
-		/**
+    public static final class J8Builder {
+        /**
          * Adds an element to the stream being built.
          *
          * <p><b>Implementation Requirements:</b><br>
@@ -253,12 +253,12 @@ public final class IntStreams {
             return this_;
         }
 
-		private J8Builder() {
-			throw new AssertionError();
-		}
-	}
+        private J8Builder() {
+            throw new AssertionError();
+        }
+    }
 
-	private IntStreams() {
-		throw new AssertionError();
-	}
+    private IntStreams() {
+        throw new AssertionError();
+    }
 }

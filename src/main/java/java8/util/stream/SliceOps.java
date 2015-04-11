@@ -113,7 +113,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static <T> Stream<T> makeRef(AbstractPipeline<?, T, ?> upstream,
-    		final long skip, final long limit) {
+            final long skip, final long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -229,7 +229,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static IntStream makeInt(AbstractPipeline<?, Integer, ?> upstream,
-    		final long skip, final long limit) {
+            final long skip, final long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -338,7 +338,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static LongStream makeLong(AbstractPipeline<?, Long, ?> upstream,
-    		final long skip, final long limit) {
+            final long skip, final long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -447,7 +447,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static DoubleStream makeDouble(AbstractPipeline<?, Double, ?> upstream,
-    		final long skip, final long limit) {
+            final long skip, final long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 

@@ -77,7 +77,7 @@ final class MatchOps {
      *         criteria
      */
     public static <T> TerminalOp<T, Boolean> makeRef(final Predicate<? super T> predicate,
-    		final MatchKind matchKind) {
+            final MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<T> {
@@ -106,7 +106,7 @@ final class MatchOps {
      *         criteria
      */
     public static TerminalOp<Integer, Boolean> makeInt(final IntPredicate predicate,
-    		final MatchKind matchKind) {
+            final MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<Integer> implements Sink.OfInt {
@@ -122,10 +122,10 @@ final class MatchOps {
                 }
             }
 
-			@Override
-			public void accept(Integer i) {
-				SinkDefaults.OfInt.accept(this, i);
-			}
+            @Override
+            public void accept(Integer i) {
+                SinkDefaults.OfInt.accept(this, i);
+            }
         }
 
         return new MatchOp<>(StreamShape.INT_VALUE, matchKind, MatchSink::new);
@@ -140,7 +140,7 @@ final class MatchOps {
      *         criteria
      */
     public static TerminalOp<Long, Boolean> makeLong(final LongPredicate predicate,
-    		final MatchKind matchKind) {
+            final MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<Long> implements Sink.OfLong {
@@ -157,10 +157,10 @@ final class MatchOps {
                 }
             }
 
-			@Override
-			public void accept(Long i) {
-				SinkDefaults.OfLong.accept(this, i);
-			}
+            @Override
+            public void accept(Long i) {
+                SinkDefaults.OfLong.accept(this, i);
+            }
         }
 
         return new MatchOp<>(StreamShape.LONG_VALUE, matchKind, MatchSink::new);
@@ -175,7 +175,7 @@ final class MatchOps {
      *         criteria
      */
     public static TerminalOp<Double, Boolean> makeDouble(final DoublePredicate predicate,
-    		final MatchKind matchKind) {
+            final MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<Double> implements Sink.OfDouble {
@@ -192,10 +192,10 @@ final class MatchOps {
                 }
             }
 
-    		@Override
-    		public void accept(Double i) {
-    			SinkDefaults.OfDouble.accept(this, i);
-    		}
+            @Override
+            public void accept(Double i) {
+                SinkDefaults.OfDouble.accept(this, i);
+            }
         }
 
         return new MatchOp<>(StreamShape.DOUBLE_VALUE, matchKind, MatchSink::new);
@@ -281,30 +281,30 @@ final class MatchOps {
             return stop;
         }
 
-		@Override
-		public void begin(long size) {
-			SinkDefaults.begin(this, size);
-		}
+        @Override
+        public void begin(long size) {
+            SinkDefaults.begin(this, size);
+        }
 
-		@Override
-		public void end() {
-			SinkDefaults.end(this);
-		}
+        @Override
+        public void end() {
+            SinkDefaults.end(this);
+        }
 
-		@Override
-		public void accept(int value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(int value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(long value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(long value) {
+            SinkDefaults.accept(this, value);
+        }
 
-		@Override
-		public void accept(double value) {
-			SinkDefaults.accept(this, value);
-		}
+        @Override
+        public void accept(double value) {
+            SinkDefaults.accept(this, value);
+        }
     }
 
     /**

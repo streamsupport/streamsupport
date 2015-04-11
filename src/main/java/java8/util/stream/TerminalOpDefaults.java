@@ -68,7 +68,7 @@ final class TerminalOpDefaults {
         return this_.evaluateSequential(helper, spliterator);
     }
 
-	private TerminalOpDefaults() {
-		throw new AssertionError();
-	}
+    private TerminalOpDefaults() {
+        throw new AssertionError();
+    }
 }

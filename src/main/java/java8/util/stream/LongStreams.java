@@ -114,20 +114,20 @@ public final class LongStreams {
                 return v;
             }
 
-			@Override
-			public Long next() {
-				return nextLong();
-			}
+            @Override
+            public Long next() {
+                return nextLong();
+            }
 
-			@Override
-			public void forEachRemaining(LongConsumer action) {
-				Iterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(LongConsumer action) {
+                Iterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("remove");
-			}
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
+            }
         };
         return StreamSupport.longStream(Spliterators.spliteratorUnknownSize(
                 iterator,
@@ -247,7 +247,7 @@ public final class LongStreams {
      * default interface methods and static interface methods in the
      * {@link LongStream.Builder} interface. 
      */
-	public static final class J8Builder {
+    public static final class J8Builder {
        /**
          * Adds an element to the stream being built.
          *
@@ -269,12 +269,12 @@ public final class LongStreams {
             return this_;
         }
 
-		private J8Builder() {
-			throw new AssertionError();
-		}
-	}
+        private J8Builder() {
+            throw new AssertionError();
+        }
+    }
 
-	private LongStreams() {
-		throw new AssertionError();
-	}
+    private LongStreams() {
+        throw new AssertionError();
+    }
 }

@@ -27,5 +27,5 @@ package java8.util.stream;
 import java8.util.function.Consumer;
 
 interface SinkConsumer<T> extends Consumer<T> {
-	// compiler kludge
+    // compiler kludge
 }
