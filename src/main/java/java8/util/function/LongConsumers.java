@@ -47,12 +47,12 @@ public final class LongConsumers {
      * @throws NullPointerException if {@code after} is null
      */
     public static LongConsumer andThen(final LongConsumer this_, final LongConsumer after) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (long t) -> { this_.accept(t); after.accept(t); };
     }
 
     private LongConsumers() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

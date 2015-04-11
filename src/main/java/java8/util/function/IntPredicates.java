@@ -51,7 +51,7 @@ public final class IntPredicates {
      * @throws NullPointerException if other is null
      */
     public static IntPredicate and(final IntPredicate this_, final IntPredicate other) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (value) -> this_.test(value) && other.test(value);
     }
@@ -66,7 +66,7 @@ public final class IntPredicates {
      * @throws NullPointerException if {@code this_} is null
      */
     public static IntPredicate negate(final IntPredicate this_) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         return (value) -> !this_.test(value);
     }
 
@@ -89,12 +89,12 @@ public final class IntPredicates {
      * @throws NullPointerException if other is null
      */
     public static IntPredicate or(final IntPredicate this_, final IntPredicate other) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (value) -> this_.test(value) || other.test(value);
     }
 
     private IntPredicates() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

@@ -130,7 +130,7 @@ abstract class Striped64 extends Number {
         private static final long valueOffset;
         static {
             try {
-            	UNSAFE = UnsafeAccess.unsafe;
+                UNSAFE = UnsafeAccess.unsafe;
                 Class<?> ak = Cell.class;
                 valueOffset = UNSAFE.objectFieldOffset
                     (ak.getDeclaredField("value"));
@@ -184,27 +184,27 @@ abstract class Striped64 extends Number {
      * Duplicated from ThreadLocalRandom because of packaging restrictions.
      */
     static final int getProbe() {
-    	try {
-			return ((Integer) GET_PROBE_METHOD.invoke(null)).intValue();
-		} catch (Exception e) {
-			throw new Error(e);
-		}
+        try {
+            return ((Integer) GET_PROBE_METHOD.invoke(null)).intValue();
+        } catch (Exception e) {
+            throw new Error(e);
+        }
     }
 
     private static final int getInitializedProbe(Integer uncontended) {
-    	try {
-			return ((Integer) GET_INIT_PROBE_METHOD.invoke(null, uncontended)).intValue();
-		} catch (Exception e) {
-			throw new Error(e);
-		}    	
+        try {
+            return ((Integer) GET_INIT_PROBE_METHOD.invoke(null, uncontended)).intValue();
+        } catch (Exception e) {
+            throw new Error(e);
+        }
     }
 
     private static void setProbe(int probe) {
-    	try {
-			SET_PROBE_METHOD.invoke(null, probe);
-		} catch (Exception e) {
-			throw new Error(e);
-		}
+        try {
+            SET_PROBE_METHOD.invoke(null, probe);
+        } catch (Exception e) {
+            throw new Error(e);
+        }
     }
 
     /**
@@ -235,15 +235,15 @@ abstract class Striped64 extends Number {
     final void longAccumulate(long x, LongBinaryOperator fn,
                               boolean wasUncontended) {
 
-    	Integer uncontended = new Integer(0); // false
-    	int h = getInitializedProbe(uncontended);
-    	if (uncontended.intValue() == 1) {
-    		wasUncontended = true;
-    	}
-    	/*
+        Integer uncontended = new Integer(0); // false
+        int h = getInitializedProbe(uncontended);
+        if (uncontended.intValue() == 1) {
+            wasUncontended = true;
+        }
+        /*
         int h;
         if ((h = getProbe()) == 0) {
-        	forceTLRandomInit(); // force initialization
+            forceTLRandomInit(); // force initialization
             h = getProbe();
             wasUncontended = true;
         }
@@ -332,15 +332,15 @@ abstract class Striped64 extends Number {
     final void doubleAccumulate(double x, DoubleBinaryOperator fn,
                                 boolean wasUncontended) {
 
-    	Integer uncontended = new Integer(0); // false
-    	int h = getInitializedProbe(uncontended);
-    	if (uncontended.intValue() == 1) {
-    		wasUncontended = true;
-    	}
-    	/*
+        Integer uncontended = new Integer(0); // false
+        int h = getInitializedProbe(uncontended);
+        if (uncontended.intValue() == 1) {
+            wasUncontended = true;
+        }
+        /*
         int h;
         if ((h = getProbe()) == 0) {
-        	forceTLRandomInit(); // force initialization
+            forceTLRandomInit(); // force initialization
             h = getProbe();
             wasUncontended = true;
         }

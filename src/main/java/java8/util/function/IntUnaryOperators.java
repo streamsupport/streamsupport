@@ -47,8 +47,8 @@ public final class IntUnaryOperators {
      *
      * @see #andThen(IntUnaryOperator, IntUnaryOperator)
      */
-	public static IntUnaryOperator compose(final IntUnaryOperator this_, final IntUnaryOperator before) {
-		Objects.requireNonNull(this_);
+    public static IntUnaryOperator compose(final IntUnaryOperator this_, final IntUnaryOperator before) {
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(before);
         return (int v) -> this_.applyAsInt(before.applyAsInt(v));
     }
@@ -69,7 +69,7 @@ public final class IntUnaryOperators {
      * @see #compose(IntUnaryOperator, IntUnaryOperator)
      */
     public static IntUnaryOperator andThen(final IntUnaryOperator this_, final IntUnaryOperator after) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (int t) -> after.applyAsInt(this_.applyAsInt(t));
     }
@@ -84,6 +84,6 @@ public final class IntUnaryOperators {
     }
 
     private IntUnaryOperators() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

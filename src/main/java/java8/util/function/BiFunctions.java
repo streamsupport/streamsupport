@@ -51,12 +51,12 @@ public final class BiFunctions {
      * @throws NullPointerException if after is null
      */
     public static <R, T, U, V> BiFunction<T, U, V> andThen(final BiFunction<? super T, ? super U, ? extends R> this_, final Function<? super R, ? extends V> after) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (T t, U u) -> after.apply(this_.apply(t, u));
     }
 
     private BiFunctions() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }

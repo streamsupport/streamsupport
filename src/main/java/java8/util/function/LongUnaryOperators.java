@@ -47,8 +47,8 @@ public final class LongUnaryOperators {
      *
      * @see #andThen(LongUnaryOperator, LongUnaryOperator)
      */
-	public static LongUnaryOperator compose(final LongUnaryOperator this_, final LongUnaryOperator before) {
-		Objects.requireNonNull(this_);
+    public static LongUnaryOperator compose(final LongUnaryOperator this_, final LongUnaryOperator before) {
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(before);
         return (long v) -> this_.applyAsLong(before.applyAsLong(v));
     }
@@ -69,7 +69,7 @@ public final class LongUnaryOperators {
      * @see #compose(LongUnaryOperator, LongUnaryOperator)
      */
     public static LongUnaryOperator andThen(final LongUnaryOperator this_, final LongUnaryOperator after) {
-    	Objects.requireNonNull(this_);
+        Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (long t) -> after.applyAsLong(this_.applyAsLong(t));
     }
@@ -84,6 +84,6 @@ public final class LongUnaryOperators {
     }
 
     private LongUnaryOperators() {
-    	throw new AssertionError();
+        throw new AssertionError();
     }
 }
