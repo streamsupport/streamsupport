@@ -82,12 +82,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -151,12 +152,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -221,12 +223,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -297,12 +300,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -404,12 +408,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -478,12 +483,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -552,12 +558,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -653,12 +660,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -727,12 +735,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -801,12 +810,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -902,12 +912,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -976,12 +987,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -1055,12 +1067,13 @@ final class ReduceOps {
 
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
 
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
 
             @Override
@@ -1144,12 +1157,13 @@ final class ReduceOps {
 
         @Override
         public void end() {
-            SinkDefaults.end(this);
+            //SinkDefaults.end(this);
         }
 
         @Override
         public boolean cancellationRequested() {
-            return SinkDefaults.cancellationRequested(this);
+            //return SinkDefaults.cancellationRequested(this);
+            return false;
         }
 
         @Override

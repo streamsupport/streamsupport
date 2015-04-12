@@ -557,15 +557,16 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
             }
             @Override
             public void begin(long size) {
-                SinkDefaults.begin(this, size);
+                //SinkDefaults.begin(this, size);
             }
             @Override
             public void end() {
-                SinkDefaults.end(this);
+                //SinkDefaults.end(this);
             }
             @Override
             public boolean cancellationRequested() {
-                return SinkDefaults.cancellationRequested(this);
+                //return SinkDefaults.cancellationRequested(this);
+                return false;
             }
             @Override
             public void accept(int value) {
