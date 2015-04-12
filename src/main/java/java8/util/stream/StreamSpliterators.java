@@ -355,15 +355,16 @@ class StreamSpliterators {
             Sink.OfInt trampoline = new Sink.OfInt() {
                 @Override
                 public void end() {
-                    SinkDefaults.end(this);
+                    //SinkDefaults.end(this);
                 }
                 @Override
                 public boolean cancellationRequested() {
-                    return SinkDefaults.cancellationRequested(this);
+                    //return SinkDefaults.cancellationRequested(this);
+                    return false;
                 }
                 @Override
                 public void begin(long size) {
-                    SinkDefaults.begin(this, size);
+                    //SinkDefaults.begin(this, size);
                 }
                 @Override
                 public void accept(double value) {
@@ -414,15 +415,16 @@ class StreamSpliterators {
                 Sink.OfInt trampoline = new Sink.OfInt() {
                     @Override
                     public void end() {
-                        SinkDefaults.end(this);
+                        //SinkDefaults.end(this);
                     }
                     @Override
                     public boolean cancellationRequested() {
-                        return SinkDefaults.cancellationRequested(this);
+                        //return SinkDefaults.cancellationRequested(this);
+                        return false;
                     }
                     @Override
                     public void begin(long size) {
-                        SinkDefaults.begin(this, size);
+                        //SinkDefaults.begin(this, size);
                     }
                     @Override
                     public void accept(double value) {
@@ -484,15 +486,16 @@ class StreamSpliterators {
             Sink.OfLong trampoline = new Sink.OfLong() {
                 @Override
                 public void end() {
-                    SinkDefaults.end(this);
+                    //SinkDefaults.end(this);
                 }
                 @Override
                 public boolean cancellationRequested() {
-                    return SinkDefaults.cancellationRequested(this);
+                    //return SinkDefaults.cancellationRequested(this);
+                    return false;
                 }
                 @Override
                 public void begin(long size) {
-                    SinkDefaults.begin(this, size);
+                    //SinkDefaults.begin(this, size);
                 }
                 @Override
                 public void accept(double value) {
@@ -543,15 +546,16 @@ class StreamSpliterators {
                 Sink.OfLong trampoline = new Sink.OfLong() {
                     @Override
                     public void end() {
-                        SinkDefaults.end(this);
+                        //SinkDefaults.end(this);
                     }
                     @Override
                     public boolean cancellationRequested() {
-                        return SinkDefaults.cancellationRequested(this);
+                        //return SinkDefaults.cancellationRequested(this);
+                        return false;
                     }
                     @Override
                     public void begin(long size) {
-                        SinkDefaults.begin(this, size);
+                        //SinkDefaults.begin(this, size);
                     }
                     @Override
                     public void accept(double value) {
@@ -613,15 +617,16 @@ class StreamSpliterators {
             Sink.OfDouble trampoline = new Sink.OfDouble() {
                 @Override
                 public void begin(long size) {
-                    SinkDefaults.begin(this, size);
+                    //SinkDefaults.begin(this, size);
                 }
                 @Override
                 public void end() {
-                    SinkDefaults.end(this);
+                    //SinkDefaults.end(this);
                 }
                 @Override
                 public boolean cancellationRequested() {
-                    return SinkDefaults.cancellationRequested(this);
+                    //return SinkDefaults.cancellationRequested(this);
+                    return false;
                 }
                 @Override
                 public void accept(int value) {
@@ -672,15 +677,16 @@ class StreamSpliterators {
                 Sink.OfDouble trampoline = new Sink.OfDouble() {
                     @Override
                     public void begin(long size) {
-                        SinkDefaults.begin(this, size);
+                        //SinkDefaults.begin(this, size);
                     }
                     @Override
                     public void end() {
-                        SinkDefaults.end(this);
+                        //SinkDefaults.end(this);
                     }
                     @Override
                     public boolean cancellationRequested() {
-                        return SinkDefaults.cancellationRequested(this);
+                        //return SinkDefaults.cancellationRequested(this);
+                        return false;
                     }
                     @Override
                     public void accept(int value) {

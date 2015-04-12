@@ -69,7 +69,7 @@ final class SinkDefaults {
      * <p>Prior to this call, the sink must be in the initial state, and after
      * this call it is in the active state.
      */
-    static <T> void begin(Sink<T> this_, long size) {}
+//    static <T> void begin(Sink<T> this_, long size) {}
 
     /**
      * Indicates that all elements have been pushed.  If the {@code Sink} is
@@ -79,7 +79,7 @@ final class SinkDefaults {
      * <p>Prior to this call, the sink must be in the active state, and after
      * this call it is returned to the initial state.
      */
-    static <T> void end(Sink<T> this_) {}
+//    static <T> void end(Sink<T> this_) {}
 
     /**
      * Indicates that this {@code Sink} does not wish to receive any more data.
@@ -88,9 +88,9 @@ final class SinkDefaults {
      *
      * @return true if cancellation is requested
      */
-    static <T> boolean cancellationRequested(Sink<T> this_) {
-        return false;
-    }
+//    static <T> boolean cancellationRequested(Sink<T> this_) {
+//        return false;
+//    }
 
     /**
      * Accepts an int value.
