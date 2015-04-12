@@ -741,7 +741,8 @@ class StreamSpliterators {
             return Spliterators.hasCharacteristics(this, characteristics);
         }
 
-        @Override
+		@Override
+        @SuppressWarnings("unchecked")
         public T_SPLITR trySplit() {
             return (T_SPLITR) get().trySplit();
         }
@@ -869,7 +870,8 @@ class StreamSpliterators {
             // existing and additionally created F/J tasks that perform
             // redundant work on no elements.
             while (true) {
-                T_SPLITR leftSplit = (T_SPLITR) s.trySplit();
+                @SuppressWarnings("unchecked")
+				T_SPLITR leftSplit = (T_SPLITR) s.trySplit();
                 if (leftSplit == null)
                     return null;
 
@@ -1286,7 +1288,8 @@ class StreamSpliterators {
             // Stop splitting when there are no more limit permits
             if (permits.get() == 0)
                 return null;
-            T_SPLITR split = (T_SPLITR) s.trySplit();
+            @SuppressWarnings("unchecked")
+			T_SPLITR split = (T_SPLITR) s.trySplit();
             return split == null ? null : makeSpliterator(split);
         }
 
@@ -1399,16 +1402,18 @@ class StreamSpliterators {
                 super(s, skip, limit);
             }
 
-            OfPrimitive(T_SPLITR s, UnorderedSliceSpliterator.OfPrimitive parent) {
+            OfPrimitive(T_SPLITR s, UnorderedSliceSpliterator.OfPrimitive<T, T_CONS, T_BUFF, T_SPLITR> parent) {
                 super(s, parent);
             }
 
             @Override
             public boolean tryAdvance(T_CONS action) {
                 Objects.requireNonNull(action);
+                @SuppressWarnings("unchecked")
+				T_CONS consumer = (T_CONS) this;
 
                 while (permitStatus() != PermitStatus.NO_MORE) {
-                    if (!s.tryAdvance((T_CONS) this))
+                    if (!s.tryAdvance(consumer))
                         return false;
                     else if (acquirePermits(1) == 1) {
                         acceptConsumed(action);
@@ -1732,7 +1737,7 @@ class StreamSpliterators {
      * estimate size is 0.
      *
      * <p>The {@code forEachRemaining} method if invoked will never terminate.
-     * The {@coe tryAdvance} method always returns true.
+     * The {@code tryAdvance} method always returns true.
      *
      */
     static abstract class InfiniteSupplyingSpliterator<T> implements Spliterator<T> {

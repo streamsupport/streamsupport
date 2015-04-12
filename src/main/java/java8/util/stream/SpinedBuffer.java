@@ -94,7 +94,8 @@ class SpinedBuffer<E>
      * @throws IllegalArgumentException if the specified initial capacity
      *         is negative
      */
-    SpinedBuffer(int initialCapacity) {
+    @SuppressWarnings("unchecked")
+	SpinedBuffer(int initialCapacity) {
         super(initialCapacity);
         curChunk = (E[]) new Object[1 << initialChunkPower];
     }
@@ -102,7 +103,8 @@ class SpinedBuffer<E>
     /**
      * Constructs an empty list with an initial capacity of sixteen.
      */
-    SpinedBuffer() {
+    @SuppressWarnings("unchecked")
+	SpinedBuffer() {
         super();
         curChunk = (E[]) new Object[1 << initialChunkPower];
     }
@@ -116,7 +118,8 @@ class SpinedBuffer<E>
                : priorElementCount[spineIndex] + spine[spineIndex].length;
     }
 
-    private void inflateSpine() {
+    @SuppressWarnings("unchecked")
+	private void inflateSpine() {
         if (spine == null) {
             spine = (E[][]) new Object[MIN_SPINE_SIZE][];
             priorElementCount = new long[MIN_SPINE_SIZE];
@@ -127,7 +130,8 @@ class SpinedBuffer<E>
     /**
      * Ensure that the buffer has at least capacity to hold the target size
      */
-    protected final void ensureCapacity(long targetSize) {
+    @SuppressWarnings("unchecked")
+	protected final void ensureCapacity(long targetSize) {
         long capacity = capacity();
         if (targetSize > capacity) {
             inflateSpine();
