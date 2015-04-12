@@ -293,11 +293,6 @@ import java8.util.function.LongConsumer;
  *   }
  * }}</pre>
  *
- * <p><b>Implementation Note:</b><br>
- * If the boolean system property {@code org.openjdk.java.util.stream.tripwire}
- * is set to {@code true} then diagnostic warnings are reported if boxing of
- * primitive values occur when operating on primitive subtype specializations.
- *
  * @param <T> the type of elements returned by this Spliterator
  *
  * @see Collection
