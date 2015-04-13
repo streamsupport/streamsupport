@@ -56,7 +56,7 @@ import java8.util.Spliterators;
  * @since 1.8
  */
 class SpinedBuffer<E>
-        extends AbstractSpinedBuffer<E>
+        extends AbstractSpinedBuffer
         implements Consumer<E> {
 
     /*
@@ -445,7 +445,7 @@ class SpinedBuffer<E>
      * @param <T_CONS> the Consumer type for this primitive type
      */
     abstract static class OfPrimitive<E, T_ARR, T_CONS>
-            extends AbstractSpinedBuffer<E> {
+            extends AbstractSpinedBuffer {
 
         /*
          * We optimistically hope that all the data will fit into the first chunk,
