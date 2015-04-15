@@ -26,6 +26,7 @@
       <class name="org.openjdk.tests.java.util.map.DefaultsTest"/>
       <class name="org.openjdk.tests.java.util.concurrent.Basic"/>
       <class name="org.openjdk.tests.java.util.concurrent.ThenComposeAsyncTest"/>
+      <class name="org.openjdk.tests.java.util.concurrent.ThenComposeExceptionTest"/>
 
       <!-- block 3 -->
       <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/>
