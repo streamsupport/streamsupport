@@ -39,7 +39,6 @@ import java8.util.function.Consumer;
 import java8.util.function.BiConsumer;
 import java8.util.function.Function;
 import java8.util.function.BiFunction;
-
 import java8.util.concurrent.ForkJoinPool;
 import java8.util.concurrent.ForkJoinTask;
 import java8.util.concurrent.CompletionException;
@@ -2488,5 +2487,10 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         } catch (Exception e) {
             throw new Error(e);
         }
+
+        // Reduce the risk of rare disastrous classloading in first call to
+        // LockSupport.park: https://bugs.openjdk.java.net/browse/JDK-8074773
+        @SuppressWarnings("unused")
+        Class<?> ensureLoaded = LockSupport.class;
     }
 }
