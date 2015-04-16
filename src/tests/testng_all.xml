@@ -79,6 +79,7 @@
       <class name="org.openjdk.tests.java.util.stream.ConcatTest"/>
 
       <!-- block 8 -->
+      <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
       <class name="org.openjdk.other.tests.function.BasicTest"/>
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
