@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -109,9 +109,11 @@ public final class Maps {
      * map.merge(key, msg, String::concat)
      * }</pre>
      *
-     * <p>If the function returns {@code null} the mapping is removed.  If the
-     * function itself throws an (unchecked) exception, the exception is
-     * rethrown, and the current mapping is left unchanged.
+     * <p>If the remapping function returns {@code null} the mapping is removed.
+     * If the remapping function itself throws an (unchecked) exception, the
+     * exception is rethrown, and the current mapping is left unchanged.
+     *
+     * <p>The remapping function itself should not modify the passed map during computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -136,6 +138,13 @@ public final class Maps {
      * values and {@code get()} returning null unambiguously means the key is
      * absent. Implementations which support null values <strong>must</strong>
      * override the default implementation.
+     *
+     * <p>The default implementation makes no guarantees about detecting if the
+     * remapping function modifies the passed map during computation and, if
+     * appropriate, reporting an error. Concurrent implementations should override
+     * this method and, on a best-effort basis, throw an {@code IllegalStateException}
+     * if it is detected that the remapping function modifies the map during computation
+     * and as a result computation would never complete.
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
@@ -188,8 +197,8 @@ public final class Maps {
      * to {@code null}), attempts to compute its value using the given mapping
      * function and enters it into the passed {@code map} unless {@code null}.
      *
-     * <p>If the function returns {@code null} no mapping is recorded. If
-     * the function itself throws an (unchecked) exception, the
+     * <p>If the mapping function returns {@code null} no mapping is recorded.
+     * If the mapping function itself throws an (unchecked) exception, the
      * exception is rethrown, and no mapping is recorded.  The most
      * common usage is to construct a new object serving as an initial
      * mapped value or memoized result, as in:
@@ -205,6 +214,7 @@ public final class Maps {
      * map.computeIfAbsent(key, k -> new HashSet<V>()).add(v);
      * }</pre>
      *
+     * <p>The mapping function itself should not modify the passed map during computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to the following steps for the
@@ -228,11 +238,18 @@ public final class Maps {
      * absent. Implementations which support null values <strong>must</strong>
      * override the default implementation.
      *
+     * <p>The default implementation makes no guarantees about detecting if the
+     * mapping function modifies the passed map during computation and, if
+     * appropriate, reporting an error. Concurrent implementations should override
+     * this method and, on a best-effort basis, throw an {@code IllegalStateException}
+     * if it is detected that the mapping function modifies the map during computation
+     * and as a result computation would never complete.
+     *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
      * @param map the {@code Map} on which to execute the {@code computeIfAbsentConcurrent} operation.
      * @param key key with which the specified value is to be associated
-     * @param mappingFunction the function to compute a value
+     * @param mappingFunction the mapping function to compute a value
      * @return the current (existing or computed) value associated with
      *         the specified key, or null if the computed value is null
      * @throws NullPointerException if the specified key is null and
@@ -485,9 +502,11 @@ public final class Maps {
      * map.merge(key, msg, String::concat)
      * }</pre>
      *
-     * <p>If the function returns {@code null} the mapping is removed.  If the
-     * function itself throws an (unchecked) exception, the exception is
-     * rethrown, and the current mapping is left unchanged.
+     * <p>If the remapping function returns {@code null} the mapping is removed.
+     * If the remapping function itself throws an (unchecked) exception, the
+     * exception is rethrown, and the current mapping is left unchanged.
+     *
+     * <p>The remapping function itself should not modify the passed map during computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -504,13 +523,24 @@ public final class Maps {
      *     map.put(key, newValue);
      * }</pre>
      *
+     * <p>The default implementation makes no guarantees about detecting if the
+     * remapping function modifies the passed map during computation and, if
+     * appropriate, reporting an error. Non-concurrent implementations should
+     * override this method and, on a best-effort basis, throw a
+     * {@code ConcurrentModificationException} if it is detected that the
+     * remapping function modifies the map during computation. Concurrent
+     * implementations should override this method and, on a best-effort basis,
+     * throw an {@code IllegalStateException} if it is detected that the
+     * remapping function modifies the map during computation and as a result
+     * computation would never complete.
+     *
      * <p>The default implementation makes no guarantees about synchronization
      * or atomicity properties of this method. Any implementation providing
      * atomicity guarantees must override this method and document its
      * concurrency properties. In particular, all implementations of
      * subinterface {@link java.util.concurrent.ConcurrentMap} must document
-     * whether the function is applied once atomically only if the value is not
-     * present.
+     * whether the remapping function is applied once atomically only if the
+     * value is not present.
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
@@ -519,7 +549,7 @@ public final class Maps {
      * @param value the non-null value to be merged with the existing value
      *        associated with the key or, if no existing value or a null value
      *        is associated with the key, to be associated with the key
-     * @param remappingFunction the function to recompute a value if present
+     * @param remappingFunction the remapping function to recompute a value if present
      * @return the new value associated with the specified key, or null if no
      *         value is associated with the key
      * @throws UnsupportedOperationException if the {@code put} operation
@@ -554,8 +584,8 @@ public final class Maps {
      * to {@code null}), attempts to compute its value using the given mapping
      * function and enters it into the passed {@code map} unless {@code null}.
      *
-     * <p>If the function returns {@code null} no mapping is recorded. If
-     * the function itself throws an (unchecked) exception, the
+     * <p>If the mapping function returns {@code null} no mapping is recorded.
+     * If the mapping function itself throws an (unchecked) exception, the
      * exception is rethrown, and no mapping is recorded.  The most
      * common usage is to construct a new object serving as an initial
      * mapped value or memoized result, as in:
@@ -571,6 +601,7 @@ public final class Maps {
      * map.computeIfAbsent(key, k -> new HashSet<V>()).add(v);
      * }</pre>
      *
+     * <p>The mapping function itself should not modify the passed map during computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to the following steps for the
@@ -585,19 +616,30 @@ public final class Maps {
      * }
      * }</pre>
      *
+     * <p>The default implementation makes no guarantees about detecting if the
+     * mapping function modifies the passed map during computation and, if
+     * appropriate, reporting an error. Non-concurrent implementations should
+     * override this method and, on a best-effort basis, throw a
+     * {@code ConcurrentModificationException} if it is detected that the
+     * mapping function modifies the map during computation. Concurrent
+     * implementations should override this method and, on a best-effort basis,
+     * throw an {@code IllegalStateException} if it is detected that the
+     * mapping function modifies the map during computation and as a result
+     * computation would never complete.
+     *
      * <p>The default implementation makes no guarantees about synchronization
      * or atomicity properties of this method. Any implementation providing
      * atomicity guarantees must override this method and document its
      * concurrency properties. In particular, all implementations of
      * subinterface {@link java.util.concurrent.ConcurrentMap} must document
-     * whether the function is applied once atomically only if the value is not
-     * present.
+     * whether the mapping function is applied once atomically only if the value
+     * is not present.
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
      * @param map the {@code Map} on which to execute the {@code computeIfAbsent} operation.
      * @param key key with which the specified value is to be associated
-     * @param mappingFunction the function to compute a value
+     * @param mappingFunction the mapping function to compute a value
      * @return the current (existing or computed) value associated with
      *         the specified key, or null if the computed value is null
      * @throws NullPointerException if the specified key is null and
@@ -814,10 +856,12 @@ public final class Maps {
      * map.compute(key, (k, v) -> (v == null) ? msg : v.concat(msg))}</pre>
      * (Method {@link #merge merge()} is often simpler to use for such purposes.)
      *
-     * <p>If the function returns {@code null}, the mapping is removed (or
-     * remains absent if initially absent).  If the function itself throws an
-     * (unchecked) exception, the exception is rethrown, and the current mapping
-     * is left unchanged.
+     * <p>If the remapping function returns {@code null}, the mapping is removed
+     * (or remains absent if initially absent).  If the remapping function itself
+     * throws an (unchecked) exception, the exception is rethrown, and the current
+     * mapping is left unchanged.
+     *
+     * <p>The remapping function itself should not modify the passed map during computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -840,19 +884,30 @@ public final class Maps {
      * }
      * }</pre>
      *
+     * <p>The default implementation makes no guarantees about detecting if the
+     * remapping function modifies the passed map during computation and, if
+     * appropriate, reporting an error. Non-concurrent implementations should
+     * override this method and, on a best-effort basis, throw a
+     * {@code ConcurrentModificationException} if it is detected that the
+     * remapping function modifies the map during computation. Concurrent
+     * implementations should override this method and, on a best-effort basis,
+     * throw an {@code IllegalStateException} if it is detected that the
+     * remapping function modifies the map during computation and as a result
+     * computation would never complete.
+     *
      * <p>The default implementation makes no guarantees about synchronization
      * or atomicity properties of this method. Any implementation providing
      * atomicity guarantees must override this method and document its
      * concurrency properties. In particular, all implementations of
      * subinterface {@link java.util.concurrent.ConcurrentMap} must document
-     * whether the function is applied once atomically only if the value is not
-     * present.
+     * whether the remapping function is applied once atomically only if the
+     * value is not present.
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
      * @param map the {@code Map} on which to execute the {@code compute} operation.
      * @param key key with which the specified value is to be associated
-     * @param remappingFunction the function to compute a value
+     * @param remappingFunction the remapping function to compute a value
      * @return the new value associated with the specified key, or null if none
      * @throws NullPointerException if the specified key is null and
      *         the map does not support null keys, or the
@@ -893,10 +948,12 @@ public final class Maps {
      * If the value for the specified key is present and non-null, attempts to
      * compute a new mapping given the key and its current mapped value.
      *
-     * <p>If the function returns {@code null}, the mapping is removed.  If the
-     * function itself throws an (unchecked) exception, the exception is
-     * rethrown, and the current mapping is left unchanged.
-     * 
+     * <p>If the remapping function returns {@code null}, the mapping is removed.
+     * If the remapping function itself throws an (unchecked) exception, the
+     * exception is rethrown, and the current mapping is left unchanged.
+     *
+     * <p>The remapping function itself should not modify the passed map during computation.
+     *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
      * steps for the {@code map}, then returning the current value or
@@ -913,19 +970,30 @@ public final class Maps {
      * }
      * }</pre>
      *
+     * <p>The default implementation makes no guarantees about detecting if the
+     * remapping function modifies the passed map during computation and, if
+     * appropriate, reporting an error. Non-concurrent implementations should
+     * override this method and, on a best-effort basis, throw a
+     * {@code ConcurrentModificationException} if it is detected that the
+     * remapping function modifies the map during computation. Concurrent
+     * implementations should override this method and, on a best-effort basis,
+     * throw an {@code IllegalStateException} if it is detected that the
+     * remapping function modifies the map during computation and as a result
+     * computation would never complete.
+     *
      * <p>The default implementation makes no guarantees about synchronization
      * or atomicity properties of this method. Any implementation providing
      * atomicity guarantees must override this method and document its
      * concurrency properties. In particular, all implementations of
      * subinterface {@link java.util.concurrent.ConcurrentMap} must document
-     * whether the function is applied once atomically only if the value is not
-     * present.
+     * whether the remapping function is applied once atomically only if the
+     * value is not present.
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
      * @param map the {@code Map} on which to execute the {@code computeIfPresent} operation.
      * @param key key with which the specified value is to be associated
-     * @param remappingFunction the function to compute a value
+     * @param remappingFunction the remapping function to compute a value
      * @return the new value associated with the specified key, or null if none
      * @throws NullPointerException if the specified key is null and
      *         the map does not support null keys, or the
