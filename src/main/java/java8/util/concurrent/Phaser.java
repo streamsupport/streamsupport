@@ -1156,5 +1156,10 @@ public class Phaser {
         } catch (Exception e) {
             throw new Error(e);
         }
+
+        // Reduce the risk of rare disastrous classloading in first call to
+        // LockSupport.park: https://bugs.openjdk.java.net/browse/JDK-8074773
+        @SuppressWarnings("unused")
+        Class<?> ensureLoaded = LockSupport.class;
     }
 }
