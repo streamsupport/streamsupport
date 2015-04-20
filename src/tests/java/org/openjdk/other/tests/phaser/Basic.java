@@ -133,7 +133,7 @@ public class Basic {
         public Throwable result() { return this.result; }
         protected void phase(int phase) { this.phase = phase; }
         @SuppressWarnings("unused")
-		public int phase() { return this.phase; }
+        public int phase() { return this.phase; }
     }
 
     private static abstract class Awaiter extends Arriver {
@@ -411,7 +411,7 @@ public class Basic {
 
     @Test
     public static void test() {
-    	main(new String[]{});
+        main(new String[]{});
     }
 
     public static void main(String[] args) {
