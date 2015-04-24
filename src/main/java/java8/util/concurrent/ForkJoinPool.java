@@ -2434,12 +2434,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                 int j = ((am & s) << ASHIFT) + ABASE;
                 U.putOrderedObject(a, j, task);
                 U.putOrderedInt(q, QTOP, s + 1);
-
-                // SZ : 2015-04-23
-                // Hotfix for ticket #58 (JDK-8078490) bug
-//                U.putOrderedInt(q, QLOCK, 0); // TODO
-                U.putIntVolatile(q, QLOCK, 0); // TODO
-
+                U.putIntVolatile(q, QLOCK, 0);
                 if (n <= 1)
                     signalWork(ws, q);
                 return;
