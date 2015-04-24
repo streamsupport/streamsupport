@@ -49,88 +49,88 @@ import org.testng.annotations.Test;
  */
 public class ConcurrentAssociateTest {
 
-	// The number of entries for each thread to place in a map
+    // The number of entries for each thread to place in a map
     private static final int N = Integer.getInteger("n", 512);
     // The number of iterations of the test
     private static final int I = Integer.getInteger("i", 256);
     private static final int availableProcessors = Runtime.getRuntime().availableProcessors();
 
     public static void main(String[] args) throws Exception {
-    	System.out.println("availableProcessors: " + availableProcessors);
+        System.out.println("availableProcessors: " + availableProcessors);
 
-    	ConcurrentAssociateTest tester = new ConcurrentAssociateTest();
+        ConcurrentAssociateTest tester = new ConcurrentAssociateTest();
 
-    	// put
-    	try {
-    		tester.testPut();
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        // put
+        try {
+            tester.testPut();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    	// putIfAbsent
-    	try {
-    		tester.testPutIfAbsent();
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        // putIfAbsent
+        try {
+            tester.testPutIfAbsent();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    	// putAll
-    	try {
-    		tester.testPutAll();
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        // putAll
+        try {
+            tester.testPutAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     } 
 
     // Object to be placed in the concurrent map
     static class X {
-    	// Limit the hash code to trigger collisions
+        // Limit the hash code to trigger collisions
         int hc = ThreadLocalRandom.current().nextInt(1, 9);
 
         public int hashCode() { return hc; }
     }
 
-	@SuppressWarnings("serial")
-	static class AssociationFailure extends RuntimeException {
-		AssociationFailure(String message) {
-			super(message);
-		}
-	}
+    @SuppressWarnings("serial")
+    static class AssociationFailure extends RuntimeException {
+        AssociationFailure(String message) {
+            super(message);
+        }
+    }
 
-	@Test
-	public void testPut() {
-		test("ConcurrentHashMap.put",
-				new BiConsumer<ConcurrentMap<Object, Object>, Object>() {
-					@Override
-					public void accept(ConcurrentMap<Object, Object> m, Object o) {
-						m.put(o, o);
-					}
-				});
-	}
+    @Test
+    public void testPut() {
+        test("ConcurrentHashMap.put",
+                new BiConsumer<ConcurrentMap<Object, Object>, Object>() {
+                    @Override
+                    public void accept(ConcurrentMap<Object, Object> m, Object o) {
+                        m.put(o, o);
+                    }
+                });
+    }
 
-	@Test
-	public void testPutIfAbsent() {
-		test("ConcurrentHashMap.putIfAbsent",
-				new BiConsumer<ConcurrentMap<Object, Object>, Object>() {
-					@Override
-					public void accept(ConcurrentMap<Object, Object> m, Object o) {
-						m.putIfAbsent(o, o);
-					}
-				});
-	}
+    @Test
+    public void testPutIfAbsent() {
+        test("ConcurrentHashMap.putIfAbsent",
+                new BiConsumer<ConcurrentMap<Object, Object>, Object>() {
+                    @Override
+                    public void accept(ConcurrentMap<Object, Object> m, Object o) {
+                        m.putIfAbsent(o, o);
+                    }
+                });
+    }
 
-	@Test
-	public void testPutAll() {
-		test("ConcurrentHashMap.putAll",
-				new BiConsumer<ConcurrentMap<Object, Object>, Object>() {
-					@Override
-					public void accept(ConcurrentMap<Object, Object> m, Object o) {
-						Map<Object, Object> hm = new HashMap<Object, Object>();
-						hm.put(o, o);
-						m.putAll(hm);
-					}
-				});
-	}
+    @Test
+    public void testPutAll() {
+        test("ConcurrentHashMap.putAll",
+                new BiConsumer<ConcurrentMap<Object, Object>, Object>() {
+                    @Override
+                    public void accept(ConcurrentMap<Object, Object> m, Object o) {
+                        Map<Object, Object> hm = new HashMap<Object, Object>();
+                        hm.put(o, o);
+                        m.putAll(hm);
+                    }
+                });
+    }
 
     private static void test(String desc, BiConsumer<ConcurrentMap<Object, Object>, Object> associator) {
         for (int i = 0; i < I; i++) {
@@ -138,65 +138,65 @@ public class ConcurrentAssociateTest {
         }
     }
 
-	private static void testOnce(final String desc, final BiConsumer<ConcurrentMap<Object, Object>, Object> associator) {
+    private static void testOnce(final String desc, final BiConsumer<ConcurrentMap<Object, Object>, Object> associator) {
         final ConcurrentHashMap<Object, Object> m = new ConcurrentHashMap<Object, Object>();
         final CountDownLatch s = new CountDownLatch(1);
 
         final Supplier<Runnable> putter = new Supplier<Runnable>() {
-			@Override
-			public Runnable get() {
-				return new Runnable() {
-					@Override
-					public void run() {
-						try {
-							s.await();
-						} catch (InterruptedException e) {
-						}
+            @Override
+            public Runnable get() {
+                return new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            s.await();
+                        } catch (InterruptedException e) {
+                        }
 
-						for (int i = 0; i < N; i++) {
-							Object o = new X();
-							associator.accept(m, o);
-							if (!m.containsKey(o)) {
-								throw new AssociationFailure(desc + " failed: entry does not exist");
-							}
-						}
-					}
-				};
-			}
-		};
+                        for (int i = 0; i < N; i++) {
+                            Object o = new X();
+                            associator.accept(m, o);
+                            if (!m.containsKey(o)) {
+                                throw new AssociationFailure(desc + " failed: entry does not exist");
+                            }
+                        }
+                    }
+                };
+            }
+        };
 
         Stream<CompletableFuture<Void>> putters = IntStreams.range(0, availableProcessors)
                 .mapToObj(new IntFunction<Runnable>() {
-        			public Runnable apply(int i) {
-        				return putter.get();
-        			}})
+                    public Runnable apply(int i) {
+                        return putter.get();
+                    }})
                 .map(new Function<Runnable, CompletableFuture<Void>>() {
-        			@Override
-        			public CompletableFuture<Void> apply(Runnable runnable) {
-        				return CompletableFuture.runAsync(runnable);
-        			}
-        		});
+                    @Override
+                    public CompletableFuture<Void> apply(Runnable runnable) {
+                        return CompletableFuture.runAsync(runnable);
+                    }
+                });
 
         CompletableFuture<Void> all = CompletableFuture.allOf(
                 putters.toArray(new IntFunction<CompletableFuture<Void>[]>() {
-                	@Override
-        			@SuppressWarnings("unchecked")
-        			public CompletableFuture<Void>[] apply(int size) {
-        				return (CompletableFuture<Void>[]) new CompletableFuture[size];
-        			}
-        		}));
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public CompletableFuture<Void>[] apply(int size) {
+                        return (CompletableFuture<Void>[]) new CompletableFuture[size];
+                    }
+                }));
 
         // Trigger the runners to start
         s.countDown();
         try {
-        	all.join();
+            all.join();
         } catch (CompletionException e) {
-        	Throwable t = e.getCause();
-        	if (t instanceof AssociationFailure) {
-        		throw (AssociationFailure) t;
-        	} else {
-        		throw e;
-        	}
+            Throwable t = e.getCause();
+            if (t instanceof AssociationFailure) {
+                throw (AssociationFailure) t;
+            } else {
+                throw e;
+            }
         }
-	}
+    }
 }
