@@ -24,8 +24,10 @@
  */
 package org.openjdk.other.tests.forkjoin;
 
-
 import java8.util.concurrent.ForkJoinPool;
+
+import org.testng.annotations.Test;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,14 +37,20 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @summary Test submission and execution of task without joining
  */
 public class SubmissionTest {
-    public static void main(String[] args) throws Throwable {
+
+    @Test
+    public static void test() {
+        main(new String[]{});
+    }
+
+    public static void main(String[] args) {
         final ForkJoinPool e = new ForkJoinPool(1);
         final AtomicBoolean b = new AtomicBoolean();
         final Runnable setFalse = new Runnable() {
-			@Override
-			public void run() {
-				b.set(false);
-			}
+            @Override
+            public void run() {
+                b.set(false);
+            }
         };
         for (int i = 0; i < 100000; i++) {
             b.set(true);
