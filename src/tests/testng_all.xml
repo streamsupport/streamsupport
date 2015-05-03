@@ -80,6 +80,7 @@
 
       <!-- block 8 -->
       <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
+      <class name="org.openjdk.other.tests.forkjoin.SubmissionTest"/>
       <class name="org.openjdk.other.tests.function.BasicTest"/>
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
