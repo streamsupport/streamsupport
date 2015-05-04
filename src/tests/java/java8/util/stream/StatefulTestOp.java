@@ -120,11 +120,11 @@ interface StatefulTestOp<E> extends IntermediateTestOp<E, E> {
 //    	throw new IllegalStateException(op.outputShape().toString());
 //    }
 
-	StreamShape inputShape();
+    StreamShape inputShape();
 
-	StreamShape outputShape();
+    StreamShape outputShape();
 
-	int opGetFlags();
+    int opGetFlags();
 
 //    default StreamShape inputShape() { return StreamShape.REFERENCE; }
 //
@@ -132,7 +132,7 @@ interface StatefulTestOp<E> extends IntermediateTestOp<E, E> {
 //
 //    default int opGetFlags() { return 0; }
 
-	Sink<E> opWrapSink(int flags, boolean parallel, Sink<E> sink);
+    Sink<E> opWrapSink(int flags, boolean parallel, Sink<E> sink);
 
 //    @SuppressWarnings("unchecked")
 //    default <P_IN> Spliterator<E> opEvaluateParallelLazy(PipelineHelper<E> helper,
@@ -140,9 +140,9 @@ interface StatefulTestOp<E> extends IntermediateTestOp<E, E> {
 //        return opEvaluateParallel(helper, spliterator, i -> (E[]) new Object[i]).spliterator();
 //    }
 
-	<P_IN> Spliterator<E> opEvaluateParallelLazy(PipelineHelper<E> helper, Spliterator<P_IN> spliterator);
+    <P_IN> Spliterator<E> opEvaluateParallelLazy(PipelineHelper<E> helper, Spliterator<P_IN> spliterator);
 
-	<P_IN> Node<E> opEvaluateParallel(PipelineHelper<E> helper,
+    <P_IN> Node<E> opEvaluateParallel(PipelineHelper<E> helper,
                                       Spliterator<P_IN> spliterator,
                                       IntFunction<E[]> generator);
 }

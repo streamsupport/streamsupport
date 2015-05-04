@@ -72,11 +72,11 @@ public final class CollectorOps {
             return helper.evaluate(spliterator, false, generator);
         }
 
-		@Override
-		public <P_IN> Spliterator<E_IN> opEvaluateParallelLazy(
-				PipelineHelper<E_IN> helper, Spliterator<P_IN> spliterator) {
-			return StatefulTestOps.opEvaluateParallelLazy(this, helper, spliterator);
-		}
+        @Override
+        public <P_IN> Spliterator<E_IN> opEvaluateParallelLazy(
+                PipelineHelper<E_IN> helper, Spliterator<P_IN> spliterator) {
+            return StatefulTestOps.opEvaluateParallelLazy(this, helper, spliterator);
+        }
     }
 
     public static class TestParallelSizedOp<T> extends StatefulCollector<T> {

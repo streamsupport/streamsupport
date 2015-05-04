@@ -14,53 +14,53 @@ import java8.util.stream.StreamSupport;
 @Test
 public class COWCollectionsTest {
 
-	public void testCOWList() {
-		try {
-			CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<String>(
-					Arrays.asList("one", "two", "three", "two", "one"));
+    public void testCOWList() {
+        try {
+            CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<String>(
+                    Arrays.asList("one", "two", "three", "two", "one"));
 
-			Stream<String> s = StreamSupport.stream(list).distinct();
+            Stream<String> s = StreamSupport.stream(list).distinct();
 
-			s.forEach(new Consumer<String>() {
-				@Override
-				public void accept(String s) {
-					System.out.println(s);
-				}
-			});
+            s.forEach(new Consumer<String>() {
+                @Override
+                public void accept(String s) {
+                    System.out.println(s);
+                }
+            });
 
-			System.out.println("Done: no failures");
-			Assert.assertTrue(true);
+            System.out.println("Done: no failures");
+            Assert.assertTrue(true);
 
-		} catch (Throwable t) {
-			System.err.println("Failed");
-			t.printStackTrace();
+        } catch (Throwable t) {
+            System.err.println("Failed");
+            t.printStackTrace();
 
-			Assert.assertTrue(false);
-		}
-	}
+            Assert.assertTrue(false);
+        }
+    }
 
-	public void testCOWSet() {
-		try {
-			CopyOnWriteArraySet<String> list = new CopyOnWriteArraySet<String>(
-					Arrays.asList("one", "two", "three", "four", "one"));
+    public void testCOWSet() {
+        try {
+            CopyOnWriteArraySet<String> list = new CopyOnWriteArraySet<String>(
+                    Arrays.asList("one", "two", "three", "four", "one"));
 
-			Stream<String> s = StreamSupport.stream(list).sorted();
+            Stream<String> s = StreamSupport.stream(list).sorted();
 
-			s.forEach(new Consumer<String>() {
-				@Override
-				public void accept(String s) {
-					System.out.println(s);
-				}
-			});
+            s.forEach(new Consumer<String>() {
+                @Override
+                public void accept(String s) {
+                    System.out.println(s);
+                }
+            });
 
-			System.out.println("Done: no failures");
-			Assert.assertTrue(true);
+            System.out.println("Done: no failures");
+            Assert.assertTrue(true);
 
-		} catch (Throwable t) {
-			System.err.println("Failed");
-			t.printStackTrace();
+        } catch (Throwable t) {
+            System.err.println("Failed");
+            t.printStackTrace();
 
-			Assert.assertTrue(false);
-		}
-	}
+            Assert.assertTrue(false);
+        }
+    }
 }

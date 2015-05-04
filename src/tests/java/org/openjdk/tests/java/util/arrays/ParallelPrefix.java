@@ -74,16 +74,16 @@ public class ParallelPrefix {
     public static Object[][] longSet(){
         return genericData(size -> LongStreams.range(0, size).toArray(),
                 new LongBinaryOperator[]{
-        			java8.lang.Longs::sum,
-        			java8.lang.Longs::min});
+                    java8.lang.Longs::sum,
+                    java8.lang.Longs::min});
     }
 
     @DataProvider
     public static Object[][] doubleSet(){
         return genericData(size -> IntStreams.range(0, size).mapToDouble(i -> (double)i).toArray(),
                 new DoubleBinaryOperator[]{
-        			java8.lang.Doubles::sum,
-        			java8.lang.Doubles::min});
+                    java8.lang.Doubles::sum,
+                    java8.lang.Doubles::min});
     }
 
     @DataProvider
@@ -283,7 +283,7 @@ public class ParallelPrefix {
     }
 
     //@SafeVarargs
-	public static <T extends Throwable> void assertThrows(Class<T> throwable, String message, Thrower<T>... throwers) {
+    public static <T extends Throwable> void assertThrows(Class<T> throwable, String message, Thrower<T>... throwers) {
         for(Thrower<T> thrower : throwers) {
             assertThrows(thrower, throwable, message);
         }

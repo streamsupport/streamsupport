@@ -126,7 +126,7 @@ public class LongPrimitiveOpsTests {
         }).forEach((LongConsumer) new LongConsumer() {
             @Override
             public void accept(long l) {
-            	ai.addAndGet(l);
+                ai.addAndGet(l);
             }
         });
         assertEquals(ai.get(), 20);
@@ -158,7 +158,7 @@ public class LongPrimitiveOpsTests {
 
     public void testToArray() {
         {
-        	// sequential
+            // sequential
             long[] array =  LongStreams.range(1, 10).map(new LongUnaryOperator() {
                 @Override
                 public long applyAsLong(long i) {
@@ -169,7 +169,7 @@ public class LongPrimitiveOpsTests {
         }
 
         {
-        	// parallel
+            // parallel
             long[] array =  LongStreams.range(1, 10).parallel().map(new LongUnaryOperator() {
                 @Override
                 public long applyAsLong(long i) {
@@ -192,13 +192,13 @@ public class LongPrimitiveOpsTests {
         Arrays.sort(sortedContent);
 
         {
-        	// sequential
+            // sequential
             long[] array =  J8Arrays.stream(content).sorted().toArray();
             assertEquals(array, sortedContent);
         }
 
         {
-        	// parallel
+            // parallel
             long[] array =  J8Arrays.stream(content).parallel().sorted().toArray();
             assertEquals(array, sortedContent);
         }

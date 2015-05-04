@@ -14,6 +14,6 @@ public final class IntermediateTestOps {
         throw new IllegalStateException("Unknown test op type: " + op.getClass().getName());
     }
 
-	private IntermediateTestOps() {
-	}
+    private IntermediateTestOps() {
+    }
 }

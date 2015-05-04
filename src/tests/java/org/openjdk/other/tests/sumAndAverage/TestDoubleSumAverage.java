@@ -40,7 +40,7 @@ public class TestDoubleSumAverage {
 
     @Test
     public static void test() {
-    	main(new String[]{});
+        main(new String[]{});
     }
 
     public static void main(String... args) {
@@ -115,13 +115,13 @@ public class TestDoubleSumAverage {
                 (ObjDoubleConsumer<DoubleSummaryStatistics>) new ObjDoubleConsumer<DoubleSummaryStatistics>() {
                     @Override
                     public void accept(DoubleSummaryStatistics doubleSummaryStatistics, double v) {
-                    	doubleSummaryStatistics.accept(v);
+                        doubleSummaryStatistics.accept(v);
                     }
                 },
                 (BiConsumer<DoubleSummaryStatistics, DoubleSummaryStatistics>) new BiConsumer<DoubleSummaryStatistics, DoubleSummaryStatistics>() {
                     @Override
                     public void accept(DoubleSummaryStatistics doubleSummaryStatistics, DoubleSummaryStatistics doubleSummaryStatistics2) {
-                    	doubleSummaryStatistics.combine(doubleSummaryStatistics2);
+                        doubleSummaryStatistics.combine(doubleSummaryStatistics2);
                     }
                 }
         );
@@ -280,13 +280,13 @@ public class TestDoubleSumAverage {
                     (ObjDoubleConsumer<DoubleSummaryStatistics>) new ObjDoubleConsumer<DoubleSummaryStatistics>() {
                         @Override
                         public void accept(DoubleSummaryStatistics doubleSummaryStatistics, double v) {
-                        	doubleSummaryStatistics.accept(v);
+                            doubleSummaryStatistics.accept(v);
                         }
                     },
                     (BiConsumer<DoubleSummaryStatistics, DoubleSummaryStatistics>) new BiConsumer<DoubleSummaryStatistics, DoubleSummaryStatistics>() {
                         @Override
                         public void accept(DoubleSummaryStatistics doubleSummaryStatistics, DoubleSummaryStatistics doubleSummaryStatistics2) {
-                        	doubleSummaryStatistics.combine(doubleSummaryStatistics2);
+                            doubleSummaryStatistics.combine(doubleSummaryStatistics2);
                         }
                     }
             );

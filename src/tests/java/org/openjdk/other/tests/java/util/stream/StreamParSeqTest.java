@@ -39,12 +39,12 @@ import static org.testng.Assert.assertTrue;
 public class StreamParSeqTest {
 
     public void testParSeq() {
-    	List<Integer> list = Arrays.asList(1, 2, 3, 4);
-    	Spliterator<Integer> spliter = Spliterators.spliteratorUnknownSize(list.iterator(), 0);
-    	Stream<Integer> stream = StreamSupport.stream(spliter, false);
-    	
+        List<Integer> list = Arrays.asList(1, 2, 3, 4);
+        Spliterator<Integer> spliter = Spliterators.spliteratorUnknownSize(list.iterator(), 0);
+        Stream<Integer> stream = StreamSupport.stream(spliter, false);
+
 //        Stream<Integer> s = Arrays.asList(1, 2, 3, 4).stream().parallel();
-    	Stream<Integer> s = stream.parallel();
+        Stream<Integer> s = stream.parallel();
         assertTrue(s.isParallel());
 
         s = s.sequential();

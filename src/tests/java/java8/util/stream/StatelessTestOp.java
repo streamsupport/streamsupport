@@ -36,14 +36,14 @@ interface StatelessTestOp<E_IN, E_OUT> extends IntermediateTestOp<E_IN, E_OUT> {
 //                public Sink opWrapSink(int flags, Sink<T> sink) {
 //                    return op.opWrapSink(flags, isParallel(), sink);
 //                }
-//            };        	
+//            };
 //        }
 //        if (op.outputShape() == StreamShape.INT_VALUE) {
 //            return new IntPipeline.StatelessOp<Object>(upstream, op.inputShape(), flags) {
 //                public Sink opWrapSink(int flags, Sink sink) {
 //                    return op.opWrapSink(flags, isParallel(), sink);
 //                }
-//            };        	
+//            };
 //        }
 //        if (op.outputShape() == StreamShape.LONG_VALUE) {
 //            return new LongPipeline.StatelessOp<Object>(upstream, op.inputShape(), flags) {
@@ -51,7 +51,7 @@ interface StatelessTestOp<E_IN, E_OUT> extends IntermediateTestOp<E_IN, E_OUT> {
 //                Sink opWrapSink(int flags, Sink sink) {
 //                    return op.opWrapSink(flags, isParallel(), sink);
 //                }
-//            };        	
+//            };
 //        }
 //        if (op.outputShape() == StreamShape.DOUBLE_VALUE) {
 //            return new DoublePipeline.StatelessOp<Object>(upstream, op.inputShape(), flags) {
@@ -59,16 +59,16 @@ interface StatelessTestOp<E_IN, E_OUT> extends IntermediateTestOp<E_IN, E_OUT> {
 //                Sink opWrapSink(int flags, Sink sink) {
 //                    return op.opWrapSink(flags, isParallel(), sink);
 //                }
-//            };        	
+//            };
 //        }
 //        throw new IllegalStateException(op.outputShape().toString());
 //    }
 
-	StreamShape inputShape();
+    StreamShape inputShape();
 
-	StreamShape outputShape();
+    StreamShape outputShape();
 
-	int opGetFlags();
+    int opGetFlags();
 
 //    default StreamShape inputShape() { return StreamShape.REFERENCE; }
 //

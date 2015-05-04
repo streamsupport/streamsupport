@@ -299,67 +299,67 @@ public class InfiniteStreamWithLimitOpTest extends OpTestCase {
 
     // that workaround was necessary to be able to run on Android (Dalvik & ART) 
     private Spliterator.OfLong proxyNotSubsized(Spliterator.OfLong s) {
-    	return new NotSubSizedProxy(s);
+        return new NotSubSizedProxy(s);
     }
 
     private static final class NotSubSizedProxy implements Spliterator.OfLong {
 
-    	final Spliterator.OfLong s;
+        final Spliterator.OfLong s;
 
-    	NotSubSizedProxy(Spliterator.OfLong s) {
-    		this.s = s;
-    	}
+        NotSubSizedProxy(Spliterator.OfLong s) {
+            this.s = s;
+        }
 
-		@Override
-		public long estimateSize() {
-			return s.estimateSize();
-		}
+        @Override
+        public long estimateSize() {
+            return s.estimateSize();
+        }
 
-		@Override
-		public int characteristics() {
-			return s.characteristics() & ~Spliterator.SUBSIZED;
-		}
+        @Override
+        public int characteristics() {
+            return s.characteristics() & ~Spliterator.SUBSIZED;
+        }
 
-		@Override
-		public long getExactSizeIfKnown() {
-			return s.getExactSizeIfKnown();
-		}
+        @Override
+        public long getExactSizeIfKnown() {
+            return s.getExactSizeIfKnown();
+        }
 
-		@Override
-		public boolean hasCharacteristics(int characteristics) {
-			boolean b = s.hasCharacteristics(characteristics);
-			return b & ((characteristics & Spliterator.SUBSIZED) == 0);
-		}
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            boolean b = s.hasCharacteristics(characteristics);
+            return b & ((characteristics & Spliterator.SUBSIZED) == 0);
+        }
 
-		@Override
-		public Comparator<? super Long> getComparator() {
-			return s.getComparator();
-		}
+        @Override
+        public Comparator<? super Long> getComparator() {
+            return s.getComparator();
+        }
 
-		@Override
-		public Spliterator.OfLong trySplit() {
-			return s.trySplit();
-		}
+        @Override
+        public Spliterator.OfLong trySplit() {
+            return s.trySplit();
+        }
 
-		@Override
-		public boolean tryAdvance(LongConsumer action) {
-			return s.tryAdvance(action);
-		}
+        @Override
+        public boolean tryAdvance(LongConsumer action) {
+            return s.tryAdvance(action);
+        }
 
-		@Override
-		public void forEachRemaining(LongConsumer action) {
-			s.forEachRemaining(action);
-		}
+        @Override
+        public void forEachRemaining(LongConsumer action) {
+            s.forEachRemaining(action);
+        }
 
-		@Override
-		public boolean tryAdvance(Consumer<? super Long> action) {
-			return s.tryAdvance(action);
-		}
+        @Override
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return s.tryAdvance(action);
+        }
 
-		@Override
-		public void forEachRemaining(Consumer<? super Long> action) {
-			s.forEachRemaining(action);
-		}
+        @Override
+        public void forEachRemaining(Consumer<? super Long> action) {
+            s.forEachRemaining(action);
+        }
     }
 
     private TestData.OfLong proxiedLongRange(long l, long u) {

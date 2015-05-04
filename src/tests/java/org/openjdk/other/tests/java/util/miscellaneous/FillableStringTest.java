@@ -41,9 +41,9 @@ import static org.testng.Assert.*;
 public class FillableStringTest {
 
     public Stream<String> generate() {
-    	List<String> list = Arrays.asList("one", "two", "three", "four", "five", "six");
-    	Spliterator<String> spliter = Spliterators.spliteratorUnknownSize(list.iterator(), 0);
-    	Stream<String> stream = StreamSupport.stream(spliter, false);
+        List<String> list = Arrays.asList("one", "two", "three", "four", "five", "six");
+        Spliterator<String> spliter = Spliterators.spliteratorUnknownSize(list.iterator(), 0);
+        Stream<String> stream = StreamSupport.stream(spliter, false);
         return stream
                 .filter(new Predicate<String>() {
                     @Override

@@ -8,6 +8,6 @@ public final class BaseTerminalTestScenarios {
         return terminalF.apply(source);
     }
 
-	private BaseTerminalTestScenarios() {
-	}
+    private BaseTerminalTestScenarios() {
+    }
 }

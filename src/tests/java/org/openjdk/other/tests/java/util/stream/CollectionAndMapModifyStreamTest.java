@@ -139,7 +139,7 @@ public class CollectionAndMapModifyStreamTest {
     }
 
     private void testEntrySetSizeRemove(String name, final Set<Map.Entry<Integer, Integer>> c) {
-    	Iterator<Map.Entry<Integer, Integer>> testIter = c.iterator();
+        Iterator<Map.Entry<Integer, Integer>> testIter = c.iterator();
         Map.Entry<Integer, Integer> first = testIter.next();
         assertTrue(c.remove(first));
 

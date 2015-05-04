@@ -124,7 +124,7 @@ public class BasicLong {
                 }
             });
             fail();
-        } catch(ObscureException expected) {
+        } catch (ObscureException expected) {
 
         }
         assertEquals(1, present.orElse(2));

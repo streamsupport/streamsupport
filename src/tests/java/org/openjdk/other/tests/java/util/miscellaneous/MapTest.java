@@ -77,7 +77,7 @@ public class MapTest {
 
     @Test
     public void testReplaceAll() {
-    	Maps.replaceAll(map, new BiFunction<Integer, String, String>() {
+        Maps.replaceAll(map, new BiFunction<Integer, String, String>() {
             @Override
             public String apply(Integer k, String v) {
                 return v.toUpperCase();

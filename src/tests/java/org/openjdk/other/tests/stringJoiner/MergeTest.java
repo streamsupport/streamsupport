@@ -55,13 +55,13 @@ public class MergeTest {
         StreamSupport.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
-            	sj.add(s);
+                sj.add(s);
             }
         });
         StreamSupport.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
-            	other.add(s);
+                other.add(s);
             }
         });
 
@@ -75,7 +75,7 @@ public class MergeTest {
         StreamSupport.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
-            	sj.add(s);
+                sj.add(s);
             }
         });
 
@@ -93,7 +93,7 @@ public class MergeTest {
         StreamSupport.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
-            	other.add(s);
+                other.add(s);
             }
         });
 
@@ -141,13 +141,13 @@ public class MergeTest {
         StreamSupport.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
-            	sj.add(s);
+                sj.add(s);
             }
         });
         StreamSupport.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
-            	other.add(s);
+                other.add(s);
             }
         });
 

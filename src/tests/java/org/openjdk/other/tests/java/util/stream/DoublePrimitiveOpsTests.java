@@ -49,12 +49,12 @@ public class DoublePrimitiveOpsTests {
     // @@@ tests for double are fragile if relying on equality when accumulating and multiplying values
 
     public void testUnBox() {
-    	List<Double> list = java.util.Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
-    	Spliterator<Double> spliter = Spliterators.spliteratorUnknownSize(list.iterator(), 0);
-    	Stream<Double> stream = StreamSupport.stream(spliter, false);
+        List<Double> list = java.util.Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0);
+        Spliterator<Double> spliter = Spliterators.spliteratorUnknownSize(list.iterator(), 0);
+        Stream<Double> stream = StreamSupport.stream(spliter, false);
 
 //        double sum = Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0).stream().mapToDouble(i -> i).reduce(0.0, Double::sum);
-    	double sum = stream.mapToDouble(new ToDoubleFunction<Double>() {
+        double sum = stream.mapToDouble(new ToDoubleFunction<Double>() {
             @Override
             public double applyAsDouble(Double i) {
                 return i;

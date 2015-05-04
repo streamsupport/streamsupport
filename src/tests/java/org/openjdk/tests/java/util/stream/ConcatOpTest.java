@@ -65,7 +65,7 @@ public class ConcatOpTest extends OpTestCase {
                 StreamSupport.iterate(0, i -> i + 1)));
 
         assertUnsized(StreamSupport.concat(
-        		StreamSupport.iterate(0, i -> i + 1),
+                StreamSupport.iterate(0, i -> i + 1),
                 LongStreams.range(0, Long.MAX_VALUE).boxed()));
     }
 
