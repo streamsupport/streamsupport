@@ -247,15 +247,15 @@ public class MatchOpTest extends OpTestCase {
                 return i.hasNext();
             }
 
-			@Override
-			public void forEachRemaining(IntConsumer action) {
-				Iterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(IntConsumer action) {
+                Iterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public Integer next() {
-				return Integer.valueOf(nextInt());
-			}
+            @Override
+            public Integer next() {
+                return Integer.valueOf(nextInt());
+            }
         }
 
         Supplier<PrimitiveIterator.OfInt> source = () -> J8Arrays.stream(new int[]{1, 2, 3, 4}).iterator();
@@ -342,15 +342,15 @@ public class MatchOpTest extends OpTestCase {
                 return i.hasNext();
             }
 
-			@Override
-			public void forEachRemaining(LongConsumer action) {
-				Iterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(LongConsumer action) {
+                Iterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public Long next() {
-				return Long.valueOf(nextLong());
-			}
+            @Override
+            public Long next() {
+                return Long.valueOf(nextLong());
+            }
         }
 
         Supplier<PrimitiveIterator.OfLong> source = () -> J8Arrays.stream(new long[]{1, 2, 3, 4}).iterator();
@@ -437,15 +437,15 @@ public class MatchOpTest extends OpTestCase {
                 return i.hasNext();
             }
 
-			@Override
-			public void forEachRemaining(DoubleConsumer action) {
-				Iterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(DoubleConsumer action) {
+                Iterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public Double next() {
-				return Double.valueOf(nextDouble());
-			}
+            @Override
+            public Double next() {
+                return Double.valueOf(nextDouble());
+            }
         }
 
         Supplier<PrimitiveIterator.OfDouble> source = () -> J8Arrays.stream(new double[]{1, 2, 3, 4}).iterator();

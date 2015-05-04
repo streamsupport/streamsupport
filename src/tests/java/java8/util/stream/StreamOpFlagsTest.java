@@ -363,20 +363,20 @@ public class StreamOpFlagsTest {
                 return c;
             }
 
-			@Override
-			public void forEachRemaining(Consumer<? super Object> action) {
-				Spliterators.forEachRemaining(this, action);
-			}
+            @Override
+            public void forEachRemaining(Consumer<? super Object> action) {
+                Spliterators.forEachRemaining(this, action);
+            }
 
-			@Override
-			public long getExactSizeIfKnown() {
-				return Spliterators.getExactSizeIfKnown(this);
-			}
+            @Override
+            public long getExactSizeIfKnown() {
+                return Spliterators.getExactSizeIfKnown(this);
+            }
 
-			@Override
-			public boolean hasCharacteristics(int characteristics) {
-				return Spliterators.hasCharacteristics(this, characteristics);
-			}
+            @Override
+            public boolean hasCharacteristics(int characteristics) {
+                return Spliterators.hasCharacteristics(this, characteristics);
+            }
         };
 
         {

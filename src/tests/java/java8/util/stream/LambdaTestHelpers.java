@@ -138,7 +138,7 @@ public class LambdaTestHelpers {
             = string -> IntStreams.range(0, string.length()).map(string::charAt);
 
     public static <T, R> Function<T, R> forPredicate(Predicate<? super T> predicate, R forTrue, R forFalse) {
-    	java8.util.Objects.requireNonNull(predicate);
+        java8.util.Objects.requireNonNull(predicate);
 
         return t -> predicate.test(t) ? forTrue : forFalse;
     }
@@ -462,7 +462,7 @@ public class LambdaTestHelpers {
     }
 
     public static String flagsToString(int flags) {
-    	java8.util.StringJoiner sj = new java8.util.StringJoiner(", ", "StreamOpFlag[", "]");
+        java8.util.StringJoiner sj = new java8.util.StringJoiner(", ", "StreamOpFlag[", "]");
         if (StreamOpFlag.DISTINCT.isKnown(flags)) sj.add("IS_DISTINCT");
         if (StreamOpFlag.ORDERED.isKnown(flags)) sj.add("IS_ORDERED");
         if (StreamOpFlag.SIZED.isKnown(flags)) sj.add("IS_SIZED");

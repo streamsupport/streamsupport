@@ -460,11 +460,11 @@ public abstract class OpTestCase extends LoggingTestCase {
             return isParallel;
         }
 
-		@Override
-		public Object run(Function terminalF, BaseStream source,
-				StreamShape shape) {
-			return BaseTerminalTestScenarios.run(terminalF, source, shape);
-		}
+        @Override
+        public Object run(Function terminalF, BaseStream source,
+                StreamShape shape) {
+            return BaseTerminalTestScenarios.run(terminalF, source, shape);
+        }
 
     }
 

@@ -60,7 +60,7 @@ public class LongAdderDemo {
 
     @Test
     public static void test() {
-    	main(new String[]{});
+        main(new String[]{});
     }
 
     public static void main(String[] args) {

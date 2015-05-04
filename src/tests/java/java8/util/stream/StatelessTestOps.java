@@ -11,14 +11,14 @@ public final class StatelessTestOps {
                 public Sink opWrapSink(int flags, Sink<T> sink) {
                     return op.opWrapSink(flags, isParallel(), sink);
                 }
-            };        	
+            };
         }
         if (op.outputShape() == StreamShape.INT_VALUE) {
             return new IntPipeline.StatelessOp<Object>(upstream, op.inputShape(), flags) {
                 public Sink opWrapSink(int flags, Sink sink) {
                     return op.opWrapSink(flags, isParallel(), sink);
                 }
-            };        	
+            };
         }
         if (op.outputShape() == StreamShape.LONG_VALUE) {
             return new LongPipeline.StatelessOp<Object>(upstream, op.inputShape(), flags) {
@@ -26,7 +26,7 @@ public final class StatelessTestOps {
                 Sink opWrapSink(int flags, Sink sink) {
                     return op.opWrapSink(flags, isParallel(), sink);
                 }
-            };        	
+            };
         }
         if (op.outputShape() == StreamShape.DOUBLE_VALUE) {
             return new DoublePipeline.StatelessOp<Object>(upstream, op.inputShape(), flags) {
@@ -34,7 +34,7 @@ public final class StatelessTestOps {
                 Sink opWrapSink(int flags, Sink sink) {
                     return op.opWrapSink(flags, isParallel(), sink);
                 }
-            };        	
+            };
         }
         throw new IllegalStateException(op.outputShape().toString());
     }
@@ -45,6 +45,6 @@ public final class StatelessTestOps {
 
     public static int opGetFlags() { return 0; }
 
-	private StatelessTestOps() {
-	}
+    private StatelessTestOps() {
+    }
 }

@@ -44,10 +44,10 @@ public class StreamReuseTest {
             String text) {
         S stream = data.stream();
         @SuppressWarnings("unused")
-		T fr = first.apply(stream);
+        T fr = first.apply(stream);
         try {
             @SuppressWarnings("unused")
-			U sr = second.apply(stream);
+            U sr = second.apply(stream);
             fail(text + " (seq)");
         }
         catch (Throwable e) {
@@ -66,7 +66,7 @@ public class StreamReuseTest {
         fr = first.apply(stream);
         try {
             @SuppressWarnings("unused")
-			U sr = second.apply(stream);
+            U sr = second.apply(stream);
             fail(text + " (par)");
         }
         catch (Throwable e) {

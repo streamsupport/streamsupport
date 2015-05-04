@@ -8,7 +8,7 @@ public final class StatefulTestOps {
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static<T> AbstractPipeline chain(AbstractPipeline upstream,
                                             StatefulTestOp op) {
-    	if (op.outputShape() == StreamShape.REFERENCE) {
+        if (op.outputShape() == StreamShape.REFERENCE) {
             return new ReferencePipeline.StatefulOp<Object, T>(upstream, op.inputShape(), op.opGetFlags()) {
                 @Override
                 Sink opWrapSink(int flags, Sink sink) {
@@ -28,8 +28,8 @@ public final class StatefulTestOps {
                     return op.opEvaluateParallel(helper, spliterator, generator);
                 }
             };
-    	}
-    	if (op.outputShape() == StreamShape.INT_VALUE) {
+        }
+        if (op.outputShape() == StreamShape.INT_VALUE) {
             return new IntPipeline.StatefulOp<Object>(upstream, op.inputShape(), op.opGetFlags()) {
                 @Override
                 Sink opWrapSink(int flags, Sink sink) {
@@ -49,8 +49,8 @@ public final class StatefulTestOps {
                     return (Node<Integer>) op.opEvaluateParallel(helper, spliterator, generator);
                 }
             };
-    	}
-    	if (op.outputShape() == StreamShape.LONG_VALUE) {
+        }
+        if (op.outputShape() == StreamShape.LONG_VALUE) {
             return new LongPipeline.StatefulOp<Object>(upstream, op.inputShape(), op.opGetFlags()) {
                 @Override
                 Sink opWrapSink(int flags, Sink sink) {
@@ -69,9 +69,9 @@ public final class StatefulTestOps {
                                                      IntFunction<Long[]> generator) {
                     return (Node<Long>) op.opEvaluateParallel(helper, spliterator, generator);
                 }
-            };	
-    	}
-    	if (op.outputShape() == StreamShape.DOUBLE_VALUE) {
+            };
+        }
+        if (op.outputShape() == StreamShape.DOUBLE_VALUE) {
             return new DoublePipeline.StatefulOp<Object>(upstream, op.inputShape(), op.opGetFlags()) {
                 @Override
                 Sink opWrapSink(int flags, Sink sink) {
@@ -91,8 +91,8 @@ public final class StatefulTestOps {
                     return (Node<Double>) op.opEvaluateParallel(helper, spliterator, generator);
                 }
             };
-    	}
-    	throw new IllegalStateException(op.outputShape().toString());
+        }
+        throw new IllegalStateException(op.outputShape().toString());
     }
 
     public static StreamShape inputShape() { return StreamShape.REFERENCE; }
@@ -107,6 +107,6 @@ public final class StatefulTestOps {
         return this_.opEvaluateParallel(helper, spliterator, i -> (E[]) new Object[i]).spliterator();
     }
 
-	private StatefulTestOps() {
-	}
+    private StatefulTestOps() {
+    }
 }

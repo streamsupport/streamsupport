@@ -143,25 +143,25 @@ public class DefaultsTest {
         Set<String> EACH_REPLACE = new HashSet<String>(map.size());
 
         if (map instanceof ConcurrentMap) {
-	        Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k, v) -> {
-	            int idx = (null == k) ? 0 : k.ordinal(); // substitute for index.
-	            assertNull(EACH_KEY[idx]);
-	            EACH_KEY[idx] = (idx == 0) ? KEYS[0] : k; // substitute for comparison.
-	            assertSame(v, map.get(k));
-	            String replacement = v + " replaced";
-	            EACH_REPLACE.add(replacement);
-	            return replacement;
-	        });
+            Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k, v) -> {
+                int idx = (null == k) ? 0 : k.ordinal(); // substitute for index.
+                assertNull(EACH_KEY[idx]);
+                EACH_KEY[idx] = (idx == 0) ? KEYS[0] : k; // substitute for comparison.
+                assertSame(v, map.get(k));
+                String replacement = v + " replaced";
+                EACH_REPLACE.add(replacement);
+                return replacement;
+            });
         } else {
-	        Maps.replaceAll(map, (k,v) -> {
-	            int idx = (null == k) ? 0 : k.ordinal(); // substitute for index.
-	            assertNull(EACH_KEY[idx]);
-	            EACH_KEY[idx] = (idx == 0) ? KEYS[0] : k; // substitute for comparison.
-	            assertSame(v, map.get(k));
-	            String replacement = v + " replaced";
-	            EACH_REPLACE.add(replacement);
-	            return replacement;
-	        });
+            Maps.replaceAll(map, (k,v) -> {
+                int idx = (null == k) ? 0 : k.ordinal(); // substitute for index.
+                assertNull(EACH_KEY[idx]);
+                EACH_KEY[idx] = (idx == 0) ? KEYS[0] : k; // substitute for comparison.
+                assertSame(v, map.get(k));
+                String replacement = v + " replaced";
+                EACH_REPLACE.add(replacement);
+                return replacement;
+            });
         }
 
         assertEquals(KEYS, EACH_KEY, description);
@@ -172,25 +172,25 @@ public class DefaultsTest {
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=nonNull values=nonNull")
     public static void testReplaceAllNoNullReplacement(String description, Map<IntegerEnum, String> map) {
-    	if (map instanceof ConcurrentMap) {
-	        assertThrows(
-		            () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, null); },
-		            NullPointerException.class,
-		            description);
-		        assertThrows(
-		            () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k,v) -> null); },
-		            NullPointerException.class,
-		            description + " should not allow replacement with null value");
-    	} else {
-	        assertThrows(
-	            () -> { Maps.replaceAll(map, null); },
-	            NullPointerException.class,
-	            description);
-	        assertThrows(
-	            () -> { Maps.replaceAll(map, (k,v) -> null); },
-	            NullPointerException.class,
-	            description + " should not allow replacement with null value");
-    	}
+        if (map instanceof ConcurrentMap) {
+            assertThrows(
+                    () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, null); },
+                    NullPointerException.class,
+                    description);
+                assertThrows(
+                    () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k,v) -> null); },
+                    NullPointerException.class,
+                    description + " should not allow replacement with null value");
+        } else {
+            assertThrows(
+                () -> { Maps.replaceAll(map, null); },
+                NullPointerException.class,
+                description);
+            assertThrows(
+                () -> { Maps.replaceAll(map, (k,v) -> null); },
+                NullPointerException.class,
+                description + " should not allow replacement with null value");
+        }
     }
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
@@ -310,10 +310,10 @@ public class DefaultsTest {
         assertTrue(map.containsKey(null), "null key absent");
         assertNull(map.get(null), "value not null");
         if (map instanceof ConcurrentMap) {
-        	ConcurrentMap<IntegerEnum, String> concMap = (ConcurrentMap<IntegerEnum, String>) map;
-        	assertSame(Maps.computeIfAbsentConcurrent(concMap, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
+            ConcurrentMap<IntegerEnum, String> concMap = (ConcurrentMap<IntegerEnum, String>) map;
+            assertSame(Maps.computeIfAbsentConcurrent(concMap, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
         } else {
-        	assertSame(Maps.computeIfAbsent(map, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
+            assertSame(Maps.computeIfAbsent(map, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
         }
         // null -> EXTRA_VALUE
         assertTrue(map.containsKey(null), "null key absent");
@@ -517,12 +517,12 @@ public class DefaultsTest {
 
             String returned = null;
             if (map instanceof ConcurrentMap) {
-            	returned = Maps.mergeConcurrent( (ConcurrentMap<IntegerEnum, String>) map, EXTRA_KEY,
+                returned = Maps.mergeConcurrent( (ConcurrentMap<IntegerEnum, String>) map, EXTRA_KEY,
                         newValue == Merging.Value.NULL ? (String) null : VALUES[2],
                         merger
                         );
             } else {
-            	returned = Maps.merge(map, EXTRA_KEY,
+                returned = Maps.merge(map, EXTRA_KEY,
                         newValue == Merging.Value.NULL ? (String) null : VALUES[2],
                         merger
                         );

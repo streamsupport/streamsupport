@@ -166,25 +166,25 @@ public class SetAllTest {
     public void testStringSetNulls() {
         String[] ar = new String[2];
         try {
-        	J8Arrays.setAll(null, (IntFunction<String>) i -> "X");
+            J8Arrays.setAll(null, (IntFunction<String>) i -> "X");
             fail("Arrays.setAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(null, (IntFunction<String>) i -> "X");
+            J8Arrays.parallelSetAll(null, (IntFunction<String>) i -> "X");
             fail("Arrays.parallelSetAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.setAll(ar, null);
+            J8Arrays.setAll(ar, null);
             fail("Arrays.setAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(ar, null);
+            J8Arrays.parallelSetAll(ar, null);
             fail("Arrays.parallelSetAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
@@ -195,25 +195,25 @@ public class SetAllTest {
     public void testIntSetNulls() {
         int[] ar = new int[2];
         try {
-        	J8Arrays.setAll(null, (IntUnaryOperator) i -> i);
+            J8Arrays.setAll(null, (IntUnaryOperator) i -> i);
             fail("Arrays.setAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(null, (IntUnaryOperator) i -> i);
+            J8Arrays.parallelSetAll(null, (IntUnaryOperator) i -> i);
             fail("Arrays.parallelSetAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.setAll(ar, null);
+            J8Arrays.setAll(ar, null);
             fail("Arrays.setAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(ar, null);
+            J8Arrays.parallelSetAll(ar, null);
             fail("Arrays.parallelSetAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
@@ -224,25 +224,25 @@ public class SetAllTest {
     public void testLongSetNulls() {
         long[] ar = new long[2];
         try {
-        	J8Arrays.setAll(null, (IntToLongFunction) i -> Long.MAX_VALUE);
+            J8Arrays.setAll(null, (IntToLongFunction) i -> Long.MAX_VALUE);
             fail("Arrays.setAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(null, (IntToLongFunction) i -> Long.MAX_VALUE);
+            J8Arrays.parallelSetAll(null, (IntToLongFunction) i -> Long.MAX_VALUE);
             fail("Arrays.parallelSetAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.setAll(ar, null);
+            J8Arrays.setAll(ar, null);
             fail("Arrays.setAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(ar, null);
+            J8Arrays.parallelSetAll(ar, null);
             fail("Arrays.parallelSetAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
@@ -253,25 +253,25 @@ public class SetAllTest {
     public void testDoubleSetNulls() {
         double[] ar = new double[2];
         try {
-        	J8Arrays.setAll(null, (IntToDoubleFunction) i -> Math.E);
+            J8Arrays.setAll(null, (IntToDoubleFunction) i -> Math.E);
             fail("Arrays.setAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(null, (IntToDoubleFunction) i -> Math.E);
+            J8Arrays.parallelSetAll(null, (IntToDoubleFunction) i -> Math.E);
             fail("Arrays.parallelSetAll(null, foo) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.setAll(ar, null);
+            J8Arrays.setAll(ar, null);
             fail("Arrays.setAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected
         }
         try {
-        	J8Arrays.parallelSetAll(ar, null);
+            J8Arrays.parallelSetAll(ar, null);
             fail("Arrays.parallelSetAll(array, null) should throw NPE");
         } catch (NullPointerException npe) {
             // expected

@@ -52,21 +52,21 @@ public interface TestData<T, S extends BaseStream<T, S>>
 //        return Spliterators.iterator(getSpliterator());
 //    }
 
-	int size();
+    int size();
 
-	Iterator<T> iterator();
+    Iterator<T> iterator();
 
-	Spliterator<T> getSpliterator();
+    Spliterator<T> getSpliterator();
 
 //    default boolean isOrdered() {
 //        return spliterator().hasCharacteristics(Spliterator.ORDERED);
 //    }
 
-	boolean isOrdered();
+    boolean isOrdered();
 
-	StreamShape getShape();
+    StreamShape getShape();
 
-	void forEach(Consumer<? super T> action);
+    void forEach(Consumer<? super T> action);
 
 //    default <A extends Collection<? super T>> A into(A target) {
 //        spliterator().forEachRemaining(target::add);
@@ -96,7 +96,7 @@ public interface TestData<T, S extends BaseStream<T, S>>
 
         public static <T> OfRef<T> ofCollection(String name, Collection<T> collection) {
             return new AbstractTestData.RefTestData<>(name, collection, c -> StreamSupport.stream(c), c -> StreamSupport.stream(c, Characteristics.get(c), true),
-            		c -> Spliterators.spliterator(c, Characteristics.get(c)), c -> c.size());
+                    c -> Spliterators.spliterator(c, Characteristics.get(c)), c -> c.size());
         }
 
         public static <T> OfRef<T> ofSpinedBuffer(String name, SpinedBuffer<T> buffer) {
@@ -289,25 +289,25 @@ public interface TestData<T, S extends BaseStream<T, S>>
                 super(name, StreamShape.REFERENCE, state, streamFn, parStreamFn, splitrFn, sizeFn);
             }
 
-			@Override
-			public Iterator<T> iterator() {
-				return TestDatas.iterator(this);
-			}
+            @Override
+            public Iterator<T> iterator() {
+                return TestDatas.iterator(this);
+            }
 
-			@Override
-			public boolean isOrdered() {
-				return TestDatas.isOrdered(this);
-			}
+            @Override
+            public boolean isOrdered() {
+                return TestDatas.isOrdered(this);
+            }
 
-			@Override
-			public <A extends Collection<? super T>> A into(A target) {
-				return TestDatas.into(this, target);
-			}
+            @Override
+            public <A extends Collection<? super T>> A into(A target) {
+                return TestDatas.into(this, target);
+            }
 
-			@Override
-			public void forEach(Consumer<? super T> action) {
-				Iterables.forEach(this, action);
-			}
+            @Override
+            public void forEach(Consumer<? super T> action) {
+                Iterables.forEach(this, action);
+            }
         }
 
         static class IntTestData<I>
@@ -334,15 +334,15 @@ public interface TestData<T, S extends BaseStream<T, S>>
                 return target;
             }
 
-			@Override
-			public boolean isOrdered() {
-				return TestDatas.isOrdered(this);
-			}
+            @Override
+            public boolean isOrdered() {
+                return TestDatas.isOrdered(this);
+            }
 
-			@Override
-			public void forEach(Consumer<? super Integer> action) {
-				Iterables.forEach(this, action);
-			}
+            @Override
+            public void forEach(Consumer<? super Integer> action) {
+                Iterables.forEach(this, action);
+            }
         }
 
         static class LongTestData<I>
@@ -369,15 +369,15 @@ public interface TestData<T, S extends BaseStream<T, S>>
                 return target;
             }
 
-			@Override
-			public boolean isOrdered() {
-				return TestDatas.isOrdered(this);
-			}
+            @Override
+            public boolean isOrdered() {
+                return TestDatas.isOrdered(this);
+            }
 
-			@Override
-			public void forEach(Consumer<? super Long> action) {
-				Iterables.forEach(this, action);
-			}
+            @Override
+            public void forEach(Consumer<? super Long> action) {
+                Iterables.forEach(this, action);
+            }
         }
 
         static class DoubleTestData<I>
@@ -404,15 +404,15 @@ public interface TestData<T, S extends BaseStream<T, S>>
                 return target;
             }
 
-			@Override
-			public boolean isOrdered() {
-				return TestDatas.isOrdered(this);
-			}
+            @Override
+            public boolean isOrdered() {
+                return TestDatas.isOrdered(this);
+            }
 
-			@Override
-			public void forEach(Consumer<? super Double> action) {
-				Iterables.forEach(this, action);
-			}
+            @Override
+            public void forEach(Consumer<? super Double> action) {
+                Iterables.forEach(this, action);
+            }
         }
     }
 }
