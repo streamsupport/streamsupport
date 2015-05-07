@@ -74,17 +74,13 @@ public final class Maps {
      *         previously associated {@code null} with the key,
      *         if the implementation supports null values.)
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the key or value is of an inappropriate
-     *         type for the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         type for the map (optional)
      * @throws NullPointerException if the specified key or value is null,
-     *         and the map does not permit null keys or values
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         and the map does not permit null keys or values (optional)
      * @throws IllegalArgumentException if some property of the specified key
-     *         or value prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         or value prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V putIfAbsent(Map<K, V> map, K key, V value) {
@@ -157,11 +153,9 @@ public final class Maps {
      * @return the new value associated with the specified key, or null if no
      *         value is associated with the key
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @throws NullPointerException if the specified key is null and the map
      *         does not support null keys or the value or remappingFunction is
      *         null
@@ -256,11 +250,9 @@ public final class Maps {
      *         the map does not support null keys, or the mappingFunction
      *         is null
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V computeIfAbsentConcurrent(ConcurrentMap<K, V> map, K key,
@@ -310,14 +302,11 @@ public final class Maps {
      * specified replacement value is null, and the map does not permit null
      * values
      * @throws ClassCastException if a replacement value is of an inappropriate
-     *         type for the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         type for the map (optional)
      * @throws NullPointerException if function or a replacement value is null,
-     *         and the map does not permit null keys or values
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         and the map does not permit null keys or values (optional)
      * @throws IllegalArgumentException if some property of a replacement value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @throws ConcurrentModificationException if an entry is found to be
      * removed during iteration
      * @since 1.8
@@ -353,11 +342,9 @@ public final class Maps {
      * @return the value to which the specified key is mapped, or
      * {@code defaultValue} if the map contains no mapping for the key
      * @throws ClassCastException if the key is of an inappropriate type for
-     * the map
-     * (<a href="Collection.html#optional-restrictions">optional</a>)
+     * the map (optional)
      * @throws NullPointerException if the specified key is null and the map
-     * does not permit null keys
-     * (<a href="Collection.html#optional-restrictions">optional</a>)
+     * does not permit null keys (optional)
      * @since 1.8
      */
     public static <K, V> V getOrDefaultConcurrent(ConcurrentMap<K, V> map, Object key, V defaultValue) {
@@ -384,11 +371,9 @@ public final class Maps {
      * @return the value to which the specified key is mapped, or
      * {@code defaultValue} if the map contains no mapping for the key
      * @throws ClassCastException if the key is of an inappropriate type for
-     * the map
-     * (<a href="Collection.html#optional-restrictions">optional</a>)
+     * the map (optional)
      * @throws NullPointerException if the specified key is null and the map
-     * does not permit null keys
-     * (<a href="Collection.html#optional-restrictions">optional</a>)
+     * does not permit null keys (optional)
      * @since 1.8
      */
     public static <K, V> V getOrDefault(Map<K, V> map, Object key, V defaultValue) {
@@ -553,11 +538,9 @@ public final class Maps {
      * @return the new value associated with the specified key, or null if no
      *         value is associated with the key
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @throws NullPointerException if the specified key is null and the map
      *         does not support null keys or the value or remappingFunction is
      *         null
@@ -646,11 +629,9 @@ public final class Maps {
      *         the map does not support null keys, or the mappingFunction
      *         is null
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V computeIfAbsent(Map<K, V> map, K key,
@@ -700,15 +681,13 @@ public final class Maps {
      * @param newValue value to be associated with the specified key
      * @return {@code true} if the value was replaced
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of a specified key or value
      *         prevents it from being stored in the map
      * @throws NullPointerException if a specified key or newValue is null,
      *         and the map does not permit null keys or values
      * @throws NullPointerException if oldValue is null and the map does not
-     *         permit null values
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         permit null values (optional)
      * @throws IllegalArgumentException if some property of a specified key
      *         or value prevents it from being stored in the map
      * @since 1.8
@@ -754,11 +733,9 @@ public final class Maps {
      *         previously associated {@code null} with the key,
      *         if the implementation supports null values.)
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @throws NullPointerException if the specified key or value is null,
      *         and the map does not permit null keys or values
      * @throws IllegalArgumentException if some property of the specified key
@@ -804,14 +781,11 @@ public final class Maps {
      * specified replacement value is null, and the map does not permit null
      * values
      * @throws ClassCastException if a replacement value is of an inappropriate
-     *         type for the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         type for the map (optional)
      * @throws NullPointerException if function or a replacement value is null,
-     *         and the map does not permit null keys or values
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         and the map does not permit null keys or values (optional)
      * @throws IllegalArgumentException if some property of a replacement value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @throws ConcurrentModificationException if an entry is found to be
      * removed during iteration
      * @since 1.8
@@ -913,11 +887,9 @@ public final class Maps {
      *         the map does not support null keys, or the
      *         remappingFunction is null
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V compute(Map<K, V> map, K key,
@@ -999,11 +971,9 @@ public final class Maps {
      *         the map does not support null keys, or the
      *         remappingFunction is null
      * @throws UnsupportedOperationException if the {@code put} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
-     *         prevents it from being stored in the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V computeIfPresent(Map<K, V> map, K key,
@@ -1052,14 +1022,11 @@ public final class Maps {
      * @param value value expected to be associated with the specified key
      * @return {@code true} if the value was removed
      * @throws UnsupportedOperationException if the {@code remove} operation
-     *         is not supported by the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         is not supported by the map (optional)
      * @throws ClassCastException if the key or value is of an inappropriate
-     *         type for the map
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         type for the map (optional)
      * @throws NullPointerException if the specified key or value is null,
-     *         and the map does not permit null keys or values
-     *         (<a href="Collection.html#optional-restrictions">optional</a>)
+     *         and the map does not permit null keys or values (optional)
      * @since 1.8
      */
     public static <K, V> boolean remove(Map<K, V> map, Object key, Object value) {
