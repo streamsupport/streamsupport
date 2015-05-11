@@ -69,6 +69,5 @@ final class TerminalOpDefaults {
     }
 
     private TerminalOpDefaults() {
-        throw new AssertionError();
     }
 }

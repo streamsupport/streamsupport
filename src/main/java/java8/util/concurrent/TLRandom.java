@@ -97,7 +97,6 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     private TLRandom() {
-        throw new AssertionError(); 
     }
 
     /**

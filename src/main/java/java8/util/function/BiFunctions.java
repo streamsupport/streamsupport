@@ -57,6 +57,5 @@ public final class BiFunctions {
     }
 
     private BiFunctions() {
-        throw new AssertionError();
     }
 }

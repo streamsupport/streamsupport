@@ -202,11 +202,9 @@ public final class DoubleStreams {
         }
 
         private J8Builder() {
-            throw new AssertionError();
         }
     }
 
     private DoubleStreams() {
-        throw new AssertionError();
     }
 }

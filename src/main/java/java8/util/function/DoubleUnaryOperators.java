@@ -84,6 +84,5 @@ public final class DoubleUnaryOperators {
     }
 
     private DoubleUnaryOperators() {
-        throw new AssertionError();
     }
 }

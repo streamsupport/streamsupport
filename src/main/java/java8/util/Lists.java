@@ -126,6 +126,5 @@ public final class Lists {
     }
 
     private Lists() {
-        throw new AssertionError();
     }
 }

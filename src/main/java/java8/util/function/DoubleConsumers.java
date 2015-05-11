@@ -53,6 +53,5 @@ public final class DoubleConsumers {
     }
 
     private DoubleConsumers() {
-        throw new AssertionError();
     }
 }

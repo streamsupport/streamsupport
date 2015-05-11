@@ -93,6 +93,5 @@ public final class Functions {
     }
 
     private Functions() {
-        throw new AssertionError();
     }
 }

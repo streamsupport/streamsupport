@@ -32,7 +32,6 @@ import java8.util.Spliterators;
 final class ArraysArrayListSpliterator {
 
     private ArraysArrayListSpliterator() {
-        throw new AssertionError();
     }
 
     static <T> Spliterator<T> spliterator(List<T> list) {

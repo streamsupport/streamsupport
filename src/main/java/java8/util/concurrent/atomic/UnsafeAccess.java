@@ -24,6 +24,5 @@ class UnsafeAccess {
     }
 
     private UnsafeAccess() {
-        throw new AssertionError();
     }
 }

@@ -1529,6 +1529,5 @@ public final class J8Arrays {
     }
 
     private J8Arrays() {
-        throw new AssertionError();
     }
 }

@@ -84,6 +84,5 @@ public final class LongUnaryOperators {
     }
 
     private LongUnaryOperators() {
-        throw new AssertionError();
     }
 }

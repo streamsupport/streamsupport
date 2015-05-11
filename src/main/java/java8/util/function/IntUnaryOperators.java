@@ -84,6 +84,5 @@ public final class IntUnaryOperators {
     }
 
     private IntUnaryOperators() {
-        throw new AssertionError();
     }
 }

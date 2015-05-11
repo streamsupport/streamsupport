@@ -95,6 +95,5 @@ public final class DoublePredicates {
     }
 
     private DoublePredicates() {
-        throw new AssertionError();
     }
 }

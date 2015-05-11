@@ -95,6 +95,5 @@ public final class LongPredicates {
     }
 
     private LongPredicates() {
-        throw new AssertionError();
     }
 }

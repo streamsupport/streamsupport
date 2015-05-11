@@ -59,6 +59,5 @@ public final class BiConsumers {
     }
 
     private BiConsumers() {
-        throw new AssertionError();
     }
 }

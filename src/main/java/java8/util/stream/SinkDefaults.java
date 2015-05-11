@@ -33,7 +33,6 @@ final class SinkDefaults {
         }
 
         private OfInt() {
-            throw new AssertionError();
         }
     }
 
@@ -44,7 +43,6 @@ final class SinkDefaults {
         }
 
         private OfLong() {
-            throw new AssertionError();
         }
     }
 
@@ -55,7 +53,6 @@ final class SinkDefaults {
         }
 
         private OfDouble() {
-            throw new AssertionError();
         }
     }
 
@@ -126,6 +123,5 @@ final class SinkDefaults {
     }
 
     private SinkDefaults() {
-        throw new AssertionError();
     }
 }

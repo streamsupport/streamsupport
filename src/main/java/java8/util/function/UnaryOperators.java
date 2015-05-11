@@ -41,6 +41,5 @@ public final class UnaryOperators {
     }
 
     private UnaryOperators() {
-        throw new AssertionError();
     }
 }

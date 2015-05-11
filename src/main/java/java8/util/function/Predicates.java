@@ -113,6 +113,5 @@ public final class Predicates {
     }
 
     private Predicates() {
-        throw new AssertionError();
     }
 }

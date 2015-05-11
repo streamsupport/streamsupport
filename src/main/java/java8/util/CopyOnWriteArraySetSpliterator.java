@@ -30,7 +30,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 final class CopyOnWriteArraySetSpliterator {
 
     private CopyOnWriteArraySetSpliterator() {
-        throw new AssertionError();
     }
 
     static <T> Spliterator<T> spliterator(CopyOnWriteArraySet<T> set) {
