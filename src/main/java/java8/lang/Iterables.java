@@ -152,7 +152,7 @@ public final class Iterables {
     }
 
     /**
-     * Returns a sequential {@code Stream} with the passed {@code Iterable}
+     * Returns a sequential {@link Stream} with the passed {@code Iterable}
      * as its source.
      *
      * <p><b>Implementation notes</b>:
@@ -198,7 +198,7 @@ public final class Iterables {
 //    }
 
     /**
-     * Returns a possibly parallel {@code Stream} with the passed
+     * Returns a possibly parallel {@link Stream} with the passed
      * {@code Iterable} as its source.  It is allowable for this
      * method to return a sequential stream.
      *
