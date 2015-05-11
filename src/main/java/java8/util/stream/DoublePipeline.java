@@ -147,10 +147,12 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    final void forEachWithCancel(Spliterator<Double> spliterator, Sink<Double> sink) {
+    final boolean forEachWithCancel(Spliterator<Double> spliterator, Sink<Double> sink) {
         Spliterator.OfDouble spl = adapt(spliterator);
         DoubleConsumer adaptedSink = adapt(sink);
-        do { } while (!sink.cancellationRequested() && spl.tryAdvance(adaptedSink));
+        boolean cancelled;
+        do { } while (!(cancelled = sink.cancellationRequested()) && spl.tryAdvance(adaptedSink));
+        return cancelled;
     }
 
     @Override
@@ -599,7 +601,7 @@ abstract class DoublePipeline<E_IN>
                     StreamShape inputShape,
                     int opFlags) {
             super(upstream, opFlags);
-            assert upstream.getOutputShape() == inputShape;
+//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
@@ -627,7 +629,7 @@ abstract class DoublePipeline<E_IN>
                    StreamShape inputShape,
                    int opFlags) {
             super(upstream, opFlags);
-            assert upstream.getOutputShape() == inputShape;
+//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override

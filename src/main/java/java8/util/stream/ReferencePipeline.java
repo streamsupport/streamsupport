@@ -124,8 +124,10 @@ abstract class ReferencePipeline<P_IN, P_OUT>
     }
 
     @Override
-    final void forEachWithCancel(Spliterator<P_OUT> spliterator, Sink<P_OUT> sink) {
-        do { } while (!sink.cancellationRequested() && spliterator.tryAdvance(sink));
+    final boolean forEachWithCancel(Spliterator<P_OUT> spliterator, Sink<P_OUT> sink) {
+    	boolean cancelled;
+    	do { } while (!(cancelled = sink.cancellationRequested()) && spliterator.tryAdvance(sink));
+    	return cancelled;
     }
 
     @Override
@@ -646,7 +648,7 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                     StreamShape inputShape,
                     int opFlags) {
             super(upstream, opFlags);
-            assert upstream.getOutputShape() == inputShape;
+//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
@@ -675,7 +677,7 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                    StreamShape inputShape,
                    int opFlags) {
             super(upstream, opFlags);
-            assert upstream.getOutputShape() == inputShape;
+//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
