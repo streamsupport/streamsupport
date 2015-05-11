@@ -29,7 +29,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 final class CopyOnWriteArrayListSpliterator {
 
     private CopyOnWriteArrayListSpliterator() {
-        throw new AssertionError();
     }
 
     static <T> Spliterator<T> spliterator(CopyOnWriteArrayList<T> list) {

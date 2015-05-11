@@ -155,7 +155,6 @@ final class Nodes {
         }
 
         private OfPrimitive() {
-            throw new AssertionError();
         }
     }
 
@@ -221,7 +220,6 @@ final class Nodes {
         }
 
         private OfDouble () {
-            throw new AssertionError();
         }
     }
 
@@ -286,7 +284,6 @@ final class Nodes {
         }
 
         private OfLong() {
-            throw new AssertionError();
         }
     }
 
@@ -351,7 +348,6 @@ final class Nodes {
         }
 
         private OfInt() {
-            throw new AssertionError();
         }
     }
 

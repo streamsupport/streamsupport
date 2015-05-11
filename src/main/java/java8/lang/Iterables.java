@@ -245,6 +245,5 @@ public final class Iterables {
 //    }
 
     private Iterables() {
-        throw new AssertionError();
     }
 }

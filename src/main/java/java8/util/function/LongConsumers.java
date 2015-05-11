@@ -53,6 +53,5 @@ public final class LongConsumers {
     }
 
     private LongConsumers() {
-        throw new AssertionError();
     }
 }

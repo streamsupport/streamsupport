@@ -194,7 +194,6 @@ public final class Spliterators {
         }
 
         private OfPrimitive() {
-            throw new AssertionError();
         }
     }
 
@@ -284,7 +283,6 @@ public final class Spliterators {
         }
 
         private OfInt() {
-            throw new AssertionError();
         }
     }
 
@@ -374,7 +372,6 @@ public final class Spliterators {
         }
 
         private OfLong() {
-            throw new AssertionError();
         }
     }
 
@@ -465,7 +462,6 @@ public final class Spliterators {
         }
 
         private OfDouble() {
-            throw new AssertionError();
         }
     }
 

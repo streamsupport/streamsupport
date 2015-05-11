@@ -143,6 +143,5 @@ public final class Iterators {
     }
 
     private Iterators() {
-        throw new AssertionError();
     }
 }

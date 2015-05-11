@@ -101,6 +101,5 @@ public final class BiPredicates {
     }
 
     private BiPredicates() {
-        throw new AssertionError();
     }
 }

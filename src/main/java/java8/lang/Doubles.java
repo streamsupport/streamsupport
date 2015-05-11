@@ -100,6 +100,5 @@ public final class Doubles {
     }
 
     private Doubles() {
-        throw new AssertionError();
     }
 }

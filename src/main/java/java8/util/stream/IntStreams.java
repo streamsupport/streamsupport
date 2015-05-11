@@ -254,11 +254,9 @@ public final class IntStreams {
         }
 
         private J8Builder() {
-            throw new AssertionError();
         }
     }
 
     private IntStreams() {
-        throw new AssertionError();
     }
 }

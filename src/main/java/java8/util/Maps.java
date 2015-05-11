@@ -1139,11 +1139,9 @@ public final class Maps {
         }
 
         private Entry() {
-            throw new AssertionError();
         }
     }
 
     private Maps() {
-        throw new AssertionError();
     }
 }

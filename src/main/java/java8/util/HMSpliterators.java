@@ -38,7 +38,6 @@ import java8.util.function.Consumer;
 final class HMSpliterators {
 
     private HMSpliterators() {
-        throw new AssertionError();
     }
 
     static <K> Spliterator<K> getKeySetSpliterator(Set<K> keySet) {

@@ -95,6 +95,5 @@ public final class IntPredicates {
     }
 
     private IntPredicates() {
-        throw new AssertionError();
     }
 }

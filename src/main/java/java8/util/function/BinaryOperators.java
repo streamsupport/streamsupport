@@ -65,6 +65,5 @@ public final class BinaryOperators {
     }
 
     private BinaryOperators() {
-        throw new AssertionError();
     }
 }

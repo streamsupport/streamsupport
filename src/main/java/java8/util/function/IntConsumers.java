@@ -53,6 +53,5 @@ public final class IntConsumers {
     }
 
     private IntConsumers() {
-        throw new AssertionError();
     }
 }

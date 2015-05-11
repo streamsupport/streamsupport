@@ -270,11 +270,9 @@ public final class LongStreams {
         }
 
         private J8Builder() {
-            throw new AssertionError();
         }
     }
 
     private LongStreams() {
-        throw new AssertionError();
     }
 }

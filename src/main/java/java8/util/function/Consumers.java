@@ -54,6 +54,5 @@ public final class Consumers {
     }
 
     private Consumers() {
-        throw new AssertionError();
     }
 }

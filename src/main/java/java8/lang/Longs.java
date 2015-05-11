@@ -200,6 +200,5 @@ public final class Longs {
     }
 
     private Longs() {
-        throw new AssertionError();
     }
 }

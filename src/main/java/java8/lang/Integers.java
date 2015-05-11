@@ -179,6 +179,5 @@ public final class Integers {
     }
 
     private Integers() {
-        throw new AssertionError();
     }
 }
