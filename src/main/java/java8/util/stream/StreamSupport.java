@@ -39,7 +39,7 @@ import java8.util.Spliterator;
  *
  * <p>This class is mostly for library writers presenting stream views
  * of data structures; most static stream methods intended for end users are in
- * the various {@code Stream} classes.
+ * the various {@code Streams} classes.
  *
  * @since 1.8
  */
@@ -65,7 +65,7 @@ public final class StreamSupport {
      * @return an empty sequential stream
      */
     public static<T> Stream<T> empty() {
-        return StreamSupport.stream(Spliterators.<T>emptySpliterator(), false);
+        return stream(Spliterators.<T>emptySpliterator(), false);
     }
 
     /**
@@ -76,7 +76,7 @@ public final class StreamSupport {
      * @return a singleton sequential stream
      */
     public static<T> Stream<T> of(T t) {
-        return StreamSupport.stream(new Streams.StreamBuilderImpl<>(t), false);
+        return stream(new Streams.StreamBuilderImpl<>(t), false);
     }
 
     /**
@@ -90,8 +90,8 @@ public final class StreamSupport {
      * @since 1.9
      */
     public static<T> Stream<T> ofNullable(T t) {
-        return t == null ? StreamSupport.empty()
-                         : StreamSupport.stream(new Streams.StreamBuilderImpl<>(t), false);
+        return t == null ? empty()
+                         : stream(new Streams.StreamBuilderImpl<>(t), false);
     }
 
     /**
@@ -143,7 +143,7 @@ public final class StreamSupport {
                 throw new UnsupportedOperationException("remove");
             }
         };
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
+        return stream(Spliterators.spliteratorUnknownSize(
                 iterator,
                 Spliterator.ORDERED | Spliterator.IMMUTABLE), false);
     }
@@ -159,7 +159,7 @@ public final class StreamSupport {
      */
     public static<T> Stream<T> generate(Supplier<T> s) {
         Objects.requireNonNull(s);
-        return StreamSupport.stream(
+        return stream(
                 new StreamSpliterators.InfiniteSupplyingSpliterator.OfRef<>(Long.MAX_VALUE, s), false);
     }
 
@@ -188,7 +188,7 @@ public final class StreamSupport {
         @SuppressWarnings("unchecked")
         Spliterator<T> split = new Streams.ConcatSpliterator.OfRef<>(
                 (Spliterator<T>) a.spliterator(), (Spliterator<T>) b.spliterator());
-        Stream<T> stream = StreamSupport.stream(split, a.isParallel() || b.isParallel());
+        Stream<T> stream = stream(split, a.isParallel() || b.isParallel());
         return stream.onClose(Streams.composedClose(a, b));
     }
 
