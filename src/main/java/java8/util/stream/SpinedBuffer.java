@@ -318,7 +318,7 @@ class SpinedBuffer<E>
                 this.lastSpineIndex = lastSpineIndex;
                 this.splElementIndex = firstSpineElementIndex;
                 this.lastSpineElementFence = lastSpineElementFence;
-                assert spine != null || firstSpineIndex == 0 && lastSpineIndex == 0;
+//                assert spine != null || firstSpineIndex == 0 && lastSpineIndex == 0;
                 splChunk = (spine == null) ? curChunk : spine[firstSpineIndex];
             }
 
@@ -648,7 +648,7 @@ class SpinedBuffer<E>
                 this.lastSpineIndex = lastSpineIndex;
                 this.splElementIndex = firstSpineElementIndex;
                 this.lastSpineElementFence = lastSpineElementFence;
-                assert spine != null || firstSpineIndex == 0 && lastSpineIndex == 0;
+//                assert spine != null || firstSpineIndex == 0 && lastSpineIndex == 0;
                 splChunk = (spine == null) ? curChunk : spine[firstSpineIndex];
             }
 
