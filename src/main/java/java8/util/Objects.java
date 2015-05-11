@@ -88,7 +88,7 @@ public final class Objects {
     }
 
     private static boolean deepEquals0(Object e1, Object e2) {
-        assert e1 != null;
+//        assert e1 != null;
         boolean eq;
         if (e1 instanceof Object[] && e2 instanceof Object[])
             eq = Arrays.deepEquals ((Object[]) e1, (Object[]) e2);

@@ -220,7 +220,7 @@ final class Streams {
         }
 
         private RangeLongSpliterator(long from, long upTo, int last) {
-            assert upTo - from + last > 0;
+//            assert upTo - from + last > 0;
             this.from = from;
             this.upTo = upTo;
             this.last = last;
