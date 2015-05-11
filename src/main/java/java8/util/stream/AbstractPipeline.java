@@ -224,7 +224,7 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
      * @return the result
      */
     final <R> R evaluate(TerminalOp<E_OUT, R> terminalOp) {
-        assert getOutputShape() == terminalOp.inputShape();
+//        assert getOutputShape() == terminalOp.inputShape();
         if (linkedOrConsumed)
             throw new IllegalStateException(MSG_STREAM_LINKED);
         linkedOrConsumed = true;
@@ -515,15 +515,16 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
 
     @Override
     @SuppressWarnings("unchecked")
-    final <P_IN> void copyIntoWithCancel(Sink<P_IN> wrappedSink, Spliterator<P_IN> spliterator) {
+    final <P_IN> boolean copyIntoWithCancel(Sink<P_IN> wrappedSink, Spliterator<P_IN> spliterator) {
         @SuppressWarnings("rawtypes")
         AbstractPipeline p = AbstractPipeline.this;
         while (p.depth > 0) {
             p = p.previousStage;
         }
         wrappedSink.begin(spliterator.getExactSizeIfKnown());
-        p.forEachWithCancel(spliterator, wrappedSink);
+        boolean cancelled = p.forEachWithCancel(spliterator, wrappedSink);
         wrappedSink.end();
+        return cancelled;
     }
 
     @Override
@@ -669,8 +670,9 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
      *
      * @param spliterator the spliterator to pull elements from
      * @param sink the sink to push elements to
+     * @return true if the cancellation was requested
      */
-    abstract void forEachWithCancel(Spliterator<E_OUT> spliterator, Sink<E_OUT> sink);
+    abstract boolean forEachWithCancel(Spliterator<E_OUT> spliterator, Sink<E_OUT> sink);
 
     /**
      * Make a node builder compatible with this stream shape.
