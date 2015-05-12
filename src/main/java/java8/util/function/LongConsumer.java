@@ -38,7 +38,6 @@ import java8.util.function.Consumer;
  * @see Consumer
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface LongConsumer {
 
     /**

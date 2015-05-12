@@ -40,7 +40,6 @@ import java8.util.function.BiFunction;
  * @see BiFunction
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface ToIntBiFunction<T, U> {
 
     /**

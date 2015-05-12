@@ -37,7 +37,6 @@ import java8.util.function.Predicate;
  * @see Predicate
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface DoublePredicate {
 
     /**

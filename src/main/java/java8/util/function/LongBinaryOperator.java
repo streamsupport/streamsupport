@@ -39,7 +39,6 @@ import java8.util.function.LongUnaryOperator;
  * @see LongUnaryOperator
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface LongBinaryOperator {
 
     /**

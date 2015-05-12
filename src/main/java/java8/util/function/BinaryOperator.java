@@ -42,7 +42,6 @@ import java8.util.function.UnaryOperator;
  * @see UnaryOperator
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface BinaryOperator<T> extends BiFunction<T,T,T> {
     /**
      * Returns a {@link BinaryOperator} which returns the lesser of two elements
