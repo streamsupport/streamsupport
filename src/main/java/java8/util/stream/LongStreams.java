@@ -31,16 +31,69 @@ import java8.util.PrimitiveIterator;
 import java8.util.Spliterator;
 import java8.util.Spliterators;
 import java8.util.function.LongConsumer;
+import java8.util.function.LongPredicate;
 import java8.util.function.LongSupplier;
 import java8.util.function.LongUnaryOperator;
 import java8.util.stream.LongStream.Builder;
 
 /**
- * A place for static default implementations of the new Java 8
- * default interface methods and static interface methods in the
- * {@link LongStream} interface. 
+ * A place for static default implementations of the new Java 8/9 static
+ * interface methods and default interface methods ({@code takeWhile()},
+ * {@code dropWhile()}) in the {@link LongStream} interface. 
  */
 public final class LongStreams {
+    /**
+     * Returns a stream consisting of elements of the passed stream that match
+     * the given predicate up to, but discarding, the first element encountered
+     * that does not match the predicate.  All subsequently encountered elements
+     * are discarded.
+     *
+     * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
+     * stateful intermediate operation</a>.
+     *
+     * @param stream the stream to wrap for the {@code takeWhile()} operation
+     * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *                  predicate to apply to each element to determine if it
+     *                  should be included, or it and all subsequently
+     *                  encountered elements be discarded.
+     * @return the new stream
+     */
+    public static LongStream takeWhile(LongStream stream, LongPredicate predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.longStream(
+                new WhileOps.UnorderedWhileSpliterator.OfLong.Taking(stream.spliterator(), true, predicate),
+                stream.isParallel());
+    }
+
+    /**
+     * Returns a stream consisting of the remaining elements of the passed
+     * stream after discarding elements that match the given predicate up to,
+     * but not discarding, the first element encountered that does not match
+     * the predicate.  All subsequently encountered elements are not discarded.
+     *
+     * <p>This is a <a href="package-summary.html#StreamOps">stateful
+     * intermediate operation</a>.
+     *
+     * @param stream the stream to wrap for the {@code dropWhile()} operation
+     * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *                  predicate to apply to each element to determine if it
+     *                  should be discarded, or it and all subsequently
+     *                  encountered elements be included.
+     * @return the new stream
+     */
+    public static LongStream dropWhile(LongStream stream, LongPredicate predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.longStream(
+                new WhileOps.UnorderedWhileSpliterator.OfLong.Dropping(stream.spliterator(), true, predicate),
+                stream.isParallel());
+    }
+
     // Static factories
 
     /**
