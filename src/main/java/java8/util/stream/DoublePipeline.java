@@ -356,6 +356,16 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
+    public final DoubleStream takeWhile(DoublePredicate predicate) {
+        return WhileOps.makeTakeWhileDouble(this, predicate);
+    }
+
+    @Override
+    public final DoubleStream dropWhile(DoublePredicate predicate) {
+        return WhileOps.makeDropWhileDouble(this, predicate);
+    }
+
+    @Override
     public final DoubleStream sorted() {
         return SortedOps.makeDouble(this);
     }

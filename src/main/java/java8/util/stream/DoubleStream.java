@@ -272,6 +272,40 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
     DoubleStream skip(long n);
 
     /**
+     * Returns a stream consisting of elements of this stream that match the
+     * given predicate up to, but discarding, the first element encountered
+     * that does not match the predicate.  All subsequently encountered elements
+     * are discarded.
+     *
+     * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
+     * stateful intermediate operation</a>.
+     *
+     * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *                  predicate to apply to each element to determine if it
+     *                  should be included, or it and all subsequently
+     *                  encountered elements be discarded.
+     * @return the new stream
+     */
+    DoubleStream takeWhile(DoublePredicate predicate);
+
+    /**
+     * Returns a stream consisting of the remaining elements of this stream
+     * after discarding elements that match the given predicate up to, but not
+     * discarding, the first element encountered that does not match the
+     * predicate.  All subsequently encountered elements are not discarded.
+     *
+     * <p>This is a <a href="package-summary.html#StreamOps">stateful
+     * intermediate operation</a>.
+     *
+     * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
+     *                  predicate to apply to each element to determine if it
+     *                  should be discarded, or it and all subsequently
+     *                  encountered elements be included.
+     * @return the new stream
+     */
+    DoubleStream dropWhile(DoublePredicate predicate);
+
+    /**
      * Performs an action for each element of this stream.
      *
      * <p>This is a <a href="package-summary.html#StreamOps">terminal

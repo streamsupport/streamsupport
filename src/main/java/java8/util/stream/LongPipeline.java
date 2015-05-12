@@ -373,6 +373,16 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
+    public final LongStream takeWhile(LongPredicate predicate) {
+        return WhileOps.makeTakeWhileLong(this, predicate);
+    }
+
+    @Override
+    public final LongStream dropWhile(LongPredicate predicate) {
+        return WhileOps.makeDropWhileLong(this, predicate);
+    }
+
+    @Override
     public final LongStream sorted() {
         return SortedOps.makeLong(this);
     }

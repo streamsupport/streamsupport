@@ -391,6 +391,16 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
+    public final IntStream takeWhile(IntPredicate predicate) {
+        return WhileOps.makeTakeWhileInt(this, predicate);
+    }
+
+    @Override
+    public final IntStream dropWhile(IntPredicate predicate) {
+        return WhileOps.makeDropWhileInt(this, predicate);
+    }
+
+    @Override
     public final IntStream sorted() {
         return SortedOps.makeInt(this);
     }
