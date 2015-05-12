@@ -40,7 +40,6 @@ import java8.util.function.Function;
  * @see Function
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface BiFunction<T, U, R> {
 
     /**

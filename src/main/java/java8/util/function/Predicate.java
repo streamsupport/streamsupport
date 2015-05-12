@@ -34,7 +34,6 @@ package java8.util.function;
  *
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface Predicate<T> {
 
     /**

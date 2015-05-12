@@ -39,7 +39,6 @@ import java8.util.function.Supplier;
  * @see Supplier
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface DoubleSupplier {
 
     /**

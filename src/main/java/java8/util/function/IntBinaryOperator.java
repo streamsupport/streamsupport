@@ -38,7 +38,6 @@ import java8.util.function.IntUnaryOperator;
  * @see IntUnaryOperator
  * @since 1.8
  */
-@java8.lang.FunctionalInterface
 public interface IntBinaryOperator {
 
     /**
