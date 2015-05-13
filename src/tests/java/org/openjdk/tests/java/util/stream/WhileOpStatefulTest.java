@@ -237,11 +237,11 @@ public class WhileOpStatefulTest extends OpTestCase {
                     () -> IntStreams.range(0, DROP_SOURCE_SIZE).boxed().unordered());
         sources.put("LinkedList.stream()",
                     () -> StreamSupport.stream(IntStreams.range(0, DROP_SOURCE_SIZE).boxed()
-                            .collect( (Collector<Integer, ?, List<Integer>>) toCollection(LinkedList::new))
+                            .collect(toCollection(LinkedList::new))
                             ));
         sources.put("LinkedList.stream().unordered()",
                     () -> StreamSupport.stream(IntStreams.range(0, DROP_SOURCE_SIZE).boxed()
-                            .collect( (Collector<Integer, ?, List<Integer>>) toCollection(LinkedList::new))
+                            .collect(toCollection(LinkedList::new))
                             )
                             .unordered());
         testWhileMulti(sources, mRef, mInt, mLong, mDouble);
