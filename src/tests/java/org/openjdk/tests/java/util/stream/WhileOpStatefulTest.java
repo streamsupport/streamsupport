@@ -45,7 +45,8 @@ import java8.util.stream.OpTestCase;
 import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
-import static java.util.stream.Collectors.toCollection;
+
+import static java8.util.stream.Collectors.toCollection;
 
 @Test
 public class WhileOpStatefulTest extends OpTestCase {
