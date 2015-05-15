@@ -162,7 +162,6 @@ public class LongSummaryStatistics implements LongConsumer, IntConsumer {
         return getCount() > 0 ? (double) getSum() / getCount() : 0.0d;
     }
 
-    @Override
     /**
      * {@inheritDoc}
      *
@@ -170,6 +169,7 @@ public class LongSummaryStatistics implements LongConsumer, IntConsumer {
      * debugging. The exact presentation format is unspecified and may vary
      * between implementations and versions.
      */
+    @Override
     public String toString() {
         return String.format(
             "%s{count=%d, sum=%d, min=%d, average=%f, max=%d}",
