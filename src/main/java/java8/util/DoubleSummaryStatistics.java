@@ -241,11 +241,10 @@ public class DoubleSummaryStatistics implements DoubleConsumer {
     }
 
     /**
-     * {@inheritDoc}
-     *
      * Returns a non-empty string representation of this object suitable for
      * debugging. The exact presentation format is unspecified and may vary
      * between implementations and versions.
+     * @return a string representation of this object
      */
     @Override
     public String toString() {
