@@ -40,11 +40,14 @@
  */
 package org.openjdk.tests.java.util.arrays;
 
+import static org.testng.Assert.assertNull;
 import java8.util.J8Arrays;
 
 import java.util.Random;
 import java.io.PrintStream;
 import java.util.Comparator;
+
+import org.testng.annotations.Test;
 
 public class ParallelSorting {
     private static final PrintStream out = System.out;
@@ -76,6 +79,21 @@ public class ParallelSorting {
         long end = System.currentTimeMillis();
 
         out.format("PASSED in %d sec.\n", Math.round((end - start) / 1E3));
+    }
+
+    @Test
+    public static void test() {
+        Exception ex = null;
+        try {
+            main(new String[]{"-shortrun"});
+        } catch (Exception t) {
+            ex = t;
+        }
+        String msg = "";
+        if (ex != null) {
+            msg = ex.getMessage();
+        }
+        assertNull(ex, "Test FAILED with " + msg);
     }
 
     private static void testAndCheck(int[] lengths, long[] randoms) {
