@@ -107,9 +107,10 @@
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
 
       <!-- block 9 -->
-      <class name="org.openjdk.other.tests.java.util.arrays.Ticket66Test"/>
-      <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
+      <class name="java8.util.Sorting"/>
       <class name="java8.util.SortingPrimitiveTest"/>
+      <class name="java8.util.Ticket66Test"/>
+      <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
 
