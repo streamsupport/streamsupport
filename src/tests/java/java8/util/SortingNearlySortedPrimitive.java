@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Goldman Sachs.
- * Copyright (c) 2014, Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2015 Goldman Sachs.
+ * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -21,29 +21,29 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
- package java8.util;
- 
-/*
- * @test
- * @summary Unit tests for DualPivotQuicksort which test a large array to
- * ensure proper sorting. Tests different list scenarios with different run
- * counts that also show a speed up in performance.
- * @run testng SortingPrimitiveTest
- */
-
-import java8.util.function.Supplier;
+package java8.util;
 
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class SortingPrimitiveTest
-{
-    private static final int ARRAY_SIZE = 10_000_000;
+import java8.util.function.Supplier;
+
+/*
+ * @test
+ * @summary Tests the sorting of a large array of sorted primitive values,
+ *          predominently for cases where the array is nearly sorted. This tests
+ *          code that detects patterns in the array to determine if it is nearly
+ *          sorted and if so employs and optimizes merge sort rather than a
+ *          Dual-Pivot QuickSort.
+ *
+ * @run testng SortingNearlySortedPrimitive
+ */
+public class SortingNearlySortedPrimitive {
+    private static final int ARRAY_SIZE = 1_000_000;
 
     @DataProvider(name = "arrays")
-    public Object[][] createData1()
-    {
+    public Object[][] createData() {
         return new Object[][]{
                 {"hiZeroLowTest", (Supplier<int[]>) this::hiZeroLowData},
                 {"endLessThanTest", (Supplier<int[]>) this::endLessThanData},
@@ -56,157 +56,127 @@ public class SortingPrimitiveTest
     }
 
     @Test(dataProvider = "arrays")
-    public void runTests(String testName, Supplier<int[]> dataMethod) throws Exception
-    {
-        int[] array = dataMethod.get();
-        this.sortAndAssert(array.clone());
-        this.sortAndAssert(this.floatCopyFromInt(array));
-        this.sortAndAssert(this.doubleCopyFromInt(array));
-        this.sortAndAssert(this.longCopyFromInt(array));
-        this.sortAndAssert(this.shortCopyFromInt(array));
-        this.sortAndAssert(this.charCopyFromInt(array));
+    public void runTests(String testName, Supplier<int[]> dataMethod) throws Exception {
+        int[] intSourceArray = dataMethod.get();
+
+        // Clone source array to ensure it is not modified
+        this.sortAndAssert(intSourceArray.clone());
+        this.sortAndAssert(floatCopyFromInt(intSourceArray));
+        this.sortAndAssert(doubleCopyFromInt(intSourceArray));
+        this.sortAndAssert(longCopyFromInt(intSourceArray));
+        this.sortAndAssert(shortCopyFromInt(intSourceArray));
+        this.sortAndAssert(charCopyFromInt(intSourceArray));
     }
 
-    private float[] floatCopyFromInt(int[] src)
-    {
+    private float[] floatCopyFromInt(int[] src) {
         float[] result = new float[src.length];
-        for (int i = 0; i < result.length; i++)
-        {
+        for (int i = 0; i < result.length; i++) {
             result[i] = src[i];
         }
         return result;
     }
 
-    private double[] doubleCopyFromInt(int[] src)
-    {
+    private double[] doubleCopyFromInt(int[] src) {
         double[] result = new double[src.length];
-        for (int i = 0; i < result.length; i++)
-        {
+        for (int i = 0; i < result.length; i++) {
             result[i] = src[i];
         }
         return result;
     }
 
-    private long[] longCopyFromInt(int[] src)
-    {
+    private long[] longCopyFromInt(int[] src) {
         long[] result = new long[src.length];
-        for (int i = 0; i < result.length; i++)
-        {
+        for (int i = 0; i < result.length; i++) {
             result[i] = src[i];
         }
         return result;
     }
 
-    private short[] shortCopyFromInt(int[] src)
-    {
+    private short[] shortCopyFromInt(int[] src) {
         short[] result = new short[src.length];
-        for (int i = 0; i < result.length; i++)
-        {
+        for (int i = 0; i < result.length; i++) {
             result[i] = (short) src[i];
         }
         return result;
     }
 
-    private char[] charCopyFromInt(int[] src)
-    {
+    private char[] charCopyFromInt(int[] src) {
         char[] result = new char[src.length];
-        for (int i = 0; i < result.length; i++)
-        {
+        for (int i = 0; i < result.length; i++) {
             result[i] = (char) src[i];
         }
         return result;
     }
 
-    private void sortAndAssert(int[] array)
-    {
+    private void sortAndAssert(int[] array) {
         DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
-        for (int i = 1; i < ARRAY_SIZE; i++)
-        {
-            if (array[i] < array[i - 1])
-            {
+        for (int i = 1; i < ARRAY_SIZE; i++) {
+            if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
             }
         }
         Assert.assertEquals(ARRAY_SIZE, array.length);
     }
 
-    private void sortAndAssert(char[] array)
-    {
+    private void sortAndAssert(char[] array) {
         DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
-        for (int i = 1; i < ARRAY_SIZE; i++)
-        {
-            if (array[i] < array[i - 1])
-            {
+        for (int i = 1; i < ARRAY_SIZE; i++) {
+            if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
             }
         }
         Assert.assertEquals(ARRAY_SIZE, array.length);
     }
 
-    private void sortAndAssert(short[] array)
-    {
+    private void sortAndAssert(short[] array) {
         DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
-        for (int i = 1; i < ARRAY_SIZE; i++)
-        {
-            if (array[i] < array[i - 1])
-            {
+        for (int i = 1; i < ARRAY_SIZE; i++) {
+            if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
             }
         }
         Assert.assertEquals(ARRAY_SIZE, array.length);
     }
 
-    private void sortAndAssert(double[] array)
-    {
+    private void sortAndAssert(double[] array) {
         DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
-        for (int i = 1; i < ARRAY_SIZE; i++)
-        {
-            if (array[i] < array[i - 1])
-            {
+        for (int i = 1; i < ARRAY_SIZE; i++) {
+            if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
             }
         }
         Assert.assertEquals(ARRAY_SIZE, array.length);
     }
 
-    private void sortAndAssert(float[] array)
-    {
+    private void sortAndAssert(float[] array) {
         DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
-        for (int i = 1; i < ARRAY_SIZE; i++)
-        {
-            if (array[i] < array[i - 1])
-            {
+        for (int i = 1; i < ARRAY_SIZE; i++) {
+            if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
             }
         }
         Assert.assertEquals(ARRAY_SIZE, array.length);
     }
 
-    private void sortAndAssert(long[] array)
-    {
+    private void sortAndAssert(long[] array) {
         DualPivotQuicksort.sort(array, 0, array.length - 1, null, 0, 0);
-        for (int i = 1; i < ARRAY_SIZE; i++)
-        {
-            if (array[i] < array[i - 1])
-            {
+        for (int i = 1; i < ARRAY_SIZE; i++) {
+            if (array[i] < array[i - 1]) {
                 throw new AssertionError("not sorted");
             }
         }
         Assert.assertEquals(ARRAY_SIZE, array.length);
     }
 
-    private int[] zeroHiData()
-    {
+    private int[] zeroHiData() {
         int[] array = new int[ARRAY_SIZE];
 
         int threeQuarters = (int) (ARRAY_SIZE * 0.75);
-        for (int i = 0; i < threeQuarters; i++)
-        {
+        for (int i = 0; i < threeQuarters; i++) {
             array[i] = 0;
         }
         int k = 1;
-        for (int i = threeQuarters; i < ARRAY_SIZE; i++)
-        {
+        for (int i = threeQuarters; i < ARRAY_SIZE; i++) {
             array[i] = k;
             k++;
         }
@@ -214,69 +184,57 @@ public class SortingPrimitiveTest
         return array;
     }
 
-    private int[] hiZeroLowData()
-    {
+    private int[] hiZeroLowData() {
         int[] array = new int[ARRAY_SIZE];
 
         int oneThird = ARRAY_SIZE / 3;
-        for (int i = 0; i < oneThird; i++)
-        {
+        for (int i = 0; i < oneThird; i++) {
             array[i] = i;
         }
         int twoThirds = oneThird * 2;
-        for (int i = oneThird; i < twoThirds; i++)
-        {
+        for (int i = oneThird; i < twoThirds; i++) {
             array[i] = 0;
         }
-        for (int i = twoThirds; i < ARRAY_SIZE; i++)
-        {
+        for (int i = twoThirds; i < ARRAY_SIZE; i++) {
             array[i] = oneThird - i + twoThirds;
         }
         return array;
     }
 
-    private int[] highFlatLowData()
-    {
+    private int[] highFlatLowData() {
         int[] array = new int[ARRAY_SIZE];
 
         int oneThird = ARRAY_SIZE / 3;
-        for (int i = 0; i < oneThird; i++)
-        {
+        for (int i = 0; i < oneThird; i++) {
             array[i] = i;
         }
         int twoThirds = oneThird * 2;
         int constant = oneThird - 1;
-        for (int i = oneThird; i < twoThirds; i++)
-        {
+        for (int i = oneThird; i < twoThirds; i++) {
             array[i] = constant;
         }
-        for (int i = twoThirds; i < ARRAY_SIZE; i++)
-        {
+        for (int i = twoThirds; i < ARRAY_SIZE; i++) {
             array[i] = constant - i + twoThirds;
         }
 
         return array;
     }
 
-    private int[] identicalData()
-    {
+    private int[] identicalData() {
         int[] array = new int[ARRAY_SIZE];
         int listNumber = 24;
 
-        for (int i = 0; i < ARRAY_SIZE; i++)
-        {
+        for (int i = 0; i < ARRAY_SIZE; i++) {
             array[i] = listNumber;
         }
 
         return array;
     }
 
-    private int[] endLessThanData()
-    {
+    private int[] endLessThanData() {
         int[] array = new int[ARRAY_SIZE];
 
-        for (int i = 0; i < ARRAY_SIZE - 1; i++)
-        {
+        for (int i = 0; i < ARRAY_SIZE - 1; i++) {
             array[i] = 3;
         }
         array[ARRAY_SIZE - 1] = 1;
@@ -284,17 +242,14 @@ public class SortingPrimitiveTest
         return array;
     }
 
-    private int[] sortedReversedSortedData()
-    {
+    private int[] sortedReversedSortedData() {
         int[] array = new int[ARRAY_SIZE];
 
-        for (int i = 0; i < ARRAY_SIZE / 2; i++)
-        {
+        for (int i = 0; i < ARRAY_SIZE / 2; i++) {
             array[i] = i;
         }
         int num = 0;
-        for (int i = ARRAY_SIZE / 2; i < ARRAY_SIZE; i++)
-        {
+        for (int i = ARRAY_SIZE / 2; i < ARRAY_SIZE; i++) {
             array[i] = ARRAY_SIZE - num;
             num++;
         }
@@ -302,16 +257,13 @@ public class SortingPrimitiveTest
         return array;
     }
 
-    private int[] pairFlipData()
-    {
+    private int[] pairFlipData() {
         int[] array = new int[ARRAY_SIZE];
 
-        for (int i = 0; i < ARRAY_SIZE; i++)
-        {
+        for (int i = 0; i < ARRAY_SIZE; i++) {
             array[i] = i;
         }
-        for (int i = 0; i < ARRAY_SIZE; i += 2)
-        {
+        for (int i = 0; i < ARRAY_SIZE; i += 2) {
             int temp = array[i];
             array[i] = array[i + 1];
             array[i + 1] = temp;
