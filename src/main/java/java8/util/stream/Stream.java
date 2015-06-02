@@ -469,31 +469,22 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
     Stream<T> skip(long n);
 
     /**
-     * Returns a stream consisting of the longest prefix of elements of this
-     * stream that match the given predicate.  If this stream is unordered then
-     * the resulting prefix (of unordered elements) is nondeterministic; the
-     * prefix will be selected from any one of the possible permutations of the
-     * elements of this unordered stream.
+     * Returns a stream consisting of the longest prefix of elements taken from
+     * this stream that match the given predicate.
+     *
+     * <p>If this stream is ordered then the prefix is a contiguous sequence of
+     * elements of this stream.  All elements of the sequence match the given
+     * predicate, the first element of the sequence is the first element
+     * (if any) of this stream, and the element (if any) immediately following
+     * the last element of the sequence does not match the given predicate.
+     *
+     * <p>If this stream is unordered then the prefix is a subset of elements of
+     * this stream.  All elements (if any) of the subset match the given
+     * predicate.  In this case the behavior of this operation is
+     * nondeterministic; it is free to select any valid subset as the prefix.
      *
      * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
      * stateful intermediate operation</a>.
-     *
-     * <p>This operation can accept a non-interfering stateful predicate to
-     * support <em>cancellation</em> of the upstream pipeline.  The stateful
-     * predicate may test against external state, such as time, or an
-     * accumulating summary value of the elements of this stream.  A false
-     * match, which triggers short-circuiting, is said to cancel the upstream
-     * pipeline.  Cancellation is a necessary, but not sufficient, condition
-     * for a) the stream to terminate normally in a finite time; and b) in a
-     * time less than that if cancellation was not performed.
-     *
-     * <p>Cancellation is more appropriate for unordered stream or sequential
-     * stream pipelines, and likely inappropriate for ordered and parallel
-     * stream pipelines.  As is ordinarily the case, the resulting prefix will
-     * be nondeterministic for unordered stream pipelines.  However, in such
-     * cases the resulting prefix will also be nondeterministic for ordered and
-     * parallel stream pipelines; the prefix will be a sub-prefix of that
-     * produced by an equivalent ordered and sequential stream pipeline.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation obtains the {@link #spliterator() spliterator}
@@ -509,15 +500,15 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * stream pipelines, it can be quite expensive on ordered parallel
      * pipelines, since the operation is constrained to return not just any
      * valid prefix, but the longest prefix of elements in the encounter order.
-     * Using an unordered stream source (such as {@link RefStreams#generate(Supplier)})
-     * or removing the ordering constraint with {@link #unordered()} may result
-     * in significant speedups of {@code takeWhile()} in parallel pipelines, if
-     * the semantics of your situation permit.  If consistency with encounter
-     * order is required, and you are experiencing poor performance or memory
+     * Using an unordered stream source (such as {@link RefStreams#generate(Supplier)}) or
+     * removing the ordering constraint with {@link #unordered()} may result in
+     * significant speedups of {@code takeWhile()} in parallel pipelines, if the
+     * semantics of your situation permit.  If consistency with encounter order
+     * is required, and you are experiencing poor performance or memory
      * utilization with {@code takeWhile()} in parallel pipelines, switching to
      * sequential execution with {@link #sequential()} may improve performance.
      *
-     * <p>An use-case for stream cancellation is executing a stream pipeline
+     * <p>One use-case for {@code takeWhile} is executing a stream pipeline
      * for a certain duration.  The following example will calculate as many
      * probable primes as is possible, in parallel, during 5 seconds:
      * <pre>{@code
@@ -531,7 +522,8 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * }</pre>
      *
      * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
-     *                  predicate to apply elements to determine the longest
+     *                  <a href="package-summary.html#Statelessness">stateless</a>
+     *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
      */
@@ -540,10 +532,18 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
     /**
      * Returns a stream consisting of the remaining elements of this stream
      * after dropping the longest prefix of elements that match the given
-     * predicate.  If this stream is unordered then the resulting prefix (of
-     * unordered elements) is nondeterministic; the prefix will be selected
-     * from any one of the possible permutations of the elements of this
-     * unordered stream.
+     * predicate.
+     *
+     * <p>If this stream is ordered then the prefix is a contiguous sequence of
+     * elements of this stream.  All elements of the sequence match the given
+     * predicate, the first element of the sequence is the first element
+     * (if any) of this stream, and the element (if any) immediately following
+     * the last element of the sequence does not match the given predicate.
+     *
+     * <p>If this stream is unordered then the prefix is a subset of elements of
+     * this stream.  All elements (if any) of the subset match the given
+     * predicate.  In this case the behavior of this operation is
+     * nondeterministic; it is free to select any valid subset as the prefix.
      *
      * <p>This is a <a href="package-summary.html#StreamOps">stateful
      * intermediate operation</a>.
@@ -562,17 +562,17 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * stream pipelines, it can be quite expensive on ordered parallel
      * pipelines, since the operation is constrained to return not just any
      * valid prefix, but the longest prefix of elements in the encounter order.
-     * Using an unordered stream source (such as {@link RefStreams#generate(Supplier)})
-     * or removing the ordering constraint with {@link #unordered()} may result
-     * in significant speedups of {@code dropWhile()} in parallel pipelines, if
-     * the semantics of your situation permit.  If consistency with encounter
-     * order is required, and you are experiencing poor performance or memory
+     * Using an unordered stream source (such as {@link RefStreams#generate(Supplier)}) or
+     * removing the ordering constraint with {@link #unordered()} may result in
+     * significant speedups of {@code dropWhile()} in parallel pipelines, if the
+     * semantics of your situation permit.  If consistency with encounter order
+     * is required, and you are experiencing poor performance or memory
      * utilization with {@code dropWhile()} in parallel pipelines, switching to
      * sequential execution with {@link #sequential()} may improve performance.
      *
      * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
      *                  <a href="package-summary.html#Statelessness">stateless</a>
-     *                  predicate to apply elements to determine the longest
+     *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
      */

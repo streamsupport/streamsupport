@@ -270,35 +270,100 @@ public interface LongStream extends BaseStream<Long, LongStream> {
     LongStream skip(long n);
 
     /**
-     * Returns a stream consisting of elements of this stream that match the
-     * given predicate up to, but discarding, the first element encountered
-     * that does not match the predicate.  All subsequently encountered elements
-     * are discarded.
+     * Returns a stream consisting of the longest prefix of elements taken from
+     * this stream that match the given predicate.
+     *
+     * <p>If this stream is ordered then the prefix is a contiguous sequence of
+     * elements of this stream.  All elements of the sequence match the given
+     * predicate, the first element of the sequence is the first element
+     * (if any) of this stream, and the element (if any) immediately following
+     * the last element of the sequence does not match the given predicate.
+     *
+     * <p>If this stream is unordered then the prefix is a subset of elements of
+     * this stream.  All elements (if any) of the subset match the given
+     * predicate.  In this case the behavior of this operation is
+     * nondeterministic; it is free to select any valid subset as the prefix.
      *
      * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
      * stateful intermediate operation</a>.
      *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation obtains the {@link #spliterator() spliterator}
+     * of this stream, wraps that spliterator so as to support the semantics
+     * of this operation on traversal, and returns a new stream associated with
+     * the wrapped spliterator.  The returned stream preserves the execution
+     * characteristics of this stream (namely parallel or sequential execution
+     * as per {@link #isParallel()}) but the wrapped spliterator may choose to
+     * not support splitting.
+     *
+     * <p><b>API Note:</b><br>
+     * While {@code takeWhile()} is generally a cheap operation on sequential
+     * stream pipelines, it can be quite expensive on ordered parallel
+     * pipelines, since the operation is constrained to return not just any
+     * valid prefix, but the longest prefix of elements in the encounter order.
+     * Using an unordered stream source (such as
+     * {@link LongStreams#generate(LongSupplier)}) or removing the ordering constraint with
+     * {@link #unordered()} may result in significant speedups of
+     * {@code takeWhile()} in parallel pipelines, if the semantics of your
+     * situation permit.  If consistency with encounter order is required, and
+     * you are experiencing poor performance or memory utilization with
+     * {@code takeWhile()} in parallel pipelines, switching to sequential
+     * execution with {@link #sequential()} may improve performance.
+     *
      * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
-     *                  predicate to apply to each element to determine if it
-     *                  should be included, or it and all subsequently
-     *                  encountered elements be discarded.
+     *                  <a href="package-summary.html#Statelessness">stateless</a>
+     *                  predicate to apply to elements to determine the longest
+     *                  prefix of elements.
      * @return the new stream
      */
     LongStream takeWhile(LongPredicate predicate);
 
     /**
      * Returns a stream consisting of the remaining elements of this stream
-     * after discarding elements that match the given predicate up to, but not
-     * discarding, the first element encountered that does not match the
-     * predicate.  All subsequently encountered elements are not discarded.
+     * after dropping the longest prefix of elements that match the given
+     * predicate.
+     *
+     * <p>If this stream is ordered then the prefix is a contiguous sequence of
+     * elements of this stream.  All elements of the sequence match the given
+     * predicate, the first element of the sequence is the first element
+     * (if any) of this stream, and the element (if any) immediately following
+     * the last element of the sequence does not match the given predicate.
+     *
+     * <p>If this stream is unordered then the prefix is a subset of elements of
+     * this stream.  All elements (if any) of the subset match the given
+     * predicate.  In this case the behavior of this operation is
+     * nondeterministic; it is free to select any valid subset as the prefix.
      *
      * <p>This is a <a href="package-summary.html#StreamOps">stateful
      * intermediate operation</a>.
      *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation obtains the {@link #spliterator() spliterator}
+     * of this stream, wraps that spliterator so as to support the semantics
+     * of this operation on traversal, and returns a new stream associated with
+     * the wrapped spliterator.  The returned stream preserves the execution
+     * characteristics of this stream (namely parallel or sequential execution
+     * as per {@link #isParallel()}) but the wrapped spliterator may choose to
+     * not support splitting.
+     *
+     * <p><b>API Note:</b><br>
+     * While {@code dropWhile()} is generally a cheap operation on sequential
+     * stream pipelines, it can be quite expensive on ordered parallel
+     * pipelines, since the operation is constrained to return not just any
+     * valid prefix, but the longest prefix of elements in the encounter order.
+     * Using an unordered stream source (such as
+     * {@link LongStreams#generate(LongSupplier)}) or removing the ordering constraint with
+     * {@link #unordered()} may result in significant speedups of
+     * {@code dropWhile()} in parallel pipelines, if the semantics of your
+     * situation permit.  If consistency with encounter order is required, and
+     * you are experiencing poor performance or memory utilization with
+     * {@code dropWhile()} in parallel pipelines, switching to sequential
+     * execution with {@link #sequential()} may improve performance.
+     *
      * @param predicate a <a href="package-summary.html#NonInterference">non-interfering</a>,
-     *                  predicate to apply to each element to determine if it
-     *                  should be discarded, or it and all subsequently
-     *                  encountered elements be included.
+     *                  <a href="package-summary.html#Statelessness">stateless</a>
+     *                  predicate to apply to elements to determine the longest
+     *                  prefix of elements.
      * @return the new stream
      */
     LongStream dropWhile(LongPredicate predicate);
