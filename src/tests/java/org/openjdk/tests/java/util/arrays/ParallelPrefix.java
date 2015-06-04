@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -53,7 +53,7 @@ public class ParallelPrefix {
     private final static int MEDIUM_ARRAY_SIZE = 1 << 8;
 
     //Array size much greater than MIN_PARTITION
-    private final static int LARGE_ARRAY_SIZE = 1 << 12;
+    private final static int LARGE_ARRAY_SIZE = 1 << 14;
 
     private final static int[] ARRAY_SIZE_COLLECTION  = new int[]{
         SMALL_ARRAY_SIZE,
@@ -62,7 +62,7 @@ public class ParallelPrefix {
         LARGE_ARRAY_SIZE
     };
 
-    @DataProvider
+    @DataProvider(name = "intSet")
     public static Object[][] intSet(){
         return genericData(size -> IntStreams.range(0, size).toArray(),
                 new IntBinaryOperator[]{
@@ -70,7 +70,7 @@ public class ParallelPrefix {
                     java8.lang.Integers::min});
     }
 
-    @DataProvider
+    @DataProvider(name = "longSet")
     public static Object[][] longSet(){
         return genericData(size -> LongStreams.range(0, size).toArray(),
                 new LongBinaryOperator[]{
@@ -78,7 +78,7 @@ public class ParallelPrefix {
                     java8.lang.Longs::min});
     }
 
-    @DataProvider
+    @DataProvider(name = "doubleSet")
     public static Object[][] doubleSet(){
         return genericData(size -> IntStreams.range(0, size).mapToDouble(i -> (double)i).toArray(),
                 new DoubleBinaryOperator[]{
@@ -86,7 +86,7 @@ public class ParallelPrefix {
                     java8.lang.Doubles::min});
     }
 
-    @DataProvider
+    @DataProvider(name = "stringSet")
     public static Object[][] stringSet(){
         Function<Integer, String[]> stringsFunc = size ->
                 IntStreams.range(0, size).mapToObj(Integer::toString).toArray(String[]::new);
@@ -123,11 +123,11 @@ public class ParallelPrefix {
 
         int[] parallelResult = data.clone();
         J8Arrays.parallelPrefix(parallelResult, fromIndex, toIndex, op);
-        assertEquals(parallelResult, sequentialResult);
+        assertArraysEqual(parallelResult, sequentialResult);
 
         int[] parallelRangeResult = java.util.Arrays.copyOfRange(data, fromIndex, toIndex);
         J8Arrays.parallelPrefix(parallelRangeResult, op);
-        assertEquals(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
+        assertArraysEqual(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
     }
 
     @Test(dataProvider="longSet")
@@ -139,11 +139,11 @@ public class ParallelPrefix {
 
         long[] parallelResult = data.clone();
         J8Arrays.parallelPrefix(parallelResult, fromIndex, toIndex, op);
-        assertEquals(parallelResult, sequentialResult);
+        assertArraysEqual(parallelResult, sequentialResult);
 
         long[] parallelRangeResult = java.util.Arrays.copyOfRange(data, fromIndex, toIndex);
         J8Arrays.parallelPrefix(parallelRangeResult, op);
-        assertEquals(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
+        assertArraysEqual(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
     }
 
     @Test(dataProvider="doubleSet")
@@ -155,11 +155,11 @@ public class ParallelPrefix {
 
         double[] parallelResult = data.clone();
         J8Arrays.parallelPrefix(parallelResult, fromIndex, toIndex, op);
-        assertEquals(parallelResult, sequentialResult);
+        assertArraysEqual(parallelResult, sequentialResult);
 
         double[] parallelRangeResult = java.util.Arrays.copyOfRange(data, fromIndex, toIndex);
         J8Arrays.parallelPrefix(parallelRangeResult, op);
-        assertEquals(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
+        assertArraysEqual(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
     }
 
     @Test(dataProvider="stringSet")
@@ -171,11 +171,11 @@ public class ParallelPrefix {
 
         String[] parallelResult = data.clone();
         J8Arrays.parallelPrefix(parallelResult, fromIndex, toIndex, op);
-        assertEquals(parallelResult, sequentialResult);
+        assertArraysEqual(parallelResult, sequentialResult);
 
         String[] parallelRangeResult = java.util.Arrays.copyOfRange(data, fromIndex, toIndex);
         J8Arrays.parallelPrefix(parallelRangeResult, op);
-        assertEquals(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
+        assertArraysEqual(parallelRangeResult, java.util.Arrays.copyOfRange(sequentialResult, fromIndex, toIndex));
     }
 
     @Test
@@ -295,6 +295,42 @@ public class ParallelPrefix {
 
     public static void assertInstance(Object actual, Class<?> expected, String message) {
         assertTrue(expected.isInstance(actual), message);
+    }
+
+    static void assertArraysEqual(int[] actual, int[] expected) {
+        try {
+            assertEquals(actual, expected, "");
+        } catch (AssertionError x) {
+            throw new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+        }
+    }
+
+    static void assertArraysEqual(long[] actual, long[] expected) {
+        try {
+            assertEquals(actual, expected, "");
+        } catch (AssertionError x) {
+            throw new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+        }
+    }
+
+    static void assertArraysEqual(double[] actual, double[] expected) {
+        try {
+            assertEquals(actual, expected, "");
+        } catch (AssertionError x) {
+            throw new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+        }
+    }
+
+    static void assertArraysEqual(String[] actual, String[] expected) {
+        try {
+            assertEquals(actual, expected, "");
+        } catch (AssertionError x) {
+            throw new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+        }
     }
 }
 
