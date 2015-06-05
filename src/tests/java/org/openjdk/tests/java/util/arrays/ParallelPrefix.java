@@ -53,7 +53,9 @@ public class ParallelPrefix {
     private final static int MEDIUM_ARRAY_SIZE = 1 << 8;
 
     //Array size much greater than MIN_PARTITION
-    private final static int LARGE_ARRAY_SIZE = 1 << 14;
+    private final static int LARGE_ARRAY_SIZE = 1 << 12; // 2^14 doesn't work on Android  
+    //bump the LARGE_ARRAY_SIZE from 2^12 to 2^14, for better test coverage on systems with a lot of parallelism.
+    //private final static int LARGE_ARRAY_SIZE = 1 << 14; // JDK-8085858
 
     private final static int[] ARRAY_SIZE_COLLECTION  = new int[]{
         SMALL_ARRAY_SIZE,
