@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,6 +24,7 @@
  */
 package java8.util;
 
+import java.util.Enumeration;
 import java.util.Iterator;
 
 import java8.util.function.Consumer;
@@ -140,6 +141,59 @@ public final class Iterators {
         while (it.hasNext()) {
             action.accept(it.next());
         }
+    }
+
+    /**
+     * Returns an {@link Iterator} that traverses the remaining elements
+     * covered by the passed enumeration. Traversal is undefined if any
+     * methods are called on the passed enumeration after the call to
+     * {@code asIterator}.
+     *
+     * <p><b>API Note:</b><br>
+     * This method is intended to help adapt code that produces
+     * {@code Enumeration} instances to code that consumes {@code Iterator}
+     * instances. For example, the {@link java.util.jar.JarFile#entries
+     * JarFile.entries()} method returns an {@code Enumeration<JarEntry>}.
+     * This can be turned into an {@code Iterator}, and then the
+     * {@code forEachRemaining()} method can be used:
+     *
+     * <pre>{@code
+     *     JarFile jarFile = ... ;
+     *     Iterators.forEachRemaining(Iterators.asIterator(jarFile.entries()), entry -> ... );
+     * }</pre>
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation returns an {@code Iterator} whose
+     * {@link Iterator#hasNext hasNext} method calls the passed Enumeration's
+     * {@code hasMoreElements} method, whose {@link Iterator#next next}
+     * method calls the passed Enumeration's {@code nextElement} method,
+     * and whose {@link Iterator#remove remove} method throws
+     * {@code UnsupportedOperationException}.
+     *
+     * @param <E> the type of the elements for the passed enumeration
+     * @param en the {@code Enumeration} whose remaining elements should be processed
+     * @return an Iterator representing the remaining elements of the
+     * passed Enumeration
+     * @throws NullPointerException if the specified enumeration is null
+     *
+     * @since 1.9
+     */
+    public static <E> Iterator<E> asIterator(Enumeration<E> en) {
+        Objects.requireNonNull(en);
+        return new Iterator<E>() {
+            @Override
+            public boolean hasNext() {
+                return en.hasMoreElements();
+            }
+            @Override
+            public E next() {
+                return en.nextElement();
+            }
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
+            }
+        };
     }
 
     private Iterators() {
