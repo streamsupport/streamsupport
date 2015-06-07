@@ -1696,9 +1696,8 @@ public final class Spliterators {
         @SuppressWarnings("unchecked")
         @Override
         public void forEachRemaining(Consumer<? super T> action) {
+            Objects.requireNonNull(action);
             Object[] a; int i, hi; // hoist accesses and checks from loop
-            if (action == null)
-                throw new NullPointerException();
             if ((a = array).length >= (hi = fence) &&
                 (i = index) >= 0 && i < (index = hi)) {
                 do { action.accept((T)a[i]); } while (++i < hi);
@@ -1707,8 +1706,7 @@ public final class Spliterators {
 
         @Override
         public boolean tryAdvance(Consumer<? super T> action) {
-            if (action == null)
-                throw new NullPointerException();
+            Objects.requireNonNull(action);
             if (index >= 0 && index < fence) {
                 @SuppressWarnings("unchecked") T e = (T) array[index++];
                 action.accept(e);
@@ -1718,7 +1716,7 @@ public final class Spliterators {
         }
 
         @Override
-        public long estimateSize() { return (long)(fence - index); }
+        public long estimateSize() { return (long) (fence - index); }
 
         @Override
         public int characteristics() {
@@ -1727,8 +1725,9 @@ public final class Spliterators {
 
         @Override
         public Comparator<? super T> getComparator() {
-            if (hasCharacteristics(Spliterator.SORTED))
+            if (hasCharacteristics(Spliterator.SORTED)) {
                 return null;
+            }
             throw new IllegalStateException();
         }
     }
@@ -2585,22 +2584,27 @@ public final class Spliterators {
             long s;
             if ((i = it) == null) {
                 i = it = collection.iterator();
-                s = est = (long) collection.size();
-            }
-            else
+                s = est = collection.size();
+            } else {
                 s = est;
+            }
             if (s > 1 && i.hasNext()) {
                 int n = batch + BATCH_UNIT;
-                if (n > s)
+                if (n > s) {
                     n = (int) s;
-                if (n > MAX_BATCH)
+                }
+                if (n > MAX_BATCH) {
                     n = MAX_BATCH;
+                }
                 Object[] a = new Object[n];
                 int j = 0;
-                do { a[j] = i.next(); } while (++j < n && i.hasNext());
+                do {
+                    a[j] = i.next();
+                } while (++j < n && i.hasNext());
                 batch = j;
-                if (est != Long.MAX_VALUE)
+                if (est != Long.MAX_VALUE) {
                     est -= j;
+                }
                 return new ArraySpliterator<>(a, 0, j, characteristics);
             }
             return null;
@@ -2608,21 +2612,21 @@ public final class Spliterators {
 
         @Override
         public void forEachRemaining(Consumer<? super T> action) {
-            if (action == null) throw new NullPointerException();
+            Objects.requireNonNull(action);
             Iterator<? extends T> i;
             if ((i = it) == null) {
                 i = it = collection.iterator();
-                est = (long) collection.size();
+                est = collection.size();
             }
             Iterators.forEachRemaining(i, action);
         }
 
         @Override
         public boolean tryAdvance(Consumer<? super T> action) {
-            if (action == null) throw new NullPointerException();
+            Objects.requireNonNull(action);
             if (it == null) {
                 it = collection.iterator();
-                est = (long) collection.size();
+                est = collection.size();
             }
             if (it.hasNext()) {
                 action.accept(it.next());
@@ -2635,7 +2639,7 @@ public final class Spliterators {
         public long estimateSize() {
             if (it == null) {
                 it = collection.iterator();
-                return est = (long)collection.size();
+                return est = collection.size();
             }
             return est;
         }
