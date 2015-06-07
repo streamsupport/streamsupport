@@ -162,7 +162,7 @@ public class WhileOpTest extends OpTestCase {
      * number of input elements (some but not all elements are dropped) then
      * the set of output elements is a superset of the set of non-matching
      * input elements</li>
-     * <li>If the number matching input elements is greater than zero then
+     * <li>If the number of matching input elements is greater than zero then
      * the set of matching output elements is a proper subset of the set of
      * matching input elements</li>
      * </ol>
