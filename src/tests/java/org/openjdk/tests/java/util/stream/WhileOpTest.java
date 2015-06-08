@@ -232,17 +232,20 @@ public class WhileOpTest extends OpTestCase {
                                    "Non-matching input is not a subset of the output");
                     }
 
-                    // The output may contain some matching elements, if any, but not all
-                    // (at least one matching element should not be present).
-                    if (matchingInput.size() > 0) {
-                        List<T> matchingOutput = new ArrayList<>();
-                        Iterables.forEach(output, i -> {
-                            if (p.test(i))
-                                matchingOutput.add(i);
-                        });
+                    // If anything got dropped at all
+                    if (output.size() != input.size()) {
+                        // The output may contain some matching elements, if any, but not all
+                        // (at least one matching element should not be present).
+                        if (matchingInput.size() > 0) {
+                            List<T> matchingOutput = new ArrayList<>();
+                            Iterables.forEach(output, i -> {
+                                if (p.test(i))
+                                    matchingOutput.add(i);
+                            });
 
-                        assertTrue(matchingOutput.size() < matchingInput.size(),
-                                   "Matching output is not a proper subset of matching input");
+                            assertTrue(matchingOutput.size() < matchingInput.size(),
+                                       "Matching output is not a proper subset of matching input");
+                        }
                     }
                 }
 
