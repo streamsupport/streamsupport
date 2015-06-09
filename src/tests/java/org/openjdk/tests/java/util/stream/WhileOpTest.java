@@ -46,6 +46,10 @@ import java8.util.stream.Stream;
 import java8.util.stream.StreamTestDataProvider;
 import java8.util.stream.TestData;
 
+/*
+ * @test
+ * @bug 8071597
+ */
 @Test
 public class WhileOpTest extends OpTestCase {
 
@@ -60,7 +64,6 @@ public class WhileOpTest extends OpTestCase {
                            s -> s.takeWhile(e -> e < size),
                            s -> s.takeWhile(e -> e < size),
                            s -> s.takeWhile(e -> e < size));
-
 
             testWhileMulti(data,
                            whileResultAsserter(data, WhileOp.Take, e -> e < size / 2),
@@ -158,12 +161,9 @@ public class WhileOpTest extends OpTestCase {
      * </ol>
      * For a dropWhile operation the following assertions can be made:
      * <ol>
-     * <li>If the number of non-matching input elements is less than the
-     * number of input elements (some but not all elements are dropped) then
-     * the set of output elements is a superset of the set of non-matching
-     * input elements</li>
-     * <li>If the number of matching input elements is greater than zero then
-     * the set of matching output elements is a proper subset of the set of
+     * <li>The set of non-matching input elements is a subset of the set of
+     * output elements</li>
+     * <li>The set of matching output elements is a subset of the set of
      * matching input elements</li>
      * </ol>
      *
@@ -173,8 +173,7 @@ public class WhileOpTest extends OpTestCase {
      * two or more takeWhile and/or dropWhile operations, or because
      * the predicate is not stateless).
      * @param p the stateless predicate applied to the operation, ignored if
-     * the
-     * operation is {@link WhileOp#Undefined}.
+     * the operation is {@link WhileOp#Undefined}.
      * @param <T> the type of elements
      * @return a result asserter
      */
@@ -225,28 +224,18 @@ public class WhileOpTest extends OpTestCase {
                             nonMatchingInput.add(t);
                     });
 
-                    // If some, not all, elements are dropped
-                    if (nonMatchingInput.size() < input.size()) {
-                        // The output must be a superset of the non-matching input
-                        assertTrue(output.containsAll(nonMatchingInput),
-                                   "Non-matching input is not a subset of the output");
-                    }
+                    // The non matching input must be a subset of output
+                    assertTrue(output.containsAll(nonMatchingInput),
+                               "Non-matching input is not a subset of the output");
 
-                    // If anything got dropped at all
-                    if (output.size() != input.size()) {
-                        // The output may contain some matching elements, if any, but not all
-                        // (at least one matching element should not be present).
-                        if (matchingInput.size() > 0) {
-                            List<T> matchingOutput = new ArrayList<>();
-                            Iterables.forEach(output, i -> {
-                                if (p.test(i))
-                                    matchingOutput.add(i);
-                            });
-
-                            assertTrue(matchingOutput.size() < matchingInput.size(),
-                                       "Matching output is not a proper subset of matching input");
-                        }
-                    }
+                    // The matching output must be a subset of the matching input
+                    List<T> matchingOutput = new ArrayList<>();
+                    Iterables.forEach(output, i -> {
+                        if (p.test(i))
+                            matchingOutput.add(i);
+                    });
+                    assertTrue(matchingInput.containsAll(matchingOutput),
+                               "Matching output is not a subset of matching input");
                 }
 
                 // Note: if there is a combination of takeWhile and dropWhile then specific
