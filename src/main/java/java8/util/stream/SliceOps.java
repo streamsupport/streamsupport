@@ -99,7 +99,7 @@ final class SliceOps {
 
     /**
      * Appends a "slice" operation to the provided stream.  The slice operation
-     * may be may be skip-only, limit-only, or skip-and-limit.
+     * may be skip-only, limit-only, or skip-and-limit.
      *
      * @param <T> the type of both input and output elements
      * @param upstream a reference stream with element type T
