@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -113,7 +113,7 @@ public class FlagOpTest extends OpTestCase {
         FlagDeclaringOp[] opsArray = ops.toArray(new FlagDeclaringOp[ops.size()]);
 
         withData(data).ops(opsArray).
-                without(StreamTestScenario.PAR_STREAM_TO_ARRAY_CLEAR_SIZED).
+                without(StreamTestScenario.CLEAR_SIZED_SCENARIOS).
                 exercise();
     }
 
@@ -153,7 +153,7 @@ public class FlagOpTest extends OpTestCase {
 
 
         withData(data).ops(opsArray).
-                without(StreamTestScenario.PAR_STREAM_TO_ARRAY_CLEAR_SIZED).
+                without(StreamTestScenario.CLEAR_SIZED_SCENARIOS).
                 exercise();
     }
 
@@ -186,7 +186,7 @@ public class FlagOpTest extends OpTestCase {
         IntermediateTestOp[] opsArray = ops.toArray(new IntermediateTestOp[ops.size()]);
 
         withData(data).ops(opsArray).
-                without(StreamTestScenario.PAR_STREAM_TO_ARRAY_CLEAR_SIZED).
+                without(StreamTestScenario.CLEAR_SIZED_SCENARIOS).
                 exercise();
     }
 
@@ -221,7 +221,7 @@ public class FlagOpTest extends OpTestCase {
         IntermediateTestOp[] opsArray = ops.toArray(new IntermediateTestOp[ops.size()]);
 
         withData(data).ops(opsArray).
-                without(StreamTestScenario.PAR_STREAM_TO_ARRAY_CLEAR_SIZED).
+                without(StreamTestScenario.CLEAR_SIZED_SCENARIOS).
                 exercise();
     }
 

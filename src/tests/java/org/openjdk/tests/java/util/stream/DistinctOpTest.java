@@ -29,6 +29,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import java8.lang.Iterables;
+
 import java8.util.Lists;
 import java8.util.Optional;
 import java8.util.Spliterator;
@@ -70,7 +72,12 @@ public class DistinctOpTest extends OpTestCase {
 
     @Test(dataProvider = "StreamTestData<Integer>", dataProviderClass = StreamTestDataProvider.class)
     public void testOp(String name, TestData.OfRef<Integer> data) {
-        Collection<Integer> result = exerciseOpsInt(data, Stream::distinct, IntStream::distinct, LongStream::distinct, DoubleStream::distinct);
+        Collection<Integer> result = exerciseOpsInt(
+        		data,
+        		Stream::distinct,
+        		IntStream::distinct,
+        		LongStream::distinct,
+        		DoubleStream::distinct);
 
         assertUnique(result);
         assertTrue((data.size() > 0) ? result.size() > 0 : result.size() == 0);
@@ -130,11 +137,18 @@ public class DistinctOpTest extends OpTestCase {
 
     @Test(dataProvider = "StreamTestData<Integer>", dataProviderClass = StreamTestDataProvider.class)
     public void testDistinctDistinct(String name, TestData.OfRef<Integer> data) {
-        Collection<Integer> result = withData(data)
-//                .stream(s -> s.distinct().distinct(), new CollectorOps.TestParallelSizedOp<>())
-                // @bug 8075307
-                .stream(s -> s.distinct().distinct())
-                .exercise();
+//        Collection<Integer> result = withData(data)
+////                .stream(s -> s.distinct().distinct(), new CollectorOps.TestParallelSizedOp<>())
+//                // @bug 8075307
+//                .stream(s -> s.distinct().distinct())
+//                .exercise();
+        Collection<Integer> result = exerciseOpsInt(
+                data,
+                s -> s.distinct().distinct(),
+                s -> s.distinct().distinct(),
+                s -> s.distinct().distinct(),
+                s -> s.distinct().distinct());
+
         assertUnique(result);
     }
 
@@ -156,5 +170,32 @@ public class DistinctOpTest extends OpTestCase {
                 .exercise();
         assertUnique(result);
         assertSorted(result);
+    }
+
+    @Test
+    public void testStable() {
+        // Create N instances of Integer all with the same value
+        List<Integer> input = IntStreams.rangeClosed(0, 1000)
+                .mapToObj(i -> new Integer(1000)) // explicit construction
+                .collect(Collectors.toList());
+        Integer expectedElement = input.get(0);
+        TestData<Integer, Stream<Integer>> data = TestData.Factory.ofCollection(
+                "1000 instances of Integer with the same value", input);
+
+        withData(data)
+                .stream(Stream::distinct)
+                .resultAsserter((actual, expected, isOrdered, isParallel) -> {
+                    List<Integer> l = new ArrayList<>();
+                    Iterables.forEach(actual, l::add);
+
+                    // Assert stability
+                    // The single result element should be equal in identity to
+                    // the first input element
+                    assertEquals(l.size(), 1);
+                    assertEquals(System.identityHashCode(l.get(0)),
+                                 System.identityHashCode(expectedElement));
+
+                })
+                .exercise();
     }
 }

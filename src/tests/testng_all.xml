@@ -12,7 +12,6 @@
       <class name="java8.util.stream.LongNodeTest"/>
       <class name="java8.util.stream.DoubleNodeTest"/>
       <class name="java8.util.stream.NodeTest"/>
-      <class name="java8.util.stream.UnorderedTest"/>
       <class name="java8.util.stream.SpinedBufferTest"/>
       <class name="java8.util.stream.SliceSpliteratorTest"/>
       <class name="java8.util.stream.StreamReuseTest"/>
@@ -101,6 +100,7 @@
       <class name="org.openjdk.other.tests.phaser.FickleRegister"/>
       <class name="org.openjdk.other.tests.phaser.PhaseOverflow"/>
       <class name="org.openjdk.other.tests.phaser.TieredArriveLoops"/>
+      <class name="org.openjdk.tests.java.util.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
@@ -122,7 +122,8 @@
       <!--class name="org.openjdk.tests.java.util.stream.CountTest"/>
       <class name="org.openjdk.tests.java.util.stream.CountLargeTest"/>
       <class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
-      <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/-->
+      <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/>
+      <class name="java8.util.stream.UnorderedTest"/-->
 
     </classes>
   </test>
