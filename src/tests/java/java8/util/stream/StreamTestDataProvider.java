@@ -33,7 +33,6 @@ import java.util.TreeSet;
 
 import org.testng.annotations.DataProvider;
 
-//import android.java.util.AndroidHashSet;
 import java8.util.Spliterators;
 import java8.util.function.Supplier;
 
@@ -116,7 +115,6 @@ public class StreamTestDataProvider {
                 }
                 list.add(collectionDataDescr("LinkedList:" + name, new LinkedList<>(intsAsList)));
                 list.add(collectionDataDescr("HashSet:" + name, new HashSet<>(intsAsList)));
-//                list.add(collectionDataDescr("AndroidHashSet:" + name, new AndroidHashSet<>(intsAsList)));
                 list.add(collectionDataDescr("LinkedHashSet:" + name, new LinkedHashSet<>(intsAsList)));
                 list.add(collectionDataDescr("TreeSet:" + name, new TreeSet<>(intsAsList)));
                 SpinedBuffer<Integer> spinedBuffer = new SpinedBuffer<>();
