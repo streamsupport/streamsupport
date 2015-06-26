@@ -57,15 +57,15 @@ public final class IntStreams {
      *                  encountered elements be discarded.
      * @return the new stream
      */
-//    public static IntStream takeWhile(IntStream stream, IntPredicate predicate) { // JDK-8071597
-//        Objects.requireNonNull(stream);
-//        Objects.requireNonNull(predicate);
-//        // Reuses the unordered spliterator, which, when encounter is present,
-//        // is safe to use as long as it configured not to split
-//        return StreamSupport.intStream(
-//                new WhileOps.UnorderedWhileSpliterator.OfInt.Taking(stream.spliterator(), true, predicate),
-//                stream.isParallel());
-//    }
+    public static IntStream takeWhile(IntStream stream, IntPredicate predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.intStream(
+                new WhileOps.UnorderedWhileSpliterator.OfInt.Taking(stream.spliterator(), true, predicate),
+                stream.isParallel());
+    }
 
     /**
      * Returns a stream consisting of the remaining elements of the passed
@@ -83,15 +83,15 @@ public final class IntStreams {
      *                  encountered elements be included.
      * @return the new stream
      */
-//    public static IntStream dropWhile(IntStream stream, IntPredicate predicate) { // JDK-8071597
-//        Objects.requireNonNull(stream);
-//        Objects.requireNonNull(predicate);
-//        // Reuses the unordered spliterator, which, when encounter is present,
-//        // is safe to use as long as it configured not to split
-//        return StreamSupport.intStream(
-//                new WhileOps.UnorderedWhileSpliterator.OfInt.Dropping(stream.spliterator(), true, predicate),
-//                stream.isParallel());
-//    }
+    public static IntStream dropWhile(IntStream stream, IntPredicate predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.intStream(
+                new WhileOps.UnorderedWhileSpliterator.OfInt.Dropping(stream.spliterator(), true, predicate),
+                stream.isParallel());
+    }
 
     // Static factories
 

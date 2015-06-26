@@ -107,19 +107,19 @@ public final class RefStreams {
      *                  prefix of elements.
      * @return the new stream
      */
-//    public static<T> Stream<T> takeWhile(Stream<? extends T> stream, Predicate<? super T> predicate) { // JDK-8071597
-//        Objects.requireNonNull(stream);
-//        Objects.requireNonNull(predicate);
-//
-//        @SuppressWarnings("unchecked")
-//        Stream<T> s = (Stream<T>) stream;
-//
-//        // Reuses the unordered spliterator, which, when encounter is present,
-//        // is safe to use as long as it configured not to split
-//        return StreamSupport.stream(
-//                new WhileOps.UnorderedWhileSpliterator.OfRef.Taking<>(s.spliterator(), true, predicate),
-//                s.isParallel());
-//    }
+    public static<T> Stream<T> takeWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+
+        @SuppressWarnings("unchecked")
+        Stream<T> s = (Stream<T>) stream;
+
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.stream(
+                new WhileOps.UnorderedWhileSpliterator.OfRef.Taking<>(s.spliterator(), true, predicate),
+                s.isParallel());
+    }
 
     /**
      * Returns a stream consisting of the remaining elements of the passed stream
@@ -163,19 +163,19 @@ public final class RefStreams {
      *                  prefix of elements.
      * @return the new stream
      */
-//    public static<T> Stream<T> dropWhile(Stream<? extends T> stream, Predicate<? super T> predicate) { // JDK-8071597
-//        Objects.requireNonNull(stream);
-//        Objects.requireNonNull(predicate);
-//
-//        @SuppressWarnings("unchecked")
-//        Stream<T> s = (Stream<T>) stream;
-//
-//        // Reuses the unordered spliterator, which, when encounter is present,
-//        // is safe to use as long as it configured not to split
-//        return StreamSupport.stream(
-//                new WhileOps.UnorderedWhileSpliterator.OfRef.Dropping<>(s.spliterator(), true, predicate),
-//                s.isParallel());
-//    }
+    public static<T> Stream<T> dropWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+
+        @SuppressWarnings("unchecked")
+        Stream<T> s = (Stream<T>) stream;
+
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.stream(
+                new WhileOps.UnorderedWhileSpliterator.OfRef.Dropping<>(s.spliterator(), true, predicate),
+                s.isParallel());
+    }
 
     /**
      * Returns a builder for a {@link Stream}.
