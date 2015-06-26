@@ -115,8 +115,8 @@
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
 
       <!-- block 10 (Java9: Stream takeWhile / dropWhile) -->
-      <class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
-      <class name="org.openjdk.tests.java.util.stream.WhileOpStatefulTest"/>
+      <!--class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
+      <class name="org.openjdk.tests.java.util.stream.WhileOpStatefulTest"/-->
 
       <!-- block 11 (superseded tests) -->
       <!--class name="org.openjdk.tests.java.util.stream.CountTest"/>
