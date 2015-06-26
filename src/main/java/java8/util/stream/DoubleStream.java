@@ -318,7 +318,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      *                  prefix of elements.
      * @return the new stream
      */
-//    DoubleStream takeWhile(DoublePredicate predicate); // JDK-8071597
+    DoubleStream takeWhile(DoublePredicate predicate);
 
     /**
      * Returns a stream consisting of the remaining elements of this stream
@@ -368,7 +368,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      *                  prefix of elements.
      * @return the new stream
      */
-//    DoubleStream dropWhile(DoublePredicate predicate); // JDK-8071597
+    DoubleStream dropWhile(DoublePredicate predicate);
 
     /**
      * Performs an action for each element of this stream.

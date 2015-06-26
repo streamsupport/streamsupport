@@ -58,15 +58,15 @@ public final class LongStreams {
      *                  encountered elements be discarded.
      * @return the new stream
      */
-//    public static LongStream takeWhile(LongStream stream, LongPredicate predicate) { // JDK-8071597
-//        Objects.requireNonNull(stream);
-//        Objects.requireNonNull(predicate);
-//        // Reuses the unordered spliterator, which, when encounter is present,
-//        // is safe to use as long as it configured not to split
-//        return StreamSupport.longStream(
-//                new WhileOps.UnorderedWhileSpliterator.OfLong.Taking(stream.spliterator(), true, predicate),
-//                stream.isParallel());
-//    }
+    public static LongStream takeWhile(LongStream stream, LongPredicate predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.longStream(
+                new WhileOps.UnorderedWhileSpliterator.OfLong.Taking(stream.spliterator(), true, predicate),
+                stream.isParallel());
+    }
 
     /**
      * Returns a stream consisting of the remaining elements of the passed
@@ -84,15 +84,15 @@ public final class LongStreams {
      *                  encountered elements be included.
      * @return the new stream
      */
-//    public static LongStream dropWhile(LongStream stream, LongPredicate predicate) { // JDK-8071597
-//        Objects.requireNonNull(stream);
-//        Objects.requireNonNull(predicate);
-//        // Reuses the unordered spliterator, which, when encounter is present,
-//        // is safe to use as long as it configured not to split
-//        return StreamSupport.longStream(
-//                new WhileOps.UnorderedWhileSpliterator.OfLong.Dropping(stream.spliterator(), true, predicate),
-//                stream.isParallel());
-//    }
+    public static LongStream dropWhile(LongStream stream, LongPredicate predicate) {
+        Objects.requireNonNull(stream);
+        Objects.requireNonNull(predicate);
+        // Reuses the unordered spliterator, which, when encounter is present,
+        // is safe to use as long as it configured not to split
+        return StreamSupport.longStream(
+                new WhileOps.UnorderedWhileSpliterator.OfLong.Dropping(stream.spliterator(), true, predicate),
+                stream.isParallel());
+    }
 
     // Static factories
 

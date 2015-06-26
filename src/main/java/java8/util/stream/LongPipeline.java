@@ -372,15 +372,15 @@ abstract class LongPipeline<E_IN>
             return SliceOps.makeLong(this, n, -1);
     }
 
-//    @Override
-//    public final LongStream takeWhile(LongPredicate predicate) { // JDK-8071597
-//        return WhileOps.makeTakeWhileLong(this, predicate);
-//    }
-//
-//    @Override
-//    public final LongStream dropWhile(LongPredicate predicate) { // JDK-8071597
-//        return WhileOps.makeDropWhileLong(this, predicate);
-//    }
+    @Override
+    public final LongStream takeWhile(LongPredicate predicate) {
+        return WhileOps.makeTakeWhileLong(this, predicate);
+    }
+
+    @Override
+    public final LongStream dropWhile(LongPredicate predicate) {
+        return WhileOps.makeDropWhileLong(this, predicate);
+    }
 
     @Override
     public final LongStream sorted() {
