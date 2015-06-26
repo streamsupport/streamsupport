@@ -527,7 +527,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      *                  prefix of elements.
      * @return the new stream
      */
-    Stream<T> takeWhile(Predicate<? super T> predicate);
+//    Stream<T> takeWhile(Predicate<? super T> predicate); // JDK-8071597
 
     /**
      * Returns a stream consisting of the remaining elements of this stream
@@ -576,7 +576,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      *                  prefix of elements.
      * @return the new stream
      */
-    Stream<T> dropWhile(Predicate<? super T> predicate);
+//    Stream<T> dropWhile(Predicate<? super T> predicate); // JDK-8071597
 
     /**
      * Performs an action for each element of this stream.

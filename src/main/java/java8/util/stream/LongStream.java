@@ -316,7 +316,7 @@ public interface LongStream extends BaseStream<Long, LongStream> {
      *                  prefix of elements.
      * @return the new stream
      */
-    LongStream takeWhile(LongPredicate predicate);
+//    LongStream takeWhile(LongPredicate predicate); // JDK-8071597
 
     /**
      * Returns a stream consisting of the remaining elements of this stream
@@ -366,7 +366,7 @@ public interface LongStream extends BaseStream<Long, LongStream> {
      *                  prefix of elements.
      * @return the new stream
      */
-    LongStream dropWhile(LongPredicate predicate);
+//    LongStream dropWhile(LongPredicate predicate); // JDK-8071597
 
     /**
      * Performs an action for each element of this stream.

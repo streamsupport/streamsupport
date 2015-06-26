@@ -258,15 +258,15 @@ public final class DefaultMethodStreams {
             return s.skip(n);
         }
 
-        @Override
-        public Stream<T> takeWhile(Predicate<? super T> predicate) {
-            return s.takeWhile(predicate);
-        }
-
-        @Override
-        public Stream<T> dropWhile(Predicate<? super T> predicate) {
-            return s.dropWhile(predicate);
-        }
+//        @Override
+//        public Stream<T> takeWhile(Predicate<? super T> predicate) { // JDK-8071597
+//            return s.takeWhile(predicate);
+//        }
+//
+//        @Override
+//        public Stream<T> dropWhile(Predicate<? super T> predicate) { // JDK-8071597
+//            return s.dropWhile(predicate);
+//        }
 
         @Override
         public void forEach(Consumer<? super T> action) {
@@ -459,15 +459,15 @@ public final class DefaultMethodStreams {
             return s.skip(n);
         }
 
-        @Override
-        public IntStream takeWhile(IntPredicate predicate) {
-            return s.takeWhile(predicate);
-        }
-
-        @Override
-        public IntStream dropWhile(IntPredicate predicate) {
-            return s.dropWhile(predicate);
-        }
+//        @Override
+//        public IntStream takeWhile(IntPredicate predicate) { // JDK-8071597
+//            return s.takeWhile(predicate);
+//        }
+//
+//        @Override
+//        public IntStream dropWhile(IntPredicate predicate) { // JDK-8071597
+//            return s.dropWhile(predicate);
+//        }
 
         @Override
         public void forEach(IntConsumer action) {
@@ -680,15 +680,15 @@ public final class DefaultMethodStreams {
             return s.skip(n);
         }
 
-        @Override
-        public LongStream takeWhile(LongPredicate predicate) {
-            return s.takeWhile(predicate);
-        }
-
-        @Override
-        public LongStream dropWhile(LongPredicate predicate) {
-            return s.dropWhile(predicate);
-        }
+//        @Override
+//        public LongStream takeWhile(LongPredicate predicate) { // JDK-8071597
+//            return s.takeWhile(predicate);
+//        }
+//
+//        @Override
+//        public LongStream dropWhile(LongPredicate predicate) { // JDK-8071597
+//            return s.dropWhile(predicate);
+//        }
 
         @Override
         public void forEachOrdered(LongConsumer action) {
@@ -883,15 +883,15 @@ public final class DefaultMethodStreams {
             return s.skip(n);
         }
 
-        @Override
-        public DoubleStream takeWhile(DoublePredicate predicate) {
-            return s.takeWhile(predicate);
-        }
-
-        @Override
-        public DoubleStream dropWhile(DoublePredicate predicate) {
-            return s.dropWhile(predicate);
-        }
+//        @Override
+//        public DoubleStream takeWhile(DoublePredicate predicate) { // JDK-8071597
+//            return s.takeWhile(predicate);
+//        }
+//
+//        @Override
+//        public DoubleStream dropWhile(DoublePredicate predicate) { // JDK-8071597
+//            return s.dropWhile(predicate);
+//        }
 
         @Override
         public void forEach(DoubleConsumer action) {

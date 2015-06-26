@@ -315,7 +315,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
      *                  prefix of elements.
      * @return the new stream
      */
-    IntStream takeWhile(IntPredicate predicate);
+//    IntStream takeWhile(IntPredicate predicate); // JDK-8071597
 
     /**
      * Returns a stream consisting of the remaining elements of this stream
@@ -364,7 +364,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
      *                  prefix of elements.
      * @return the new stream
      */
-    IntStream dropWhile(IntPredicate predicate);
+//    IntStream dropWhile(IntPredicate predicate); // JDK-8071597
 
     /**
      * Performs an action for each element of this stream.

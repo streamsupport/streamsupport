@@ -442,15 +442,15 @@ abstract class ReferencePipeline<P_IN, P_OUT>
             return SliceOps.makeRef(this, n, -1);
     }
 
-    @Override
-    public final Stream<P_OUT> takeWhile(Predicate<? super P_OUT> predicate) {
-        return WhileOps.makeTakeWhileRef(this, predicate);
-    }
-
-    @Override
-    public final Stream<P_OUT> dropWhile(Predicate<? super P_OUT> predicate) {
-        return WhileOps.makeDropWhileRef(this, predicate);
-    }
+//    @Override
+//    public final Stream<P_OUT> takeWhile(Predicate<? super P_OUT> predicate) { // JDK-8071597
+//        return WhileOps.makeTakeWhileRef(this, predicate);
+//    }
+//
+//    @Override
+//    public final Stream<P_OUT> dropWhile(Predicate<? super P_OUT> predicate) { // JDK-8071597
+//        return WhileOps.makeDropWhileRef(this, predicate);
+//    }
 
     // Terminal operations from Stream
 
