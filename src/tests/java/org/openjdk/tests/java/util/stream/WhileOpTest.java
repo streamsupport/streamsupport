@@ -31,6 +31,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import java8.lang.Iterables;
 
@@ -38,10 +39,14 @@ import java8.util.function.Function;
 import java8.util.function.Predicate;
 import java8.util.stream.DefaultMethodStreams;
 import java8.util.stream.DoubleStream;
+import java8.util.stream.DoubleStreams;
 import java8.util.stream.IntStream;
+import java8.util.stream.IntStreams;
 import java8.util.stream.LambdaTestHelpers;
 import java8.util.stream.LongStream;
+import java8.util.stream.LongStreams;
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamTestDataProvider;
 import java8.util.stream.TestData;
@@ -317,5 +322,69 @@ public class WhileOpTest extends OpTestCase {
                     .resultAsserter(ra)
                     .exercise();
         }
+    }
+
+    @Test
+    public void testRefDefaultClose() {
+        AtomicBoolean isClosed = new AtomicBoolean();
+        Stream<Integer> s = RefStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
+        Stream<Integer> ds = null;
+        try {
+        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds.count();
+        } finally {
+        	if (ds != null) {
+        		ds.close();
+        	}
+        }
+        assertTrue(isClosed.get());
+    }
+
+    @Test
+    public void testIntDefaultClose() {
+        AtomicBoolean isClosed = new AtomicBoolean();
+        IntStream s = IntStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
+        IntStream ds = null;
+        try {
+        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds.count();
+        } finally {
+        	if (ds != null) {
+        		ds.close();
+        	}
+        }
+        assertTrue(isClosed.get());
+    }
+
+    @Test
+    public void testLongDefaultClose() {
+        AtomicBoolean isClosed = new AtomicBoolean();
+        LongStream s = LongStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
+        LongStream ds = null;
+        try {
+        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds.count();
+        } finally {
+        	if (ds != null) {
+        		ds.close();
+        	}
+        }
+        assertTrue(isClosed.get());
+    }
+
+    @Test
+    public void testDoubleDefaultClose() {
+        AtomicBoolean isClosed = new AtomicBoolean();
+        DoubleStream s = DoubleStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
+        DoubleStream ds = null;
+        try {
+        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds.count();
+        } finally {
+        	if (ds != null) {
+        		ds.close();
+        	}
+        }
+        assertTrue(isClosed.get());
     }
 }
