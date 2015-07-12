@@ -330,12 +330,12 @@ public class WhileOpTest extends OpTestCase {
         Stream<Integer> s = RefStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
         Stream<Integer> ds = null;
         try {
-        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
             ds.count();
         } finally {
-        	if (ds != null) {
-        		ds.close();
-        	}
+            if (ds != null) {
+                ds.close();
+            }
         }
         assertTrue(isClosed.get());
     }
@@ -346,12 +346,12 @@ public class WhileOpTest extends OpTestCase {
         IntStream s = IntStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
         IntStream ds = null;
         try {
-        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
             ds.count();
         } finally {
-        	if (ds != null) {
-        		ds.close();
-        	}
+            if (ds != null) {
+                ds.close();
+            }
         }
         assertTrue(isClosed.get());
     }
@@ -362,12 +362,12 @@ public class WhileOpTest extends OpTestCase {
         LongStream s = LongStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
         LongStream ds = null;
         try {
-        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
             ds.count();
         } finally {
-        	if (ds != null) {
-        		ds.close();
-        	}
+            if (ds != null) {
+                ds.close();
+            }
         }
         assertTrue(isClosed.get());
     }
@@ -378,12 +378,12 @@ public class WhileOpTest extends OpTestCase {
         DoubleStream s = DoubleStreams.of(1, 2, 3).onClose(() -> isClosed.set(true));
         DoubleStream ds = null;
         try {
-        	ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
+            ds = DefaultMethodStreams.delegateTo(s).takeWhile(e -> e < 3);
             ds.count();
         } finally {
-        	if (ds != null) {
-        		ds.close();
-        	}
+            if (ds != null) {
+                ds.close();
+            }
         }
         assertTrue(isClosed.get());
     }
