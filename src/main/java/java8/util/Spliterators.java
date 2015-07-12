@@ -2164,6 +2164,38 @@ public final class Spliterators {
         public int characteristics() {
             return characteristics;
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long getExactSizeIfKnown() {
+            return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return (characteristics() & characteristics) == characteristics;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Comparator<? super T> getComparator() {
+            throw new IllegalStateException();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(Consumer<? super T> action) {
+            do { } while (tryAdvance(action));
+        }
     }
 
     /**
@@ -2273,6 +2305,46 @@ public final class Spliterators {
         @Override
         public int characteristics() {
             return characteristics;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long getExactSizeIfKnown() {
+            return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return (characteristics() & characteristics) == characteristics;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Comparator<? super Integer> getComparator() {
+            throw new IllegalStateException();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(IntConsumer action) {
+            do { } while (tryAdvance(action));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(Consumer<? super Integer> action) {
+            Spliterators.OfInt.forEachRemaining(this, action);
         }
     }
 
@@ -2384,6 +2456,46 @@ public final class Spliterators {
         public int characteristics() {
             return characteristics;
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long getExactSizeIfKnown() {
+            return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return (characteristics() & characteristics) == characteristics;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Comparator<? super Long> getComparator() {
+            throw new IllegalStateException();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(LongConsumer action) {
+            do { } while (tryAdvance(action));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(Consumer<? super Long> action) {
+            Spliterators.OfLong.forEachRemaining(this, action);
+        }
     }
 
     /**
@@ -2493,6 +2605,46 @@ public final class Spliterators {
         @Override
         public int characteristics() {
             return characteristics;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public long getExactSizeIfKnown() {
+            return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean hasCharacteristics(int characteristics) {
+            return (characteristics() & characteristics) == characteristics;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public Comparator<? super Double> getComparator() {
+            throw new IllegalStateException();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(DoubleConsumer action) {
+            do { } while (tryAdvance(action));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void forEachRemaining(Consumer<? super Double> action) {
+            Spliterators.OfDouble.forEachRemaining(this, action);
         }
     }
 
