@@ -73,7 +73,7 @@ public final class RefStreams {
      * sequential execution as per {@link Stream#isParallel() isParallel()})
      * but the wrapped spliterator may choose to not support splitting.
      * When the returned stream is closed, the close handlers for both
-     * the returned and this stream are invoked.
+     * the returned and the passed stream are invoked.
      *
      * <p><b>API Note:</b><br>
      * While {@code takeWhile()} is generally a cheap operation on sequential
@@ -143,7 +143,7 @@ public final class RefStreams {
      * sequential execution as per {@link Stream#isParallel() isParallel()})
      * but the wrapped spliterator may choose to not support splitting.
      * When the returned stream is closed, the close handlers for both
-     * the returned and this stream are invoked.
+     * the returned and the passed stream are invoked.
      *
      * <p><b>API Note:</b><br>
      * While {@code dropWhile()} is generally a cheap operation on sequential
