@@ -2050,8 +2050,8 @@ public final class Spliterators {
      * <p>An extending class need only
      * implement {@link #tryAdvance(java8.util.function.Consumer) tryAdvance}.
      * The extending class should override
-     * {@link #forEachRemaining(java8.util.function.Consumer) forEach} if it can
-     * provide a more performant implementation.
+     * {@link #forEachRemaining(java8.util.function.Consumer) forEachRemaining}
+     * if it can provide a more performant implementation.
      *
      * <p><b>API Note:</b><br>
      * This class is a useful aid for creating a spliterator when it is not
@@ -2171,10 +2171,10 @@ public final class Spliterators {
      * permit limited parallelism.
      *
      * <p>To implement a spliterator an extending class need only
-     * implement {@link #tryAdvance(java8.util.function.IntConsumer)}
+     * implement {@link #tryAdvance(java8.util.function.IntConsumer)
      * tryAdvance}.  The extending class should override
-     * {@link #forEachRemaining(java8.util.function.IntConsumer)} forEach} if it
-     * can provide a more performant implementation.
+     * {@link #forEachRemaining(java8.util.function.IntConsumer) forEachRemaining}
+     * if it can provide a more performant implementation.
      *
      * <p><b>API Note:</b><br>
      * This class is a useful aid for creating a spliterator when it is not
@@ -2281,10 +2281,10 @@ public final class Spliterators {
      * to permit limited parallelism.
      *
      * <p>To implement a spliterator an extending class need only
-     * implement {@link #tryAdvance(java8.util.function.LongConsumer)}
+     * implement {@link #tryAdvance(java8.util.function.LongConsumer)
      * tryAdvance}.  The extending class should override
-     * {@link #forEachRemaining(java8.util.function.LongConsumer)} forEach} if it
-     * can provide a more performant implementation.
+     * {@link #forEachRemaining(java8.util.function.LongConsumer) forEachRemaining}
+     * if it can provide a more performant implementation.
      *
      * <p><b>API Note:</b><br>
      * This class is a useful aid for creating a spliterator when it is not
@@ -2391,10 +2391,10 @@ public final class Spliterators {
      * {@code trySplit} to permit limited parallelism.
      *
      * <p>To implement a spliterator an extending class need only
-     * implement {@link #tryAdvance(java8.util.function.DoubleConsumer)}
+     * implement {@link #tryAdvance(java8.util.function.DoubleConsumer)
      * tryAdvance}.  The extending class should override
-     * {@link #forEachRemaining(java8.util.function.DoubleConsumer)} forEach} if
-     * it can provide a more performant implementation.
+     * {@link #forEachRemaining(java8.util.function.DoubleConsumer) forEachRemaining}
+     * if it can provide a more performant implementation.
      *
      * <p><b>API Note:</b><br>
      * This class is a useful aid for creating a spliterator when it is not
