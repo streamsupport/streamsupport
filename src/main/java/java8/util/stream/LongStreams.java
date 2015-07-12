@@ -65,7 +65,7 @@ public final class LongStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.longStream(
                 new WhileOps.UnorderedWhileSpliterator.OfLong.Taking(stream.spliterator(), true, predicate),
-                stream.isParallel());
+                stream.isParallel()).onClose(stream::close);
     }
 
     /**
@@ -91,7 +91,7 @@ public final class LongStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.longStream(
                 new WhileOps.UnorderedWhileSpliterator.OfLong.Dropping(stream.spliterator(), true, predicate),
-                stream.isParallel());
+                stream.isParallel()).onClose(stream::close);
     }
 
     // Static factories

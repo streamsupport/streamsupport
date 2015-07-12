@@ -72,6 +72,8 @@ public final class RefStreams {
      * the execution characteristics of the passed stream (namely parallel or
      * sequential execution as per {@link Stream#isParallel() isParallel()})
      * but the wrapped spliterator may choose to not support splitting.
+     * When the returned stream is closed, the close handlers for both
+     * the returned and this stream are invoked.
      *
      * <p><b>API Note:</b><br>
      * While {@code takeWhile()} is generally a cheap operation on sequential
@@ -118,7 +120,7 @@ public final class RefStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.stream(
                 new WhileOps.UnorderedWhileSpliterator.OfRef.Taking<>(s.spliterator(), true, predicate),
-                s.isParallel());
+                s.isParallel()).onClose(s::close);
     }
 
     /**
@@ -140,6 +142,8 @@ public final class RefStreams {
      * the execution characteristics of the passed stream (namely parallel or
      * sequential execution as per {@link Stream#isParallel() isParallel()})
      * but the wrapped spliterator may choose to not support splitting.
+     * When the returned stream is closed, the close handlers for both
+     * the returned and this stream are invoked.
      *
      * <p><b>API Note:</b><br>
      * While {@code dropWhile()} is generally a cheap operation on sequential
@@ -174,7 +178,7 @@ public final class RefStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.stream(
                 new WhileOps.UnorderedWhileSpliterator.OfRef.Dropping<>(s.spliterator(), true, predicate),
-                s.isParallel());
+                s.isParallel()).onClose(s::close);
     }
 
     /**
