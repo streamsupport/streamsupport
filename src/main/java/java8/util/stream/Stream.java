@@ -493,7 +493,8 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * the wrapped spliterator.  The returned stream preserves the execution
      * characteristics of this stream (namely parallel or sequential execution
      * as per {@link #isParallel()}) but the wrapped spliterator may choose to
-     * not support splitting.
+     * not support splitting. When the returned stream is closed, the close
+     * handlers for both the returned and this stream are invoked.
      *
      * <p><b>API Note:</b><br>
      * While {@code takeWhile()} is generally a cheap operation on sequential
@@ -555,7 +556,8 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * the wrapped spliterator.  The returned stream preserves the execution
      * characteristics of this stream (namely parallel or sequential execution
      * as per {@link #isParallel()}) but the wrapped spliterator may choose to
-     * not support splitting.
+     * not support splitting. When the returned stream is closed, the close
+     * handlers for both the returned and this stream are invoked.
      *
      * <p><b>API Note:</b><br>
      * While {@code dropWhile()} is generally a cheap operation on sequential
