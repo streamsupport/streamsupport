@@ -324,6 +324,7 @@ public interface LongStream extends BaseStream<Long, LongStream> {
      *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
+     * @since 1.9
      */
     LongStream takeWhile(LongPredicate predicate);
 
@@ -383,6 +384,7 @@ public interface LongStream extends BaseStream<Long, LongStream> {
      *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
+     * @since 1.9
      */
     LongStream dropWhile(LongPredicate predicate);
 

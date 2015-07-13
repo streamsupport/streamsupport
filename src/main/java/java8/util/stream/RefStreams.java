@@ -107,6 +107,7 @@ public final class RefStreams {
      *                  predicate to apply elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
+     * @since 1.9
      */
     public static<T> Stream<T> takeWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
         Objects.requireNonNull(stream);
@@ -181,6 +182,7 @@ public final class RefStreams {
      *                  predicate to apply elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
+     * @since 1.9
      */
     public static<T> Stream<T> dropWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
         Objects.requireNonNull(stream);
