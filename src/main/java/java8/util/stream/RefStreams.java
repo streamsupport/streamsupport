@@ -38,32 +38,31 @@ import java8.util.stream.Stream.Builder;
 public final class RefStreams {
 
     /**
-     * Returns a stream consisting of the longest prefix of elements of the
-     * passed stream that match the given predicate.  If the passed stream is
-     * unordered then the resulting prefix (of unordered elements) is
-     * nondeterministic; the prefix will be selected from any one of the
-     * possible permutations of the elements of the unordered stream.
+     * Returns, if the passed stream is ordered, a stream consisting of the longest
+     * prefix of elements taken from the passed stream that match the given predicate.
+     * Otherwise returns, if the passed stream is unordered, a stream consisting of a
+     * subset of elements taken from the passed stream that match the given predicate.
      *
+     * <p>If the passed stream is ordered then the longest prefix is a contiguous
+     * sequence of elements of the passed stream that match the given predicate.  The
+     * first element of the sequence is the first element of the passed stream, and
+     * the element immediately following the last element of the sequence does
+     * not match the given predicate.
+     *
+     * <p>If the passed stream is unordered, and some (but not all) elements of the
+     * passed stream match the given predicate, then the behavior of this operation is
+     * nondeterministic; it is free to take any subset of matching elements
+     * (which includes the empty set).
+     *
+     * <p>Independent of whether the passed stream is ordered or unordered if all
+     * elements of the passed stream match the given predicate then this operation
+     * takes all elements (the result is the same as the input), or if no
+     * elements of the passed stream match the given predicate then no elements are
+     * taken (the result is an empty stream).
+     * 
      * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
      * stateful intermediate operation</a>.
-     *
-     * <p>This operation can accept a non-interfering stateful predicate to
-     * support <em>cancellation</em> of the upstream pipeline.  The stateful
-     * predicate may test against external state, such as time, or an
-     * accumulating summary value of the elements of this stream.  A false
-     * match, which triggers short-circuiting, is said to cancel the upstream
-     * pipeline.  Cancellation is a necessary, but not sufficient, condition
-     * for a) the stream to terminate normally in a finite time; and b) in a
-     * time less than that if cancellation was not performed.
-     *
-     * <p>Cancellation is more appropriate for unordered stream or sequential
-     * stream pipelines, and likely inappropriate for ordered and parallel
-     * stream pipelines.  As is ordinarily the case, the resulting prefix will
-     * be nondeterministic for unordered stream pipelines.  However, in such
-     * cases the resulting prefix will also be nondeterministic for ordered and
-     * parallel stream pipelines; the prefix will be a sub-prefix of that
-     * produced by an equivalent ordered and sequential stream pipeline.
-     *
+     * 
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation obtains the {@link Stream#spliterator() spliterator}
      * of the passed stream, wraps that spliterator so as to support the
@@ -124,12 +123,28 @@ public final class RefStreams {
     }
 
     /**
-     * Returns a stream consisting of the remaining elements of the passed stream
-     * after dropping the longest prefix of elements that match the given
-     * predicate.  If the passed stream is unordered then the resulting prefix (of
-     * unordered elements) is nondeterministic; the prefix will be selected
-     * from any one of the possible permutations of the elements of the
-     * unordered stream.
+     * Returns, if the passed stream is ordered, a stream consisting of the remaining
+     * elements of the passed stream after dropping the longest prefix of elements
+     * that match the given predicate.  Otherwise returns, if the passed stream is
+     * unordered, a stream consisting of the remaining elements of the passed stream
+     * after dropping a subset of elements that match the given predicate.
+     *
+     * <p>If the passed stream is ordered then the longest prefix is a contiguous
+     * sequence of elements of the passed stream that match the given predicate.  The
+     * first element of the sequence is the first element of the passed stream, and
+     * the element immediately following the last element of the sequence does
+     * not match the given predicate.
+     *
+     * <p>If the passed stream is unordered, and some (but not all) elements of the
+     * passed stream match the given predicate, then the behavior of this operation is
+     * nondeterministic; it is free to drop any subset of matching elements
+     * (which includes the empty set).
+     *
+     * <p>Independent of whether the passed stream is ordered or unordered if all
+     * elements of the passed stream match the given predicate then this operation
+     * drops all elements (the result is an empty stream), or if no elements of
+     * the passed stream match the given predicate then no elements are dropped (the
+     * result is the same as the input).
      *
      * <p>This is a <a href="package-summary.html#StreamOps">stateful
      * intermediate operation</a>.

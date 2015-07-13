@@ -272,19 +272,27 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
     DoubleStream skip(long n);
 
     /**
-     * Returns a stream consisting of the longest prefix of elements taken from
-     * this stream that match the given predicate.
+     * Returns, if this stream is ordered, a stream consisting of the longest
+     * prefix of elements taken from this stream that match the given predicate.
+     * Otherwise returns, if this stream is unordered, a stream consisting of a
+     * subset of elements taken from this stream that match the given predicate.
      *
-     * <p>If this stream is ordered then the prefix is a contiguous sequence of
-     * elements of this stream.  All elements of the sequence match the given
-     * predicate, the first element of the sequence is the first element
-     * (if any) of this stream, and the element (if any) immediately following
-     * the last element of the sequence does not match the given predicate.
+     * <p>If this stream is ordered then the longest prefix is a contiguous
+     * sequence of elements of this stream that match the given predicate.  The
+     * first element of the sequence is the first element of this stream, and
+     * the element immediately following the last element of the sequence does
+     * not match the given predicate.
      *
-     * <p>If this stream is unordered then the prefix is a subset of elements of
-     * this stream.  All elements (if any) of the subset match the given
-     * predicate.  In this case the behavior of this operation is
-     * nondeterministic; it is free to select any valid subset as the prefix.
+     * <p>If this stream is unordered, and some (but not all) elements of this
+     * stream match the given predicate, then the behavior of this operation is
+     * nondeterministic; it is free to take any subset of matching elements
+     * (which includes the empty set).
+     *
+     * <p>Independent of whether this stream is ordered or unordered if all
+     * elements of this stream match the given predicate then this operation
+     * takes all elements (the result is the same as the input), or if no
+     * elements of the stream match the given predicate then no elements are
+     * taken (the result is an empty stream).
      *
      * <p>This is a <a href="package-summary.html#StreamOps">short-circuiting
      * stateful intermediate operation</a>.
@@ -322,20 +330,28 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
     DoubleStream takeWhile(DoublePredicate predicate);
 
     /**
-     * Returns a stream consisting of the remaining elements of this stream
-     * after dropping the longest prefix of elements that match the given
-     * predicate.
+     * Returns, if this stream is ordered, a stream consisting of the remaining
+     * elements of this stream after dropping the longest prefix of elements
+     * that match the given predicate.  Otherwise returns, if this stream is
+     * unordered, a stream consisting of the remaining elements of this stream
+     * after dropping a subset of elements that match the given predicate.
      *
-     * <p>If this stream is ordered then the prefix is a contiguous sequence of
-     * elements of this stream.  All elements of the sequence match the given
-     * predicate, the first element of the sequence is the first element
-     * (if any) of this stream, and the element (if any) immediately following
-     * the last element of the sequence does not match the given predicate.
+     * <p>If this stream is ordered then the longest prefix is a contiguous
+     * sequence of elements of this stream that match the given predicate.  The
+     * first element of the sequence is the first element of this stream, and
+     * the element immediately following the last element of the sequence does
+     * not match the given predicate.
      *
-     * <p>If this stream is unordered then the prefix is a subset of elements of
-     * this stream.  All elements (if any) of the subset match the given
-     * predicate.  In this case the behavior of this operation is
-     * nondeterministic; it is free to select any valid subset as the prefix.
+     * <p>If this stream is unordered, and some (but not all) elements of this
+     * stream match the given predicate, then the behavior of this operation is
+     * nondeterministic; it is free to drop any subset of matching elements
+     * (which includes the empty set).
+     *
+     * <p>Independent of whether this stream is ordered or unordered if all
+     * elements of this stream match the given predicate then this operation
+     * drops all elements (the result is an empty stream), or if no elements of
+     * the stream match the given predicate then no elements are dropped (the
+     * result is the same as the input).
      *
      * <p>This is a <a href="package-summary.html#StreamOps">stateful
      * intermediate operation</a>.
