@@ -53,7 +53,8 @@ public class ConcurrentAssociateTest {
     private static final int N = Integer.getInteger("n", 512);
     // The number of iterations of the test
     private static final int I = Integer.getInteger("i", 256);
-    private static final int availableProcessors = Runtime.getRuntime().availableProcessors();
+    // Bound concurrency to avoid degenerate performance (JDK-8081734)
+    private static final int availableProcessors = Math.min(Runtime.getRuntime().availableProcessors(), 32);
 
     public static void main(String[] args) throws Exception {
         System.out.println("availableProcessors: " + availableProcessors);
