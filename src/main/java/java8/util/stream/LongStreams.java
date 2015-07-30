@@ -57,6 +57,7 @@ public final class LongStreams {
      *                  should be included, or it and all subsequently
      *                  encountered elements be discarded.
      * @return the new stream
+     * @since 1.9
      */
     public static LongStream takeWhile(LongStream stream, LongPredicate predicate) {
         Objects.requireNonNull(stream);
@@ -83,6 +84,7 @@ public final class LongStreams {
      *                  should be discarded, or it and all subsequently
      *                  encountered elements be included.
      * @return the new stream
+     * @since 1.9
      */
     public static LongStream dropWhile(LongStream stream, LongPredicate predicate) {
         Objects.requireNonNull(stream);
