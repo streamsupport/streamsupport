@@ -118,13 +118,6 @@
       <class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.WhileOpStatefulTest"/>
 
-      <!-- block 11 (superseded tests) -->
-      <!--class name="org.openjdk.tests.java.util.stream.CountTest"/>
-      <class name="org.openjdk.tests.java.util.stream.CountLargeTest"/>
-      <class name="org.openjdk.tests.java.util.stream.TabulatorsTest"/>
-      <class name="org.openjdk.tests.java.util.stream.ExplodeOpTest"/>
-      <class name="java8.util.stream.UnorderedTest"/-->
-
     </classes>
   </test>
 </suite>
