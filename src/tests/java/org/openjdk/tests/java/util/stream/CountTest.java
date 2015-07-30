@@ -47,7 +47,7 @@ import java8.util.stream.TestData;
 
 import org.testng.annotations.Test;
 
-public class CountTest2 extends OpTestCase {
+public class CountTest extends OpTestCase {
 
     @Test(dataProvider = "StreamTestData<Integer>", dataProviderClass = StreamTestDataProvider.class)
     public void testOps(String name, TestData.OfRef<Integer> data) {
