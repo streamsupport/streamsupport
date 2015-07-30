@@ -56,6 +56,7 @@ public final class IntStreams {
      *                  should be included, or it and all subsequently
      *                  encountered elements be discarded.
      * @return the new stream
+     * @since 1.9
      */
     public static IntStream takeWhile(IntStream stream, IntPredicate predicate) {
         Objects.requireNonNull(stream);
@@ -82,6 +83,7 @@ public final class IntStreams {
      *                  should be discarded, or it and all subsequently
      *                  encountered elements be included.
      * @return the new stream
+     * @since 1.9
      */
     public static IntStream dropWhile(IntStream stream, IntPredicate predicate) {
         Objects.requireNonNull(stream);
