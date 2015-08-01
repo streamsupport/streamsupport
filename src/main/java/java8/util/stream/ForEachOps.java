@@ -30,6 +30,7 @@ import java.util.concurrent.ConcurrentMap;
 import java8.util.Objects;
 import java8.util.Spliterator;
 import java8.util.concurrent.CountedCompleter;
+import java8.util.concurrent.ForkJoinPool;
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
 import java8.util.function.IntConsumer;
@@ -432,7 +433,8 @@ final class ForEachOps {
             this.spliterator = spliterator;
             this.targetSize = AbstractTask.suggestTargetSize(spliterator.estimateSize());
             // Size map to avoid concurrent re-sizes
-            this.completionMap = new ConcurrentHashMap<>(Math.max(16, AbstractTask.LEAF_TARGET << 1));
+            this.completionMap = new ConcurrentHashMap<>(Math.max(16, AbstractTask.LEAF_TARGET << 1),
+                    0.75f, ForkJoinPool.getCommonPoolParallelism() + 1);
             this.action = action;
             this.leftPredecessor = null;
         }
