@@ -1,3 +1,8 @@
+/*
+ * Written by Stefan Zobel and released to the
+ * public domain, as explained at
+ * http://creativecommons.org/publicdomain/zero/1.0/
+ */
 package java8.util;
 
 import java.util.Comparator;
@@ -85,7 +90,7 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
             delegate.accept(t);
         }
 
-        // this can be spared in all likelihood !!?
+        // TODO: this can be spared in all likelihood !!?
         @Override
         public java.util.function.Consumer<T> andThen(
                 java.util.function.Consumer<? super T> after) {
