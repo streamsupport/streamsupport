@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import java8.util.Objects;
+import java8.util.concurrent.ForkJoinPool;
 import java8.util.function.IntFunction;
 import java8.util.Spliterator;
 
@@ -80,7 +81,9 @@ final class DistinctOps {
                 else {
                     // Holder of null state since ConcurrentHashMap does not support null values
                     AtomicBoolean seenNull = new AtomicBoolean(false);
-                    ConcurrentMap<T, Boolean> map = new ConcurrentHashMap<T, Boolean>();
+                    // Pre-size map to reduce concurrent re-sizes
+                    ConcurrentMap<T, Boolean> map = new ConcurrentHashMap<T, Boolean>(512, 0.75f,
+                            ForkJoinPool.getCommonPoolParallelism() + 1);
                     TerminalOp<T, Void> forEachOp = ForEachOps.makeRef(t -> {
                         if (t == null) {
                             seenNull.set(true);
