@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import java8.util.Objects;
 import java8.util.Spliterators;
+import java8.util.concurrent.ForkJoinPool;
 import java8.util.function.BooleanSupplier;
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
@@ -747,7 +748,7 @@ class StreamSpliterators {
             return Spliterators.hasCharacteristics(this, characteristics);
         }
 
-		@Override
+        @Override
         @SuppressWarnings("unchecked")
         public T_SPLITR trySplit() {
             return (T_SPLITR) get().trySplit();
@@ -877,7 +878,7 @@ class StreamSpliterators {
             // redundant work on no elements.
             while (true) {
                 @SuppressWarnings("unchecked")
-				T_SPLITR leftSplit = (T_SPLITR) s.trySplit();
+                T_SPLITR leftSplit = (T_SPLITR) s.trySplit();
                 if (leftSplit == null)
                     return null;
 
@@ -1295,7 +1296,7 @@ class StreamSpliterators {
             if (permits.get() == 0)
                 return null;
             @SuppressWarnings("unchecked")
-			T_SPLITR split = (T_SPLITR) s.trySplit();
+            T_SPLITR split = (T_SPLITR) s.trySplit();
             return split == null ? null : makeSpliterator(split);
         }
 
@@ -1416,7 +1417,7 @@ class StreamSpliterators {
             public boolean tryAdvance(T_CONS action) {
                 Objects.requireNonNull(action);
                 @SuppressWarnings("unchecked")
-				T_CONS consumer = (T_CONS) this;
+                T_CONS consumer = (T_CONS) this;
 
                 while (permitStatus() != PermitStatus.NO_MORE) {
                     if (!s.tryAdvance(consumer))
@@ -1663,7 +1664,8 @@ class StreamSpliterators {
         private T tmpSlot;
 
         DistinctSpliterator(Spliterator<T> s) {
-            this(s, new ConcurrentHashMap<>());
+            // Pre-size map to reduce concurrent re-sizes
+            this(s, new ConcurrentHashMap<>(512, 0.75f, ForkJoinPool.getCommonPoolParallelism() + 1));
         }
 
         private DistinctSpliterator(Spliterator<T> s, ConcurrentMap<T, Boolean> seen) {
