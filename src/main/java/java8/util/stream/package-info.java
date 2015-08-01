@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -159,7 +159,7 @@
  * is a necessary, but not sufficient, condition for the processing of an infinite
  * stream to terminate normally in finite time.
  *
- * <h3>Parallelism</h3>
+ * <h3><a name="Parallelism">Parallelism</a></h3>
  *
  * <p>Processing elements with an explicit {@code for-}loop is inherently serial.
  * Streams facilitate parallel execution by reframing the computation as a pipeline of
@@ -280,7 +280,7 @@
  * parameters to stream operations entirely; there is usually a way to
  * restructure the stream pipeline to avoid statefulness.
  *
- * <h3>Side-effects</h3>
+ * <h3><a name="SideEffects">Side-effects</a></h3>
  *
  * Side-effects in behavioral parameters to stream operations are, in general,
  * discouraged, as they can often lead to unwitting violations of the
