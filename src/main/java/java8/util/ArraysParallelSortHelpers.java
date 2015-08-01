@@ -220,10 +220,12 @@ import java8.util.concurrent.CountedCompleter;
                     }
                     w[k++] = t;
                 }
-                if (rb < rf)
+
+                if (rb < rf) {
                     System.arraycopy(a, rb, w, k, rf - rb);
-                else if (lb < lf)
+                } else if (lb < lf) {
                     System.arraycopy(a, lb, w, k, lf - lb);
+                }
 
                 tryComplete();
             }
