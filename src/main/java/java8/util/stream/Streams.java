@@ -61,7 +61,7 @@ final class Streams {
      * An {@code int} range spliterator.
      */
     static final class RangeIntSpliterator implements Spliterator.OfInt {
-        // Can never be greater that upTo, this avoids overflow if upper bound
+        // Can never be greater than upTo, this avoids overflow if upper bound
         // is Integer.MAX_VALUE
         // All elements are traversed if from == upTo & last == 0
         private int from;
@@ -220,7 +220,6 @@ final class Streams {
         }
 
         private RangeLongSpliterator(long from, long upTo, int last) {
-//            assert upTo - from + last > 0;
             this.from = from;
             this.upTo = upTo;
             this.last = last;
