@@ -854,7 +854,6 @@ class StreamSpliterators {
         long fence;
 
         SliceSpliterator(T_SPLITR s, long sliceOrigin, long sliceFence, long origin, long fence) {
-//            assert s.hasCharacteristics(Spliterator.SUBSIZED);
             this.s = s;
             this.sliceOrigin = sliceOrigin;
             this.sliceFence = sliceFence;
@@ -1264,7 +1263,6 @@ class StreamSpliterators {
             long remainingPermits;
             long grabbing;
             // permits never increase, and don't decrease below zero
-//            assert numElements > 0;
             do {
                 remainingPermits = permits.get();
                 if (remainingPermits == 0)

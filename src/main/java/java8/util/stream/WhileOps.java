@@ -1380,7 +1380,6 @@ final class WhileOps {
                       Spliterator<P_IN> spliterator,
                       IntFunction<P_OUT[]> generator) {
             super(helper, spliterator);
-//            assert op instanceof DropWhileOp;
             this.op = op;
             this.generator = generator;
             this.isOrdered = StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags());
