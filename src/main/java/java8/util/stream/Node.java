@@ -87,9 +87,6 @@ interface Node<T> {
      * @return the stream shape associated with this node
      */
     StreamShape getShape();
-//    default StreamShape getShape() {
-//        return StreamShape.REFERENCE;
-//    }
 
     /**
      * Returns the number of child nodes of this node.
@@ -99,9 +96,6 @@ interface Node<T> {
      * @return the number of child nodes
      */
     int getChildCount();
-//    default int getChildCount() {
-//        return 0;
-//    }
 
     /**
      * Retrieves the child {@code Node} at a given index.
@@ -115,9 +109,6 @@ interface Node<T> {
      *         than or equal to the number of child nodes
      */
     Node<T> getChild(int i);
-//    default Node<T> getChild(int i) {
-//        throw new IndexOutOfBoundsException();
-//    }
 
     /**
      * Return a node describing a subsequence of the elements of this node,
@@ -133,18 +124,6 @@ interface Node<T> {
      * @return the truncated node
      */
     Node<T> truncate(long from, long to, IntFunction<T[]> generator);
-//    default Node<T> truncate(long from, long to, IntFunction<T[]> generator) {
-//        if (from == 0 && to == count())
-//            return this;
-//        Spliterator<T> spliterator = spliterator();
-//        long size = to - from;
-//        Node.Builder<T> nodeBuilder = Nodes.builder(size, generator);
-//        nodeBuilder.begin(size);
-//        for (int i = 0; i < from && spliterator.tryAdvance(e -> { }); i++) { }
-//        for (int i = 0; (i < size) && spliterator.tryAdvance(nodeBuilder); i++) { }
-//        nodeBuilder.end();
-//        return nodeBuilder.build();
-//    }
 
     /**
      * Provides an array view of the contents of this node.
@@ -249,9 +228,6 @@ interface Node<T> {
 
         @Override
         T_NODE getChild(int i);
-//        default T_NODE getChild(int i) {
-//            throw new IndexOutOfBoundsException();
-//        }
 
         T_NODE truncate(long from, long to, IntFunction<T[]> generator);
 
@@ -265,19 +241,6 @@ interface Node<T> {
          */
         @Override
         T[] asArray(IntFunction<T[]> generator);
-//        default T[] asArray(IntFunction<T[]> generator) {
-//            if (java8.util.Tripwire.ENABLED) {
-//                java8.util.Tripwire.trip(getClass(), "{0} calling Node.OfPrimitive.asArray");
-//            }
-//
-//            long size = count();
-//            if (size >= Nodes.MAX_ARRAY_SIZE) {
-//                throw new IllegalArgumentException(Nodes.BAD_SIZE);
-//            }
-//            T[] boxed = generator.apply((int) count());
-//            copyInto(boxed, 0);
-//            return boxed;
-//        }
 
         /**
          * Views this node as a primitive array.
@@ -329,17 +292,6 @@ interface Node<T> {
          */
         @Override
         void forEach(Consumer<? super Integer> consumer);
-//        default void forEach(Consumer<? super Integer> consumer) {
-//            if (consumer instanceof IntConsumer) {
-//                forEach((IntConsumer) consumer);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(), "{0} calling Node.OfInt.forEachRemaining(Consumer)");
-//                }
-//                spliterator().forEachRemaining(consumer);
-//            }
-//        }
 
         /**
          * {@inheritDoc}
@@ -351,36 +303,12 @@ interface Node<T> {
          */
         @Override
         void copyInto(Integer[] boxed, int offset);
-//        default void copyInto(Integer[] boxed, int offset) {
-//            if (Tripwire.ENABLED)
-//                Tripwire.trip(getClass(), "{0} calling Node.OfInt.copyInto(Integer[], int)");
-//
-//            int[] array = asPrimitiveArray();
-//            for (int i = 0; i < array.length; i++) {
-//                boxed[offset + i] = array[i];
-//            }
-//        }
 
         @Override
         Node.OfInt truncate(long from, long to, IntFunction<Integer[]> generator);
-//        default Node.OfInt truncate(long from, long to, IntFunction<Integer[]> generator) {
-//            if (from == 0 && to == count())
-//                return this;
-//            long size = to - from;
-//            Spliterator.OfInt spliterator = spliterator();
-//            Node.Builder.OfInt nodeBuilder = Nodes.intBuilder(size);
-//            nodeBuilder.begin(size);
-//            for (int i = 0; i < from && spliterator.tryAdvance((IntConsumer) e -> { }); i++) { }
-//            for (int i = 0; (i < size) && spliterator.tryAdvance((IntConsumer) nodeBuilder); i++) { }
-//            nodeBuilder.end();
-//            return nodeBuilder.build();
-//        }
 
         @Override
         int[] newArray(int count);
-//        default int[] newArray(int count) {
-//            return new int[count];
-//        }
 
         /**
          * {@inheritDoc}
@@ -388,9 +316,6 @@ interface Node<T> {
          * {@code StreamShape.INT_VALUE}
          */
         StreamShape getShape();
-//        default StreamShape getShape() {
-//            return StreamShape.INT_VALUE;
-//        }
     }
 
     /**
@@ -408,17 +333,6 @@ interface Node<T> {
          */
         @Override
         void forEach(Consumer<? super Long> consumer);
-//        default void forEach(Consumer<? super Long> consumer) {
-//            if (consumer instanceof LongConsumer) {
-//                forEach((LongConsumer) consumer);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(), "{0} calling Node.OfLong.forEachRemaining(Consumer)");
-//                }
-//                spliterator().forEachRemaining(consumer);
-//            }
-//        }
 
         /**
          * {@inheritDoc}
@@ -430,37 +344,12 @@ interface Node<T> {
          */
         @Override
         void copyInto(Long[] boxed, int offset);
-//        default void copyInto(Long[] boxed, int offset) {
-//            if (Tripwire.ENABLED) {
-//                Tripwire.trip(getClass(), "{0} calling Node.OfInt.copyInto(Long[], int)");
-//            }
-//
-//            long[] array = asPrimitiveArray();
-//            for (int i = 0; i < array.length; i++) {
-//                boxed[offset + i] = array[i];
-//            }
-//        }
 
         @Override
         Node.OfLong truncate(long from, long to, IntFunction<Long[]> generator);
-//        default Node.OfLong truncate(long from, long to, IntFunction<Long[]> generator) {
-//            if (from == 0 && to == count())
-//                return this;
-//            long size = to - from;
-//            Spliterator.OfLong spliterator = spliterator();
-//            Node.Builder.OfLong nodeBuilder = Nodes.longBuilder(size);
-//            nodeBuilder.begin(size);
-//            for (int i = 0; i < from && spliterator.tryAdvance((LongConsumer) e -> { }); i++) { }
-//            for (int i = 0; (i < size) && spliterator.tryAdvance((LongConsumer) nodeBuilder); i++) { }
-//            nodeBuilder.end();
-//            return nodeBuilder.build();
-//        }
 
         @Override
         long[] newArray(int count);
-//        default long[] newArray(int count) {
-//            return new long[count];
-//        }
 
         /**
          * {@inheritDoc}
@@ -468,9 +357,6 @@ interface Node<T> {
          * {@code StreamShape.LONG_VALUE}
          */
         StreamShape getShape();
-//        default StreamShape getShape() {
-//            return StreamShape.LONG_VALUE;
-//        }
     }
 
     /**
@@ -488,17 +374,6 @@ interface Node<T> {
          */
         @Override
         void forEach(Consumer<? super Double> consumer);
-//        default void forEach(Consumer<? super Double> consumer) {
-//            if (consumer instanceof DoubleConsumer) {
-//                forEach((DoubleConsumer) consumer);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(), "{0} calling Node.OfLong.forEachRemaining(Consumer)");
-//                }
-//                spliterator().forEachRemaining(consumer);
-//            }
-//        }
 
         //
 
@@ -512,37 +387,12 @@ interface Node<T> {
          */
         @Override
         void copyInto(Double[] boxed, int offset);
-//        default void copyInto(Double[] boxed, int offset) {
-//            if (Tripwire.ENABLED) {
-//                Tripwire.trip(getClass(), "{0} calling Node.OfDouble.copyInto(Double[], int)");
-//            }
-//
-//            double[] array = asPrimitiveArray();
-//            for (int i = 0; i < array.length; i++) {
-//                boxed[offset + i] = array[i];
-//            }
-//        }
 
         @Override
         Node.OfDouble truncate(long from, long to, IntFunction<Double[]> generator);
-//        default Node.OfDouble truncate(long from, long to, IntFunction<Double[]> generator) {
-//            if (from == 0 && to == count())
-//                return this;
-//            long size = to - from;
-//            Spliterator.OfDouble spliterator = spliterator();
-//            Node.Builder.OfDouble nodeBuilder = Nodes.doubleBuilder(size);
-//            nodeBuilder.begin(size);
-//            for (int i = 0; i < from && spliterator.tryAdvance((DoubleConsumer) e -> { }); i++) { }
-//            for (int i = 0; (i < size) && spliterator.tryAdvance((DoubleConsumer) nodeBuilder); i++) { }
-//            nodeBuilder.end();
-//            return nodeBuilder.build();
-//        }
 
         @Override
         double[] newArray(int count);
-//        default double[] newArray(int count) {
-//            return new double[count];
-//        }
 
         /**
          * {@inheritDoc}
@@ -551,8 +401,5 @@ interface Node<T> {
          * {@code StreamShape.DOUBLE_VALUE}
          */
         StreamShape getShape();
-//        default StreamShape getShape() {
-//            return StreamShape.DOUBLE_VALUE;
-//        }
     }
 }

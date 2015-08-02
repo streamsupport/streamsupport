@@ -126,7 +126,6 @@ interface Sink<T> extends SinkConsumer<T> {
      * this call it is in the active state.
      */
     void begin(long size);
-//    default void begin(long size) {}
 
     /**
      * Indicates that all elements have been pushed.  If the {@code Sink} is
@@ -137,7 +136,6 @@ interface Sink<T> extends SinkConsumer<T> {
      * this call it is returned to the initial state.
      */
     void end();
-//    default void end() {}
 
     /**
      * Indicates that this {@code Sink} does not wish to receive any more data.
@@ -147,9 +145,6 @@ interface Sink<T> extends SinkConsumer<T> {
      * @return true if cancellation is requested
      */
     boolean cancellationRequested();
-//    default boolean cancellationRequested() {
-//        return false;
-//    }
 
     /**
      * Accepts an int value.
@@ -159,9 +154,6 @@ interface Sink<T> extends SinkConsumer<T> {
      * @throws IllegalStateException if this sink does not accept int values
      */
     void accept(int value);
-//    default void accept(int value) {
-//        throw new IllegalStateException("called wrong accept method");
-//    }
 
     /**
      * Accepts a long value.
@@ -171,9 +163,6 @@ interface Sink<T> extends SinkConsumer<T> {
      * @throws IllegalStateException if this sink does not accept long values
      */
     void accept(long value);
-//    default void accept(long value) {
-//        throw new IllegalStateException("called wrong accept method");
-//    }
 
     /**
      * Accepts a double value.
@@ -183,9 +172,6 @@ interface Sink<T> extends SinkConsumer<T> {
      * @throws IllegalStateException if this sink does not accept double values
      */
     void accept(double value);
-//    default void accept(double value) {
-//        throw new IllegalStateException("called wrong accept method");
-//    }
 
     /**
      * {@code Sink} that implements {@code Sink<Integer>}, re-abstracts
@@ -198,12 +184,6 @@ interface Sink<T> extends SinkConsumer<T> {
 
         @Override
         void accept(Integer i);
-//        default void accept(Integer i) {
-//            if (Tripwire.ENABLED) {
-//                Tripwire.trip(getClass(), "{0} calling Sink.OfInt.accept(Integer)");
-//            }
-//            accept(i.intValue());
-//        }
     }
 
     /**
@@ -217,12 +197,6 @@ interface Sink<T> extends SinkConsumer<T> {
 
         @Override
         void accept(Long i);
-//        default void accept(Long i) {
-//            if (Tripwire.ENABLED) {
-//                Tripwire.trip(getClass(), "{0} calling Sink.OfLong.accept(Long)");
-//            }
-//            accept(i.longValue());
-//        }
     }
 
     /**
@@ -236,12 +210,6 @@ interface Sink<T> extends SinkConsumer<T> {
 
         @Override
         void accept(Double i);
-//        default void accept(Double i) {
-//            if (Tripwire.ENABLED) {
-//                Tripwire.trip(getClass(), "{0} calling Sink.OfDouble.accept(Double)");
-//            }
-//            accept(i.doubleValue());
-//        }
     }
 
     /**
