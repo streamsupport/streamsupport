@@ -305,7 +305,7 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                         IntStream result = null;
                         try {
                             result = mapper.apply(u);
-                            // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
+                            // We can do better than this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstreamAsInt);
                             }
@@ -340,7 +340,7 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                         DoubleStream result = null;
                         try {
                             result = mapper.apply(u);
-                            // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
+                            // We can do better than this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstreamAsDouble);
                             }
@@ -375,7 +375,7 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                         LongStream result = null;
                         try {
                             result = mapper.apply(u);
-                            // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
+                            // We can do better than this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(downstreamAsLong);
                             }

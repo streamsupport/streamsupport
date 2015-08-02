@@ -266,7 +266,7 @@ abstract class DoublePipeline<E_IN>
                         DoubleStream result = null;
                         try {
                             result = mapper.apply(t);
-                            // We can do better that this too; optimize for depth=0 case and just grab spliterator and forEach it
+                            // We can do better than this too; optimize for depth=0 case and just grab spliterator and forEach it
                             if (result != null) {
                                 result.sequential().forEach(i -> downstream.accept(i));
                             }

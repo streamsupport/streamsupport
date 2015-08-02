@@ -387,11 +387,9 @@ final class SortedOps {
 
         @Override
         public void end() {
-//        	list.sort(comparator);
             Lists.sort(list, comparator);
             downstream.begin(list.size());
             if (!cancellationWasRequested) {
-//                list.forEach(downstream::accept);
                 Iterables.forEach(list, downstream::accept);
             } else {
                 for (T t : list) {
