@@ -266,6 +266,8 @@ public final class IntStreams {
      * Use caution when constructing streams from repeated concatenation.
      * Accessing an element of a deeply concatenated stream can result in deep
      * call chains, or even {@code StackOverflowError}.
+     * <p>Subsequent changes to the sequential/parallel execution mode of the
+     * returned stream are not guaranteed to be propagated to the input streams.
      *
      * @param a the first stream
      * @param b the second stream
