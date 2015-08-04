@@ -175,6 +175,8 @@ public final class StreamSupport {
      * Use caution when constructing streams from repeated concatenation.
      * Accessing an element of a deeply concatenated stream can result in deep
      * call chains, or even {@code StackOverflowError}.
+     * <p>Subsequent changes to the sequential/parallel execution mode of the
+     * returned stream are not guaranteed to be propagated to the input streams.
      *
      * @param <T> The type of stream elements
      * @param a the first stream
