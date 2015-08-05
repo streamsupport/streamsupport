@@ -184,15 +184,15 @@
  *
  * <p>The only difference between the serial and parallel versions of this
  * example is the creation of the initial stream, using "{@code parallelStream()}"
- * instead of "{@code stream()}".  When the terminal operation is initiated,
- * the stream pipeline is executed sequentially or in parallel depending on the
- * orientation of the stream on which it is invoked.  Whether a stream will execute in serial or
- * parallel can be determined with the {@code isParallel()} method, and the
- * orientation of a stream can be modified with the
+ * instead of "{@code stream()}". The stream pipeline is executed sequentially or
+ * in parallel depending on the mode of the stream on which the terminal operation
+ * is invoked. The sequential or parallel mode of a stream can be determined with the
+ * {@link java8.util.stream.BaseStream#isParallel()} method, and the
+ * stream's mode can be modified with the
  * {@link java8.util.stream.BaseStream#sequential()} and
- * {@link java8.util.stream.BaseStream#parallel()} operations.  When the terminal
- * operation is initiated, the stream pipeline is executed sequentially or in
- * parallel depending on the mode of the stream on which it is invoked.
+ * {@link java8.util.stream.BaseStream#parallel()} operations.
+ * The most recent sequential or parallel mode setting applies to the
+ * execution of the entire stream pipeline.
  *
  * <p>Except for operations identified as explicitly nondeterministic, such
  * as {@code findAny()}, whether a stream executes sequentially or in parallel
