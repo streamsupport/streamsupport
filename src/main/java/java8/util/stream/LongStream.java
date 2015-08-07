@@ -612,8 +612,9 @@ public interface LongStream extends BaseStream<Long, LongStream> {
 
     /**
      * Returns the count of elements in this stream.  This is a special case of
-     * a <a href="package-summary.html#Reduction">reduction</a> and is
-     * equivalent to:
+     * a <a href="package-summary.html#Reduction">reduction</a> and is (at least
+     * in the predominant case where the count can't be directly obtained from
+     * the stream source) equivalent to:
      * <pre>{@code
      *     return map(e -> 1L).sum();
      * }</pre>
