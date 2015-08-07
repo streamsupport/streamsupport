@@ -5,7 +5,7 @@ SET JAVA7=F:/Java/sun-jdk1.7.0_80-64bit/bin/java
 
 SET JAVA8=F:/Java/jdk1.8.0_51-64bit/bin/java
 
-SET JAVA9=F:/Java/jdk1.9.0_ea_b74_2015_07_22-64bit/bin/java
+SET JAVA9=F:/Java/jdk1.9.0_ea_b76_2015_08_05-64bit/bin/java
 
 SET TEST_JAR=streamsupport-tests-1.3.1-SNAPSHOT.jar
 
