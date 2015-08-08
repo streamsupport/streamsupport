@@ -200,7 +200,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      * <p><b>API Note:</b><br> This method exists mainly to support debugging, where you want
      * to see the elements as they flow past a certain point in a pipeline:
      * <pre>{@code
-     *     DoubleStream.of(1, 2, 3, 4)
+     *     DoubleStreams.of(1, 2, 3, 4)
      *         .filter(e -> e > 2)
      *         .peek(e -> System.out.println("Filtered value: " + e))
      *         .map(e -> e * e)
@@ -702,7 +702,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      * except for harmless cases such as debugging, may be affected.  For
      * example, consider the following stream:
      * <pre>{@code
-     *     DoubleStream s = DoubleStream.of(1, 2, 3, 4);
+     *     DoubleStream s = DoubleStreams.of(1, 2, 3, 4);
      *     long count = s.peek(System.out::println).count();
      * }</pre>
      * The number of elements covered by the stream source is known and the

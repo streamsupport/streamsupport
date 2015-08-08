@@ -244,7 +244,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * stream of the {@code words} contained in that file:
      * <pre>{@code
      *     Stream<String> lines = Files.lines(path, StandardCharsets.UTF_8);
-     *     Stream<String> words = lines.flatMap(line -> Stream.of(line.split(" +")));
+     *     Stream<String> words = lines.flatMap(line -> RefStreams.of(line.split(" +")));
      * }</pre>
      * The {@code mapper} function passed to {@code flatMap} splits a line,
      * using a simple regular expression, into an array of words, and then
@@ -397,7 +397,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * <p><b>API Note:</b><br> This method exists mainly to support debugging, where you want
      * to see the elements as they flow past a certain point in a pipeline:
      * <pre>{@code
-     *     Stream.of("one", "two", "three", "four")
+     *     RefStreams.of("one", "two", "three", "four")
      *         .filter(e -> e.length() > 3)
      *         .peek(e -> System.out.println("Filtered value: " + e))
      *         .map(String::toUpperCase)
