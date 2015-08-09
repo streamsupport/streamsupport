@@ -182,7 +182,7 @@ public class StreamBuilderTest extends OpTestCase {
         sb.build();
 
         checkISE(() -> sb.accept(1));
-        checkISE(() -> IntStreams.J8Builder.add(sb, 1)/*sb.add(1)*/);
+        checkISE(() -> sb.add(1));
         checkISE(() -> sb.build());
     }
 
@@ -197,7 +197,7 @@ public class StreamBuilderTest extends OpTestCase {
         testIntStreamBuilder(size, (s) -> {
             IntStream.Builder sb = IntStreams.builder();
             IntStreams.range(0, s).forEach(i -> {
-                IntStream.Builder _sb = IntStreams.J8Builder.add(sb, i)/*sb.add(i)*/;
+                IntStream.Builder _sb = sb.add(i);
                 assertTrue(sb == _sb);
             });
             return sb.build();
@@ -244,7 +244,7 @@ public class StreamBuilderTest extends OpTestCase {
         sb.build();
 
         checkISE(() -> sb.accept(1));
-        checkISE(() -> LongStreams.J8Builder.add(sb, 1)/*sb.add(1)*/);
+        checkISE(() -> sb.add(1));
         checkISE(() -> sb.build());
     }
 
@@ -259,7 +259,7 @@ public class StreamBuilderTest extends OpTestCase {
         testLongStreamBuilder(size, (s) -> {
             LongStream.Builder sb = LongStreams.builder();
             LongStreams.range(0, s).forEach(i -> {
-                LongStream.Builder _sb = LongStreams.J8Builder.add(sb, i)/*sb.add(i)*/;
+                LongStream.Builder _sb = sb.add(i);
                 assertTrue(sb == _sb);
             });
             return sb.build();
@@ -305,7 +305,7 @@ public class StreamBuilderTest extends OpTestCase {
         sb.build();
 
         checkISE(() -> sb.accept(1));
-        checkISE(() -> DoubleStreams.J8Builder.add(sb, 1)/*sb.add(1)*/);
+        checkISE(() -> sb.add(1));
         checkISE(() -> sb.build());
     }
 
@@ -320,7 +320,7 @@ public class StreamBuilderTest extends OpTestCase {
         testDoubleStreamBuilder(size, (s) -> {
             DoubleStream.Builder sb = DoubleStreams.builder();
             IntStreams.range(0, s).asDoubleStream().forEach(i -> {
-                DoubleStream.Builder _sb = DoubleStreams.J8Builder.add(sb, i)/*sb.add(i)*/;
+                DoubleStream.Builder _sb = sb.add(i);
                 assertTrue(sb == _sb);
             });
             return sb.build();

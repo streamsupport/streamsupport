@@ -283,37 +283,6 @@ public final class IntStreams {
         return stream.onClose(Streams.composedClose(a, b));
     }
 
-    /**
-     * A place for static default implementations of the new Java 8
-     * default interface methods and static interface methods in the
-     * {@link IntStream.Builder} interface. 
-     */
-    public static final class J8Builder {
-        /**
-         * Adds an element to the stream being built.
-         *
-         * <p><b>Implementation Requirements:</b><br>
-         * The default implementation behaves as if:
-         * <pre>{@code
-         *     accept(t)
-         *     return this;
-         * }</pre>
-         *
-         * @param this_ the Builder used to build the stream
-         * @param t the element to add
-         * @return {@code this} builder
-         * @throws IllegalStateException if the builder has already transitioned
-         * to the built state
-         */
-        public static Builder add(Builder this_, int t) {
-            this_.accept(t);
-            return this_;
-        }
-
-        private J8Builder() {
-        }
-    }
-
     private IntStreams() {
     }
 }
