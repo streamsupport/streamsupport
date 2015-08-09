@@ -315,28 +315,6 @@ public final class RefStreams {
         return StreamSupport.concat(a, b);
     }
 
-    /**
-     * Adds an element to the {@link Stream} being built represented by the
-     * {@link Stream.Builder} argument.
-     *
-     * <p><b>Implementation Requirements:</b><br>
-     * The default implementation behaves as if:
-     * <pre>{@code
-     *     builder.accept(t)
-     *     return builder;
-     * }</pre>
-     *
-     * @param <T> the type of stream elements
-     * @param builder the {@link Stream.Builder} to use
-     * @param t the element to add
-     * @return the passed builder
-     * @throws IllegalStateException if the builder has already transitioned to
-     * the built state
-     */
-    public static <T> Stream.Builder<T> add(Stream.Builder<T> builder, T t) {
-        return StreamSupport.add(builder, t);
-    }
-
     private RefStreams() {
     }
 }

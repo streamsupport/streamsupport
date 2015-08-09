@@ -196,29 +196,6 @@ public final class StreamSupport {
     }
 
     /**
-     * Adds an element to the stream being built represented by the Stream.Builder
-     * argument.
-     *
-     * <p><b>Implementation Requirements:</b><br>
-     * The default implementation behaves as if:
-     * <pre>{@code
-     *     builder.accept(t)
-     *     return builder;
-     * }</pre>
-     *
-     * @param <T> the type of stream elements
-     * @param builder the {@code Stream.Builder} to use
-     * @param t the element to add
-     * @return the passed builder
-     * @throws IllegalStateException if the builder has already transitioned to
-     * the built state
-     */
-    public static <T> Stream.Builder<T> add(Stream.Builder<T> builder, T t) {
-        builder.accept(t);
-        return builder;
-    }
-
-    /**
      * Creates a new sequential {@code Stream} using either the given
      * collection's {@link java.util.Collection#iterator()} as the source of
      * elements for an internally created {@code Spliterator} which will report
