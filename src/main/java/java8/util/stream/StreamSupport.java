@@ -158,9 +158,9 @@ public final class StreamSupport {
      * @param s the {@code Supplier} of generated elements
      * @return a new infinite sequential unordered {@code Stream}
      */
-    public static <T> Stream<T> generate(Supplier<T> s) {
+    public static <T> Stream<T> generate(Supplier<? extends T> s) {
         Objects.requireNonNull(s);
-        return stream(
+        return (Stream<T>) stream(
                 new StreamSpliterators.InfiniteSupplyingSpliterator.OfRef<>(Long.MAX_VALUE, s), false);
     }
 

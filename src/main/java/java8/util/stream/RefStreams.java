@@ -287,7 +287,7 @@ public final class RefStreams {
      * @param s the {@code Supplier} of generated elements
      * @return a new infinite sequential unordered {@code Stream}
      */
-    public static <T> Stream<T> generate(Supplier<T> s) {
+    public static <T> Stream<T> generate(Supplier<? extends T> s) {
         return StreamSupport.generate(s);
     }
 
