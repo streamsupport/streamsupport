@@ -32,6 +32,7 @@ import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
 import java8.util.function.IntConsumer;
 import java8.util.function.LongConsumer;
+import java8.util.stream.IntStream.Builder;
 import java8.util.Spliterator;
 
 /**
@@ -430,6 +431,7 @@ final class Streams {
             }
         }
 
+        @Override
         public Stream.Builder<T> add(T t) {
             accept(t);
             return this;
@@ -524,6 +526,12 @@ final class Streams {
             else {
                 throw new IllegalStateException();
             }
+        }
+
+        @Override
+        public Builder add(int t) {
+            accept(t);
+            return this;
         }
 
         @Override
@@ -628,6 +636,12 @@ final class Streams {
         }
 
         @Override
+        public java8.util.stream.LongStream.Builder add(long t) {
+            accept(t);
+            return this;
+        }
+
+        @Override
         public LongStream build() {
             int c = count;
             if (c >= 0) {
@@ -726,6 +740,12 @@ final class Streams {
             else {
                 throw new IllegalStateException();
             }
+        }
+
+        @Override
+        public java8.util.stream.DoubleStream.Builder add(double t) {
+            accept(t);
+            return this;
         }
 
         @Override
