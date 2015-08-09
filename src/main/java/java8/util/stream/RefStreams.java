@@ -109,7 +109,7 @@ public final class RefStreams {
      * @return the new stream
      * @since 1.9
      */
-    public static<T> Stream<T> takeWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
+    public static <T> Stream<T> takeWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
         Objects.requireNonNull(stream);
         Objects.requireNonNull(predicate);
 
@@ -184,7 +184,7 @@ public final class RefStreams {
      * @return the new stream
      * @since 1.9
      */
-    public static<T> Stream<T> dropWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
+    public static <T> Stream<T> dropWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
         Objects.requireNonNull(stream);
         Objects.requireNonNull(predicate);
 
@@ -204,7 +204,7 @@ public final class RefStreams {
      * @param <T> type of elements
      * @return a stream builder
      */
-    public static<T> Builder<T> builder() {
+    public static <T> Builder<T> builder() {
         return StreamSupport.builder();
     }
 
@@ -214,7 +214,7 @@ public final class RefStreams {
      * @param <T> the type of stream elements
      * @return an empty sequential stream
      */
-    public static<T> Stream<T> empty() {
+    public static <T> Stream<T> empty() {
         return StreamSupport.empty();
     }
 
@@ -225,7 +225,7 @@ public final class RefStreams {
      * @param <T> the type of stream elements
      * @return a singleton sequential stream
      */
-    public static<T> Stream<T> of(T t) {
+    public static <T> Stream<T> of(T t) {
         return StreamSupport.of(t);
     }
 
@@ -239,7 +239,7 @@ public final class RefStreams {
      *         is non-null, otherwise an empty stream
      * @since 1.9
      */
-    public static<T> Stream<T> ofNullable(T t) {
+    public static <T> Stream<T> ofNullable(T t) {
         return StreamSupport.ofNullable(t);
     }
 
@@ -251,7 +251,7 @@ public final class RefStreams {
      * @param values the elements of the new stream
      * @return the new stream
      */
-    public static<T> Stream<T> of(@SuppressWarnings("unchecked") T... values) {
+    public static <T> Stream<T> of(@SuppressWarnings("unchecked") T... values) {
         return StreamSupport.of(values);
     }
 
@@ -266,13 +266,14 @@ public final class RefStreams {
      * {@code n}, will be the result of applying the function {@code f} to the
      * element at position {@code n - 1}.
      *
+     * @param <S> the type of the operand and seed, a subtype of T
      * @param <T> the type of stream elements
      * @param seed the initial element
      * @param f a function to be applied to the previous element to produce
      *          a new element
      * @return a new sequential {@code Stream}
      */
-    public static<T> Stream<T> iterate(T seed, UnaryOperator<T> f) {
+    public static <T, S extends T> Stream<T> iterate(S seed, UnaryOperator<S> f) {
         return StreamSupport.iterate(seed, f);
     }
 
@@ -286,7 +287,7 @@ public final class RefStreams {
      * @param s the {@code Supplier} of generated elements
      * @return a new infinite sequential unordered {@code Stream}
      */
-    public static<T> Stream<T> generate(Supplier<T> s) {
+    public static <T> Stream<T> generate(Supplier<T> s) {
         return StreamSupport.generate(s);
     }
 
