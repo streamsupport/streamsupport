@@ -335,7 +335,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * Preserving stability for {@code distinct()} in parallel pipelines is
      * relatively expensive (requires that the operation act as a full barrier,
      * with substantial buffering overhead), and stability is often not needed.
-     * Using an unordered stream source (such as {@link StreamSupport#generate(Supplier)})
+     * Using an unordered stream source (such as {@link RefStreams#generate(Supplier)})
      * or removing the ordering constraint with {@link #unordered()} may result
      * in significantly more efficient execution for {@code distinct()} in parallel
      * pipelines, if the semantics of your situation permit.  If consistency
@@ -425,7 +425,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * especially for large values of {@code maxSize}, since {@code limit(n)}
      * is constrained to return not just any <em>n</em> elements, but the
      * <em>first n</em> elements in the encounter order.  Using an unordered
-     * stream source (such as {@link StreamSupport#generate(Supplier)}) or removing the
+     * stream source (such as {@link RefStreams#generate(Supplier)}) or removing the
      * ordering constraint with {@link #unordered()} may result in significant
      * speedups of {@code limit()} in parallel pipelines, if the semantics of
      * your situation permit.  If consistency with encounter order is required,
@@ -454,7 +454,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * especially for large values of {@code n}, since {@code skip(n)}
      * is constrained to skip not just any <em>n</em> elements, but the
      * <em>first n</em> elements in the encounter order.  Using an unordered
-     * stream source (such as {@link StreamSupport#generate(Supplier)}) or removing the
+     * stream source (such as {@link RefStreams#generate(Supplier)}) or removing the
      * ordering constraint with {@link #unordered()} may result in significant
      * speedups of {@code skip()} in parallel pipelines, if the semantics of
      * your situation permit.  If consistency with encounter order is required,
