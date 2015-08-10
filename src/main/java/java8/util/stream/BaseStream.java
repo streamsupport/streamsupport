@@ -53,7 +53,7 @@ import java8.util.Spliterator;
  * @see IntStream
  * @see LongStream
  * @see DoubleStream
- * @see <a href="package-summary.html">java.util.stream</a>
+ * @see <a href="package-summary.html">java8.util.stream</a>
  */
 public interface BaseStream<T, S extends BaseStream<T, S>> {
     /**
