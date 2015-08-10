@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -105,11 +105,7 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * @param action The action to be performed for each element
          * @throws NullPointerException if the specified action is null
          */
-//        default void forEachRemaining(IntConsumer action) {
-//            Objects.requireNonNull(action);
-//            while (hasNext())
-//                action.accept(nextInt());
-//        }
+        void forEachRemaining(IntConsumer action);
 
         /**
          * {@inheritDoc}
@@ -117,12 +113,8 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * The default implementation boxes the result of calling
          * {@link #nextInt()}, and returns that boxed result.
          */
-//        @Override
-//        default Integer next() {
-//            if (Tripwire.ENABLED)
-//                Tripwire.trip(getClass(), "{0} calling PrimitiveIterator.OfInt.nextInt()");
-//            return nextInt();
-//        }
+        @Override
+        Integer next();
 
         /**
          * {@inheritDoc}
@@ -134,18 +126,7 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * and then passed to {@link #forEachRemaining}.
          */
 //        @Override
-//        default void forEachRemaining(Consumer<? super Integer> action) {
-//            if (action instanceof IntConsumer) {
-//                forEachRemaining((IntConsumer) action);
-//            }
-//            else {
-//                // The method reference action::accept is never null
-//                Objects.requireNonNull(action);
-//                if (Tripwire.ENABLED)
-//                    Tripwire.trip(getClass(), "{0} calling PrimitiveIterator.OfInt.forEachRemainingInt(action::accept)");
-//                forEachRemaining((IntConsumer) action::accept);
-//            }
-//        }
+//        void forEachRemaining(Consumer<? super Integer> action);
     }
 
     /**
@@ -178,11 +159,7 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * @param action The action to be performed for each element
          * @throws NullPointerException if the specified action is null
          */
-//        default void forEachRemaining(LongConsumer action) {
-//            Objects.requireNonNull(action);
-//            while (hasNext())
-//                action.accept(nextLong());
-//        }
+        void forEachRemaining(LongConsumer action);
 
         /**
          * {@inheritDoc}
@@ -190,12 +167,8 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * The default implementation boxes the result of calling
          * {@link #nextLong()}, and returns that boxed result.
          */
-//        @Override
-//        default Long next() {
-//            if (Tripwire.ENABLED)
-//                Tripwire.trip(getClass(), "{0} calling PrimitiveIterator.OfLong.nextLong()");
-//            return nextLong();
-//        }
+        @Override
+        Long next();
 
         /**
          * {@inheritDoc}
@@ -207,18 +180,7 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * and then passed to {@link #forEachRemaining}.
          */
 //        @Override
-//        default void forEachRemaining(Consumer<? super Long> action) {
-//            if (action instanceof LongConsumer) {
-//                forEachRemaining((LongConsumer) action);
-//            }
-//            else {
-//                // The method reference action::accept is never null
-//                Objects.requireNonNull(action);
-//                if (Tripwire.ENABLED)
-//                    Tripwire.trip(getClass(), "{0} calling PrimitiveIterator.OfLong.forEachRemainingLong(action::accept)");
-//                forEachRemaining((LongConsumer) action::accept);
-//            }
-//        }
+//        void forEachRemaining(Consumer<? super Long> action);
     }
 
     /**
@@ -251,11 +213,7 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * @param action The action to be performed for each element
          * @throws NullPointerException if the specified action is null
          */
-//        default void forEachRemaining(DoubleConsumer action) {
-//            Objects.requireNonNull(action);
-//            while (hasNext())
-//                action.accept(nextDouble());
-//        }
+        void forEachRemaining(DoubleConsumer action);
 
         /**
          * {@inheritDoc}
@@ -263,12 +221,8 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * The default implementation boxes the result of calling
          * {@link #nextDouble()}, and returns that boxed result.
          */
-//        @Override
-//        default Double next() {
-//            if (Tripwire.ENABLED)
-//                Tripwire.trip(getClass(), "{0} calling PrimitiveIterator.OfDouble.nextLong()");
-//            return nextDouble();
-//        }
+        @Override
+        Double next();
 
         /**
          * {@inheritDoc}
@@ -281,17 +235,6 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * {@link #forEachRemaining}.
          */
 //        @Override
-//        default void forEachRemaining(Consumer<? super Double> action) {
-//            if (action instanceof DoubleConsumer) {
-//                forEachRemaining((DoubleConsumer) action);
-//            }
-//            else {
-//                // The method reference action::accept is never null
-//                Objects.requireNonNull(action);
-//                if (Tripwire.ENABLED)
-//                    Tripwire.trip(getClass(), "{0} calling PrimitiveIterator.OfDouble.forEachRemainingDouble(action::accept)");
-//                forEachRemaining((DoubleConsumer) action::accept);
-//            }
-//        }
+//        void forEachRemaining(Consumer<? super Double> action);
     }
 }
