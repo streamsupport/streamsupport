@@ -535,8 +535,8 @@ public interface Spliterator<T> {
      *
      * <p><b>API Note:</b><br> In this context "immutable" really means
      * "not structurally modifiable." A Spliterator that covers elements of
-     * an array may report {@IMMUTABLE} since replacements made in-place do
-     * not result in structural modifications to that array.
+     * an array may report {@code IMMUTABLE} since replacements made in-place
+     * do not result in structural modifications to that array.
      */
     public static final int IMMUTABLE  = 0x00000400;
 
