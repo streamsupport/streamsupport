@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2015 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -419,9 +419,6 @@ public interface Spliterator<T> {
      * @throws NullPointerException if the specified action is null
      */
     void forEachRemaining(Consumer<? super T> action);
-//    default void forEachRemaining(Consumer<? super T> action) {
-//        do { } while (tryAdvance(action));
-//    }
 
     /**
      * Convenience method that returns {@link #estimateSize()} if this
@@ -434,9 +431,6 @@ public interface Spliterator<T> {
      * @return the exact size, if known, else {@code -1}.
      */
     long getExactSizeIfKnown();
-//    default long getExactSizeIfKnown() {
-//        return (characteristics() & SIZED) == 0 ? -1L : estimateSize();
-//    }
 
     /**
      * Returns {@code true} if this Spliterator's {@link
@@ -451,9 +445,6 @@ public interface Spliterator<T> {
      * else {@code false}
      */
     boolean hasCharacteristics(int characteristics);
-//    default boolean hasCharacteristics(int characteristics) {
-//        return (characteristics() & characteristics) == characteristics;
-//    }
 
     /**
      * If this Spliterator's source is {@link #SORTED} by a {@link Comparator},
@@ -470,9 +461,6 @@ public interface Spliterator<T> {
      *         a characteristic of {@code SORTED}.
      */
     Comparator<? super T> getComparator();
-//    default Comparator<? super T> getComparator() {
-//        throw new IllegalStateException();
-//    }
 
     /**
      * Characteristic value signifying that an encounter order is defined for
@@ -538,12 +526,17 @@ public interface Spliterator<T> {
 
     /**
      * Characteristic value signifying that the element source cannot be
-     * structurally modified; that is, elements cannot be added, replaced, or
-     * removed, so such changes cannot occur during traversal. A Spliterator
-     * that does not report {@code IMMUTABLE} or {@code CONCURRENT} is expected
-     * to have a documented policy (for example throwing
-     * {@link ConcurrentModificationException}) concerning structural
+     * structurally modified; that is, the size of the source cannot be changed,
+     * nor can it be modified in a way that would interfere with traversal.
+     * A Spliterator that does not report {@code IMMUTABLE} or
+     * {@code CONCURRENT} is expected to have a documented policy (for example
+     * throwing {@link ConcurrentModificationException}) concerning structural
      * interference detected during traversal.
+     *
+     * <p><b>API Note:</b><br> In this context "immutable" really means
+     * "not structurally modifiable." A Spliterator that covers elements of
+     * an array may report {@IMMUTABLE} since replacements made in-place do
+     * not result in structural modifications to that array.
      */
     public static final int IMMUTABLE  = 0x00000400;
 
@@ -646,9 +639,6 @@ public interface Spliterator<T> {
          * @throws NullPointerException if the specified action is null
          */
         void forEachRemaining(T_CONS action);
-//        default void forEachRemaining(T_CONS action) {
-//            do { } while (tryAdvance(action));
-//        }
     }
 
     /**
@@ -665,9 +655,6 @@ public interface Spliterator<T> {
 
         @Override
         void forEachRemaining(IntConsumer action);
-//        default void forEachRemaining(IntConsumer action) {
-//            do { } while (tryAdvance(action));
-//        }
 
         /**
          * {@inheritDoc}
@@ -681,18 +668,6 @@ public interface Spliterator<T> {
          */
         @Override
         boolean tryAdvance(Consumer<? super Integer> action);
-//        default boolean tryAdvance(Consumer<? super Integer> action) {
-//            if (action instanceof IntConsumer) {
-//                return tryAdvance((IntConsumer) action);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(),
-//                                  "{0} calling Spliterator.OfInt.tryAdvance((IntConsumer) action::accept)");
-//                }
-//                return tryAdvance((IntConsumer) action::accept);
-//            }
-//        }
 
         /**
          * {@inheritDoc}
@@ -706,18 +681,6 @@ public interface Spliterator<T> {
          */
         @Override
         void forEachRemaining(Consumer<? super Integer> action);
-//        default void forEachRemaining(Consumer<? super Integer> action) {
-//            if (action instanceof IntConsumer) {
-//                forEachRemaining((IntConsumer) action);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(),
-//                                  "{0} calling Spliterator.OfInt.forEachRemaining((IntConsumer) action::accept)");
-//                }
-//                forEachRemaining((IntConsumer) action::accept);
-//            }
-//        }
     }
 
     /**
@@ -734,9 +697,6 @@ public interface Spliterator<T> {
 
         @Override
         void forEachRemaining(LongConsumer action);
-//        default void forEachRemaining(LongConsumer action) {
-//            do { } while (tryAdvance(action));
-//        }
 
         /**
          * {@inheritDoc}
@@ -750,18 +710,6 @@ public interface Spliterator<T> {
          */
         @Override
         boolean tryAdvance(Consumer<? super Long> action);
-//        default boolean tryAdvance(Consumer<? super Long> action) {
-//            if (action instanceof LongConsumer) {
-//                return tryAdvance((LongConsumer) action);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(),
-//                                  "{0} calling Spliterator.OfLong.tryAdvance((LongConsumer) action::accept)");
-//                }
-//                return tryAdvance((LongConsumer) action::accept);
-//            }
-//        }
 
         /**
          * {@inheritDoc}
@@ -775,18 +723,6 @@ public interface Spliterator<T> {
          */
         @Override
         void forEachRemaining(Consumer<? super Long> action);
-//        default void forEachRemaining(Consumer<? super Long> action) {
-//            if (action instanceof LongConsumer) {
-//                forEachRemaining((LongConsumer) action);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(),
-//                                  "{0} calling Spliterator.OfLong.forEachRemaining((LongConsumer) action::accept)");
-//                }
-//                forEachRemaining((LongConsumer) action::accept);
-//            }
-//        }
     }
 
     /**
@@ -803,9 +739,6 @@ public interface Spliterator<T> {
 
         @Override
         void forEachRemaining(DoubleConsumer action);
-//        default void forEachRemaining(DoubleConsumer action) {
-//            do { } while (tryAdvance(action));
-//        }
 
         /**
          * {@inheritDoc}
@@ -819,18 +752,6 @@ public interface Spliterator<T> {
          */
         @Override
         boolean tryAdvance(Consumer<? super Double> action);
-//        default boolean tryAdvance(Consumer<? super Double> action) {
-//            if (action instanceof DoubleConsumer) {
-//                return tryAdvance((DoubleConsumer) action);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(),
-//                                  "{0} calling Spliterator.OfDouble.tryAdvance((DoubleConsumer) action::accept)");
-//                }
-//                return tryAdvance((DoubleConsumer) action::accept);
-//            }
-//        }
 
         /**
          * {@inheritDoc}
@@ -845,17 +766,5 @@ public interface Spliterator<T> {
          */
         @Override
         void forEachRemaining(Consumer<? super Double> action);
-//        default void forEachRemaining(Consumer<? super Double> action) {
-//            if (action instanceof DoubleConsumer) {
-//                forEachRemaining((DoubleConsumer) action);
-//            }
-//            else {
-//                if (Tripwire.ENABLED) {
-//                    Tripwire.trip(getClass(),
-//                                  "{0} calling Spliterator.OfDouble.forEachRemaining((DoubleConsumer) action::accept)");
-//                }
-//                forEachRemaining((DoubleConsumer) action::accept);
-//            }
-//        }
     }
 }
