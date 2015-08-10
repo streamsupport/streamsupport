@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -50,7 +50,7 @@
  * such as {@link java.io.FileFilter}, are defined in the packages where they
  * are used.
  *
- * <p>The interfaces in this package are annotated with
+ * <p>The interfaces in this package may be annotated with
  * {@link java8.lang.FunctionalInterface}. This annotation is not a requirement
  * for the compiler to recognize an interface as a functional interface, but
  * merely an aid to capture design intent and enlist the help of the compiler in
