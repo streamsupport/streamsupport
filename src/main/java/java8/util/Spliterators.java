@@ -929,7 +929,7 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
-        if (NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) {
+        if (!IS_ANDROID && NATIVE_SPECIALIZATION) {
             if ("java.util.HashMap$EntrySet".equals(className)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
@@ -943,7 +943,7 @@ public final class Spliterators {
             return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
         }
 
-        if (NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) {
+        if (!IS_ANDROID && NATIVE_SPECIALIZATION) {
             if (c instanceof HashSet) {
                 return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
             }
