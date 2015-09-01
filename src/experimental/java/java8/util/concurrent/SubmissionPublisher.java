@@ -123,8 +123,7 @@ import java8.util.function.Supplier;
  * @author Doug Lea
  * @since 1.9
  */
-public class SubmissionPublisher<T> implements Flow.Publisher<T>,
-                                               AutoCloseable {
+public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
