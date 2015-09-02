@@ -894,7 +894,7 @@ public final class Spliterators {
             return queueSpliterator((Queue<T>) c);
         }
 
-        if ((NATIVE_SPECIALIZATION /*|| IS_ANDROID*/) && "java.util.HashMap$Values".equals(className)) {
+        if ((!IS_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
             return HMSpliterators.getValuesSpliterator((Collection<T>) c);
         }
 
