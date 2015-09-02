@@ -14,8 +14,6 @@ import java.util.concurrent.locks.LockSupport;
 
 import java8.util.function.BiConsumer;
 import java8.util.function.BiPredicate;
-import java8.util.function.Function;
-import java8.util.function.Supplier;
 
 /**
  * A {@link Flow.Publisher} that asynchronously issues submitted
@@ -123,6 +121,8 @@ import java8.util.function.Supplier;
  * @author Doug Lea
  * @since 1.9
  */
+// revision 1.39 from 2015-08-09
+// http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/SubmissionPublisher.java?revision=1.39
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     /*
      * Most mechanics are handled by BufferedSubscription. This class
@@ -852,7 +852,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * before blocking.  To avoid potential cycles, only one level of
      * helping is currently supported.
      *
-     * This class uses @Contended and heuristic field declaration
+     * This class uses heuristic field declaration
      * ordering to reduce false-sharing-based memory contention among
      * instances of BufferedSubscription, but it does not currently
      * attempt to avoid memory contention among buffers. This field
@@ -861,8 +861,6 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * Addressing this may require allocating substantially more space
      * than users expect.
      */
-    @SuppressWarnings("serial")
-    @sun.misc.Contended
     static final class BufferedSubscription<T>
         implements Flow.Subscription, ForkJoinPool.ManagedBlocker {
         // Order-sensitive field declarations
@@ -934,7 +932,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
             if (a != null && (cap = a.length) > 0 && cap > (size = t + 1 - h)) {
                 a[(cap - 1) & t] = item;    // relaxed writes OK
                 tail = t + 1;
-                U.storeFence();             // ensure fields written
+                ForkJoinPool.MemBar.storeFence();             // ensure fields written
                 stat = size;
             }
             else
@@ -961,12 +959,12 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 alloc = true;
             }
             else {
-                U.fullFence();                   // recheck
+            	ForkJoinPool.MemBar.fullFence();                   // recheck
                 int h = head, t = tail, size = t + 1 - h;
                 if (cap > size) {
                     a[(cap - 1) & t] = item;
                     tail = t + 1;
-                    U.storeFence();
+                    ForkJoinPool.MemBar.storeFence();
                     stat = size;
                     alloc = false;
                 }
@@ -1012,7 +1010,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                         }
                         newArray[t & newMask] = item;
                         tail = t + 1;
-                        U.storeFence();
+                        ForkJoinPool.MemBar.storeFence();
                     }
                 }
             }
@@ -1030,7 +1028,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 helpDepth = 1;
                 Thread thread = Thread.currentThread();
                 if ((thread instanceof ForkJoinWorkerThread) &&
-                    ((w = (ForkJoinWorkerThread)thread)).getPool() == e)
+                    ((w = (ForkJoinWorkerThread) thread)).getPool() == e)
                     stat = internalHelpConsume(w.workQueue, item);
                 else if (e == ForkJoinPool.commonPool())
                     stat = externalHelpConsume
@@ -1093,7 +1091,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 ((e = executor) instanceof ForkJoinPool)) {
                 Thread thread = Thread.currentThread();
                 if (((thread instanceof ForkJoinWorkerThread) &&
-                     ((ForkJoinWorkerThread)thread).getPool() == e) ||
+                     ((ForkJoinWorkerThread) thread).getPool() == e) ||
                     e == ForkJoinPool.commonPool()) {
                     helpDepth = 1;
                     ForkJoinTask<?> t;
@@ -1385,7 +1383,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                               U.compareAndSwapInt(this, CTL, c, c | CONSUME)) &&
                              U.compareAndSwapObject(a, i, x, null)) {
                         U.putOrderedInt(this, HEAD, ++h);
-                        U.getAndAddLong(this, DEMAND, -1L);
+                        ForkJoinPool.getAndAddLong(this, DEMAND, -1L);
                         if ((w = waiter) != null)
                             signalWaiter(w);
                         try {
@@ -1484,7 +1482,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         // Unsafe mechanics
-        private static final sun.misc.Unsafe U = sun.misc.Unsafe.getUnsafe();
+        private static final sun.misc.Unsafe U;
         private static final long CTL;
         private static final long TAIL;
         private static final long HEAD;
@@ -1494,6 +1492,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
         static {
             try {
+            	U = UnsafeAccess.unsafe;
                 CTL = U.objectFieldOffset
                     (BufferedSubscription.class.getDeclaredField("ctl"));
                 TAIL = U.objectFieldOffset
@@ -1508,7 +1507,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 if ((scale & (scale - 1)) != 0)
                     throw new Error("data type scale not a power of two");
                 ASHIFT = 31 - Integer.numberOfLeadingZeros(scale);
-            } catch (ReflectiveOperationException e) {
+            } catch (Exception e) {
                 throw new Error(e);
             }
 

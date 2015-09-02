@@ -7,9 +7,11 @@
 package java8.util.concurrent;
 
 import java.util.ArrayList;
+
 import java8.util.function.Consumer;
 import java8.util.function.Function;
 import java8.util.stream.Stream;
+import java8.util.stream.StreamSupport;
 
 /**
  * Interrelated interfaces and static methods for establishing
@@ -142,6 +144,8 @@ import java8.util.stream.Stream;
  * @author Doug Lea
  * @since 1.9
  */
+// revision 1.23 from 2015-07-24
+// http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/Flow.java?revision=1.23
 public final class Flow {
 
     private Flow() {} // uninstantiable
@@ -168,7 +172,6 @@ public final class Flow {
      *
      * @param <T> the published item type
      */
-    @FunctionalInterface
     public static interface Publisher<T> {
         /**
          * Adds the given Subscriber if possible.  If already
@@ -405,7 +408,7 @@ public final class Flow {
             this.items = new ArrayList<T>();
         }
         public void accept(T item) { items.add(item); }
-        public void onComplete() { status.complete(fn.apply(items.stream())); }
+        public void onComplete() { status.complete(fn.apply(StreamSupport.stream(items))); }
     }
 
     /**
