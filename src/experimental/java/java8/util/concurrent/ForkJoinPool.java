@@ -1003,7 +1003,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                     if (d < 0)
                         stat = d;
                     else {
-                    	MemBar.fullFence();           // sync with signallees
+                        MemBar.fullFence();           // sync with signallees
                         stat = 0;
                     }
                 }
@@ -1348,7 +1348,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         private static final long QLOCK;
         static {
             try {
-            	U = UnsafeAccess.unsafe;
+                U = UnsafeAccess.unsafe;
                 QLOCK = U.objectFieldOffset
                     (WorkQueue.class.getDeclaredField("qlock"));
                 ABASE = U.arrayBaseOffset(ForkJoinTask[].class);
@@ -3503,7 +3503,7 @@ public class ForkJoinPool extends AbstractExecutorService {
 
     static {
         try {
-        	U = UnsafeAccess.unsafe;
+            U = UnsafeAccess.unsafe;
             CTL = U.objectFieldOffset
                 (ForkJoinPool.class.getDeclaredField("ctl"));
             ABASE = U.arrayBaseOffset(ForkJoinTask[].class);
@@ -3609,16 +3609,16 @@ public class ForkJoinPool extends AbstractExecutorService {
     }
 
     static final class MemBar {
-    	private static final AtomicInteger x = new AtomicInteger();
+        private static final AtomicInteger x = new AtomicInteger();
 
         static void loadFence() {
-        	U.getIntVolatile(x, OFF);
+            U.getIntVolatile(x, OFF);
         }
         static void storeFence() {
-        	U.putIntVolatile(x, OFF, 0);
+            U.putIntVolatile(x, OFF, 0);
         }
         static void fullFence() {
-        	U.putOrderedInt(x, OFF, 0);
+            U.putOrderedInt(x, OFF, 0);
         }
 
         private MemBar() {
@@ -3627,13 +3627,13 @@ public class ForkJoinPool extends AbstractExecutorService {
         // Unsafe mechanics
         private static final sun.misc.Unsafe U;
         private static final long OFF;
-    	static {
-    		try {
-    			U = UnsafeAccess.unsafe;
-    			OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
-    		} catch (Exception e) {
-    			throw new Error(e);
-    		}
-    	}
+        static {
+            try {
+                U = UnsafeAccess.unsafe;
+                OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
+            } catch (Exception e) {
+                throw new Error(e);
+            }
+        }
     }
 }

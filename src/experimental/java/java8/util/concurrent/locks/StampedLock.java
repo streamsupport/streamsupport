@@ -501,7 +501,7 @@ public class StampedLock implements java.io.Serializable {
      * since issuance of the given stamp; else false
      */
     public boolean validate(long stamp) {
-    	MemBar.loadFence();
+        MemBar.loadFence();
         return (stamp & SBITS) == (state & SBITS);
     }
 
@@ -1384,7 +1384,7 @@ public class StampedLock implements java.io.Serializable {
 
     static {
         try {
-        	U = UnsafeAccess.unsafe;
+            U = UnsafeAccess.unsafe;
             STATE = U.objectFieldOffset
                 (StampedLock.class.getDeclaredField("state"));
             WHEAD = U.objectFieldOffset
@@ -1443,16 +1443,16 @@ public class StampedLock implements java.io.Serializable {
     };
 
     static final class MemBar {
-    	private static final AtomicInteger x = new AtomicInteger();
+        private static final AtomicInteger x = new AtomicInteger();
 
         static void loadFence() {
-        	U.getIntVolatile(x, OFF);
+            U.getIntVolatile(x, OFF);
         }
         static void storeFence() {
-        	U.putIntVolatile(x, OFF, 0);
+            U.putIntVolatile(x, OFF, 0);
         }
         static void fullFence() {
-        	U.putOrderedInt(x, OFF, 0);
+            U.putOrderedInt(x, OFF, 0);
         }
 
         private MemBar() {
@@ -1461,13 +1461,13 @@ public class StampedLock implements java.io.Serializable {
         // Unsafe mechanics
         private static final sun.misc.Unsafe U;
         private static final long OFF;
-    	static {
-    		try {
-    			U = UnsafeAccess.unsafe;
-    			OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
-    		} catch (Exception e) {
-    			throw new Error(e);
-    		}
-    	}
+        static {
+            try {
+                U = UnsafeAccess.unsafe;
+                OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
+            } catch (Exception e) {
+                throw new Error(e);
+            }
+        }
     }
 }
