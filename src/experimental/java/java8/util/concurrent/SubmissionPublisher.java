@@ -959,7 +959,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 alloc = true;
             }
             else {
-            	ForkJoinPool.MemBar.fullFence();                   // recheck
+                ForkJoinPool.MemBar.fullFence();                   // recheck
                 int h = head, t = tail, size = t + 1 - h;
                 if (cap > size) {
                     a[(cap - 1) & t] = item;
@@ -1492,7 +1492,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
         static {
             try {
-            	U = UnsafeAccess.unsafe;
+                U = UnsafeAccess.unsafe;
                 CTL = U.objectFieldOffset
                     (BufferedSubscription.class.getDeclaredField("ctl"));
                 TAIL = U.objectFieldOffset
