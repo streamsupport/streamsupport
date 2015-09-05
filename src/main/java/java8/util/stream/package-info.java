@@ -79,9 +79,9 @@
  *     {@code parallelStream()} methods;</li>
  *     <li>From an array via {@link java8.util.J8Arrays#stream(Object[])};</li>
  *     <li>From static factory methods on the stream classes, such as
- *     {@link java8.util.stream.StreamSupport#of(Object[])},
+ *     {@link java8.util.stream.RefStreams#of(Object[])},
  *     {@link java8.util.stream.IntStreams#range(int, int)}
- *     or {@link java8.util.stream.StreamSupport#iterate(Object, java8.util.function.UnaryOperator)};</li>
+ *     or {@link java8.util.stream.RefStreams#iterate(Object, java8.util.function.UnaryOperator)};</li>
  *     <li>The lines of a file can be obtained from {@link java.io.BufferedReader#lines()};</li>
  *     <li>Streams of file paths can be obtained from methods in {@link java.nio.file.Files};</li>
  *     <li>Streams of random numbers can be obtained from {@link java.util.Random#ints()};</li>
