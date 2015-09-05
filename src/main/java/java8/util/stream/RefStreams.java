@@ -24,7 +24,11 @@
  */
 package java8.util.stream;
 
+import java.util.Iterator;
+
 import java8.util.Objects;
+import java8.util.Spliterator;
+import java8.util.Spliterators;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
 import java8.util.function.UnaryOperator;
@@ -205,7 +209,7 @@ public final class RefStreams {
      * @return a stream builder
      */
     public static <T> Builder<T> builder() {
-        return StreamSupport.builder();
+        return new Streams.StreamBuilderImpl<>();
     }
 
     /**
@@ -215,7 +219,7 @@ public final class RefStreams {
      * @return an empty sequential stream
      */
     public static <T> Stream<T> empty() {
-        return StreamSupport.empty();
+        return StreamSupport.stream(Spliterators.<T>emptySpliterator(), false);
     }
 
     /**
@@ -226,7 +230,7 @@ public final class RefStreams {
      * @return a singleton sequential stream
      */
     public static <T> Stream<T> of(T t) {
-        return StreamSupport.of(t);
+        return StreamSupport.stream(new Streams.StreamBuilderImpl<>(t), false);
     }
 
     /**
@@ -240,7 +244,8 @@ public final class RefStreams {
      * @since 1.9
      */
     public static <T> Stream<T> ofNullable(T t) {
-        return StreamSupport.ofNullable(t);
+        return t == null ? empty()
+                : StreamSupport.stream(new Streams.StreamBuilderImpl<>(t), false);
     }
 
     /**
@@ -252,7 +257,7 @@ public final class RefStreams {
      * @return the new stream
      */
     public static <T> Stream<T> of(@SuppressWarnings("unchecked") T... values) {
-        return StreamSupport.of(values);
+        return java8.util.J8Arrays.stream(values);
     }
 
     /**
@@ -274,7 +279,29 @@ public final class RefStreams {
      * @return a new sequential {@code Stream}
      */
     public static <T, S extends T> Stream<T> iterate(S seed, UnaryOperator<S> f) {
-        return StreamSupport.iterate(seed, f);
+        Objects.requireNonNull(f);
+        final Iterator<T> iterator = new Iterator<T>() {
+            @SuppressWarnings("unchecked")
+            S s = (S) Streams.NONE;
+
+            @Override
+            public boolean hasNext() {
+                return true;
+            }
+
+            @Override
+            public T next() {
+                return s = (s == Streams.NONE) ? seed : f.apply(s);
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("remove");
+            }
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
+                iterator,
+                Spliterator.ORDERED | Spliterator.IMMUTABLE), false);
     }
 
     /**
@@ -288,7 +315,9 @@ public final class RefStreams {
      * @return a new infinite sequential unordered {@code Stream}
      */
     public static <T> Stream<T> generate(Supplier<? extends T> s) {
-        return StreamSupport.generate(s);
+        Objects.requireNonNull(s);
+        return (Stream<T>) StreamSupport.stream(
+                new StreamSpliterators.InfiniteSupplyingSpliterator.OfRef<>(Long.MAX_VALUE, s), false);
     }
 
     /**
@@ -312,7 +341,14 @@ public final class RefStreams {
      * @return the concatenation of the two input streams
      */
     public static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b) {
-        return StreamSupport.concat(a, b);
+        Objects.requireNonNull(a);
+        Objects.requireNonNull(b);
+
+        @SuppressWarnings("unchecked")
+        Spliterator<T> split = new Streams.ConcatSpliterator.OfRef<>(
+                (Spliterator<T>) a.spliterator(), (Spliterator<T>) b.spliterator());
+        Stream<T> stream = StreamSupport.stream(split, a.isParallel() || b.isParallel());
+        return stream.onClose(Streams.composedClose(a, b));
     }
 
     private RefStreams() {

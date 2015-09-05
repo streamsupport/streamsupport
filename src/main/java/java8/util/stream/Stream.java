@@ -1109,7 +1109,7 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * builder, in the order they were added.
      *
      * @param <T> the type of stream elements
-     * @see StreamSupport#builder()
+     * @see RefStreams#builder()
      * @since 1.8
      */
     public interface Builder<T> extends Consumer<T> {

@@ -25,7 +25,6 @@
 package java8.util.stream;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import java8.util.Objects;
 import java8.util.Spliterators;
@@ -53,9 +52,11 @@ public final class StreamSupport {
      *
      * @param <T> type of elements
      * @return a stream builder
+     * @deprecated Use {@link RefStreams#builder()} instead
      */
+    @Deprecated
     public static <T> Builder<T> builder() {
-        return new Streams.StreamBuilderImpl<>();
+        return RefStreams.builder();
     }
 
     /**
@@ -63,9 +64,11 @@ public final class StreamSupport {
      *
      * @param <T> the type of stream elements
      * @return an empty sequential stream
+     * @deprecated Use {@link RefStreams#empty()} instead
      */
+    @Deprecated
     public static <T> Stream<T> empty() {
-        return stream(Spliterators.<T>emptySpliterator(), false);
+        return RefStreams.empty();
     }
 
     /**
@@ -74,9 +77,11 @@ public final class StreamSupport {
      * @param t the single element
      * @param <T> the type of stream elements
      * @return a singleton sequential stream
+     * @deprecated Use {@link RefStreams#of(Object)} instead
      */
+    @Deprecated
     public static <T> Stream<T> of(T t) {
-        return stream(new Streams.StreamBuilderImpl<>(t), false);
+        return RefStreams.of(t);
     }
 
     /**
@@ -88,10 +93,11 @@ public final class StreamSupport {
      * @return a stream with a single element if the specified element
      *         is non-null, otherwise an empty stream
      * @since 1.9
+     * @deprecated Use {@link RefStreams#ofNullable(Object)} instead
      */
+    @Deprecated
     public static <T> Stream<T> ofNullable(T t) {
-        return t == null ? empty()
-                         : stream(new Streams.StreamBuilderImpl<>(t), false);
+        return RefStreams.ofNullable(t);
     }
 
     /**
@@ -100,9 +106,11 @@ public final class StreamSupport {
      * @param <T> the type of stream elements
      * @param values the elements of the new stream
      * @return the new stream
+     * @deprecated Use {@link RefStreams#of(Object...)} instead
      */
+    @Deprecated
     public static <T> Stream<T> of(@SuppressWarnings("unchecked") T... values) { // Creating a stream from an array is safe
-        return java8.util.J8Arrays.stream(values);
+        return RefStreams.of(values);
     }
 
     /**
@@ -122,31 +130,11 @@ public final class StreamSupport {
      * @param f a function to be applied to the previous element to produce
      *          a new element
      * @return a new sequential {@code Stream}
+     * @deprecated Use {@link RefStreams#iterate(Object, UnaryOperator)} instead
      */
+    @Deprecated
     public static <T, S extends T> Stream<T> iterate(final S seed, final UnaryOperator<S> f) {
-        Objects.requireNonNull(f);
-        final Iterator<T> iterator = new Iterator<T>() {
-            @SuppressWarnings("unchecked")
-            S s = (S) Streams.NONE;
-
-            @Override
-            public boolean hasNext() {
-                return true;
-            }
-
-            @Override
-            public T next() {
-                return s = (s == Streams.NONE) ? seed : f.apply(s);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("remove");
-            }
-        };
-        return stream(Spliterators.spliteratorUnknownSize(
-                iterator,
-                Spliterator.ORDERED | Spliterator.IMMUTABLE), false);
+        return RefStreams.iterate(seed, f);
     }
 
     /**
@@ -157,11 +145,11 @@ public final class StreamSupport {
      * @param <T> the type of stream elements
      * @param s the {@code Supplier} of generated elements
      * @return a new infinite sequential unordered {@code Stream}
+     * @deprecated Use {@link RefStreams#generate(Supplier)} instead
      */
+    @Deprecated
     public static <T> Stream<T> generate(Supplier<? extends T> s) {
-        Objects.requireNonNull(s);
-        return (Stream<T>) stream(
-                new StreamSpliterators.InfiniteSupplyingSpliterator.OfRef<>(Long.MAX_VALUE, s), false);
+        return RefStreams.generate(s);
     }
 
     /**
@@ -183,16 +171,11 @@ public final class StreamSupport {
      * @param a the first stream
      * @param b the second stream
      * @return the concatenation of the two input streams
+     * @deprecated Use {@link RefStreams#concat(Stream, Stream)} instead
      */
+    @Deprecated
     public static <T> Stream<T> concat(Stream<? extends T> a, Stream<? extends T> b) {
-        Objects.requireNonNull(a);
-        Objects.requireNonNull(b);
-
-        @SuppressWarnings("unchecked")
-        Spliterator<T> split = new Streams.ConcatSpliterator.OfRef<>(
-                (Spliterator<T>) a.spliterator(), (Spliterator<T>) b.spliterator());
-        Stream<T> stream = stream(split, a.isParallel() || b.isParallel());
-        return stream.onClose(Streams.composedClose(a, b));
+        return RefStreams.concat(a, b);
     }
 
     /**

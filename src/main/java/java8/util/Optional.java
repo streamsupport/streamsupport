@@ -31,8 +31,8 @@ import java8.util.function.Consumer;
 import java8.util.function.Function;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
-import java8.util.stream.StreamSupport;
 
 /**
  * A container object which may or may not contain a non-null value.
@@ -286,9 +286,9 @@ public final class Optional<T> {
      */
     public Stream<T> stream() {
         if (!isPresent()) {
-            return StreamSupport.empty();
+            return RefStreams.empty();
         } else {
-            return StreamSupport.of(value);
+            return RefStreams.of(value);
         }
     }
 
