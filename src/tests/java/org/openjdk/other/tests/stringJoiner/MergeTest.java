@@ -31,9 +31,10 @@ package org.openjdk.other.tests.stringJoiner;
 
 import java8.util.StringJoiner;
 import java8.util.function.Consumer;
-import java8.util.stream.StreamSupport;
+import java8.util.stream.RefStreams;
 
 import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -52,13 +53,13 @@ public class MergeTest {
     public void testSimple() {
         final StringJoiner sj = new StringJoiner(",", "{", "}");
         final StringJoiner other = new StringJoiner(",", "[", "]");
-        StreamSupport.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
+        RefStreams.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
                 sj.add(s);
             }
         });
-        StreamSupport.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
+        RefStreams.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
                 other.add(s);
@@ -72,7 +73,7 @@ public class MergeTest {
     public void testEmptyOther() {
         final StringJoiner sj = new StringJoiner(",", "{", "}");
         StringJoiner other = new StringJoiner(",", "[", "]");
-        StreamSupport.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
+        RefStreams.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
                 sj.add(s);
@@ -90,7 +91,7 @@ public class MergeTest {
     public void testEmptyThis() {
         StringJoiner sj = new StringJoiner(",", "{", "}");
         final StringJoiner other = new StringJoiner(":", "[", "]");
-        StreamSupport.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
+        RefStreams.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
                 other.add(s);
@@ -138,13 +139,13 @@ public class MergeTest {
     public void testDelimiter() {
         final StringJoiner sj = new StringJoiner(",", "{", "}");
         final StringJoiner other = new StringJoiner(":", "[", "]");
-        StreamSupport.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
+        RefStreams.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
                 sj.add(s);
             }
         });
-        StreamSupport.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
+        RefStreams.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
             @Override
             public void accept(String s) {
                 other.add(s);

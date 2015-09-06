@@ -42,6 +42,7 @@ import java8.util.stream.IntStream;
 import java8.util.stream.IntStreams;
 import java8.util.stream.LongStream;
 import java8.util.stream.LongStreams;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
 import static java8.util.stream.LambdaTestHelpers.*;
@@ -140,7 +141,7 @@ public class ConcatTest {
     }
 
     private void assertRefConcat(Stream<Integer> s1, Stream<Integer> s2, boolean parallel, boolean ordered) {
-        Stream<Integer> result = StreamSupport.concat(s1, s2);
+        Stream<Integer> result = RefStreams.concat(s1, s2);
         assertEquals(result.isParallel(), parallel);
         assertConcatContent(result.spliterator(), ordered, Spliterators.spliterator(expected, 0));
     }

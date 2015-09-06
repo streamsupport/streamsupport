@@ -31,8 +31,8 @@ import java8.util.stream.IntStreams;
 import java8.util.stream.LongStream;
 import java8.util.stream.LongStreams;
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.SpliteratorTestHelper;
-import java8.util.stream.StreamSupport;
 import java8.util.stream.TestData;
 
 import org.testng.annotations.Test;
@@ -46,13 +46,13 @@ import org.testng.annotations.Test;
 public class RangeTest extends OpTestCase {
 
     public void testInfiniteRangeFindFirst() {
-        Integer first = StreamSupport.iterate(0, i -> i + 1).filter(i -> i > 10000).findFirst().get();
-        assertEquals(first, StreamSupport.iterate(0, i -> i + 1).parallel().filter(i -> i > 10000).findFirst().get());
+        Integer first = RefStreams.iterate(0, i -> i + 1).filter(i -> i > 10000).findFirst().get();
+        assertEquals(first, RefStreams.iterate(0, i -> i + 1).parallel().filter(i -> i > 10000).findFirst().get());
 
         // Limit is required to transform the infinite stream to a finite stream
         // since the exercising requires a finite stream
         withData(TestData.Factory.ofSupplier(
-                "", () -> StreamSupport.iterate(0, i -> i + 1).filter(i -> i > 10000).limit(20000))).
+                "", () -> RefStreams.iterate(0, i -> i + 1).filter(i -> i > 10000).limit(20000))).
                 terminal(s->s.findFirst()).expectedResult(Optional.of(10001)).exercise();
     }
 

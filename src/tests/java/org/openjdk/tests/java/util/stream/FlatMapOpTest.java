@@ -44,11 +44,11 @@ import java8.util.stream.DoubleStreams;
 import java8.util.stream.IntStreamTestDataProvider;
 import java8.util.stream.LongStreamTestDataProvider;
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
 import java8.util.stream.StreamTestDataProvider;
 import java8.util.stream.TestData;
-
 import static java8.util.stream.LambdaTestHelpers.*;
 import static java8.util.stream.ThrowableHelper.checkNPE;
 
@@ -56,7 +56,7 @@ import static java8.util.stream.ThrowableHelper.checkNPE;
 public class FlatMapOpTest extends OpTestCase {
 
     public void testNullMapper() {
-        checkNPE(() -> StreamSupport.of(1).flatMap(null));
+        checkNPE(() -> RefStreams.of(1).flatMap(null));
         checkNPE(() -> IntStreams.of(1).flatMap(null));
         checkNPE(() -> LongStreams.of(1).flatMap(null));
         checkNPE(() -> DoubleStreams.of(1).flatMap(null));
@@ -85,10 +85,10 @@ public class FlatMapOpTest extends OpTestCase {
 
         Supplier<Stream<Integer>> s = () -> {
             before.set(0); onClose.set(0);
-            return StreamSupport.of(1, 2).peek(e -> before.getAndIncrement());
+            return RefStreams.of(1, 2).peek(e -> before.getAndIncrement());
         };
 
-        s.get().flatMap(i -> StreamSupport.of(i, i).onClose(onClose::getAndIncrement)).count();
+        s.get().flatMap(i -> RefStreams.of(i, i).onClose(onClose::getAndIncrement)).count();
         assertEquals(before.get(), onClose.get());
 
         s.get().flatMapToInt(i -> IntStreams.of(i, i).onClose(onClose::getAndIncrement)).count();
@@ -139,7 +139,7 @@ public class FlatMapOpTest extends OpTestCase {
         result = exerciseOps(data, s -> s.flatMap(mfNull));
         assertEquals(0, result.size());
 
-        result = exerciseOps(data, s-> s.flatMap(e -> StreamSupport.empty()));
+        result = exerciseOps(data, s-> s.flatMap(e -> RefStreams.empty()));
         assertEquals(0, result.size());
 
         exerciseOps(data, s -> s.flatMap(mfLt));
