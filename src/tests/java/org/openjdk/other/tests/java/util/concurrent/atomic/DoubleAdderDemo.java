@@ -109,10 +109,11 @@ public class DoubleAdderDemo {
     }
 
     static void report(int nthreads, int incs, long time, double sum) {
-        long total = (long)nthreads * incs;
-        if (sum != (double)total)
+        long total = (long) nthreads * incs;
+        if (sum != (double) total)
             throw new Error(sum + " != " + total);
-        double secs = (double)time / (1000L * 1000 * 1000);
+        time = (time == 0L) ? 1L : time;
+        double secs = (double) time / (1000L * 1000 * 1000);
         long rate = total * (1000L) / time;
         System.out.printf("threads:%3d  Time: %7.3fsec  Incs per microsec: %4d\n",
                           nthreads, secs, rate);
