@@ -30,6 +30,7 @@ package org.openjdk.tests.java.util.stream;
 
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import java8.util.stream.DoubleStream;
 import java8.util.stream.DoubleStreams;
 import java8.util.stream.DoubleStreamTestDataProvider;
@@ -40,8 +41,8 @@ import java8.util.stream.LongStream;
 import java8.util.stream.LongStreams;
 import java8.util.stream.LongStreamTestDataProvider;
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
-import java8.util.stream.StreamSupport;
 import java8.util.stream.StreamTestDataProvider;
 import java8.util.stream.TestData;
 
@@ -159,10 +160,10 @@ public class CountTest extends OpTestCase {
     public void testNoEvaluationForSizedStream() {
         {
             AtomicInteger ai = new AtomicInteger();
-            StreamSupport.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).count();
+            RefStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).count();
             assertEquals(ai.get(), 0);
 
-            StreamSupport.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).parallel().count();
+            RefStreams.of(1, 2, 3, 4).peek(e -> ai.getAndIncrement()).parallel().count();
             assertEquals(ai.get(), 0);
         }
 

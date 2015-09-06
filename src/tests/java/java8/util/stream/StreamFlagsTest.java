@@ -51,7 +51,7 @@ public class StreamFlagsTest {
     Stream<String> hashSet = StreamSupport.stream(new HashSet<String>());
     Stream<String> treeSet = StreamSupport.stream(new TreeSet<String>());
     Stream<String> linkedHashSet = StreamSupport.stream(new LinkedHashSet<String>());
-    Stream<String> repeat = StreamSupport.generate(() -> "");
+    Stream<String> repeat = RefStreams.generate(() -> "");
 
     Stream<?>[] streams = { arrayList, linkedList, hashSet, treeSet, linkedHashSet, repeat };
 
@@ -64,7 +64,7 @@ public class StreamFlagsTest {
 
     public void testStreamSupportGenerate() {
 
-        Stream<String> repeat = StreamSupport.generate(() -> "");
+        Stream<String> repeat = RefStreams.generate(() -> "");
 
         assertFlags(OpTestCase.getStreamFlags(repeat),
                     EnumSet.noneOf(StreamOpFlag.class),

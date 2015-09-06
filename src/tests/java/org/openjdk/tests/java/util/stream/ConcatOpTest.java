@@ -29,8 +29,8 @@ import java8.util.stream.StreamTestDataProvider;
 
 import org.testng.annotations.Test;
 
+import java8.util.stream.RefStreams;
 import java8.util.stream.TestData;
-import java8.util.stream.StreamSupport;
 import java8.util.stream.IntStreams;
 import java8.util.stream.LongStreams;
 import java8.util.stream.DoubleStreams;
@@ -45,27 +45,27 @@ public class ConcatOpTest extends OpTestCase {
     @Test(dataProvider = "StreamTestData<Integer>", dataProviderClass = StreamTestDataProvider.class)
     public void testOps(String name, TestData.OfRef<Integer> data) {
         exerciseOpsInt(data,
-                       s -> java8.util.stream.StreamSupport.concat(s, data.stream()),
+                       s -> java8.util.stream.RefStreams.concat(s, data.stream()),
                        s -> java8.util.stream.IntStreams.concat(s, data.stream().mapToInt(Integer::intValue)),
                        s -> java8.util.stream.LongStreams.concat(s, data.stream().mapToLong(Integer::longValue)),
                        s -> java8.util.stream.DoubleStreams.concat(s, data.stream().mapToDouble(Integer::doubleValue)));
     }
 
     public void testSize() {
-        assertSized(StreamSupport.concat(
+        assertSized(RefStreams.concat(
                 LongStreams.range(0, Long.MAX_VALUE / 2).boxed(),
                 LongStreams.range(0, Long.MAX_VALUE / 2).boxed()));
 
-        assertUnsized(StreamSupport.concat(
+        assertUnsized(RefStreams.concat(
                 LongStreams.range(0, Long.MAX_VALUE).boxed(),
                 LongStreams.range(0, Long.MAX_VALUE).boxed()));
 
-        assertUnsized(StreamSupport.concat(
+        assertUnsized(RefStreams.concat(
                 LongStreams.range(0, Long.MAX_VALUE).boxed(),
-                StreamSupport.iterate(0, i -> i + 1)));
+                RefStreams.iterate(0, i -> i + 1)));
 
-        assertUnsized(StreamSupport.concat(
-                StreamSupport.iterate(0, i -> i + 1),
+        assertUnsized(RefStreams.concat(
+                RefStreams.iterate(0, i -> i + 1),
                 LongStreams.range(0, Long.MAX_VALUE).boxed()));
     }
 

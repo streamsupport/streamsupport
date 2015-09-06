@@ -42,6 +42,7 @@ import java8.util.stream.LambdaTestHelpers;
 import java8.util.stream.LongStream;
 import java8.util.stream.LongStreamTestScenario;
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
 import java8.util.stream.StreamTestScenario;
@@ -422,7 +423,7 @@ public class InfiniteStreamWithLimitOpTest extends OpTestCase {
     public void testUnorderedGenerator(String description, UnaryOperator<Stream<Long>> fs) {
         // Source is spliterator of infinite size
         TestData.OfRef<Long> generator = TestData.Factory.ofSupplier(
-                "[1L, 1L, ...]", () -> StreamSupport.generate(() -> 1L));
+                "[1L, 1L, ...]", () -> RefStreams.generate(() -> 1L));
 
         withData(generator).
                 stream((Stream<Long> s) -> fs.apply(s.filter(i -> true).unordered())).
@@ -468,7 +469,7 @@ public class InfiniteStreamWithLimitOpTest extends OpTestCase {
     public void testUnorderedIteration(String description, UnaryOperator<Stream<Long>> fs) {
         // Source is a right-balanced tree of infinite size
         TestData.OfRef<Long> iterator = TestData.Factory.ofSupplier(
-                "[1L, 2L, 3L, ...]", () -> StreamSupport.iterate(1L, i -> i + 1L));
+                "[1L, 2L, 3L, ...]", () -> RefStreams.iterate(1L, i -> i + 1L));
 
         // Ref
         withData(iterator).

@@ -38,6 +38,7 @@ import java8.util.stream.LambdaTestHelpers;
 import java8.util.stream.LongStream;
 import java8.util.stream.LongStreams;
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
 import java8.util.stream.TestData;
@@ -60,7 +61,7 @@ public class StreamBuilderTest extends OpTestCase {
     @Test
     public void testOfNullableWithNonNull() {
         TestData.OfRef<Integer> data = TestData.Factory.ofSupplier("{1}",
-                                                                   () -> StreamSupport.ofNullable(1));
+                                                                   () -> RefStreams.ofNullable(1));
 
         withData(data).
                 stream(s -> s).
@@ -71,7 +72,7 @@ public class StreamBuilderTest extends OpTestCase {
     @Test
     public void testOfNullableWithNull() {
         TestData.OfRef<Integer> data = TestData.Factory.ofSupplier("{null})",
-                                                                   () -> StreamSupport.ofNullable(null));
+                                                                   () -> RefStreams.ofNullable(null));
 
         withData(data).
                 stream(s -> s).
@@ -100,7 +101,7 @@ public class StreamBuilderTest extends OpTestCase {
     @Test
     public void testSingleton() {
         TestData.OfRef<Integer> data = TestData.Factory.ofSupplier("{1}",
-                                                                   () -> StreamSupport.of(1));
+                                                                   () -> RefStreams.of(1));
 
         withData(data).
                 stream(s -> s).
@@ -115,7 +116,7 @@ public class StreamBuilderTest extends OpTestCase {
 
     @Test(dataProvider = "sizes")
     public void testAfterBuilding(int size) {
-        Stream.Builder<Integer> sb = StreamSupport.builder();
+        Stream.Builder<Integer> sb = RefStreams.builder();
         IntStreams.range(0, size).boxed().forEach(sb);
         sb.build();
 
@@ -127,13 +128,13 @@ public class StreamBuilderTest extends OpTestCase {
     @Test(dataProvider = "sizes", groups = { "serialization-hostile" })
     public void testStreamBuilder(int size) {
         testStreamBuilder(size, (s) -> {
-            Stream.Builder<Integer> sb = StreamSupport.builder();
+            Stream.Builder<Integer> sb = RefStreams.builder();
             IntStreams.range(0, s).boxed().forEach(sb);
             return sb.build();
         });
 
         testStreamBuilder(size, (s) -> {
-            Stream.Builder<Integer> sb = StreamSupport.builder();
+            Stream.Builder<Integer> sb = RefStreams.builder();
             IntStreams.range(0, s).boxed().forEach(i -> {
                 Stream.Builder<Integer> _sb = sb.add(i);
                 assertTrue(sb == _sb);
