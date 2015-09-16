@@ -1489,7 +1489,7 @@ public final class Spliterators {
 
     // Implementations
 
-    private static abstract class EmptySpliterator<T, S extends Spliterator<T>, C> {
+    private abstract static class EmptySpliterator<T, S extends Spliterator<T>, C> {
 
         EmptySpliterator() { }
 
@@ -2068,7 +2068,7 @@ public final class Spliterators {
      * @see #spliterator(Iterator, long, int)
      * @since 1.8
      */
-    public static abstract class AbstractSpliterator<T> implements Spliterator<T> {
+    public abstract static class AbstractSpliterator<T> implements Spliterator<T> {
         static final int BATCH_UNIT = 1 << 10;  // batch array size increment
         static final int MAX_BATCH = 1 << 25;  // max batch array size;
         private final int characteristics;
@@ -2223,7 +2223,7 @@ public final class Spliterators {
      * @see #spliterator(java8.util.PrimitiveIterator.OfInt, long, int)
      * @since 1.8
      */
-    public static abstract class AbstractIntSpliterator implements Spliterator.OfInt {
+    public abstract static class AbstractIntSpliterator implements Spliterator.OfInt {
         static final int MAX_BATCH = AbstractSpliterator.MAX_BATCH;
         static final int BATCH_UNIT = AbstractSpliterator.BATCH_UNIT;
         private final int characteristics;
@@ -2373,7 +2373,7 @@ public final class Spliterators {
      * @see #spliterator(java8.util.PrimitiveIterator.OfLong, long, int)
      * @since 1.8
      */
-    public static abstract class AbstractLongSpliterator implements Spliterator.OfLong {
+    public abstract static class AbstractLongSpliterator implements Spliterator.OfLong {
         static final int MAX_BATCH = AbstractSpliterator.MAX_BATCH;
         static final int BATCH_UNIT = AbstractSpliterator.BATCH_UNIT;
         private final int characteristics;
@@ -2523,7 +2523,7 @@ public final class Spliterators {
      * @see #spliterator(java8.util.PrimitiveIterator.OfDouble, long, int)
      * @since 1.8
      */
-    public static abstract class AbstractDoubleSpliterator implements Spliterator.OfDouble {
+    public abstract static class AbstractDoubleSpliterator implements Spliterator.OfDouble {
         static final int MAX_BATCH = AbstractSpliterator.MAX_BATCH;
         static final int BATCH_UNIT = AbstractSpliterator.BATCH_UNIT;
         private final int characteristics;
