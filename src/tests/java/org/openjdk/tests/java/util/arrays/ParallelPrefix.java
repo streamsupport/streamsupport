@@ -44,20 +44,20 @@ import org.testng.annotations.Test;
 
 public class ParallelPrefix {
     //Array size less than MIN_PARTITION
-    private final static int SMALL_ARRAY_SIZE = 1 << 3;
+    private static final int SMALL_ARRAY_SIZE = 1 << 3;
 
     //Array size equals MIN_PARTITION
-    private final static int THRESHOLD_ARRAY_SIZE = 1 << 4;
+    private static final int THRESHOLD_ARRAY_SIZE = 1 << 4;
 
     //Array size greater than MIN_PARTITION
-    private final static int MEDIUM_ARRAY_SIZE = 1 << 8;
+    private static final int MEDIUM_ARRAY_SIZE = 1 << 8;
 
     //Array size much greater than MIN_PARTITION
-    private final static int LARGE_ARRAY_SIZE = 1 << 12; // 2^14 doesn't work on Android  
+    private static final int LARGE_ARRAY_SIZE = 1 << 12; // 2^14 doesn't work on Android  
     //bump the LARGE_ARRAY_SIZE from 2^12 to 2^14, for better test coverage on systems with a lot of parallelism.
     //private final static int LARGE_ARRAY_SIZE = 1 << 14; // JDK-8085858
 
-    private final static int[] ARRAY_SIZE_COLLECTION  = new int[]{
+    private static final int[] ARRAY_SIZE_COLLECTION  = new int[]{
         SMALL_ARRAY_SIZE,
         THRESHOLD_ARRAY_SIZE,
         MEDIUM_ARRAY_SIZE,
