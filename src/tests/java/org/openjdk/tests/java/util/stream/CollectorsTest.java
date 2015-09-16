@@ -86,7 +86,7 @@ import static java8.util.stream.LambdaTestHelpers.mDoubler;
  */
 public class CollectorsTest extends OpTestCase {
 
-    private static abstract class CollectorAssertion<T, U> {
+    private abstract static class CollectorAssertion<T, U> {
         abstract void assertValue(U value,
                                   Supplier<Stream<T>> source,
                                   boolean ordered) throws Exception;
