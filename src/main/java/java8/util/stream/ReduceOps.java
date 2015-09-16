@@ -1135,7 +1135,7 @@ final class ReduceOps {
     /**
      * A sink that counts elements
      */
-    static abstract class CountingSink<T>
+    abstract static class CountingSink<T>
             extends Box<Long>
             implements AccumulatingSink<T, Long, CountingSink<T>> {
         long count;
@@ -1245,7 +1245,7 @@ final class ReduceOps {
      *
      * @param <U> The type of the state element
      */
-    private static abstract class Box<U> {
+    private abstract static class Box<U> {
         U state;
 
         Box() {} // Avoid creation of special accessor
@@ -1265,7 +1265,7 @@ final class ReduceOps {
      * @param <R> the result type of the reducing operation
      * @param <S> the type of the {@code AccumulatingSink}
      */
-    private static abstract class ReduceOp<T, R, S extends AccumulatingSink<T, R, S>>
+    private abstract static class ReduceOp<T, R, S extends AccumulatingSink<T, R, S>>
             implements TerminalOp<T, R> {
         private final StreamShape inputShape;
 

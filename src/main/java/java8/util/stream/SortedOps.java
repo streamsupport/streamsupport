@@ -304,7 +304,7 @@ final class SortedOps {
      * occur, in general (not restricted to just sorting), for short-circuiting
      * parallel pipelines.
      */
-    private static abstract class AbstractRefSortingSink<T> extends Sink.ChainedReference<T, T> {
+    private abstract static class AbstractRefSortingSink<T> extends Sink.ChainedReference<T, T> {
         protected final Comparator<? super T> comparator;
         // @@@ could be a lazy final value, if/when support is added
         protected boolean cancellationWasRequested;
@@ -412,7 +412,7 @@ final class SortedOps {
     /**
      * Abstract {@link Sink} for implementing sort on int streams.
      */
-    private static abstract class AbstractIntSortingSink extends Sink.ChainedInt<Integer> {
+    private abstract static class AbstractIntSortingSink extends Sink.ChainedInt<Integer> {
         protected boolean cancellationWasRequested;
 
         AbstractIntSortingSink(Sink<? super Integer> downstream) {
@@ -510,7 +510,7 @@ final class SortedOps {
     /**
      * Abstract {@link Sink} for implementing sort on long streams.
      */
-    private static abstract class AbstractLongSortingSink extends Sink.ChainedLong<Long> {
+    private abstract static class AbstractLongSortingSink extends Sink.ChainedLong<Long> {
         protected boolean cancellationWasRequested;
 
         AbstractLongSortingSink(Sink<? super Long> downstream) {
@@ -608,7 +608,7 @@ final class SortedOps {
     /**
      * Abstract {@link Sink} for implementing sort on long streams.
      */
-    private static abstract class AbstractDoubleSortingSink extends Sink.ChainedDouble<Double> {
+    private abstract static class AbstractDoubleSortingSink extends Sink.ChainedDouble<Double> {
         protected boolean cancellationWasRequested;
 
         AbstractDoubleSortingSink(Sink<? super Double> downstream) {

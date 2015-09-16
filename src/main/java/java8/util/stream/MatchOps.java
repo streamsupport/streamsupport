@@ -264,7 +264,7 @@ final class MatchOps {
      *
      * @param <T> The output type of the stream pipeline
      */
-    private static abstract class BooleanTerminalSink<T> implements Sink<T> {
+    private abstract static class BooleanTerminalSink<T> implements Sink<T> {
         boolean stop;
         boolean value;
 

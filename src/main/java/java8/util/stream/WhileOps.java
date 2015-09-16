@@ -651,7 +651,7 @@ final class WhileOps {
      * @param <T> the type of elements returned by this spliterator
      * @param <T_SPLITR> the type of the spliterator
      */
-    static abstract class UnorderedWhileSpliterator<T, T_SPLITR extends Spliterator<T>> implements Spliterator<T> {
+    abstract static class UnorderedWhileSpliterator<T, T_SPLITR extends Spliterator<T>> implements Spliterator<T> {
         // Power of two constant minus one used for modulus of count
         static final int CANCEL_CHECK_COUNT = (1 << 6) - 1;
 
@@ -717,7 +717,7 @@ final class WhileOps {
 
         abstract T_SPLITR makeSpliterator(T_SPLITR s);
 
-        static abstract class OfRef<T> extends UnorderedWhileSpliterator<T, Spliterator<T>> implements Consumer<T> {
+        abstract static class OfRef<T> extends UnorderedWhileSpliterator<T, Spliterator<T>> implements Consumer<T> {
             final Predicate<? super T> p;
             T t;
 
@@ -832,7 +832,7 @@ final class WhileOps {
             }
         }
 
-        static abstract class OfInt extends UnorderedWhileSpliterator<Integer, Spliterator.OfInt> implements IntConsumer, Spliterator.OfInt {
+        abstract static class OfInt extends UnorderedWhileSpliterator<Integer, Spliterator.OfInt> implements IntConsumer, Spliterator.OfInt {
             final IntPredicate p;
             int t;
 
@@ -957,7 +957,7 @@ final class WhileOps {
             }
         }
 
-        static abstract class OfLong extends UnorderedWhileSpliterator<Long, Spliterator.OfLong> implements LongConsumer, Spliterator.OfLong {
+        abstract static class OfLong extends UnorderedWhileSpliterator<Long, Spliterator.OfLong> implements LongConsumer, Spliterator.OfLong {
             final LongPredicate p;
             long t;
 
@@ -1082,7 +1082,7 @@ final class WhileOps {
             }
         }
 
-        static abstract class OfDouble extends UnorderedWhileSpliterator<Double, Spliterator.OfDouble> implements DoubleConsumer, Spliterator.OfDouble {
+        abstract static class OfDouble extends UnorderedWhileSpliterator<Double, Spliterator.OfDouble> implements DoubleConsumer, Spliterator.OfDouble {
             final DoublePredicate p;
             double t;
 
