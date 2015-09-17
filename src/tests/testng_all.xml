@@ -103,6 +103,7 @@
       <class name="org.openjdk.tests.java.util.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
+      <class name="org.openjdk.other.tests.stringJoiner.MergeTest2"/>
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
 
