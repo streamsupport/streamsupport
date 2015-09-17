@@ -7,6 +7,7 @@
 package java8.util.concurrent;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 import java8.util.function.Consumer;
 import java8.util.function.Function;
@@ -291,7 +292,7 @@ public final class Flow {
      * Returns a default value for Publisher or Subscriber buffering,
      * that may be used in the absence of other constraints.
      *
-     * @implNote
+     * <p><b>Implementation notes</b>:
      * The current value returned is 256.
      *
      * @return the buffer size value
