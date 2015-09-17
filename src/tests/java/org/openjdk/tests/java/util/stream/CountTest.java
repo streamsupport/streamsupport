@@ -31,6 +31,7 @@ package org.openjdk.tests.java.util.stream;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import java8.util.stream.Collectors;
 import java8.util.stream.DoubleStream;
 import java8.util.stream.DoubleStreams;
 import java8.util.stream.DoubleStreamTestDataProvider;
@@ -62,6 +63,12 @@ public class CountTest extends OpTestCase {
         // Test with an unknown sized stream
         withData(data).
                 terminal(s -> s.filter(e -> true), Stream::count).
+                expectedResult(expectedCount).
+                exercise();
+
+        // Test counting collector
+        withData(data).
+                terminal(s -> s, s -> s.collect(Collectors.counting())).
                 expectedResult(expectedCount).
                 exercise();
 
