@@ -364,13 +364,10 @@ public class SpliteratorLateBindingFailFastTest {
 
             s.estimateSize();
 
-            if (!(c instanceof LinkedList)) { // TODO
+            source.update();
 
-                source.update();
-
-                executeAndCatch(() -> s.forEachRemaining(e -> {
-                }));
-            }
+            executeAndCatch(() -> s.forEachRemaining(e -> {
+            }));
         }
     }
 
