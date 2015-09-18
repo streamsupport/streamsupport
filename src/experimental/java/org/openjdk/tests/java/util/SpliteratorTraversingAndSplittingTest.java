@@ -43,7 +43,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
+//import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -417,7 +417,8 @@ public class SpliteratorTraversingAndSplittingTest {
             db.addMap(m -> Collections.synchronizedSortedMap(new TreeMap<>(m)));
 
             db.addCollection(c -> Collections.checkedCollection(c, Integer.class));
-            db.addCollection(c -> Collections.checkedQueue(new ArrayDeque<>(c), Integer.class));
+//            db.addCollection(c -> Collections.checkedQueue(new ArrayDeque<>(c), Integer.class));
+            db.addCollection(c -> Collections.checkedCollection(new ArrayDeque<>(c), Integer.class));
             db.addCollection(c -> Collections.checkedSet(new HashSet<>(c), Integer.class));
             db.addCollection(c -> Collections.checkedSortedSet(new TreeSet<>(c), Integer.class));
             db.addList(c -> Collections.checkedList(new ArrayList<>(c), Integer.class));
@@ -445,7 +446,7 @@ public class SpliteratorTraversingAndSplittingTest {
 
             db.addMap(LinkedHashMap::new);
 
-            db.addMap(IdentityHashMap::new);
+//            db.addMap(IdentityHashMap::new);
 
             db.addMap(WeakHashMap::new);
 

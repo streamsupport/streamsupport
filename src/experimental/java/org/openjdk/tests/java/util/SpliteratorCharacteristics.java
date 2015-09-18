@@ -197,11 +197,11 @@ public class SpliteratorCharacteristics {
                                  Spliterator.SIZED | Spliterator.DISTINCT);
     }
 
-    public void testLinkedHashMap() {
-        assertMapCharacteristics(new LinkedHashMap<>(),
-                                 Spliterator.SIZED | Spliterator.DISTINCT |
-                                 Spliterator.ORDERED);
-    }
+//    public void testLinkedHashMap() {
+//        assertMapCharacteristics(new LinkedHashMap<>(),
+//                                 Spliterator.SIZED | Spliterator.DISTINCT |
+//                                 Spliterator.ORDERED);
+//    }
 
     public void testLinkedHashSet() {
         assertSetCharacteristics(new LinkedHashSet<>(),
@@ -209,17 +209,17 @@ public class SpliteratorCharacteristics {
                                  Spliterator.ORDERED);
     }
 
-    public void testTreeMap() {
-        assertSortedMapCharacteristics(new TreeMap<>(),
-                                       Spliterator.SIZED | Spliterator.DISTINCT |
-                                       Spliterator.SORTED | Spliterator.ORDERED);
-    }
+//    public void testTreeMap() {
+//        assertSortedMapCharacteristics(new TreeMap<>(),
+//                                       Spliterator.SIZED | Spliterator.DISTINCT |
+//                                       Spliterator.SORTED | Spliterator.ORDERED);
+//    }
 
-    public void testTreeMapWithComparator() {
-        assertSortedMapCharacteristics(new TreeMap<>(Comparators.reverseOrder()),
-                                       Spliterator.SIZED | Spliterator.DISTINCT |
-                                       Spliterator.SORTED | Spliterator.ORDERED);
-    }
+//    public void testTreeMapWithComparator() {
+//        assertSortedMapCharacteristics(new TreeMap<>(Comparators.reverseOrder()),
+//                                       Spliterator.SIZED | Spliterator.DISTINCT |
+//                                       Spliterator.SORTED | Spliterator.ORDERED);
+//    }
 
     public void testTreeSet() {
         assertSortedSetCharacteristics(new TreeSet<>(),
@@ -233,33 +233,33 @@ public class SpliteratorCharacteristics {
                                        Spliterator.SORTED | Spliterator.ORDERED);
     }
 
-    public void testConcurrentSkipListMap() {
-        assertSortedMapCharacteristics(new ConcurrentSkipListMap<>(),
-                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
-                                       Spliterator.DISTINCT | Spliterator.SORTED |
-                                       Spliterator.ORDERED);
-    }
+//    public void testConcurrentSkipListMap() {
+//        assertSortedMapCharacteristics(new ConcurrentSkipListMap<>(),
+//                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
+//                                       Spliterator.DISTINCT | Spliterator.SORTED |
+//                                       Spliterator.ORDERED);
+//    }
 
-    public void testConcurrentSkipListMapWithComparator() {
-        assertSortedMapCharacteristics(new ConcurrentSkipListMap<>(Comparators.<Integer>reverseOrder()),
-                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
-                                       Spliterator.DISTINCT | Spliterator.SORTED |
-                                       Spliterator.ORDERED);
-    }
+//    public void testConcurrentSkipListMapWithComparator() {
+//        assertSortedMapCharacteristics(new ConcurrentSkipListMap<>(Comparators.<Integer>reverseOrder()),
+//                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
+//                                       Spliterator.DISTINCT | Spliterator.SORTED |
+//                                       Spliterator.ORDERED);
+//    }
 
-    public void testConcurrentSkipListSet() {
-        assertSortedSetCharacteristics(new ConcurrentSkipListSet<>(),
-                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
-                                       Spliterator.DISTINCT | Spliterator.SORTED |
-                                       Spliterator.ORDERED);
-    }
+//    public void testConcurrentSkipListSet() {
+//        assertSortedSetCharacteristics(new ConcurrentSkipListSet<>(),
+//                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
+//                                       Spliterator.DISTINCT | Spliterator.SORTED |
+//                                       Spliterator.ORDERED);
+//    }
 
-    public void testConcurrentSkipListSetWithComparator() {
-        assertSortedSetCharacteristics(new ConcurrentSkipListSet<>(Comparators.reverseOrder()),
-                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
-                                       Spliterator.DISTINCT | Spliterator.SORTED |
-                                       Spliterator.ORDERED);
-    }
+//    public void testConcurrentSkipListSetWithComparator() {
+//        assertSortedSetCharacteristics(new ConcurrentSkipListSet<>(Comparators.reverseOrder()),
+//                                       Spliterator.CONCURRENT | Spliterator.NONNULL |
+//                                       Spliterator.DISTINCT | Spliterator.SORTED |
+//                                       Spliterator.ORDERED);
+//    }
 
 
     //
