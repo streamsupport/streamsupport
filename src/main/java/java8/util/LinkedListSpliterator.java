@@ -179,10 +179,16 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
     }
 
     private static Object getNextNode(Object node) {
+        if (node == null) {
+            throw new ConcurrentModificationException();
+        }
         return UNSAFE.getObject(node, NODE_NEXT_OFF);
     }
 
     private static <E> E getNodeItem(Object node) {
+        if (node == null) {
+            throw new ConcurrentModificationException();
+        }
         return (E) UNSAFE.getObject(node, NODE_ITEM_OFF);
     }
 
