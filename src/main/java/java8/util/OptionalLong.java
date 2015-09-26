@@ -92,7 +92,7 @@ public final class OptionalLong {
      *
      * <p><b>API Note:</b><br> Though it may be tempting to do so, avoid testing if an object
      * is empty by comparing with {@code ==} against instances returned by
-     * {@code Option.empty()}. There is no guarantee that it is a singleton.
+     * {@code OptionalLong.empty()}. There is no guarantee that it is a singleton.
      * Instead, use {@link #isPresent()}.
      *
      *  @return an empty {@code OptionalLong}.
