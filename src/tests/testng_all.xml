@@ -111,6 +111,10 @@
       <class name="java8.util.Sorting"/>
       <class name="java8.util.SortingNearlySortedPrimitive"/>
       <class name="java8.util.Ticket66Test"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorCharacteristics"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorCollisions"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorLateBindingFailFastTest"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest"/>
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
