@@ -323,7 +323,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
      *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     IntStream takeWhile(IntPredicate predicate);
 
@@ -382,7 +382,7 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
      *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     IntStream dropWhile(IntPredicate predicate);
 

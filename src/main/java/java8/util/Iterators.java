@@ -176,7 +176,7 @@ public final class Iterators {
      * passed Enumeration
      * @throws NullPointerException if the specified enumeration is null
      *
-     * @since 1.9
+     * @since 9
      */
     public static <E> Iterator<E> asIterator(Enumeration<E> en) {
         Objects.requireNonNull(en);

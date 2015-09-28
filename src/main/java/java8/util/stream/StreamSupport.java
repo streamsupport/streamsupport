@@ -92,7 +92,7 @@ public final class StreamSupport {
      * @param <T> the type of stream elements
      * @return a stream with a single element if the specified element
      *         is non-null, otherwise an empty stream
-     * @since 1.9
+     * @since 9
      * @deprecated Use {@link RefStreams#ofNullable(Object)} instead
      */
     @Deprecated

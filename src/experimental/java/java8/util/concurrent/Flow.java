@@ -143,7 +143,7 @@ import java8.util.stream.StreamSupport;
  * }}</pre>
  *
  * @author Doug Lea
- * @since 1.9
+ * @since 9
  */
 // revision 1.23 from 2015-07-24
 // http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/Flow.java?revision=1.23

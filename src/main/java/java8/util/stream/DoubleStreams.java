@@ -57,7 +57,7 @@ public final class DoubleStreams {
      *                  should be included, or it and all subsequently
      *                  encountered elements be discarded.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     public static DoubleStream takeWhile(DoubleStream stream, DoublePredicate predicate) {
         Objects.requireNonNull(stream);
@@ -84,7 +84,7 @@ public final class DoubleStreams {
      *                  should be discarded, or it and all subsequently
      *                  encountered elements be included.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     public static DoubleStream dropWhile(DoubleStream stream, DoublePredicate predicate) {
         Objects.requireNonNull(stream);

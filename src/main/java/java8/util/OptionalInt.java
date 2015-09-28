@@ -172,7 +172,7 @@ public final class OptionalInt {
      * not present
      * @throws NullPointerException if a value is present and {@code action} is
      * null, or a value is not present and {@code emptyAction} is null.
-     * @since 1.9
+     * @since 9
      */
     public void ifPresentOrElse(IntConsumer action, Runnable emptyAction) {
         if (isPresent) {
@@ -196,7 +196,7 @@ public final class OptionalInt {
      * }</pre>
      *
      * @return the optional value as an {@code IntStream}
-     * @since 1.9
+     * @since 9
      */
     public IntStream stream() {
         if (isPresent) {
@@ -246,7 +246,7 @@ public final class OptionalInt {
      * @throws NullPointerException if no value is present and
      * {@code exceptionSupplier} is null
      */
-    public<X extends Throwable> int orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
+    public <X extends Throwable> int orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
         if (isPresent) {
             return value;
         } else {

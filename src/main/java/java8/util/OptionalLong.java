@@ -173,7 +173,7 @@ public final class OptionalLong {
      * not present
      * @throws NullPointerException if a value is present and {@code action} is
      * null, or a value is not present and {@code emptyAction} is null.
-     * @since 1.9
+     * @since 9
      */
     public void ifPresentOrElse(LongConsumer action, Runnable emptyAction) {
         if (isPresent) {
@@ -197,7 +197,7 @@ public final class OptionalLong {
      * }</pre>
      *
      * @return the optional value as a {@code LongStream}
-     * @since 1.9
+     * @since 9
      */
     public LongStream stream() {
         if (isPresent) {
