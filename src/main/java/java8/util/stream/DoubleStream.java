@@ -326,7 +326,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     DoubleStream takeWhile(DoublePredicate predicate);
 
@@ -386,7 +386,7 @@ public interface DoubleStream extends BaseStream<Double, DoubleStream> {
      *                  predicate to apply to elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     DoubleStream dropWhile(DoublePredicate predicate);
 

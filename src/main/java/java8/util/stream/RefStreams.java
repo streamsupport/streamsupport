@@ -111,7 +111,7 @@ public final class RefStreams {
      *                  predicate to apply elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     public static <T> Stream<T> takeWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
         Objects.requireNonNull(stream);
@@ -186,7 +186,7 @@ public final class RefStreams {
      *                  predicate to apply elements to determine the longest
      *                  prefix of elements.
      * @return the new stream
-     * @since 1.9
+     * @since 9
      */
     public static <T> Stream<T> dropWhile(Stream<? extends T> stream, Predicate<? super T> predicate) {
         Objects.requireNonNull(stream);
@@ -241,7 +241,7 @@ public final class RefStreams {
      * @param <T> the type of stream elements
      * @return a stream with a single element if the specified element
      *         is non-null, otherwise an empty stream
-     * @since 1.9
+     * @since 9
      */
     public static <T> Stream<T> ofNullable(T t) {
         return t == null ? empty()

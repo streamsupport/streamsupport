@@ -546,7 +546,7 @@ public final class Collectors {
      * stream returned by mapper
      * @return a collector which applies the mapping function to the input
      * elements and provides the flat mapped results to the downstream collector
-     * @since 1.9
+     * @since 9
      */
     public static <T, U, A, R>
     Collector<T, ?, R> flatMapping(Function<? super T, ? extends Stream<? extends U>> mapper,

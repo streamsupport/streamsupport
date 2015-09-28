@@ -121,7 +121,7 @@ import java8.util.function.BiPredicate;
  *
  * @param <T> the published item type
  * @author Doug Lea
- * @since 1.9
+ * @since 9
  */
 // revision 1.39 from 2015-08-09
 // http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/SubmissionPublisher.java?revision=1.39

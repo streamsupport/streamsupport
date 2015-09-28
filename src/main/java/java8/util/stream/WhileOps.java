@@ -45,7 +45,7 @@ import java8.util.function.Predicate;
  * Factory for instances of a takeWhile and dropWhile operations
  * that produce subsequences of their input stream.
  *
- * @since 1.9
+ * @since 9
  */
 final class WhileOps {
 
