@@ -184,7 +184,7 @@ public class ForkJoinWorkerThread extends Thread {
     }
 
     /**
-     * Non-public hook method for InnocuousForkJoinWorkerThread
+     * Non-public hook method for InnocuousForkJoinWorkerThread.
      */
     void afterTopLevelExec() {
     }
@@ -226,25 +226,24 @@ public class ForkJoinWorkerThread extends Thread {
     }
 
     // Set up to allow setting thread fields in constructor
-    private static final sun.misc.Unsafe U;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     static final boolean IS_PRE8_IBM;
     private static final long THREADLOCALS;
     private static final long INHERITABLETHREADLOCALS;
     private static final long INHERITEDACCESSCONTROLCONTEXT;
     static {
         try {
-            U = UnsafeAccess.unsafe;
             IS_PRE8_IBM = isIBMPre8();
-            Class<?> tk = Thread.class;
             if (!isAndroid()) {
-                THREADLOCALS = U.objectFieldOffset(tk
+                THREADLOCALS = U.objectFieldOffset(Thread.class
                         .getDeclaredField("threadLocals"));
-                INHERITABLETHREADLOCALS = U.objectFieldOffset(tk
+                INHERITABLETHREADLOCALS = U.objectFieldOffset(Thread.class
                         .getDeclaredField("inheritableThreadLocals"));
                 String accFieldName = IS_PRE8_IBM ? "accessControlContext"
                         : "inheritedAccessControlContext";
-                INHERITEDACCESSCONTROLCONTEXT = U.objectFieldOffset(tk
-                        .getDeclaredField(accFieldName));
+                INHERITEDACCESSCONTROLCONTEXT = U
+                        .objectFieldOffset(Thread.class
+                                .getDeclaredField(accFieldName));
             } else {
                 // we don't need these offsets when on Android
                 THREADLOCALS = 0L;
@@ -304,11 +303,11 @@ public class ForkJoinWorkerThread extends Thread {
         private static ThreadGroup createThreadGroup() {
             try {
                 sun.misc.Unsafe u = UnsafeAccess.unsafe;
-                Class<?> tk = Thread.class;
-                Class<?> gk = ThreadGroup.class;
                 String groupFieldName = IS_PRE8_IBM ? "threadGroup" : "group";
-                long tg = u.objectFieldOffset(tk.getDeclaredField(groupFieldName));
-                long gp = u.objectFieldOffset(gk.getDeclaredField("parent"));
+                long tg = u.objectFieldOffset(Thread.class
+                        .getDeclaredField(groupFieldName));
+                long gp = u.objectFieldOffset(ThreadGroup.class
+                        .getDeclaredField("parent"));
                 ThreadGroup group = (ThreadGroup)
                     u.getObject(Thread.currentThread(), tg);
                 while (group != null) {
