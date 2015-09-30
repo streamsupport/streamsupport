@@ -114,12 +114,13 @@ public class DoubleAdder extends Striped64 implements Serializable {
      * @return the sum
      */
     public double sum() {
-        Cell[] as = cells; Cell a;
+        Cell[] as = cells;
         double sum = Double.longBitsToDouble(base);
         if (as != null) {
-            for (int i = 0; i < as.length; ++i) {
-                if ((a = as[i]) != null)
+            for (Cell a : as) {
+                if (a != null) {
                     sum += Double.longBitsToDouble(a.value);
+                }
             }
         }
         return sum;
@@ -133,12 +134,13 @@ public class DoubleAdder extends Striped64 implements Serializable {
      * known that no threads are concurrently updating.
      */
     public void reset() {
-        Cell[] as = cells; Cell a;
+        Cell[] as = cells;
         base = 0L; // relies on fact that double 0 must have same rep as long
         if (as != null) {
-            for (int i = 0; i < as.length; ++i) {
-                if ((a = as[i]) != null)
-                    a.value = 0L;
+            for (Cell a : as) {
+                if (a != null) {
+                    a.reset();
+                }
             }
         }
     }
@@ -154,14 +156,14 @@ public class DoubleAdder extends Striped64 implements Serializable {
      * @return the sum
      */
     public double sumThenReset() {
-        Cell[] as = cells; Cell a;
+        Cell[] as = cells;
         double sum = Double.longBitsToDouble(base);
         base = 0L;
         if (as != null) {
-            for (int i = 0; i < as.length; ++i) {
-                if ((a = as[i]) != null) {
+            for (Cell a : as) {
+                if (a != null) {
                     long v = a.value;
-                    a.value = 0L;
+                    a.reset();
                     sum += Double.longBitsToDouble(v);
                 }
             }
@@ -233,7 +235,7 @@ public class DoubleAdder extends Striped64 implements Serializable {
          * held by this proxy.
          *
          * @return a {@code DoubleAdder} object with initial state
-         * held by this proxy.
+         * held by this proxy
          */
         private Object readResolve() {
             DoubleAdder a = new DoubleAdder();
@@ -244,7 +246,7 @@ public class DoubleAdder extends Striped64 implements Serializable {
 
     /**
      * Returns a
-     * <a href="../../../../serialized-form.html#java.util.concurrent.atomic.DoubleAdder.SerializationProxy">
+     * <a href="../../../../serialized-form.html#java8.util.concurrent.atomic.DoubleAdder.SerializationProxy">
      * SerializationProxy</a>
      * representing the state of this instance.
      *

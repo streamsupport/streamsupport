@@ -122,11 +122,10 @@ public class LongAdder extends Striped64 implements Serializable {
      */
     public long sum() {
         Cell[] as = cells;
-        Cell a;
         long sum = base;
         if (as != null) {
-            for (int i = 0; i < as.length; ++i) {
-                if ((a = as[i]) != null) {
+            for (Cell a : as) {
+                if (a != null) {
                     sum += a.value;
                 }
             }
@@ -143,12 +142,11 @@ public class LongAdder extends Striped64 implements Serializable {
      */
     public void reset() {
         Cell[] as = cells;
-        Cell a;
         base = 0L;
         if (as != null) {
-            for (int i = 0; i < as.length; ++i) {
-                if ((a = as[i]) != null) {
-                    a.value = 0L;
+            for (Cell a : as) {
+                if (a != null) {
+                    a.reset();
                 }
             }
         }
@@ -166,14 +164,13 @@ public class LongAdder extends Striped64 implements Serializable {
      */
     public long sumThenReset() {
         Cell[] as = cells;
-        Cell a;
         long sum = base;
         base = 0L;
         if (as != null) {
-            for (int i = 0; i < as.length; ++i) {
-                if ((a = as[i]) != null) {
+            for (Cell a : as) {
+                if (a != null) {
                     sum += a.value;
-                    a.value = 0L;
+                    a.reset();
                 }
             }
         }
@@ -240,11 +237,11 @@ public class LongAdder extends Striped64 implements Serializable {
         }
 
         /**
-         * Return a {@code LongAdder} object with initial state
+         * Returns a {@code LongAdder} object with initial state
          * held by this proxy.
          *
          * @return a {@code LongAdder} object with initial state
-         * held by this proxy.
+         * held by this proxy
          */
         private Object readResolve() {
             LongAdder a = new LongAdder();
@@ -255,7 +252,7 @@ public class LongAdder extends Striped64 implements Serializable {
 
     /**
      * Returns a
-     * <a href="../../../../serialized-form.html#java.util.concurrent.atomic.LongAdder.SerializationProxy">
+     * <a href="../../../../serialized-form.html#java8.util.concurrent.atomic.LongAdder.SerializationProxy">
      * SerializationProxy</a>
      * representing the state of this instance.
      *
