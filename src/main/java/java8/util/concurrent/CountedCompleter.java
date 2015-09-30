@@ -167,7 +167,8 @@ package java8.util.concurrent;
  * {@code tryComplete}) the pending count is set to one:
  *
  * <pre> {@code
- * class ForEach<E> ...
+ * class ForEach<E> ... {
+ *   ...
  *   public void compute() { // version 2
  *     if (hi - lo >= 2) {
  *       int mid = (lo + hi) >>> 1;
@@ -181,7 +182,7 @@ package java8.util.concurrent;
  *       tryComplete();
  *     }
  *   }
- * }</pre>
+ * }}</pre>
  *
  * As a further improvement, notice that the left task need not even exist.
  * Instead of creating a new one, we can iterate using the original task,
@@ -190,7 +191,8 @@ package java8.util.concurrent;
  * {@code tryComplete()} can be replaced with {@link #propagateCompletion}.
  *
  * <pre> {@code
- * class ForEach<E> ...
+ * class ForEach<E> ... {
+ *   ...
  *   public void compute() { // version 3
  *     int l = lo,  h = hi;
  *     while (h - l >= 2) {
@@ -203,7 +205,7 @@ package java8.util.concurrent;
  *       op.apply(array[l]);
  *     propagateCompletion();
  *   }
- * }</pre>
+ * }}</pre>
  *
  * Additional improvements of such classes might entail precomputing
  * pending counts so that they can be established in constructors,
@@ -401,8 +403,7 @@ package java8.util.concurrent;
  * // sample use:
  * PacketSender p = new PacketSender();
  * new HeaderBuilder(p, ...).fork();
- * new BodyBuilder(p, ...).fork();
- * }</pre>
+ * new BodyBuilder(p, ...).fork();}</pre>
  *
  * @since 1.8
  * @author Doug Lea
@@ -743,7 +744,7 @@ public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
     }
 
     /**
-     * Returns the result of the computation. By default
+     * Returns the result of the computation.  By default,
      * returns {@code null}, which is appropriate for {@code Void}
      * actions, but in other cases should be overridden, almost
      * always to return a field or function of a field that
@@ -763,11 +764,10 @@ public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
     protected void setRawResult(T t) { }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe U;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long PENDING;
     static {
         try {
-            U = UnsafeAccess.unsafe;
             PENDING = U.objectFieldOffset
                 (CountedCompleter.class.getDeclaredField("pending"));
         } catch (Exception e) {

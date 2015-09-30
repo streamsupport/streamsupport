@@ -72,7 +72,7 @@ import java.util.concurrent.locks.LockSupport;
  *
  * <ul>
  *
- *   <li> <b>Arrival.</b> Methods {@link #arrive} and
+ *   <li><b>Arrival.</b> Methods {@link #arrive} and
  *       {@link #arriveAndDeregister} record arrival.  These methods
  *       do not block, but return an associated <em>arrival phase
  *       number</em>; that is, the phase number of the phaser to which
@@ -85,7 +85,7 @@ import java.util.concurrent.locks.LockSupport;
  *       flexible than, providing a barrier action to a {@code
  *       CyclicBarrier}.
  *
- *   <li> <b>Waiting.</b> Method {@link #awaitAdvance} requires an
+ *   <li><b>Waiting.</b> Method {@link #awaitAdvance} requires an
  *       argument indicating an arrival phase number, and returns when
  *       the phaser advances to (or is already at) a different phase.
  *       Unlike similar constructions using {@code CyclicBarrier},
@@ -97,7 +97,7 @@ import java.util.concurrent.locks.LockSupport;
  *       associated recovery within handlers of those exceptions,
  *       often after invoking {@code forceTermination}.  Phasers may
  *       also be used by tasks executing in a {@link ForkJoinPool}.
- *       Progress is ensured if the pool's parallelism level can
+ *       Progress is ensured if the pool's parallelismLevel can
  *       accommodate the maximum number of simultaneously blocked
  *       parties.
  *
@@ -331,7 +331,7 @@ public class Phaser {
     }
 
     /**
-     * The parent of this phaser, or null if none
+     * The parent of this phaser, or null if none.
      */
     private final Phaser parent;
 
@@ -349,9 +349,9 @@ public class Phaser {
     private final AtomicReference<QNode> evenQ;
     private final AtomicReference<QNode> oddQ;
 
-    private AtomicReference<QNode> queueFor(int phase) {
-        return ((phase & 1) == 0) ? evenQ : oddQ;
-    }
+//    private AtomicReference<QNode> queueFor(int phase) {
+//        return ((phase & 1) == 0) ? evenQ : oddQ;
+//    }
 
     /**
      * Returns message string for bounds exceptions on arrival.
@@ -382,17 +382,17 @@ public class Phaser {
         final Phaser root = this.root;
         for (;;) {
             long s = (root == this) ? state : reconcileState();
-            int phase = (int)(s >>> PHASE_SHIFT);
+            int phase = (int) (s >>> PHASE_SHIFT);
             if (phase < 0)
                 return phase;
-            int counts = (int)s;
+            int counts = (int) s;
             int unarrived = (counts == EMPTY) ? 0 : (counts & UNARRIVED_MASK);
             if (unarrived <= 0)
                 throw new IllegalStateException(badArrive(s));
-            if (UNSAFE.compareAndSwapLong(this, stateOffset, s, s-=adjust)) {
+            if (U.compareAndSwapLong(this, STATE, s, s-=adjust)) {
                 if (unarrived == 1) {
                     long n = s & PARTIES_MASK;  // base of next state
-                    int nextUnarrived = (int)n >>> PARTIES_SHIFT;
+                    int nextUnarrived = (int) n >>> PARTIES_SHIFT;
                     if (root == this) {
                         if (onAdvance(phase, nextUnarrived))
                             n |= TERMINATION_BIT;
@@ -401,14 +401,13 @@ public class Phaser {
                         else
                             n |= nextUnarrived;
                         int nextPhase = (phase + 1) & MAX_PHASE;
-                        n |= (long)nextPhase << PHASE_SHIFT;
-                        UNSAFE.compareAndSwapLong(this, stateOffset, s, n);
+                        n |= (long) nextPhase << PHASE_SHIFT;
+                        U.compareAndSwapLong(this, STATE, s, n);
                         releaseWaiters(phase);
                     }
                     else if (nextUnarrived == 0) { // propagate deregistration
                         phase = parent.doArrive(ONE_DEREGISTER);
-                        UNSAFE.compareAndSwapLong(this, stateOffset,
-                                                  s, s | EMPTY);
+                        U.compareAndSwapLong(this, STATE, s, s | EMPTY);
                     }
                     else
                         phase = parent.doArrive(ONE_ARRIVAL);
@@ -419,38 +418,37 @@ public class Phaser {
     }
 
     /**
-     * Implementation of register, bulkRegister
+     * Implementation of register, bulkRegister.
      *
      * @param registrations number to add to both parties and
      * unarrived fields. Must be greater than zero.
      */
     private int doRegister(int registrations) {
         // adjustment to state
-        long adjust = ((long)registrations << PARTIES_SHIFT) | registrations;
+        long adjust = ((long) registrations << PARTIES_SHIFT) | registrations;
         final Phaser parent = this.parent;
         int phase;
         for (;;) {
             long s = (parent == null) ? state : reconcileState();
-            int counts = (int)s;
+            int counts = (int) s;
             int parties = counts >>> PARTIES_SHIFT;
             int unarrived = counts & UNARRIVED_MASK;
             if (registrations > MAX_PARTIES - parties)
                 throw new IllegalStateException(badRegister(s));
-            phase = (int)(s >>> PHASE_SHIFT);
+            phase = (int) (s >>> PHASE_SHIFT);
             if (phase < 0)
                 break;
             if (counts != EMPTY) {                  // not 1st registration
                 if (parent == null || reconcileState() == s) {
                     if (unarrived == 0)             // wait out advance
                         root.internalAwaitAdvance(phase, null);
-                    else if (UNSAFE.compareAndSwapLong(this, stateOffset,
-                                                       s, s + adjust))
+                    else if (U.compareAndSwapLong(this, STATE, s, s + adjust))
                         break;
                 }
             }
             else if (parent == null) {              // 1st root registration
-                long next = ((long)phase << PHASE_SHIFT) | adjust;
-                if (UNSAFE.compareAndSwapLong(this, stateOffset, s, next))
+                long next = ((long) phase << PHASE_SHIFT) | adjust;
+                if (U.compareAndSwapLong(this, STATE, s, next))
                     break;
             }
             else {
@@ -462,12 +460,12 @@ public class Phaser {
                         // finish registration whenever parent registration
                         // succeeded, even when racing with termination,
                         // since these are part of the same "transaction".
-                        while (!UNSAFE.compareAndSwapLong
-                               (this, stateOffset, s,
-                                ((long)phase << PHASE_SHIFT) | adjust)) {
+                        while (!U.compareAndSwapLong
+                               (this, STATE, s,
+                                ((long) phase << PHASE_SHIFT) | adjust)) {
                             s = state;
-                            phase = (int)(root.state >>> PHASE_SHIFT);
-                            // assert (int)s == EMPTY;
+                            phase = (int) (root.state >>> PHASE_SHIFT);
+                            // assert (int) s == EMPTY;
                         }
                         break;
                     }
@@ -492,11 +490,11 @@ public class Phaser {
         if (root != this) {
             int phase, p;
             // CAS to root phase with current parties, tripping unarrived
-            while ((phase = (int)(root.state >>> PHASE_SHIFT)) !=
+            while ((phase = (int) (root.state >>> PHASE_SHIFT)) !=
                    (int)(s >>> PHASE_SHIFT) &&
-                   !UNSAFE.compareAndSwapLong
-                   (this, stateOffset, s,
-                    s = (((long)phase << PHASE_SHIFT) |
+                   !U.compareAndSwapLong
+                   (this, STATE, s,
+                    s = (((long) phase << PHASE_SHIFT) |
                          ((phase < 0) ? (s & COUNTS_MASK) :
                           (((p = (int)s >>> PARTIES_SHIFT) == 0) ? EMPTY :
                            ((s & PARTIES_MASK) | p))))))
@@ -567,9 +565,9 @@ public class Phaser {
             this.oddQ = new AtomicReference<QNode>();
         }
         this.state = (parties == 0) ? (long)EMPTY :
-            ((long)phase << PHASE_SHIFT) |
-            ((long)parties << PARTIES_SHIFT) |
-            ((long)parties);
+            ((long) phase << PHASE_SHIFT) |
+            ((long) parties << PARTIES_SHIFT) |
+            ((long) parties);
     }
 
     /**
@@ -677,15 +675,14 @@ public class Phaser {
         final Phaser root = this.root;
         for (;;) {
             long s = (root == this) ? state : reconcileState();
-            int phase = (int)(s >>> PHASE_SHIFT);
+            int phase = (int) (s >>> PHASE_SHIFT);
             if (phase < 0)
                 return phase;
-            int counts = (int)s;
+            int counts = (int) s;
             int unarrived = (counts == EMPTY) ? 0 : (counts & UNARRIVED_MASK);
             if (unarrived <= 0)
                 throw new IllegalStateException(badArrive(s));
-            if (UNSAFE.compareAndSwapLong(this, stateOffset, s,
-                                          s -= ONE_ARRIVAL)) {
+            if (U.compareAndSwapLong(this, STATE, s, s -= ONE_ARRIVAL)) {
                 if (unarrived > 1)
                     return root.internalAwaitAdvance(phase, null);
                 if (root != this)
@@ -699,8 +696,8 @@ public class Phaser {
                 else
                     n |= nextUnarrived;
                 int nextPhase = (phase + 1) & MAX_PHASE;
-                n |= (long)nextPhase << PHASE_SHIFT;
-                if (!UNSAFE.compareAndSwapLong(this, stateOffset, s, n))
+                n |= (long) nextPhase << PHASE_SHIFT;
+                if (!U.compareAndSwapLong(this, STATE, s, n))
                     return (int)(state >>> PHASE_SHIFT); // terminated
                 releaseWaiters(phase);
                 return nextPhase;
@@ -723,7 +720,7 @@ public class Phaser {
     public int awaitAdvance(int phase) {
         final Phaser root = this.root;
         long s = (root == this) ? state : reconcileState();
-        int p = (int)(s >>> PHASE_SHIFT);
+        int p = (int) (s >>> PHASE_SHIFT);
         if (phase < 0)
             return phase;
         if (p == phase)
@@ -750,7 +747,7 @@ public class Phaser {
         throws InterruptedException {
         final Phaser root = this.root;
         long s = (root == this) ? state : reconcileState();
-        int p = (int)(s >>> PHASE_SHIFT);
+        int p = (int) (s >>> PHASE_SHIFT);
         if (phase < 0)
             return phase;
         if (p == phase) {
@@ -788,7 +785,7 @@ public class Phaser {
         long nanos = unit.toNanos(timeout);
         final Phaser root = this.root;
         long s = (root == this) ? state : reconcileState();
-        int p = (int)(s >>> PHASE_SHIFT);
+        int p = (int) (s >>> PHASE_SHIFT);
         if (phase < 0)
             return phase;
         if (p == phase) {
@@ -816,8 +813,7 @@ public class Phaser {
         final Phaser root = this.root;
         long s;
         while ((s = root.state) >= 0) {
-            if (UNSAFE.compareAndSwapLong(root, stateOffset,
-                                          s, s | TERMINATION_BIT)) {
+            if (U.compareAndSwapLong(root, STATE, s, s | TERMINATION_BIT)) {
                 // signal all threads
                 releaseWaiters(0); // Waiters on evenQ
                 releaseWaiters(1); // Waiters on oddQ
@@ -836,7 +832,7 @@ public class Phaser {
      * @return the phase number, or a negative value if terminated
      */
     public final int getPhase() {
-        return (int)(root.state >>> PHASE_SHIFT);
+        return (int) (root.state >>> PHASE_SHIFT);
     }
 
     /**
@@ -956,7 +952,7 @@ public class Phaser {
     }
 
     /**
-     * Implementation of toString and string-based error messages
+     * Implementation of toString and string-based error messages.
      */
     private String stateToString(long s) {
         return super.toString() +
@@ -975,7 +971,7 @@ public class Phaser {
         Thread t;  // its thread
         AtomicReference<QNode> head = (phase & 1) == 0 ? evenQ : oddQ;
         while ((q = head.get()) != null &&
-               q.phase != (int)(root.state >>> PHASE_SHIFT)) {
+               q.phase != (int) (root.state >>> PHASE_SHIFT)) {
             if (head.compareAndSet(q, q.next) &&
                 (t = q.thread) != null) {
                 q.thread = null;
@@ -998,7 +994,7 @@ public class Phaser {
         for (;;) {
             Thread t;
             QNode q = head.get();
-            int p = (int)(root.state >>> PHASE_SHIFT);
+            int p = (int) (root.state >>> PHASE_SHIFT);
             if (q == null || ((t = q.thread) != null && q.phase == p))
                 return p;
             if (head.compareAndSet(q, q.next) && t != null) {
@@ -1041,9 +1037,9 @@ public class Phaser {
         int spins = SPINS_PER_ARRIVAL;
         long s;
         int p;
-        while ((p = (int)((s = state) >>> PHASE_SHIFT)) == phase) {
+        while ((p = (int) ((s = state) >>> PHASE_SHIFT)) == phase) {
             if (node == null) {           // spinning in noninterruptible mode
-                int unarrived = (int)s & UNARRIVED_MASK;
+                int unarrived = (int) s & UNARRIVED_MASK;
                 if (unarrived != lastUnarrived &&
                     (lastUnarrived = unarrived) < NCPU)
                     spins += SPINS_PER_ARRIVAL;
@@ -1059,13 +1055,13 @@ public class Phaser {
                 AtomicReference<QNode> head = (phase & 1) == 0 ? evenQ : oddQ;
                 QNode q = node.next = head.get();
                 if ((q == null || q.phase == phase) &&
-                    (int)(state >>> PHASE_SHIFT) == phase) // avoid stale enq
+                    (int) (state >>> PHASE_SHIFT) == phase) // avoid stale enq
                     queued = head.compareAndSet(q, node);
             }
             else {
                 try {
                     ForkJoinPool.managedBlock(node);
-                } catch (InterruptedException ie) {
+                } catch (InterruptedException cantHappen) {
                     node.wasInterrupted = true;
                 }
             }
@@ -1076,7 +1072,7 @@ public class Phaser {
                 node.thread = null;       // avoid need for unpark()
             if (node.wasInterrupted && !node.interruptible)
                 Thread.currentThread().interrupt();
-            if (p == phase && (p = (int)(state >>> PHASE_SHIFT)) == phase)
+            if (p == phase && (p = (int) (state >>> PHASE_SHIFT)) == phase)
                 return abortWait(phase); // possibly clean up on abort
         }
         releaseWaiters(phase);
@@ -1084,7 +1080,7 @@ public class Phaser {
     }
 
     /**
-     * Wait nodes for Treiber stack representing wait queue
+     * Wait nodes for Treiber stack representing wait queue.
      */
     static final class QNode implements ForkJoinPool.ManagedBlocker {
         final Phaser phaser;
@@ -1121,39 +1117,33 @@ public class Phaser {
                 thread = null;
                 return true;
             }
-            if (timed) {
-                if (nanos > 0L) {
-                    nanos = deadline - System.nanoTime();
-                }
-                if (nanos <= 0L) {
+            if (timed &&
+                (nanos <= 0L || (nanos = deadline - System.nanoTime()) <= 0L)) {
                     thread = null;
                     return true;
                 }
-            }
             return false;
         }
 
         public boolean block() {
-            if (isReleasable())
-                return true;
-            else if (!timed)
-                LockSupport.park(this);
-            else if (nanos > 0L)
-                LockSupport.parkNanos(this, nanos);
-            return isReleasable();
+            while (!isReleasable()) {
+                if (timed) {
+                    LockSupport.parkNanos(this, nanos);
+                } else {
+                    LockSupport.park(this);
+                }
+            }
+            return true;
         }
     }
 
     // Unsafe mechanics
 
-    private static final sun.misc.Unsafe UNSAFE;
-    private static final long stateOffset;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
+    private static final long STATE;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> k = Phaser.class;
-            stateOffset = UNSAFE.objectFieldOffset
-                (k.getDeclaredField("state"));
+            STATE = U.objectFieldOffset(Phaser.class.getDeclaredField("state"));
         } catch (Exception e) {
             throw new Error(e);
         }

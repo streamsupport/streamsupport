@@ -44,7 +44,7 @@ package java8.util.concurrent;
  * <p><b>Sample Usages.</b> Here is a simple but complete ForkJoin
  * sort that sorts a given {@code long[]} array:
  *
- *  <pre> {@code
+ * <pre> {@code
  * static class SortTask extends RecursiveAction {
  *   final long[] array; final int lo, hi;
  *   SortTask(long[] array, int lo, int hi) {
@@ -78,7 +78,7 @@ package java8.util.concurrent;
  * SortTask(anArray)} and invoking it in a ForkJoinPool.  As a more
  * concrete simple example, the following task increments each element
  * of an array:
- *  <pre> {@code
+ * <pre> {@code
  * class IncrementTask extends RecursiveAction {
  *   final long[] array; final int lo, hi;
  *   IncrementTask(long[] array, int lo, int hi) {
@@ -109,7 +109,7 @@ package java8.util.concurrent;
  * performing leaf actions on unstolen tasks rather than further
  * subdividing.
  *
- *  <pre> {@code
+ * <pre> {@code
  * double sumOfSquares(ForkJoinPool pool, double[] array) {
  *   int n = array.length;
  *   Applyer a = new Applyer(array, 0, n, null);
