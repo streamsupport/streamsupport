@@ -47,8 +47,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /*package*/ final class TLRandom {
 
     /** Generates per-thread initialization/probe field */
-    private static final AtomicInteger probeGenerator =
-        new AtomicInteger();
+    private static final AtomicInteger probeGenerator = new AtomicInteger();
 
     /**
      * The next seed for default constructors.
@@ -76,24 +75,29 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     /**
-     * The seed increment
+     * The seed increment.
      */
     private static final long GAMMA = 0x9e3779b97f4a7c15L;
 
     /**
-     * The increment for generating probe values
+     * The increment for generating probe values.
      */
     private static final int PROBE_INCREMENT = 0x9e3779b9;
 
     /**
-     * The increment of seeder per new instance
+     * The increment of seeder per new instance.
      */
     private static final long SEEDER_INCREMENT = 0xbb67ae8584caa73bL;
 
-    private static long mix64(long z) {
+    static long mix64(long z) {
         z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
         z = (z ^ (z >>> 33)) * 0xc4ceb9fe1a85ec53L;
         return z ^ (z >>> 33);
+    }
+
+    static int mix32(long z) {
+        z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
+        return (int) (((z ^ (z >>> 33)) * 0xc4ceb9fe1a85ec53L) >>> 32);
     }
 
     private TLRandom() {
@@ -167,11 +171,8 @@ import java.util.concurrent.atomic.AtomicLong;
             r ^= r >>> 17;
             r ^= r << 5;
         }
-        else {
-            localInit();
-            if ((r = (int) getThreadLocalRandomSeed()) == 0) {
-                r = 1; // avoid zero
-            }
+        else if ((r = mix32(seeder.getAndAdd(SEEDER_INCREMENT))) == 0) {
+            r = 1; // avoid zero
         }
         setThreadLocalRandomSecondarySeed(r);
         return r;
@@ -217,7 +218,7 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     private static void setUncontendedToTrue(Integer isUncontended) {
-        UNSAFE.putInt(isUncontended, VALUE_OFF, 1); // true
+        U.putInt(isUncontended, VALUE_OFF, 1); // true
     }
 
     // only called via reflection from Striped64 
@@ -232,13 +233,12 @@ import java.util.concurrent.atomic.AtomicLong;
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long VALUE_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> ik = Integer.class;
-            VALUE_OFF = UNSAFE.objectFieldOffset(ik.getDeclaredField("value"));
+            VALUE_OFF = U.objectFieldOffset(Integer.class
+                    .getDeclaredField("value"));
         } catch (Exception e) {
             throw new Error(e);
         }
