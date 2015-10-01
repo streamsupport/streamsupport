@@ -1,4 +1,33 @@
 /*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+/*
+ * This file is available under and governed by the GNU General Public
+ * License version 2 only, as published by the Free Software Foundation.
+ * However, the following notice accompanied the original version of this
+ * file:
+ *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -141,8 +170,7 @@ import java.util.concurrent.locks.LockSupport;
  * @since 1.7
  * @author Doug Lea
  */
-// revision 1.268 from 2015-08-09
-// http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/ForkJoinPool.java?revision=1.268
+//@sun.misc.Contended
 public class ForkJoinPool extends AbstractExecutorService {
 
     /*
@@ -271,7 +299,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * a spinlock, unlocking requires only a "releasing" store (using
      * putOrderedInt).  The qlock is also used during termination
      * detection, in which case it is forced to a negative
-     * nonlockable value.
+     * non-lockable value.
      *
      * Management
      * ==========
@@ -572,7 +600,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * each probe via the "bound" parameter.)
      *
      * The compensation mechanism may be bounded.  Bounds for the
-     * commonPool (see commonMaxSpares) better enable JVMs to cope
+     * commonPool (see COMMON_MAX_SPARES) better enable JVMs to cope
      * with programming errors and abuse before running out of
      * resources to do so. In other cases, users may supply factories
      * that limit thread construction. The effects of bounding in this
@@ -694,7 +722,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * Default ForkJoinWorkerThreadFactory implementation; creates a
      * new ForkJoinWorkerThread.
      */
-    static final class DefaultForkJoinWorkerThreadFactory
+    private static final class DefaultForkJoinWorkerThreadFactory
         implements ForkJoinWorkerThreadFactory {
         public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
             return new ForkJoinWorkerThread(pool);
@@ -707,7 +735,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * in WorkQueue.tryRemoveAndExec. We don't need the proxy to
      * actually do anything beyond having a unique identity.
      */
-    static final class EmptyTask extends ForkJoinTask<Void> {
+    private static final class EmptyTask extends ForkJoinTask<Void> {
         private static final long serialVersionUID = -7721805057305804111L;
         EmptyTask() { status = ForkJoinTask.NORMAL; } // force done
         public final Void getRawResult() { return null; }
@@ -718,7 +746,7 @@ public class ForkJoinPool extends AbstractExecutorService {
     /**
      * Additional fields and lock created upon initialization.
      */
-    static final class AuxState extends ReentrantLock {
+    private static final class AuxState extends ReentrantLock {
         private static final long serialVersionUID = -6001602636862214147L;
         volatile long stealCount;     // cumulative steal count
         long indexSeed;               // index bits for registerWorker
@@ -758,8 +786,10 @@ public class ForkJoinPool extends AbstractExecutorService {
      * Performance on most platforms is very sensitive to placement of
      * instances of both WorkQueues and their arrays -- we absolutely
      * do not want multiple WorkQueue instances or multiple queue
-     * arrays sharing cache lines.
+     * arrays sharing cache lines. The @Contended annotation alerts
+     * JVMs to try to keep instances apart.
      */
+    //@sun.misc.Contended
     static final class WorkQueue {
 
         /**
@@ -797,6 +827,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         final ForkJoinWorkerThread owner; // owning thread or null if shared
         volatile Thread parker;    // == owner during call to park; else null
         volatile ForkJoinTask<?> currentJoin;  // task being joined in awaitJoin
+        /*@sun.misc.Contended("group2")*/ // separate from other fields
         volatile ForkJoinTask<?> currentSteal; // nonnull when running some task
 
         WorkQueue(ForkJoinPool pool, ForkJoinWorkerThread owner) {
@@ -846,7 +877,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                 a[(al - 1) & s] = task;  // relaxed writes OK
                 top = s + 1;
                 ForkJoinPool p = pool;
-                MemBar.storeFence();          // ensure fields written before use
+                MemBar.storeFence();          // ensure fields written
                 if ((d = b - s) == 0 && p != null)
                     p.signalWork();
                 else if (al + d == 1)
@@ -897,7 +928,6 @@ public class ForkJoinPool extends AbstractExecutorService {
                 if (t != null &&
                     U.compareAndSwapObject(a, offset, t, null)) {
                     top = s;
-                    MemBar.storeFence();
                     return t;
                 }
             }
@@ -980,7 +1010,6 @@ public class ForkJoinPool extends AbstractExecutorService {
                 long offset = ((long)index << ASHIFT) + ABASE;
                 if (U.compareAndSwapObject(a, offset, task, null)) {
                     top = s;
-                    MemBar.storeFence();
                     return true;
                 }
             }
@@ -1036,16 +1065,15 @@ public class ForkJoinPool extends AbstractExecutorService {
         }
 
         /**
-         * Shared version of pop
+         * Shared version of pop.
          */
         final boolean trySharedUnpush(ForkJoinTask<?> task) {
             boolean popped = false;
-            int s = top - 1, al;  ForkJoinTask<?>[] a;
+            int s = top - 1, al; ForkJoinTask<?>[] a;
             if ((a = array) != null && (al = a.length) > 0) {
                 int index = (al - 1) & s;
                 long offset = ((long)index << ASHIFT) + ABASE;
-                ForkJoinTask<?> t = (ForkJoinTask<?>)
-                    U.getObject(a, offset);
+                ForkJoinTask<?> t = (ForkJoinTask<?>) U.getObject(a, offset);
                 if (t == task &&
                     U.compareAndSwapInt(this, QLOCK, 0, 1)) {
                     if (U.compareAndSwapObject(a, offset, task, null)) {
@@ -1205,7 +1233,6 @@ public class ForkJoinPool extends AbstractExecutorService {
                             if (s + 1 == top) {      // pop
                                 if (U.compareAndSwapObject(a, offset, t, null)) {
                                     top = s;
-                                    MemBar.storeFence();
                                     removed = true;
                                 }
                             }
@@ -1222,7 +1249,6 @@ public class ForkJoinPool extends AbstractExecutorService {
                         else if (t.status < 0 && s + 1 == top) {
                             if (U.compareAndSwapObject(a, offset, t, null)) {
                                 top = s;
-                                MemBar.storeFence();
                             }
                             break;                  // was cancelled
                         }
@@ -1269,7 +1295,6 @@ public class ForkJoinPool extends AbstractExecutorService {
                             else if (U.compareAndSwapObject(a, offset,
                                                             t, null)) {
                                 top = s - 1;
-                                MemBar.storeFence();
                                 return t;
                             }
                             break;
@@ -1343,13 +1368,12 @@ public class ForkJoinPool extends AbstractExecutorService {
         }
 
         // Unsafe mechanics. Note that some are (and must be) the same as in FJP
-        private static final sun.misc.Unsafe U;
+        private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
         private static final int  ABASE;
         private static final int  ASHIFT;
         private static final long QLOCK;
         static {
             try {
-                U = UnsafeAccess.unsafe;
                 QLOCK = U.objectFieldOffset
                     (WorkQueue.class.getDeclaredField("qlock"));
                 ABASE = U.arrayBaseOffset(ForkJoinTask[].class);
@@ -1374,9 +1398,9 @@ public class ForkJoinPool extends AbstractExecutorService {
 
     /**
      * Permission required for callers of methods that may start or
-     * kill threads. Also used as a private static lock in tryInitialize.
+     * kill threads.  Also used as a static lock in tryInitialize.
      */
-    private static final RuntimePermission modifyThreadPermission;
+    static final RuntimePermission modifyThreadPermission;
 
     /**
      * Common (static) pool. Non-null for public use unless a static
@@ -1392,12 +1416,12 @@ public class ForkJoinPool extends AbstractExecutorService {
      * common.parallelism field to be zero, but in that case still report
      * parallelism as 1 to reflect resulting caller-runs mechanics.
      */
-    static final int commonParallelism;
+    static final int COMMON_PARALLELISM;
 
     /**
      * Limit on spare thread construction in tryCompensate.
      */
-    private static int commonMaxSpares;
+    private static final int COMMON_MAX_SPARES;
 
     /**
      * Sequence number for creating workerNamePrefix.
@@ -1424,18 +1448,17 @@ public class ForkJoinPool extends AbstractExecutorService {
     private static final long IDLE_TIMEOUT_MS = 2000L; // 2sec
 
     /**
-     * Tolerance for idle timeouts, to cope with timer undershoots
+     * Tolerance for idle timeouts, to cope with timer undershoots.
      */
     private static final long TIMEOUT_SLOP_MS =   20L; // 20ms
 
     /**
-     * The initial value for commonMaxSpares during static
-     * initialization unless overridden using System property
-     * "java.util.concurrent.ForkJoinPool.common.maximumSpares".  The
-     * default value is far in excess of normal requirements, but also
-     * far short of MAX_CAP and typical OS thread limits, so allows
-     * JVMs to catch misuse/abuse before running out of resources
-     * needed to do so.
+     * The default value for COMMON_MAX_SPARES.  Overridable using the
+     * "java.util.concurrent.ForkJoinPool.common.maximumSpares" system
+     * property.  The default value is far in excess of normal
+     * requirements, but also far short of MAX_CAP and typical OS
+     * thread limits, so allows JVMs to catch misuse/abuse before
+     * running out of resources needed to do so.
      */
     private static final int DEFAULT_COMMON_MAX_SPARES = 256;
 
@@ -1528,8 +1551,12 @@ public class ForkJoinPool extends AbstractExecutorService {
             int rs; // create workQueues array with size a power of two
             int p = config & SMASK; // ensure at least 2 slots
             int n = (p > 1) ? p - 1 : 1;
-            n |= n >>> 1; n |= n >>> 2;  n |= n >>> 4;
-            n |= n >>> 8; n |= n >>> 16; n = ((n + 1) << 1) & SMASK;
+            n |= n >>> 1;
+            n |= n >>> 2;
+            n |= n >>> 4;
+            n |= n >>> 8;
+            n |= n >>> 16;
+            n = ((n + 1) << 1) & SMASK;
             AuxState aux = new AuxState();
             WorkQueue[] ws = new WorkQueue[n];
             synchronized (modifyThreadPermission) { // double-check
@@ -1611,7 +1638,6 @@ public class ForkJoinPool extends AbstractExecutorService {
         WorkQueue w = new WorkQueue(this, wt);
         int i = 0;                                    // assign a pool index
         int mode = config & MODE_MASK;
-        int rs = runState;
         if ((aux = auxState) != null) {
             aux.lock();
             try {
@@ -1654,7 +1680,6 @@ public class ForkJoinPool extends AbstractExecutorService {
      */
     final void deregisterWorker(ForkJoinWorkerThread wt, Throwable ex) {
         WorkQueue w = null;
-        int rs = runState;
         if (wt != null && (w = wt.workQueue) != null) {
             AuxState aux; WorkQueue[] ws;          // remove index from array
             int idx = w.config & SMASK;
@@ -1679,6 +1704,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                                                (SP_MASK & c))));
         }
         if (w != null) {
+            w.currentSteal = null;
             w.qlock = -1;                             // ensure set
             w.cancelAll();                            // cancel remaining tasks
         }
@@ -1773,11 +1799,11 @@ public class ForkJoinPool extends AbstractExecutorService {
      * @param r random seed
      */
     private void tryReactivate(WorkQueue w, WorkQueue[] ws, int r) {
-        long c; int sp, wl, m; WorkQueue v;
+        long c; int sp, wl; WorkQueue v;
         if ((sp = (int)(c = ctl)) != 0 && w != null &&
             ws != null && (wl = ws.length) > 0 &&
-            ((m = wl - 1) & ((sp ^ r) >>> 16)) <= 1 &&
-            (v = ws[m & sp]) != null) {
+            ((sp ^ r) & SS_SEQ) == 0 &&
+            (v = ws[(wl - 1) & sp]) != null) {
             long nc = (v.stackPred & SP_MASK) | (UC_MASK & (c + AC_UNIT));
             int ns = sp & ~UNSIGNALLED;
             if (w.scanState < 0 &&
@@ -1829,8 +1855,11 @@ public class ForkJoinPool extends AbstractExecutorService {
                 if (w.scanState < 0) {           // recheck after write
                     LockSupport.park(this);
                     if ((stat = w.qlock) >= 0 && w.scanState < 0) {
-                        Thread.interrupted();    // clear status
-                        LockSupport.park(this);  // retry once
+                        Thread.interrupted();    // clear status and retry once
+                        if ((runState & STOP) != 0)
+                            stat = w.qlock = -1;
+                        else
+                            LockSupport.park(this);
                     }
                 }
                 w.parker = null;
@@ -1873,7 +1902,8 @@ public class ForkJoinPool extends AbstractExecutorService {
                         int cfg = w.config, idx = cfg & SMASK;
                         long nc = ((UC_MASK & (c - TC_UNIT)) |
                                    (SP_MASK & w.stackPred));
-                        if ((ws = workQueues) != null &&
+                        if ((runState & STOP) == 0 &&
+                            (ws = workQueues) != null &&
                             idx < ws.length && idx >= 0 && ws[idx] == w &&
                             U.compareAndSwapLong(this, CTL, c, nc)) {
                             ws[idx] = null;
@@ -2221,7 +2251,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                 canBlock = U.compareAndSwapLong(this, CTL, c, nc);
             }
             else if (tc >= MAX_CAP ||
-                     (this == common && tc >= pc + commonMaxSpares))
+                     (this == common && tc >= pc + COMMON_MAX_SPARES))
                 throw new RejectedExecutionException(
                     "Thread limit exceeded replacing blocked worker");
             else {                                  // similar to tryAddWorker
@@ -2448,12 +2478,12 @@ public class ForkJoinPool extends AbstractExecutorService {
                         break;                    // check queues
                     for (int i = 0; i <= m; ++i) {
                         if ((w = ws[i]) != null) {
-                            if ((b = w.base) != w.top ||
+                            if (((b = w.base) != w.top && !w.isEmpty()) ||
                                 w.currentSteal != null) {
-                                while ((sp = (int)(c = ctl)) != 0 &&
-                                       !tryRelease(c, ws[m & sp], AC_UNIT))
-                                    ;
-                                return false;     // arrange for recheck
+                                if ((sp = (int)(c = ctl)) == 0 ||
+                                    tryRelease(c, ws[m & sp], AC_UNIT))
+                                    return false; // arrange for recheck
+                                oldSum = 0L;      // rescan
                             }
                             checkSum += b;
                             if ((i & 1) == 0)
@@ -2927,7 +2957,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * @since 1.8
      */
     public static int getCommonPoolParallelism() {
-        return commonParallelism;
+        return COMMON_PARALLELISM;
     }
 
     /**
@@ -3497,14 +3527,13 @@ public class ForkJoinPool extends AbstractExecutorService {
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe U;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long CTL;
     private static final int  ABASE;
     private static final int  ASHIFT;
 
     static {
         try {
-            U = UnsafeAccess.unsafe;
             CTL = U.objectFieldOffset
                 (ForkJoinPool.class.getDeclaredField("ctl"));
             ABASE = U.arrayBaseOffset(ForkJoinTask[].class);
@@ -3518,9 +3547,18 @@ public class ForkJoinPool extends AbstractExecutorService {
 
         // Reduce the risk of rare disastrous classloading in first call to
         // LockSupport.park: https://bugs.openjdk.java.net/browse/JDK-8074773
+        @SuppressWarnings("unused")
         Class<?> ensureLoaded = LockSupport.class;
 
-        commonMaxSpares = DEFAULT_COMMON_MAX_SPARES;
+        int commonMaxSpares = DEFAULT_COMMON_MAX_SPARES;
+        try {
+            String p = System.getProperty
+                ("java.util.concurrent.ForkJoinPool.common.maximumSpares");
+            if (p != null)
+                commonMaxSpares = Integer.parseInt(p);
+        } catch (Exception ignore) {}
+        COMMON_MAX_SPARES = commonMaxSpares;
+
         defaultForkJoinWorkerThreadFactory =
             new DefaultForkJoinWorkerThreadFactory();
         modifyThreadPermission = new RuntimePermission("modifyThread");
@@ -3528,15 +3566,16 @@ public class ForkJoinPool extends AbstractExecutorService {
         common = java.security.AccessController.doPrivileged
             (new java.security.PrivilegedAction<ForkJoinPool>() {
                 public ForkJoinPool run() { return makeCommonPool(); }});
-        int par = common.config & SMASK; // report 1 even if threads disabled
-        commonParallelism = par > 0 ? par : 1;
+
+        // report 1 even if threads disabled
+        COMMON_PARALLELISM = Math.max(common.config & SMASK, 1);
     }
 
     /**
      * Creates and returns the common pool, respecting user settings
      * specified via system properties.
      */
-    private static ForkJoinPool makeCommonPool() {
+    static ForkJoinPool makeCommonPool() {
         int parallelism = -1;
         ForkJoinWorkerThreadFactory factory = null;
         UncaughtExceptionHandler handler = null;
@@ -3547,8 +3586,6 @@ public class ForkJoinPool extends AbstractExecutorService {
                 ("java.util.concurrent.ForkJoinPool.common.threadFactory");
             String hp = System.getProperty
                 ("java.util.concurrent.ForkJoinPool.common.exceptionHandler");
-            String mp = System.getProperty
-                ("java.util.concurrent.ForkJoinPool.common.maximumSpares");
             if (pp != null)
                 parallelism = Integer.parseInt(pp);
             if (fp != null)
@@ -3557,15 +3594,15 @@ public class ForkJoinPool extends AbstractExecutorService {
             if (hp != null)
                 handler = ((UncaughtExceptionHandler)ClassLoader.
                            getSystemClassLoader().loadClass(hp).newInstance());
-            if (mp != null)
-                commonMaxSpares = Integer.parseInt(mp);
         } catch (Exception ignore) {
         }
         if (factory == null) {
-            if (System.getSecurityManager() == null)
+            if (System.getSecurityManager() == null) {
                 factory = defaultForkJoinWorkerThreadFactory;
-            else // use security-managed default
+            } else { // use security-managed default
+                // note that this will never get called on Android!
                 factory = new InnocuousForkJoinWorkerThreadFactory();
+            }
         }
         if (parallelism < 0 && // default 1 less than #cores
             (parallelism = Runtime.getRuntime().availableProcessors() - 1) <= 0)
@@ -3577,9 +3614,9 @@ public class ForkJoinPool extends AbstractExecutorService {
     }
 
     /**
-     * Factory for innocuous worker threads
+     * Factory for innocuous worker threads.
      */
-    static final class InnocuousForkJoinWorkerThreadFactory
+    private static final class InnocuousForkJoinWorkerThreadFactory
         implements ForkJoinWorkerThreadFactory {
 
         /**
@@ -3616,21 +3653,20 @@ public class ForkJoinPool extends AbstractExecutorService {
             U.getIntVolatile(x, OFF);
         }
         static void storeFence() {
-            U.putIntVolatile(x, OFF, 0);
+            U.putOrderedInt(x, OFF, 0);
         }
         static void fullFence() {
-            U.putOrderedInt(x, OFF, 0);
+            U.putIntVolatile(x, OFF, 0);
         }
 
         private MemBar() {
         }
 
         // Unsafe mechanics
-        private static final sun.misc.Unsafe U;
+        private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
         private static final long OFF;
         static {
             try {
-                U = UnsafeAccess.unsafe;
                 OFF = U.objectFieldOffset(AtomicInteger.class.getDeclaredField("value"));
             } catch (Exception e) {
                 throw new Error(e);
