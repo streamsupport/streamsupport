@@ -1449,10 +1449,10 @@ public class StampedLock implements java.io.Serializable {
             U.getIntVolatile(x, OFF);
         }
         static void storeFence() {
-            U.putIntVolatile(x, OFF, 0);
+            U.putOrderedInt(x, OFF, 0);
         }
         static void fullFence() {
-            U.putOrderedInt(x, OFF, 0);
+            U.putIntVolatile(x, OFF, 0);
         }
 
         private MemBar() {
