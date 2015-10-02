@@ -1,4 +1,33 @@
 /*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+/*
+ * This file is available under and governed by the GNU General Public
+ * License version 2 only, as published by the Free Software Foundation.
+ * However, the following notice accompanied the original version of this
+ * file:
+ *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -16,22 +45,25 @@ import java.util.concurrent.locks.LockSupport;
 
 import java8.util.function.BiConsumer;
 import java8.util.function.BiPredicate;
+import java8.util.function.Consumer;
 
 /**
  * A {@link Flow.Publisher} that asynchronously issues submitted
  * (non-null) items to current subscribers until it is closed.  Each
  * current subscriber receives newly submitted items in the same order
  * unless drops or exceptions are encountered.  Using a
- * SubmissionPublisher allows item generators to act as Publishers
- * relying on drop handling and/or blocking for flow control.
+ * SubmissionPublisher allows item generators to act as compliant <a
+ * href="http://www.reactive-streams.org/"> reactive-streams</a>
+ * Publishers relying on drop handling and/or blocking for flow
+ * control.
  *
  * <p>A SubmissionPublisher uses the {@link Executor} supplied in its
  * constructor for delivery to subscribers. The best choice of
  * Executor depends on expected usage. If the generator(s) of
  * submitted items run in separate threads, and the number of
  * subscribers can be estimated, consider using a {@link
- * Executors#newFixedThreadPool}. Otherwise consider using
- * the default {@link ForkJoinPool#commonPool}.
+ * Executors#newFixedThreadPool}. Otherwise consider using the
+ * default, normally the {@link ForkJoinPool#commonPool}.
  *
  * <p>Buffering allows producers and consumers to transiently operate
  * at different rates.  Each subscriber uses an independent buffer.
@@ -39,31 +71,37 @@ import java8.util.function.BiPredicate;
  * given maximum. (The enforced capacity may be rounded up to the
  * nearest power of two and/or bounded by the largest value supported
  * by this implementation.)  Invocations of {@link
- * Flow.Subscription#request} do not directly result in buffer
- * expansion, but risk saturation if unfilled requests exceed the
- * maximum capacity.  The default value of {@link
- * Flow#defaultBufferSize} may provide a useful starting point for
+ * Flow.Subscription#request(long) request} do not directly result in
+ * buffer expansion, but risk saturation if unfilled requests exceed
+ * the maximum capacity.  The default value of {@link
+ * Flow#defaultBufferSize()} may provide a useful starting point for
  * choosing a capacity based on expected rates, resources, and usages.
  *
  * <p>Publication methods support different policies about what to do
- * when buffers are saturated. Method {@link #submit} blocks until
- * resources are available. This is simplest, but least responsive.
- * The {@code offer} methods may drop items (either immediately or
- * with bounded timeout), but provide an opportunity to interpose a
- * handler and then retry.
+ * when buffers are saturated. Method {@link #submit(Object) submit}
+ * blocks until resources are available. This is simplest, but least
+ * responsive.  The {@code offer} methods may drop items (either
+ * immediately or with bounded timeout), but provide an opportunity to
+ * interpose a handler and then retry.
  *
  * <p>If any Subscriber method throws an exception, its subscription
  * is cancelled.  If a handler is supplied as a constructor argument,
  * it is invoked before cancellation upon an exception in method
- * {@code onNext}, but exceptions in methods {@code onSubscribe}
- * {@code onError} and {@code onComplete} are not recorded or handled
- * before cancellation.  If the supplied Executor throws {@link
- * RejectedExecutionException} (or any other RuntimeException or
- * Error) when attempting to execute a task, or a drop handler throws
- * an exception when processing a dropped item, then the exception is
- * rethrown. In these cases, not all subscribers will have been issued
- * the published item. It is usually good practice to {@link
- * #closeExceptionally closeExceptionally} in these cases.
+ * {@link Flow.Subscriber#onNext onNext}, but exceptions in methods
+ * {@link Flow.Subscriber#onSubscribe onSubscribe},
+ * {@link Flow.Subscriber#onError(Throwable) onError} and
+ * {@link Flow.Subscriber#onComplete() onComplete} are not recorded or
+ * handled before cancellation.  If the supplied Executor throws
+ * {@link RejectedExecutionException} (or any other RuntimeException
+ * or Error) when attempting to execute a task, or a drop handler
+ * throws an exception when processing a dropped item, then the
+ * exception is rethrown. In these cases, not all subscribers will
+ * have been issued the published item. It is usually good practice to
+ * {@link #closeExceptionally closeExceptionally} in these cases.
+ *
+ * <p>Method {@link #consume(Consumer)} simplifies support for a
+ * common case in which the only action of a subscriber is to request
+ * and process all items using a supplied function.
  *
  * <p>This class may also serve as a convenient base for subclasses
  * that generate items, and use the methods in this class to publish
@@ -123,8 +161,6 @@ import java8.util.function.BiPredicate;
  * @author Doug Lea
  * @since 9
  */
-// revision 1.39 from 2015-08-09
-// http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/SubmissionPublisher.java?revision=1.39
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     /*
      * Most mechanics are handled by BufferedSubscription. This class
@@ -135,18 +171,33 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      */
 
     /** The largest possible power of two array size. */
-    static final int BUFFER_CAPACITY_LIMIT  = 1 << 30;
+    static final int BUFFER_CAPACITY_LIMIT = 1 << 30;
 
-    /** Round capacity to power of 2, at least 2, at most limit. */
-    static final int roundCapacity(int cap) { // to nearest power of 2
+    /** Round capacity to power of 2, at most limit. */
+    static final int roundCapacity(int cap) {
         int n = cap - 1;
         n |= n >>> 1;
         n |= n >>> 2;
         n |= n >>> 4;
         n |= n >>> 8;
         n |= n >>> 16;
-        return (n <= 0) ? 2 : // at least 2
+        return (n <= 0) ? 1 : // at least 1
             (n >= BUFFER_CAPACITY_LIMIT) ? BUFFER_CAPACITY_LIMIT : n + 1;
+    }
+
+    // default Executor setup; nearly the same as CompletableFuture
+
+    /**
+     * Default executor -- ForkJoinPool.commonPool() unless it cannot
+     * support parallelism.
+     */
+    private static final Executor ASYNC_POOL =
+        (ForkJoinPool.getCommonPoolParallelism() > 1) ?
+        ForkJoinPool.commonPool() : new ThreadPerTaskExecutor();
+
+    /** Fallback if ForkJoinPool.commonPool() cannot support parallelism */
+    private static final class ThreadPerTaskExecutor implements Executor {
+        public void execute(Runnable r) { new Thread(r).start(); }
     }
 
     /**
@@ -176,9 +227,10 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /**
      * Creates a new SubmissionPublisher using the given Executor for
-     * async delivery to subscribers, with the given maximum
-     * buffer size for each subscriber, and, if non-null, the given handler
-     * invoked when any Subscriber throws an exception in method {@code onNext}.
+     * async delivery to subscribers, with the given maximum buffer size
+     * for each subscriber, and, if non-null, the given handler invoked
+     * when any Subscriber throws an exception in method {@link
+     * Flow.Subscriber#onNext(Object) onNext}.
      *
      * @param executor the executor to use for async delivery,
      * supporting creation of at least one independent thread
@@ -188,7 +240,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * supported by this implementation; method {@link #getMaxBufferCapacity}
      * returns the actual value)
      * @param handler if non-null, procedure to invoke upon exception
-     * thrown in method {@code onNext}.
+     * thrown in method {@code onNext}
      * @throws NullPointerException if executor is null
      * @throws IllegalArgumentException if maxBufferCapacity not
      * positive
@@ -206,9 +258,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /**
      * Creates a new SubmissionPublisher using the given Executor for
-     * async delivery to subscribers, with the given maximum
-     * buffer size for each subscriber, and no handler for Subscriber
-     * exceptions in method {@code onNext}.
+     * async delivery to subscribers, with the given maximum buffer size
+     * for each subscriber, and no handler for Subscriber exceptions in
+     * method {@link Flow.Subscriber#onNext(Object) onNext}.
      *
      * @param executor the executor to use for async delivery,
      * supporting creation of at least one independent thread
@@ -227,30 +279,35 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /**
      * Creates a new SubmissionPublisher using the {@link
-     * ForkJoinPool#commonPool()} for async delivery to subscribers,
-     * with maximum buffer capacity of {@link Flow#defaultBufferSize},
-     * and no handler for Subscriber exceptions in method {@code
-     * onNext}.
+     * ForkJoinPool#commonPool()} for async delivery to subscribers
+     * (unless it does not support a parallelism level of at least two,
+     * in which case, a new Thread is created to run each task), with
+     * maximum buffer capacity of {@link Flow#defaultBufferSize}, and no
+     * handler for Subscriber exceptions in method {@link
+     * Flow.Subscriber#onNext(Object) onNext}.
      */
     public SubmissionPublisher() {
-        this(ForkJoinPool.commonPool(), Flow.defaultBufferSize(), null);
+        this(ASYNC_POOL, Flow.defaultBufferSize(), null);
     }
 
     /**
-     * Adds the given Subscriber unless already subscribed.  If
-     * already subscribed, the Subscriber's {@code onError} method is
-     * invoked on the existing subscription with an {@link
-     * IllegalStateException}.  Otherwise, upon success, the
-     * Subscriber's {@code onSubscribe} method is invoked
-     * asynchronously with a new {@link Flow.Subscription}. If {@code
-     * onSubscribe} throws an exception, the subscription is
-     * cancelled. Otherwise, if this SubmissionPublisher was closed
-     * exceptionally, then the subscriber's {@code onError} method is
-     * invoked with the corresponding exception, or if closed without
-     * exception, the subscriber's {@code onComplete} method is
-     * invoked.  Subscribers may enable receiving items by invoking
-     * the {@code request} method of the new Subscription, and may
-     * unsubscribe by invoking its {@code cancel} method.
+     * Adds the given Subscriber unless already subscribed.  If already
+     * subscribed, the Subscriber's {@link
+     * Flow.Subscriber#onError(Throwable) onError} method is invoked on
+     * the existing subscription with an {@link IllegalStateException}.
+     * Otherwise, upon success, the Subscriber's {@link
+     * Flow.Subscriber#onSubscribe onSubscribe} method is invoked
+     * asynchronously with a new {@link Flow.Subscription}.  If {@link
+     * Flow.Subscriber#onSubscribe onSubscribe} throws an exception, the
+     * subscription is cancelled. Otherwise, if this SubmissionPublisher
+     * was closed exceptionally, then the subscriber's {@link
+     * Flow.Subscriber#onError onError} method is invoked with the
+     * corresponding exception, or if closed without exception, the
+     * subscriber's {@link Flow.Subscriber#onComplete() onComplete}
+     * method is invoked.  Subscribers may enable receiving items by
+     * invoking the {@link Flow.Subscription#request(long) request}
+     * method of the new Subscription, and may unsubscribe by invoking
+     * its {@link Flow.Subscription#cancel() cancel} method.
      *
      * @param subscriber the subscriber
      * @throws NullPointerException if subscriber is null
@@ -296,12 +353,12 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /**
      * Publishes the given item to each current subscriber by
-     * asynchronously invoking its {@link Flow.Subscriber#onNext}
-     * method, blocking uninterruptibly while resources for any
+     * asynchronously invoking its {@link Flow.Subscriber#onNext(Object)
+     * onNext} method, blocking uninterruptibly while resources for any
      * subscriber are unavailable. This method returns an estimate of
-     * the maximum lag (number of items submitted but not yet
-     * consumed) among all current subscribers. This value is at least
-     * one (accounting for this submitted item) if there are any
+     * the maximum lag (number of items submitted but not yet consumed)
+     * among all current subscribers. This value is at least one
+     * (accounting for this submitted item) if there are any
      * subscribers, else zero.
      *
      * <p>If the Executor for this publisher throws a
@@ -369,16 +426,17 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     }
 
     /**
-     * Publishes the given item, if possible, to each current
-     * subscriber by asynchronously invoking its {@link
-     * Flow.Subscriber#onNext} method. The item may be dropped by one
-     * or more subscribers if resource limits are exceeded, in which
-     * case the given handler (if non-null) is invoked, and if it
-     * returns true, retried once.  Other calls to methods in this
-     * class by other threads are blocked while the handler is
-     * invoked.  Unless recovery is assured, options are usually
-     * limited to logging the error and/or issuing an {@code onError}
-     * signal to the subscriber.
+     * Publishes the given item, if possible, to each current subscriber
+     * by asynchronously invoking its {@link
+     * Flow.Subscriber#onNext(Object) onNext} method. The item may be
+     * dropped by one or more subscribers if resource limits are
+     * exceeded, in which case the given handler (if non-null) is
+     * invoked, and if it returns true, retried once.  Other calls to
+     * methods in this class by other threads are blocked while the
+     * handler is invoked.  Unless recovery is assured, options are
+     * usually limited to logging the error and/or issuing an {@link
+     * Flow.Subscriber#onError(Throwable) onError} signal to the
+     * subscriber.
      *
      * <p>This method returns a status indicator: If negative, it
      * represents the (negative) number of drops (failed attempts to
@@ -410,19 +468,19 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     }
 
     /**
-     * Publishes the given item, if possible, to each current
-     * subscriber by asynchronously invoking its {@link
-     * Flow.Subscriber#onNext} method, blocking while resources for
-     * any subscription are unavailable, up to the specified timeout
-     * or the caller thread is interrupted, at which point the given
-     * handler (if non-null) is invoked, and if it returns true,
-     * retried once. (The drop handler may distinguish timeouts from
-     * interrupts by checking whether the current thread is
-     * interrupted.) Other calls to methods in this class by other
+     * Publishes the given item, if possible, to each current subscriber
+     * by asynchronously invoking its {@link
+     * Flow.Subscriber#onNext(Object) onNext} method, blocking while
+     * resources for any subscription are unavailable, up to the
+     * specified timeout or until the caller thread is interrupted, at
+     * which point the given handler (if non-null) is invoked, and if it
+     * returns true, retried once. (The drop handler may distinguish
+     * timeouts from interrupts by checking whether the current thread
+     * is interrupted.)  Other calls to methods in this class by other
      * threads are blocked while the handler is invoked.  Unless
      * recovery is assured, options are usually limited to logging the
-     * error and/or issuing an {@code onError} signal to the
-     * subscriber.
+     * error and/or issuing an {@link Flow.Subscriber#onError(Throwable)
+     * onError} signal to the subscriber.
      *
      * <p>This method returns a status indicator: If negative, it
      * represents the (negative) number of drops (failed attempts to
@@ -521,10 +579,10 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /**
      * Unless already closed, issues {@link
-     * Flow.Subscriber#onComplete} signals to current subscribers, and
-     * disallows subsequent attempts to publish. Upon return, this
-     * method does <em>NOT</em> guarantee that all subscribers have
-     * yet completed.
+     * Flow.Subscriber#onComplete() onComplete} signals to current
+     * subscribers, and disallows subsequent attempts to publish.
+     * Upon return, this method does <em>NOT</em> guarantee that all
+     * subscribers have yet completed.
      */
     public void close() {
         if (!closed) {
@@ -544,11 +602,12 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     }
 
     /**
-     * Unless already closed, issues {@link Flow.Subscriber#onError}
-     * signals to current subscribers with the given error, and
-     * disallows subsequent attempts to publish.  Future subscribers
-     * also receive the given error. Upon return, this method does
-     * <em>NOT</em> guarantee that all subscribers have yet completed.
+     * Unless already closed, issues {@link
+     * Flow.Subscriber#onError(Throwable) onError} signals to current
+     * subscribers with the given error, and disallows subsequent
+     * attempts to publish.  Future subscribers also receive the given
+     * error. Upon return, this method does <em>NOT</em> guarantee
+     * that all subscribers have yet completed.
      *
      * @param error the {@code onError} argument sent to subscribers
      * @throws NullPointerException if error is null
@@ -583,8 +642,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     }
 
     /**
-     * Returns the exception associated with {@link #closeExceptionally},
-     * or null if not closed or if closed normally.
+     * Returns the exception associated with {@link
+     * #closeExceptionally(Throwable) closeExceptionally}, or null if
+     * not closed or if closed normally.
      *
      * @return the exception, or null if none
      */
@@ -724,8 +784,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /**
      * Returns an estimate of the minimum number of items requested
-     * (via {@link Flow.Subscription#request}) but not yet produced,
-     * among all current subscribers.
+     * (via {@link Flow.Subscription#request(long) request}) but not
+     * yet produced, among all current subscribers.
      *
      * @return the estimate, or zero if no subscribers
      */
@@ -783,6 +843,61 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
             }
         }
         return max;
+    }
+
+    /**
+     * Processes all published items using the given Consumer function.
+     * Returns a CompletableFuture that is completed normally when this
+     * publisher signals {@link Flow.Subscriber#onComplete()
+     * onComplete}, or completed exceptionally upon any error, or an
+     * exception is thrown by the Consumer, or the returned
+     * CompletableFuture is cancelled, in which case no further items
+     * are processed.
+     *
+     * @param consumer the function applied to each onNext item
+     * @return a CompletableFuture that is completed normally
+     * when the publisher signals onComplete, and exceptionally
+     * upon any error or cancellation
+     * @throws NullPointerException if consumer is null
+     */
+    public CompletableFuture<Void> consume(Consumer<? super T> consumer) {
+        if (consumer == null)
+            throw new NullPointerException();
+        CompletableFuture<Void> status = new CompletableFuture<Void>();
+        subscribe(new ConsumerSubscriber<T>(status, consumer));
+        return status;
+    }
+
+    /** Subscriber for method consume */
+    private static final class ConsumerSubscriber<T>
+            implements Flow.Subscriber<T> {
+        final CompletableFuture<Void> status;
+        final Consumer<? super T> consumer;
+        Flow.Subscription subscription;
+        ConsumerSubscriber(CompletableFuture<Void> status,
+                           Consumer<? super T> consumer) {
+            this.status = status; this.consumer = consumer;
+        }
+        public final void onSubscribe(Flow.Subscription subscription) {
+            this.subscription = subscription;
+            status.whenComplete((v, e) -> subscription.cancel());
+            if (!status.isDone())
+                subscription.request(Long.MAX_VALUE);
+        }
+        public final void onError(Throwable ex) {
+            status.completeExceptionally(ex);
+        }
+        public final void onComplete() {
+            status.complete(null);
+        }
+        public final void onNext(T item) {
+            try {
+                consumer.accept(item);
+            } catch (Throwable ex) {
+                subscription.cancel();
+                status.completeExceptionally(ex);
+            }
+        }
     }
 
     /**
@@ -854,7 +969,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * before blocking.  To avoid potential cycles, only one level of
      * helping is currently supported.
      *
-     * This class uses heuristic field declaration
+     * This class uses @Contended and heuristic field declaration
      * ordering to reduce false-sharing-based memory contention among
      * instances of BufferedSubscription, but it does not currently
      * attempt to avoid memory contention among buffers. This field
@@ -863,7 +978,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * Addressing this may require allocating substantially more space
      * than users expect.
      */
-    static final class BufferedSubscription<T>
+    //@sun.misc.Contended
+    private static final class BufferedSubscription<T>
         implements Flow.Subscription, ForkJoinPool.ManagedBlocker {
         // Order-sensitive field declarations
         long timeout;                      // > 0 if timed wait
@@ -895,9 +1011,10 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         static final long INTERRUPTED = -1L; // timeout vs interrupt sentinel
 
         /**
-         * Initial/Minimum buffer capacity. Must be a power of two, at least 2.
+         * Initial buffer capacity used when maxBufferCapacity is
+         * greater. Must be a power of two.
          */
-        static final int MINCAP = 16;
+        static final int DEFAULT_INITIAL_CAP = 32;
 
         BufferedSubscription(Flow.Subscriber<? super T> subscriber,
                              Executor executor,
@@ -908,7 +1025,10 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
             this.executor = executor;
             this.onNextHandler = onNextHandler;
             this.maxCapacity = maxBufferCapacity;
-            this.array = new Object[MINCAP];
+            this.array = new Object[maxBufferCapacity < DEFAULT_INITIAL_CAP ?
+                                    (maxBufferCapacity < 2 ? // at least 2 slots
+                                     2 : maxBufferCapacity) :
+                                    DEFAULT_INITIAL_CAP];
         }
 
         final boolean isDisabled() {
@@ -917,7 +1037,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
         /**
          * Returns estimated number of buffered items, or -1 if
-         * disabled
+         * disabled.
          */
         final int estimateLag() {
             int n;
@@ -931,10 +1051,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         final int offer(T item) {
             int h = head, t = tail, cap, size, stat;
             Object[] a = array;
-            if (a != null && (cap = a.length) > 0 && cap > (size = t + 1 - h)) {
+            if (a != null && (cap = a.length) > 0 && cap >= (size = t + 1 - h)) {
                 a[(cap - 1) & t] = item;    // relaxed writes OK
                 tail = t + 1;
-                ForkJoinPool.MemBar.storeFence();             // ensure fields written
                 stat = size;
             }
             else
@@ -963,10 +1082,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
             else {
                 ForkJoinPool.MemBar.fullFence();                   // recheck
                 int h = head, t = tail, size = t + 1 - h;
-                if (cap > size) {
+                if (cap >= size) {
                     a[(cap - 1) & t] = item;
                     tail = t + 1;
-                    ForkJoinPool.MemBar.storeFence();
                     stat = size;
                     alloc = false;
                 }
@@ -980,9 +1098,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 }
             }
             if (alloc) {
-                int newCap = (cap > 0 ? cap << 1 :
-                              maxCapacity >= MINCAP ? MINCAP :
-                              maxCapacity >= 2 ? maxCapacity : 2);
+                int newCap = (cap > 0) ? cap << 1 : 1;
                 if (newCap <= cap)
                     stat = 0;
                 else {
@@ -1012,7 +1128,6 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                         }
                         newArray[t & newMask] = item;
                         tail = t + 1;
-                        ForkJoinPool.MemBar.storeFence();
                     }
                 }
             }
@@ -1053,7 +1168,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         /**
-         * Tries helping for FJ submitter
+         * Tries helping for FJ submitter.
          */
         private int internalHelpConsume(ForkJoinPool.WorkQueue w, T item) {
             int stat = 0;
@@ -1062,14 +1177,14 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 while ((t = w.peek()) != null && (t instanceof ConsumerTask)) {
                     if ((stat = offer(item)) != 0 || !w.tryUnpush(t))
                         break;
-                    ((ConsumerTask<?>)t).consumer.consume();
+                    ((ConsumerTask<?>) t).consumer.consume();
                 }
             }
             return stat;
         }
 
         /**
-         * Tries helping for non-FJ submitter
+         * Tries helping for non-FJ submitter.
          */
         private int externalHelpConsume(ForkJoinPool.WorkQueue w, T item) {
             int stat = 0;
@@ -1078,14 +1193,14 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 while ((t = w.peek()) != null && (t instanceof ConsumerTask)) {
                     if ((stat = offer(item)) != 0 || !w.trySharedUnpush(t))
                         break;
-                    ((ConsumerTask<?>)t).consumer.consume();
+                    ((ConsumerTask<?>) t).consumer.consume();
                 }
             }
             return stat;
         }
 
         /**
-         * Timeout version; similar to submit
+         * Timeout version; similar to submit.
          */
         final int timedOffer(T item, long nanos) {
             int stat; Executor e;
@@ -1104,7 +1219,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                             (nanos = deadline - System.nanoTime()) <= 0L ||
                             !t.tryUnfork())
                             break;
-                        ((ConsumerTask<?>)t).consumer.consume();
+                        ((ConsumerTask<?>) t).consumer.consume();
                     }
                     helpDepth = 0;
                 }
@@ -1372,7 +1487,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                     else if ((a = array) == null || h == tail ||
                              (n = a.length) == 0 ||
                              (x = U.getObjectVolatile
-                              (a, (i = ((long)((n - 1) & h) << ASHIFT) + ABASE)))
+                              (a, (i = ((long) ((n - 1) & h) << ASHIFT) + ABASE)))
                              == null) {
                         if (!checkEmpty(s, c))
                             break;
@@ -1400,7 +1515,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         /**
-         * Respond to control events in consume()
+         * Responds to control events in consume().
          */
         private boolean checkControl(Flow.Subscriber<? super T> s, int c) {
             boolean stat = true;
@@ -1433,7 +1548,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         /**
-         * Respond to apparent emptiness in consume()
+         * Responds to apparent emptiness in consume().
          */
         private boolean checkEmpty(Flow.Subscriber<? super T> s, int c) {
             boolean stat = true;
@@ -1456,7 +1571,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         /**
-         * Respond to apparent zero demand in consume()
+         * Responds to apparent zero demand in consume().
          */
         private boolean checkDemand(int c) {
             boolean stat = true;
@@ -1470,7 +1585,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         /**
-         * Process exception in Subscriber.onNext
+         * Processes exception in Subscriber.onNext.
          */
         private void handleOnNext(Flow.Subscriber<? super T> s, Throwable ex) {
             BiConsumer<? super Flow.Subscriber<? super T>, ? super Throwable> h;
@@ -1484,9 +1599,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
 
         // Unsafe mechanics
-        private static final sun.misc.Unsafe U;
+        private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
         private static final long CTL;
-        private static final long TAIL;
         private static final long HEAD;
         private static final long DEMAND;
         private static final int  ABASE;
@@ -1494,11 +1608,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
         static {
             try {
-                U = UnsafeAccess.unsafe;
                 CTL = U.objectFieldOffset
                     (BufferedSubscription.class.getDeclaredField("ctl"));
-                TAIL = U.objectFieldOffset
-                    (BufferedSubscription.class.getDeclaredField("tail"));
                 HEAD = U.objectFieldOffset
                     (BufferedSubscription.class.getDeclaredField("head"));
                 DEMAND = U.objectFieldOffset
@@ -1515,6 +1626,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
             // Reduce the risk of rare disastrous classloading in first call to
             // LockSupport.park: https://bugs.openjdk.java.net/browse/JDK-8074773
+            @SuppressWarnings("unused")
             Class<?> ensureLoaded = LockSupport.class;
         }
     }
