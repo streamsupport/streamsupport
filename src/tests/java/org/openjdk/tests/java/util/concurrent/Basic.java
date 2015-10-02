@@ -47,11 +47,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import static java.util.concurrent.TimeUnit.*;
+
+import org.testng.annotations.Test;
 
 import java8.util.concurrent.Phaser;
 import java8.util.concurrent.CompletableFuture;
 import java8.util.concurrent.CompletionException;
+import static java.util.concurrent.TimeUnit.*;
 import static java8.util.concurrent.CompletableFuture.*;
 import static java8.util.concurrent.ForkJoinPool.*;
 
@@ -828,7 +830,13 @@ public class Basic {
         for (Object o : y)
             sb.append(o).append(" ");
         fail(x + " not equal to one of [" + sb + "]");}
-    public static void main(String[] args) throws Throwable {
+
+    @Test
+    public static void test() {
+        main(new String[]{});
+    }
+
+    public static void main(String[] args) {
         try {realMain(args);} catch (Throwable t) {unexpected(t);}
         System.out.printf("%nPassed = %d, failed = %d%n%n", passed, failed);
         if (failed > 0) throw new AssertionError("Some tests failed");}
