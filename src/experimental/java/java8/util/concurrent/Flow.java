@@ -1,4 +1,33 @@
 /*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+/*
+ * This file is available under and governed by the GNU General Public
+ * License version 2 only, as published by the Free Software Foundation.
+ * However, the following notice accompanied the original version of this
+ * file:
+ *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -6,13 +35,7 @@
 
 package java8.util.concurrent;
 
-import java.util.ArrayList;
 import java.util.concurrent.Executor;
-
-import java8.util.function.Consumer;
-import java8.util.function.Function;
-import java8.util.stream.Stream;
-import java8.util.stream.StreamSupport;
 
 /**
  * Interrelated interfaces and static methods for establishing
@@ -44,7 +67,7 @@ import java8.util.stream.StreamSupport;
  * <pre> {@code
  * class OneShotPublisher implements Publisher<Boolean> {
  *   private final ExecutorService executor = ForkJoinPool.commonPool(); // daemon-based
- *   private boolean subscribed = false; // true after first subscribe
+ *   private boolean subscribed; // true after first subscribe
  *   public synchronized void subscribe(Subscriber<? super Boolean> subscriber) {
  *     if (subscribed)
  *        subscriber.onError(new IllegalStateException()); // only one allowed
@@ -57,7 +80,7 @@ import java8.util.stream.StreamSupport;
  *     private final Subscriber<? super Boolean> subscriber;
  *     private final ExecutorService executor;
  *     private Future<?> future; // to allow cancellation
- *     private boolean completed = false;
+ *     private boolean completed;
  *     OneShotSubscription(Subscriber<? super Boolean> subscriber,
  *                         ExecutorService executor) {
  *       this.subscriber = subscriber;
@@ -67,10 +90,9 @@ import java8.util.stream.StreamSupport;
  *       if (n != 0 && !completed) {
  *         completed = true;
  *         if (n < 0) {
- *           IllegalStateException ex = new IllegalStateException();
+ *           IllegalArgumentException ex = new IllegalArgumentException();
  *           executor.execute(() -> subscriber.onError(ex));
- *         }
- *         else {
+ *         } else {
  *           future = executor.submit(() -> {
  *             subscriber.onNext(Boolean.TRUE);
  *             subscriber.onComplete();
@@ -92,8 +114,7 @@ import java8.util.stream.StreamSupport;
  * the following example, where a buffer size of 1 single-steps, and
  * larger sizes usually allow for more efficient overlapped processing
  * with less communication; for example with a value of 64, this keeps
- * total outstanding requests between 32 and 64.  (See also {@link
- * #consume(long, Publisher, Consumer)} that automates a common case.)
+ * total outstanding requests between 32 and 64.
  * Because Subscriber method invocations for a given {@link
  * Subscription} are strictly ordered, there is no need for these
  * methods to use locks or volatiles unless a Subscriber maintains
@@ -127,9 +148,8 @@ import java8.util.stream.StreamSupport;
  * <p>The default value of {@link #defaultBufferSize} may provide a
  * useful starting point for choosing request sizes and capacities in
  * Flow components based on expected rates, resources, and usages.
- * Or, when flow control is known to be always inapplicable, a
- * subscriber may initially request an effectively unbounded number of
- * items, as in:
+ * Or, when flow control is never needed, a subscriber may initially
+ * request an effectively unbounded number of items, as in:
  *
  * <pre> {@code
  * class UnboundedSubscriber<T> implements Subscriber<T> {
@@ -145,8 +165,6 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  * @since 9
  */
-// revision 1.23 from 2015-07-24
-// http://gee.cs.oswego.edu/cgi-bin/viewcvs.cgi/jsr166/src/main/java/util/concurrent/Flow.java?revision=1.23
 public final class Flow {
 
     private Flow() {} // uninstantiable
@@ -173,6 +191,7 @@ public final class Flow {
      *
      * @param <T> the published item type
      */
+    //@FunctionalInterface
     public static interface Publisher<T> {
         /**
          * Adds the given Subscriber if possible.  If already
@@ -203,7 +222,7 @@ public final class Flow {
          * Method invoked prior to invoking any other Subscriber
          * methods for the given Subscription. If this method throws
          * an exception, resulting behavior is not guaranteed, but may
-         * cause the Subscription to be cancelled.
+         * cause the Subscription not to be established or to be cancelled.
          *
          * <p>Typically, implementations of this method invoke {@code
          * subscription.request} to enable receiving items.
@@ -268,9 +287,9 @@ public final class Flow {
         /**
          * Causes the Subscriber to (eventually) stop receiving
          * messages.  Implementation is best-effort -- additional
-         * messages may be received after invoking this method.  A
-         * cancelled subscription need not ever receive an {@code
-         * onComplete} signal.
+         * messages may be received after invoking this method.
+         * A cancelled subscription need not ever receive an
+         * {@code onComplete} or {@code onError} signal.
          */
         public void cancel();
     }
@@ -281,10 +300,8 @@ public final class Flow {
      * @param <T> the subscribed item type
      * @param <R> the published item type
      */
-    public static interface Processor<T,R> extends Subscriber<T>, Publisher<R> {
+    public static interface Processor<T, R> extends Subscriber<T>, Publisher<R> {
     }
-
-    // Support for static methods
 
     static final int DEFAULT_BUFFER_SIZE = 256;
 
@@ -299,172 +316,5 @@ public final class Flow {
      */
     public static int defaultBufferSize() {
         return DEFAULT_BUFFER_SIZE;
-    }
-
-    abstract static class CompletableSubscriber<T,U>
-        implements Subscriber<T>, Consumer<T>
-    {
-        final CompletableFuture<U> status;
-        Subscription subscription;
-        long requestSize;
-        long count;
-        CompletableSubscriber(long bufferSize, CompletableFuture<U> status) {
-            this.status = status;
-            this.requestSize = bufferSize;
-        }
-        public final void onSubscribe(Subscription subscription) {
-            long rs = requestSize;
-            count = requestSize -= (rs >>> 1);
-            (this.subscription = subscription).request(rs);
-        }
-        public final void onError(Throwable ex) {
-            status.completeExceptionally(ex);
-        }
-        public void onNext(T item) {
-            try {
-                if (--count <= 0)
-                    subscription.request(count = requestSize);
-                accept(item);
-            } catch (Throwable ex) {
-                subscription.cancel();
-                status.completeExceptionally(ex);
-            }
-        }
-    }
-
-    static final class ConsumeSubscriber<T> extends CompletableSubscriber<T,Void> {
-        final Consumer<? super T> consumer;
-        ConsumeSubscriber(long bufferSize,
-                          CompletableFuture<Void> status,
-                          Consumer<? super T> consumer) {
-            super(bufferSize, status);
-            this.consumer = consumer;
-        }
-        public void accept(T item) { consumer.accept(item); }
-        public void onComplete() { status.complete(null); }
-    }
-
-    /**
-     * Creates and subscribes a Subscriber that consumes all items
-     * from the given publisher using the given Consumer function, and
-     * using the given bufferSize for buffering. Returns a
-     * CompletableFuture that is completed normally when the publisher
-     * signals {@code onComplete}, or completed exceptionally upon any
-     * error, including an exception thrown by the Consumer (in which
-     * case the subscription is cancelled if not already terminated).
-     * Other attempts to cancel the CompletableFuture need not
-     * cause the computation to terminate.
-     *
-     * @param <T> the published item type
-     * @param bufferSize the request size for subscriptions
-     * @param publisher the publisher
-     * @param consumer the function applied to each onNext item
-     * @return a CompletableFuture that is completed normally
-     * when the publisher signals onComplete, and exceptionally
-     * upon any error
-     * @throws NullPointerException if publisher or consumer are null
-     * @throws IllegalArgumentException if bufferSize not positive
-     */
-    public static <T> CompletableFuture<Void> consume(
-        long bufferSize, Publisher<T> publisher, Consumer<? super T> consumer) {
-        if (bufferSize <= 0L)
-            throw new IllegalArgumentException("bufferSize must be positive");
-        if (publisher == null || consumer == null)
-            throw new NullPointerException();
-        CompletableFuture<Void> status = new CompletableFuture<>();
-        publisher.subscribe(new ConsumeSubscriber<T>(
-                                bufferSize, status, consumer));
-        return status;
-    }
-
-    /**
-     * Equivalent to {@link #consume(long, Publisher, Consumer)}
-     * with {@link #defaultBufferSize}.
-     *
-     * @param <T> the published item type
-     * @param publisher the publisher
-     * @param consumer the function applied to each onNext item
-     * @return a CompletableFuture that is completed normally
-     * when the publisher signals onComplete, and exceptionally
-     * upon any error
-     * @throws NullPointerException if publisher or consumer are null
-     */
-    public static <T> CompletableFuture<Void> consume(
-        Publisher<T> publisher, Consumer<? super T> consumer) {
-        return consume(defaultBufferSize(), publisher, consumer);
-    }
-
-    /**
-     * Temporary implementation for Stream, collecting all items
-     * and then applying stream operation.
-     */
-    static final class StreamSubscriber<T,R> extends CompletableSubscriber<T,R> {
-        final Function<? super Stream<T>, ? extends R> fn;
-        final ArrayList<T> items;
-        StreamSubscriber(long bufferSize,
-                         CompletableFuture<R> status,
-                         Function<? super Stream<T>, ? extends R> fn) {
-            super(bufferSize, status);
-            this.fn = fn;
-            this.items = new ArrayList<T>();
-        }
-        public void accept(T item) { items.add(item); }
-        public void onComplete() { status.complete(fn.apply(StreamSupport.stream(items))); }
-    }
-
-    /**
-     * Creates and subscribes a Subscriber that applies the given
-     * stream operation to items, and uses the given bufferSize for
-     * buffering. Returns a CompletableFuture that is completed
-     * normally with the result of this function when the publisher
-     * signals {@code onComplete}, or is completed exceptionally upon
-     * any error. Other attempts to cancel the CompletableFuture need
-     * not cause the computation to terminate.
-     *
-     * <p><b>Preliminary release note:</b> Currently, this method
-     * collects all items before executing the stream
-     * computation. Improvements are pending Stream integration.
-     *
-     * @param <T> the published item type
-     * @param <R> the result type of the stream function
-     * @param bufferSize the request size for subscriptions
-     * @param publisher the publisher
-     * @param streamFunction the operation on elements
-     * @return a CompletableFuture that is completed normally with the
-     * result of the given function as result when the publisher signals
-     * onComplete, and exceptionally upon any error
-     * @throws NullPointerException if publisher or function are null
-     * @throws IllegalArgumentException if bufferSize not positive
-     */
-    public static <T,R> CompletableFuture<R> stream(
-        long bufferSize, Publisher<T> publisher,
-        Function<? super Stream<T>, ? extends R> streamFunction) {
-        if (bufferSize <= 0L)
-            throw new IllegalArgumentException("bufferSize must be positive");
-        if (publisher == null || streamFunction == null)
-            throw new NullPointerException();
-        CompletableFuture<R> status = new CompletableFuture<>();
-        publisher.subscribe(new StreamSubscriber<T,R>(
-                                bufferSize, status, streamFunction));
-        return status;
-    }
-
-    /**
-     * Equivalent to {@link #stream(long, Publisher, Function)}
-     * with {@link #defaultBufferSize}.
-     *
-     * @param <T> the published item type
-     * @param <R> the result type of the stream function
-     * @param publisher the publisher
-     * @param streamFunction the operation on elements
-     * @return a CompletableFuture that is completed normally with the
-     * result of the given function as result when the publisher signals
-     * onComplete, and exceptionally upon any error
-     * @throws NullPointerException if publisher or function are null
-     */
-    public static <T,R> CompletableFuture<R> stream(
-        Publisher<T> publisher,
-        Function<? super Stream<T>,? extends R> streamFunction) {
-        return stream(defaultBufferSize(), publisher, streamFunction);
     }
 }
