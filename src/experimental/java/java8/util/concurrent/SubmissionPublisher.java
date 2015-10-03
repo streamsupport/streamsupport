@@ -43,6 +43,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import java8.util.Objects;
 import java8.util.function.BiConsumer;
 import java8.util.function.BiPredicate;
 import java8.util.function.Consumer;
@@ -247,8 +248,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      */
     public SubmissionPublisher(Executor executor, int maxBufferCapacity,
                                BiConsumer<? super Flow.Subscriber<? super T>, ? super Throwable> handler) {
-        if (executor == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(executor);
         if (maxBufferCapacity <= 0)
             throw new IllegalArgumentException("capacity must be positive");
         this.executor = executor;
@@ -313,7 +313,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @throws NullPointerException if subscriber is null
      */
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
-        if (subscriber == null) throw new NullPointerException();
+        Objects.requireNonNull(subscriber);
         BufferedSubscription<T> subscription =
             new BufferedSubscription<T>(subscriber, executor,
                                         onNextHandler, maxBufferCapacity);
@@ -374,7 +374,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @throws RejectedExecutionException if thrown by Executor
      */
     public int submit(T item) {
-        if (item == null) throw new NullPointerException();
+        Objects.requireNonNull(item);
         int lag = 0;
         boolean complete;
         synchronized (this) {
@@ -518,7 +518,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
     /** Common implementation for both forms of offer */
     final int doOffer(long nanos, T item,
                       BiPredicate<Flow.Subscriber<? super T>, ? super T> onDrop) {
-        if (item == null) throw new NullPointerException();
+        Objects.requireNonNull(item);
         int lag = 0, drops = 0;
         boolean complete;
         synchronized (this) {
@@ -613,8 +613,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @throws NullPointerException if error is null
      */
     public void closeExceptionally(Throwable error) {
-        if (error == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(error);
         if (!closed) {
             BufferedSubscription<T> b;
             synchronized (this) {
@@ -759,7 +758,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @throws NullPointerException if subscriber is null
      */
     public boolean isSubscribed(Flow.Subscriber<? super T> subscriber) {
-        if (subscriber == null) throw new NullPointerException();
+        Objects.requireNonNull(subscriber);
         if (!closed) {
             synchronized (this) {
                 BufferedSubscription<T> pred = null, next;
@@ -861,8 +860,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @throws NullPointerException if consumer is null
      */
     public CompletableFuture<Void> consume(Consumer<? super T> consumer) {
-        if (consumer == null)
-            throw new NullPointerException();
+        Objects.requireNonNull(consumer);
         CompletableFuture<Void> status = new CompletableFuture<Void>();
         subscribe(new ConsumerSubscriber<T>(status, consumer));
         return status;
