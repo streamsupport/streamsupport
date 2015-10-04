@@ -34,6 +34,7 @@
  */
 package java8.util.concurrent;
 
+import java8.util.Objects;
 import java8.util.function.Supplier;
 import java8.util.function.Consumer;
 import java8.util.function.BiConsumer;
@@ -421,10 +422,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         if (!useCommonPool && e == ForkJoinPool.commonPool()) {
             return asyncPool;
         }
-        if (e == null) {
-            throw new NullPointerException();
-        }
-        return e;
+        return Objects.requireNonNull(e);
     }
 
     // Modes for Completion.tryFire. Signedness matters.
@@ -625,9 +623,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private <V> CompletableFuture<V> uniApplyStage(
         Executor e, Function<? super T, ? extends V> f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<V> d =  new CompletableFuture<V>();
         if (e != null || !d.uniApply(this, f, null)) {
             UniApply<T,V> c = new UniApply<T,V>(e, d, this, f);
@@ -685,9 +681,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private CompletableFuture<Void> uniAcceptStage(Executor e,
                                                    Consumer<? super T> f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<Void> d = new CompletableFuture<Void>();
         if (e != null || !d.uniAccept(this, f, null)) {
             UniAccept<T> c = new UniAccept<T>(e, d, this, f);
@@ -739,9 +733,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     }
 
     private CompletableFuture<Void> uniRunStage(Executor e, Runnable f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<Void> d = new CompletableFuture<Void>();
         if (e != null || !d.uniRun(this, f, null)) {
             UniRun<T> c = new UniRun<T>(e, d, this, f);
@@ -806,9 +798,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private CompletableFuture<T> uniWhenCompleteStage(
         Executor e, BiConsumer<? super T, ? super Throwable> f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<T> d = new CompletableFuture<T>();
         if (e != null || !d.uniWhenComplete(this, f, null)) {
             UniWhenComplete<T> c = new UniWhenComplete<T>(e, d, this, f);
@@ -867,9 +857,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private <V> CompletableFuture<V> uniHandleStage(
         Executor e, BiFunction<? super T, Throwable, ? extends V> f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<V> d = new CompletableFuture<V>();
         if (e != null || !d.uniHandle(this, f, null)) {
             UniHandle<T, V> c = new UniHandle<T, V>(e, d, this, f);
@@ -923,9 +911,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private CompletableFuture<T> uniExceptionallyStage(
         Function<Throwable, ? extends T> f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<T> d = new CompletableFuture<T>();
         if (!d.uniExceptionally(this, f, null)) {
             UniExceptionally<T> c = new UniExceptionally<T>(d, this, f);
@@ -1019,7 +1005,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     private <V> CompletableFuture<V> uniComposeStage(
         Executor e, Function<? super T, ? extends CompletionStage<V>> f) {
-        if (f == null) throw new NullPointerException();
+        Objects.requireNonNull(f);
         Object r; Throwable x;
         if (e == null && (r = result) != null) {
             // try to return function result directly
@@ -1691,9 +1677,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     static <U> CompletableFuture<U> asyncSupplyStage(Executor e,
                                                      Supplier<U> f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<U> d = new CompletableFuture<U>();
         e.execute(new AsyncSupply<U>(d, f));
         return d;
@@ -1729,9 +1713,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     }
 
     static CompletableFuture<Void> asyncRunStage(Executor e, Runnable f) {
-        if (f == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(f);
         CompletableFuture<Void> d = new CompletableFuture<Void>();
         e.execute(new AsyncRun(d, f));
         return d;
@@ -2074,10 +2056,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      * to transition to a completed state, else {@code false}
      */
     public boolean completeExceptionally(Throwable ex) {
-        if (ex == null) {
-            throw new NullPointerException();
-        }
-        boolean triggered = internalComplete(new AltResult(ex));
+        boolean triggered = internalComplete(new AltResult(Objects.requireNonNull(ex)));
         postComplete();
         return triggered;
     }
@@ -2425,10 +2404,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      * @throws NullPointerException if the exception is null
      */
     public void obtrudeException(Throwable ex) {
-        if (ex == null) {
-            throw new NullPointerException();
-        }
-        result = new AltResult(ex);
+        result = new AltResult(Objects.requireNonNull(ex));
         postComplete();
     }
 

@@ -38,6 +38,7 @@ import java.io.ObjectStreamField;
 import java.util.Comparator;
 import java.util.Random;
 
+import java8.util.Objects;
 import java8.util.Spliterator;
 import java8.util.Spliterators;
 import java8.util.function.Consumer;
@@ -817,7 +818,7 @@ public class ThreadLocalRandom extends Random {
         }
 
         public boolean tryAdvance(IntConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 consumer.accept(ThreadLocalRandom.current().internalNextInt(origin, bound));
@@ -833,7 +834,7 @@ public class ThreadLocalRandom extends Random {
         }
 
         public void forEachRemaining(IntConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 index = f;
@@ -896,7 +897,7 @@ public class ThreadLocalRandom extends Random {
         }
 
         public boolean tryAdvance(LongConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 consumer.accept(ThreadLocalRandom.current().internalNextLong(origin, bound));
@@ -912,7 +913,7 @@ public class ThreadLocalRandom extends Random {
         }
 
         public void forEachRemaining(LongConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 index = f;
@@ -975,7 +976,7 @@ public class ThreadLocalRandom extends Random {
         }
 
         public boolean tryAdvance(DoubleConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 consumer.accept(ThreadLocalRandom.current().internalNextDouble(origin, bound));
@@ -991,7 +992,7 @@ public class ThreadLocalRandom extends Random {
         }
 
         public void forEachRemaining(DoubleConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 index = f;
