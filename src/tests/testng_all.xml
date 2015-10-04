@@ -79,7 +79,6 @@
 
       <!-- block 8 -->
       <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
-      <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
       <class name="org.openjdk.other.tests.forkjoin.SubmissionTest"/>
       <class name="org.openjdk.other.tests.function.BasicTest"/>
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
@@ -103,7 +102,6 @@
       <class name="org.openjdk.other.tests.phaser.TieredArriveLoops"/>
       <class name="org.openjdk.tests.java.util.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
-      <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.MergeTest2"/>
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
@@ -123,6 +121,10 @@
       <!-- block 10 (Java9: Stream takeWhile / dropWhile) -->
       <class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.WhileOpStatefulTest"/>
+
+      <!-- block 11 (superseded & questionable tests) -->
+      <!--class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
+      <class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>
   </test>
