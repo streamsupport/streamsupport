@@ -53,6 +53,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.security.AccessControlContext;
 import java.security.ProtectionDomain;
 import java.security.Permissions;
+import java8.util.Objects;
 
 /**
  * An {@link ExecutorService} for running {@link ForkJoinTask}s.
@@ -2579,10 +2580,7 @@ public class ForkJoinPool extends AbstractExecutorService {
 
     private static ForkJoinWorkerThreadFactory checkFactory
         (ForkJoinWorkerThreadFactory factory) {
-        if (factory == null) {
-            throw new NullPointerException();
-        }
-        return factory;
+        return Objects.requireNonNull(factory);
     }
 
     /**
@@ -2641,10 +2639,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         scheduled for execution
      */
     public <T> T invoke(ForkJoinTask<T> task) {
-        if (task == null) {
-            throw new NullPointerException();
-        }
-        externalPush(task);
+        externalPush(Objects.requireNonNull(task));
         return task.join();
     }
 
@@ -2657,10 +2652,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         scheduled for execution
      */
     public void execute(ForkJoinTask<?> task) {
-        if (task == null) {
-            throw new NullPointerException();
-        }
-        externalPush(task);
+        externalPush(Objects.requireNonNull(task));
     }
 
     // AbstractExecutorService methods
@@ -2671,9 +2663,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         scheduled for execution
      */
     public void execute(Runnable task) {
-        if (task == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(task);
         ForkJoinTask<?> job;
         if (task instanceof ForkJoinTask<?>) { // avoid re-wrap
             job = (ForkJoinTask<?>) task;
@@ -2694,10 +2684,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         scheduled for execution
      */
     public <T> ForkJoinTask<T> submit(ForkJoinTask<T> task) {
-        if (task == null) {
-            throw new NullPointerException();
-        }
-        externalPush(task);
+        externalPush(Objects.requireNonNull(task));
         return task;
     }
 
@@ -2729,9 +2716,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         scheduled for execution
      */
     public ForkJoinTask<?> submit(Runnable task) {
-        if (task == null) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(task);
         ForkJoinTask<?> job;
         if (task instanceof ForkJoinTask<?>) { // avoid re-wrap
             job = (ForkJoinTask<?>) task;
