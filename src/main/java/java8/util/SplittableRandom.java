@@ -28,6 +28,7 @@ import java.security.PrivilegedAction;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicLong;
 
+import java8.util.Objects;
 import java8.util.function.Consumer;
 import java8.util.function.IntConsumer;
 import java8.util.function.LongConsumer;
@@ -860,7 +861,7 @@ public final class SplittableRandom {
         }
 
         public boolean tryAdvance(IntConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 consumer.accept(rng.internalNextInt(origin, bound));
@@ -871,7 +872,7 @@ public final class SplittableRandom {
         }
 
         public void forEachRemaining(IntConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 index = f;
@@ -955,7 +956,7 @@ public final class SplittableRandom {
         }
 
         public boolean tryAdvance(LongConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 consumer.accept(rng.internalNextLong(origin, bound));
@@ -966,7 +967,7 @@ public final class SplittableRandom {
         }
 
         public void forEachRemaining(LongConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 index = f;
@@ -1050,7 +1051,7 @@ public final class SplittableRandom {
         }
 
         public boolean tryAdvance(DoubleConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 consumer.accept(rng.internalNextDouble(origin, bound));
@@ -1061,7 +1062,7 @@ public final class SplittableRandom {
         }
 
         public void forEachRemaining(DoubleConsumer consumer) {
-            if (consumer == null) throw new NullPointerException();
+            Objects.requireNonNull(consumer);
             long i = index, f = fence;
             if (i < f) {
                 index = f;
