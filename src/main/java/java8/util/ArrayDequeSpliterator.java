@@ -33,7 +33,7 @@ import java8.util.Spliterators;
 import java8.util.function.Consumer;
 
 final class ArrayDequeSpliterator<E> implements Spliterator<E> {
-//	private final Object[] elements;
+//  private final Object[] elements;
     private final ArrayDeque<E> deq;
     private int fence;  // -1 until first use
     private int index;  // current index, modified on traverse/split
@@ -135,30 +135,30 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
     }
 
     private static <T> int getTail(ArrayDeque<T> deq) {
-        return UNSAFE.getInt(deq, TAIL_OFF);
+        return U.getInt(deq, TAIL_OFF);
     }
 
     private static <T> int getHead(ArrayDeque<T> deq) {
-        return UNSAFE.getInt(deq, HEAD_OFF);
+        return U.getInt(deq, HEAD_OFF);
     }
 
     private static <T> Object[] getData(ArrayDeque<T> deq) {
-        return (Object[]) UNSAFE.getObject(deq, DATA_OFF);
+        return (Object[]) U.getObject(deq, DATA_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long TAIL_OFF;
     private static final long HEAD_OFF;
     private static final long DATA_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> ad = ArrayDeque.class;
-            TAIL_OFF = UNSAFE.objectFieldOffset(ad.getDeclaredField("tail"));
-            HEAD_OFF = UNSAFE.objectFieldOffset(ad.getDeclaredField("head"));
-            DATA_OFF = UNSAFE
-                    .objectFieldOffset(ad.getDeclaredField("elements"));
+            TAIL_OFF = U.objectFieldOffset(ArrayDeque.class
+                    .getDeclaredField("tail"));
+            HEAD_OFF = U.objectFieldOffset(ArrayDeque.class
+                    .getDeclaredField("head"));
+            DATA_OFF = U.objectFieldOffset(ArrayDeque.class
+                    .getDeclaredField("elements"));
         } catch (Exception e) {
             throw new Error(e);
         }

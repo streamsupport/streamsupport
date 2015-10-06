@@ -211,36 +211,36 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     }
 
     private static ReentrantLock getPutLock(LinkedBlockingQueue<?> queue) {
-        return (ReentrantLock) UNSAFE.getObject(queue, PUT_LOCK_OFF);
+        return (ReentrantLock) U.getObject(queue, PUT_LOCK_OFF);
     }
 
     private static ReentrantLock getTakeLock(LinkedBlockingQueue<?> queue) {
-        return (ReentrantLock) UNSAFE.getObject(queue, TAKE_LOCK_OFF);
+        return (ReentrantLock) U.getObject(queue, TAKE_LOCK_OFF);
     }
 
     /**
      * Returns queue.head.next as an Object
      */
     private static <T> Object getHeadNext(LinkedBlockingQueue<T> queue) {
-        return getNextNode(UNSAFE.getObject(queue, HEAD_OFF));
+        return getNextNode(U.getObject(queue, HEAD_OFF));
     }
 
     /**
      * Returns node.next as an Object
      */
     private static Object getNextNode(Object node) {
-        return UNSAFE.getObject(node, NODE_NEXT_OFF);
+        return U.getObject(node, NODE_NEXT_OFF);
     }
 
     /**
      * Returns node.item as a T
      */
     private static <T> T getNodeItem(Object node) {
-        return (T) UNSAFE.getObject(node, NODE_ITEM_OFF);
+        return (T) U.getObject(node, NODE_ITEM_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long HEAD_OFF;
     private static final long NODE_ITEM_OFF;
     private static final long NODE_NEXT_OFF;
@@ -248,17 +248,16 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     private static final long TAKE_LOCK_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> lbqc = LinkedBlockingQueue.class;
             Class<?> nc = Class
                     .forName("java.util.concurrent.LinkedBlockingQueue$Node");
-            HEAD_OFF = UNSAFE.objectFieldOffset(lbqc.getDeclaredField("head"));
-            NODE_ITEM_OFF = UNSAFE.objectFieldOffset(nc
-                    .getDeclaredField("item"));
-            NODE_NEXT_OFF = UNSAFE.objectFieldOffset(nc
-                    .getDeclaredField("next"));
-            PUT_LOCK_OFF = UNSAFE.objectFieldOffset(lbqc.getDeclaredField("putLock"));
-            TAKE_LOCK_OFF = UNSAFE.objectFieldOffset(lbqc.getDeclaredField("takeLock"));
+            HEAD_OFF = U.objectFieldOffset(LinkedBlockingQueue.class
+                    .getDeclaredField("head"));
+            NODE_ITEM_OFF = U.objectFieldOffset(nc.getDeclaredField("item"));
+            NODE_NEXT_OFF = U.objectFieldOffset(nc.getDeclaredField("next"));
+            PUT_LOCK_OFF = U.objectFieldOffset(LinkedBlockingQueue.class
+                    .getDeclaredField("putLock"));
+            TAKE_LOCK_OFF = U.objectFieldOffset(LinkedBlockingQueue.class
+                    .getDeclaredField("takeLock"));
         } catch (Exception e) {
             throw new Error(e);
         }

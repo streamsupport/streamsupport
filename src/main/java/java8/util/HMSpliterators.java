@@ -349,27 +349,27 @@ final class HMSpliterators {
         }
 
         static int getModCount(HashMap<?, ?> map) {
-            return UNSAFE.getInt(map, MODCOUNT_OFF);
+            return U.getInt(map, MODCOUNT_OFF);
         }
 
         static Object[] getTable(HashMap<?, ?> map) {
-            return (Object[]) UNSAFE.getObject(map, TABLE_OFF);
+            return (Object[]) U.getObject(map, TABLE_OFF);
         }
 
         static <K> K getNodeKey(Object node) {
-            return (K) UNSAFE.getObject(node, NODE_KEY_OFF);
+            return (K) U.getObject(node, NODE_KEY_OFF);
         }
 
         static <T> T getNodeValue(Object node) {
-            return (T) UNSAFE.getObject(node, NODE_VAL_OFF);
+            return (T) U.getObject(node, NODE_VAL_OFF);
         }
 
         static Object getNextNode(Object node) {
-            return UNSAFE.getObject(node, NODE_NXT_OFF);
+            return U.getObject(node, NODE_NXT_OFF);
         }
 
         // Unsafe mechanics
-        private static final sun.misc.Unsafe UNSAFE;
+        private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
         private static final long TABLE_OFF;
         private static final long MODCOUNT_OFF;
         private static final long NODE_KEY_OFF;
@@ -377,22 +377,20 @@ final class HMSpliterators {
         private static final long NODE_NXT_OFF;
         static {
             try {
-                UNSAFE = UnsafeAccess.unsafe;
-                Class<?> hmc = HashMap.class;
-                TABLE_OFF = UNSAFE.objectFieldOffset(hmc
+                TABLE_OFF = U.objectFieldOffset(HashMap.class
                         .getDeclaredField("table"));
-                MODCOUNT_OFF = UNSAFE.objectFieldOffset(hmc
+                MODCOUNT_OFF = U.objectFieldOffset(HashMap.class
                         .getDeclaredField("modCount"));
-//				String ncName = Spliterators.IS_ANDROID ? "HashMapEntry"
-//						: Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
+//              String ncName = Spliterators.IS_ANDROID ? "HashMapEntry"
+//                      : Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
                 String ncName = Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
                 ncName = "java.util.HashMap$" + ncName;
                 Class<?> nc = Class.forName(ncName);
-                NODE_KEY_OFF = UNSAFE.objectFieldOffset(nc
+                NODE_KEY_OFF = U.objectFieldOffset(nc
                         .getDeclaredField("key"));
-                NODE_VAL_OFF = UNSAFE.objectFieldOffset(nc
+                NODE_VAL_OFF = U.objectFieldOffset(nc
                         .getDeclaredField("value"));
-                NODE_NXT_OFF = UNSAFE.objectFieldOffset(nc
+                NODE_NXT_OFF = U.objectFieldOffset(nc
                         .getDeclaredField("next"));
             } catch (Exception e) {
                 throw new Error(e);
@@ -401,45 +399,43 @@ final class HMSpliterators {
     }
 
     private static <K, V> HashMap<K, V> getHashMapFromKeySet(Set<K> keySet) {
-        return (HashMap<K, V>) UNSAFE.getObject(keySet, KEYSET_$0_OFF);
+        return (HashMap<K, V>) U.getObject(keySet, KEYSET_$0_OFF);
     }
 
     private static <K, V> HashMap<K, V> getHashMapFromEntrySet(
             Set<Map.Entry<K, V>> entrySet) {
-        return (HashMap<K, V>) UNSAFE.getObject(entrySet, ENTRYSET_$0_OFF);
+        return (HashMap<K, V>) U.getObject(entrySet, ENTRYSET_$0_OFF);
     }
 
     private static <K, V> HashMap<K, V> getHashMapFromValues(
             Collection<V> values) {
-        return (HashMap<K, V>) UNSAFE.getObject(values, VALUES_$0_OFF);
+        return (HashMap<K, V>) U.getObject(values, VALUES_$0_OFF);
     }
 
     private static <K, V> HashMap<K, V> getHashMapFromHashSet(HashSet<K> hashSet) {
-        return (HashMap<K, V>) UNSAFE.getObject(hashSet, HASHSET_MAP_OFF);
+        return (HashMap<K, V>) U.getObject(hashSet, HASHSET_MAP_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long VALUES_$0_OFF;
     private static final long KEYSET_$0_OFF;
     private static final long ENTRYSET_$0_OFF;
     private static final long HASHSET_MAP_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> hsc = HashSet.class;
             Class<?> vc = Class.forName("java.util.HashMap$Values");
             Class<?> ksc = Class.forName("java.util.HashMap$KeySet");
             Class<?> esc = Class.forName("java.util.HashMap$EntrySet");
-//			String hsMapFieldName = Spliterators.IS_ANDROID ? "backingMap"
-//					: "map";
-            VALUES_$0_OFF = UNSAFE.objectFieldOffset(vc
+//          String hsMapFieldName = Spliterators.IS_ANDROID ? "backingMap"
+//                  : "map";
+            VALUES_$0_OFF = U.objectFieldOffset(vc
                     .getDeclaredField("this$0"));
-            KEYSET_$0_OFF = UNSAFE.objectFieldOffset(ksc
+            KEYSET_$0_OFF = U.objectFieldOffset(ksc
                     .getDeclaredField("this$0"));
-            ENTRYSET_$0_OFF = UNSAFE.objectFieldOffset(esc
+            ENTRYSET_$0_OFF = U.objectFieldOffset(esc
                     .getDeclaredField("this$0"));
-            HASHSET_MAP_OFF = UNSAFE.objectFieldOffset(hsc
+            HASHSET_MAP_OFF = U.objectFieldOffset(HashSet.class
                     .getDeclaredField("map")); // hsMapFieldName
         } catch (Exception e) {
             throw new Error(e);

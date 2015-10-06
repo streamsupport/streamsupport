@@ -181,32 +181,31 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     }
 
     private static <T> int getSize(ArrayList<T> lst) {
-        return UNSAFE.getInt(lst, SIZE_OFF);
+        return U.getInt(lst, SIZE_OFF);
     }
 
     private static <T> int getModCount(ArrayList<T> lst) {
-        return UNSAFE.getInt(lst, MODCOUNT_OFF);
+        return U.getInt(lst, MODCOUNT_OFF);
     }
 
     private static <T> Object[] getData(ArrayList<T> lst) {
-        return (Object[]) UNSAFE.getObject(lst, DATA_OFF);
+        return (Object[]) U.getObject(lst, DATA_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long SIZE_OFF;
     private static final long MODCOUNT_OFF;
     private static final long DATA_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
+            MODCOUNT_OFF = U.objectFieldOffset(AbstractList.class
                     .getDeclaredField("modCount"));
-            Class<?> al = ArrayList.class;
-            SIZE_OFF = UNSAFE.objectFieldOffset(al.getDeclaredField("size"));
+            SIZE_OFF = U.objectFieldOffset(ArrayList.class
+                    .getDeclaredField("size"));
             String arrayFieldName = Spliterators.IS_ANDROID ? "array"
                     : "elementData";
-            DATA_OFF = UNSAFE.objectFieldOffset(al
+            DATA_OFF = U.objectFieldOffset(ArrayList.class
                     .getDeclaredField(arrayFieldName));
         } catch (Exception e) {
             throw new Error(e);
