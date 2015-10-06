@@ -51,6 +51,7 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantLock;
+import java8.util.Objects;
 
 /**
  * Abstract base class for tasks that run within a {@link ForkJoinPool}.
@@ -1379,8 +1380,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
         final Runnable runnable;
         T result;
         AdaptedRunnable(Runnable runnable, T result) {
-            if (runnable == null) throw new NullPointerException();
-            this.runnable = runnable;
+            this.runnable = Objects.requireNonNull(runnable);
             this.result = result; // OK to set this even before completion
         }
         public final T getRawResult() { return result; }
@@ -1397,8 +1397,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
         implements RunnableFuture<Void> {
         final Runnable runnable;
         AdaptedRunnableAction(Runnable runnable) {
-            if (runnable == null) throw new NullPointerException();
-            this.runnable = runnable;
+            this.runnable = Objects.requireNonNull(runnable);
         }
         public final Void getRawResult() { return null; }
         public final void setRawResult(Void v) { }
@@ -1413,8 +1412,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     static final class RunnableExecuteAction extends ForkJoinTask<Void> {
         final Runnable runnable;
         RunnableExecuteAction(Runnable runnable) {
-            if (runnable == null) throw new NullPointerException();
-            this.runnable = runnable;
+            this.runnable = Objects.requireNonNull(runnable);
         }
         public final Void getRawResult() { return null; }
         public final void setRawResult(Void v) { }
@@ -1433,8 +1431,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
         final Callable<? extends T> callable;
         T result;
         AdaptedCallable(Callable<? extends T> callable) {
-            if (callable == null) throw new NullPointerException();
-            this.callable = callable;
+            this.callable = Objects.requireNonNull(callable);
         }
         public final T getRawResult() { return result; }
         public final void setRawResult(T v) { result = v; }
