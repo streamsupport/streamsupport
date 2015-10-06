@@ -25,30 +25,33 @@
 package java8.util;
 
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-final class CopyOnWriteArrayListSpliterator {
+// Spliterator for java.util.concurrent.CopyOnWriteArraySet
+final class COWArraySetSpliterator {
 
-    private CopyOnWriteArrayListSpliterator() {
+    private COWArraySetSpliterator() {
     }
 
-    static <T> Spliterator<T> spliterator(CopyOnWriteArrayList<T> list) {
-        return Spliterators.spliterator(getArray(list), Spliterator.IMMUTABLE
-                | Spliterator.ORDERED);
+    static <T> Spliterator<T> spliterator(CopyOnWriteArraySet<T> set) {
+        Object[] array = COWArrayListSpliterator
+                .getArray(getCowArrayList(set));
+        return Spliterators.spliterator(array, Spliterator.IMMUTABLE
+                | Spliterator.DISTINCT);
     }
 
-    static <T> Object[] getArray(CopyOnWriteArrayList<T> list) {
-        return (Object[]) U.getObject(list, ARRAY_OFF);
+    private static <T> CopyOnWriteArrayList<T> getCowArrayList(
+            CopyOnWriteArraySet<T> set) {
+        return (CopyOnWriteArrayList<T>) U.getObject(set, COW_ARRAY_OFF);
     }
 
     // Unsafe mechanics
     private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
-    private static final long ARRAY_OFF;
+    private static final long COW_ARRAY_OFF;
     static {
         try {
-            String arrayFieldName = Spliterators.IS_ANDROID ? "elements"
-                    : "array";
-            ARRAY_OFF = U.objectFieldOffset(CopyOnWriteArrayList.class
-                    .getDeclaredField(arrayFieldName));
+            COW_ARRAY_OFF = U.objectFieldOffset(CopyOnWriteArraySet.class
+                    .getDeclaredField("al"));
         } catch (Exception e) {
             throw new Error(e);
         }

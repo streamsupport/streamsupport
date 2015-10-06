@@ -31,7 +31,8 @@ import java.util.PriorityQueue;
 import java8.util.Spliterator;
 import java8.util.function.Consumer;
 
-final class PriorityQueueSpliterator<E> implements Spliterator<E> {
+// Spliterator for java.util.PriorityQueue
+final class PQueueSpliterator<E> implements Spliterator<E> {
     /*
      * This is very similar to ArrayList Spliterator, except for
      * extra null checks.
@@ -42,7 +43,7 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
     private int expectedModCount; // initialized when fence set
 
     /** Creates new spliterator covering the given range */
-    private PriorityQueueSpliterator(PriorityQueue<E> pq, int origin, int fence,
+    private PQueueSpliterator(PriorityQueue<E> pq, int origin, int fence,
                          int expectedModCount) {
         this.pq = pq;
         this.index = origin;
@@ -51,7 +52,7 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
     }
 
     static <T> Spliterator<T> spliterator(PriorityQueue<T> pq) {
-        return new PriorityQueueSpliterator<T>(pq, 0, -1, 0);
+        return new PQueueSpliterator<T>(pq, 0, -1, 0);
     }
 
     private int getFence() { // initialize fence to size on first use
@@ -64,10 +65,10 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
     }
 
     @Override
-    public PriorityQueueSpliterator<E> trySplit() {
+    public PQueueSpliterator<E> trySplit() {
         int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
         return (lo >= mid) ? null :
-            new PriorityQueueSpliterator<E>(pq, lo, index = mid,
+            new PQueueSpliterator<E>(pq, lo, index = mid,
                                             expectedModCount);
     }
 
