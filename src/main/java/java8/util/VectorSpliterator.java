@@ -146,30 +146,29 @@ final class VectorSpliterator<E> implements Spliterator<E> {
     }
 
     private static <T> int getSize(Vector<T> lst) {
-        return UNSAFE.getInt(lst, SIZE_OFF);
+        return U.getInt(lst, SIZE_OFF);
     }
 
     private static <T> int getModCount(Vector<T> lst) {
-        return UNSAFE.getInt(lst, MODCOUNT_OFF);
+        return U.getInt(lst, MODCOUNT_OFF);
     }
 
     private static <T> Object[] getData(Vector<T> lst) {
-        return (Object[]) UNSAFE.getObject(lst, DATA_OFF);
+        return (Object[]) U.getObject(lst, DATA_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long SIZE_OFF;
     private static final long MODCOUNT_OFF;
     private static final long DATA_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
+            MODCOUNT_OFF = U.objectFieldOffset(AbstractList.class
                     .getDeclaredField("modCount"));
-            Class<?> vc = Vector.class;
-            SIZE_OFF = UNSAFE.objectFieldOffset(vc.getDeclaredField("elementCount"));
-            DATA_OFF = UNSAFE.objectFieldOffset(vc
+            SIZE_OFF = U.objectFieldOffset(Vector.class
+                    .getDeclaredField("elementCount"));
+            DATA_OFF = U.objectFieldOffset(Vector.class
                     .getDeclaredField("elementData"));
         } catch (Exception e) {
             throw new Error(e);

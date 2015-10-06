@@ -166,7 +166,7 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
         if (list == null) {
             return null;
         }
-        return UNSAFE.getObject(list, FIRST_OFF);
+        return U.getObject(list, FIRST_OFF);
     }
 
     private Object getFirst(LinkedList<?> list) {
@@ -175,46 +175,43 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
             return getNextNode(endOfList);
         }
         // Java 7 & Java 8
-        return UNSAFE.getObject(list, FIRST_OFF);
+        return U.getObject(list, FIRST_OFF);
     }
 
     private static Object getNextNode(Object node) {
         if (node == null) {
             throw new ConcurrentModificationException();
         }
-        return UNSAFE.getObject(node, NODE_NEXT_OFF);
+        return U.getObject(node, NODE_NEXT_OFF);
     }
 
     private static <E> E getNodeItem(Object node) {
         if (node == null) {
             throw new ConcurrentModificationException();
         }
-        return (E) UNSAFE.getObject(node, NODE_ITEM_OFF);
+        return (E) U.getObject(node, NODE_ITEM_OFF);
     }
 
     private static int getSize(LinkedList<?> list) {
-        return UNSAFE.getInt(list, SIZE_OFF);
+        return U.getInt(list, SIZE_OFF);
     }
 
     private static int getModCount(LinkedList<?> list) {
-        return UNSAFE.getInt(list, MODCOUNT_OFF);
+        return U.getInt(list, MODCOUNT_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final boolean IS_ANDROID = Spliterators.IS_ANDROID;
+    private static final boolean IS_JAVA6 = Spliterators.IS_JAVA6;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long SIZE_OFF;
     private static final long MODCOUNT_OFF;
     private static final long FIRST_OFF;
     private static final long NODE_ITEM_OFF;
     private static final long NODE_NEXT_OFF;
-    private static final boolean IS_ANDROID;
-    private static final boolean IS_JAVA6;
     static {
         try {
-            IS_ANDROID = Spliterators.IS_ANDROID;
-            IS_JAVA6 = Spliterators.IS_JAVA6;
-            UNSAFE = UnsafeAccess.unsafe;
-            MODCOUNT_OFF = UNSAFE.objectFieldOffset(AbstractList.class
+            MODCOUNT_OFF = U.objectFieldOffset(AbstractList.class
                     .getDeclaredField("modCount"));
             String firstFieldName = IS_ANDROID ? "voidLink"
                     : IS_JAVA6 ? "header" : "first";
@@ -223,14 +220,14 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
                             : "java.util.LinkedList$Node";
             String nodeItemName = IS_ANDROID ? "data" : IS_JAVA6 ? "element"
                     : "item";
-            Class<?> llc = LinkedList.class;
             Class<?> nc = Class.forName(nodeClassName);
-            SIZE_OFF = UNSAFE.objectFieldOffset(llc.getDeclaredField("size"));
-            FIRST_OFF = UNSAFE.objectFieldOffset(llc
+            SIZE_OFF = U.objectFieldOffset(LinkedList.class
+                    .getDeclaredField("size"));
+            FIRST_OFF = U.objectFieldOffset(LinkedList.class
                     .getDeclaredField(firstFieldName));
-            NODE_ITEM_OFF = UNSAFE.objectFieldOffset(nc
+            NODE_ITEM_OFF = U.objectFieldOffset(nc
                     .getDeclaredField(nodeItemName));
-            NODE_NEXT_OFF = UNSAFE.objectFieldOffset(nc
+            NODE_NEXT_OFF = U.objectFieldOffset(nc
                     .getDeclaredField("next"));
         } catch (Exception e) {
             throw new Error(e);

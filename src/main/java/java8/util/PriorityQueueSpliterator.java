@@ -148,40 +148,38 @@ final class PriorityQueueSpliterator<E> implements Spliterator<E> {
     }
 
     private static <T> int getSize(PriorityQueue<T> pq) {
-        return UNSAFE.getInt(pq, SIZE_OFF);
+        return U.getInt(pq, SIZE_OFF);
     }
 
     private static <T> int getModCount(PriorityQueue<T> pq) {
         if (IS_ANDROID) {
             return 0;
         }
-        return UNSAFE.getInt(pq, MODCOUNT_OFF);
+        return U.getInt(pq, MODCOUNT_OFF);
     }
 
     private static <T> Object[] getQueue(PriorityQueue<T> pq) {
-        return (Object[]) UNSAFE.getObject(pq, QUEUE_OFF);
+        return (Object[]) U.getObject(pq, QUEUE_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final boolean IS_ANDROID = Spliterators.IS_ANDROID;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long SIZE_OFF;
     private static final long MODCOUNT_OFF;
     private static final long QUEUE_OFF;
-    private static final boolean IS_ANDROID;
     static {
         try {
-            IS_ANDROID = Spliterators.IS_ANDROID;
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> pq = PriorityQueue.class;
-            SIZE_OFF = UNSAFE.objectFieldOffset(pq.getDeclaredField("size"));
+            SIZE_OFF = U.objectFieldOffset(PriorityQueue.class
+                    .getDeclaredField("size"));
             if (!IS_ANDROID) {
-                MODCOUNT_OFF = UNSAFE.objectFieldOffset(pq
+                MODCOUNT_OFF = U.objectFieldOffset(PriorityQueue.class
                         .getDeclaredField("modCount"));
             } else {
                 MODCOUNT_OFF = 0L; // unused
             }
             String queueFieldName = IS_ANDROID ? "elements" : "queue";
-            QUEUE_OFF = UNSAFE.objectFieldOffset(pq
+            QUEUE_OFF = U.objectFieldOffset(PriorityQueue.class
                     .getDeclaredField(queueFieldName));
         } catch (Exception e) {
             throw new Error(e);

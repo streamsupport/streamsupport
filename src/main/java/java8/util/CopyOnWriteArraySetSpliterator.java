@@ -41,17 +41,15 @@ final class CopyOnWriteArraySetSpliterator {
 
     private static <T> CopyOnWriteArrayList<T> getCowArrayList(
             CopyOnWriteArraySet<T> set) {
-        return (CopyOnWriteArrayList<T>) UNSAFE.getObject(set, COW_ARRAY_OFF);
+        return (CopyOnWriteArrayList<T>) U.getObject(set, COW_ARRAY_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long COW_ARRAY_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> cowSet = CopyOnWriteArraySet.class;
-            COW_ARRAY_OFF = UNSAFE.objectFieldOffset(cowSet
+            COW_ARRAY_OFF = U.objectFieldOffset(CopyOnWriteArraySet.class
                     .getDeclaredField("al"));
         } catch (Exception e) {
             throw new Error(e);

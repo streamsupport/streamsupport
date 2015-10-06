@@ -39,17 +39,16 @@ final class ArraysArrayListSpliterator {
     }
 
     private static <T> Object[] getArray(List<T> list) {
-        return (Object[]) UNSAFE.getObject(list, ARRAY_OFF);
+        return (Object[]) U.getObject(list, ARRAY_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long ARRAY_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
             Class<?> aal = Class.forName("java.util.Arrays$ArrayList");
-            ARRAY_OFF = UNSAFE.objectFieldOffset(aal.getDeclaredField("a"));
+            ARRAY_OFF = U.objectFieldOffset(aal.getDeclaredField("a"));
         } catch (Exception e) {
             throw new Error(e);
         }

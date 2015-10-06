@@ -197,45 +197,44 @@ final class LBDSpliterator<E> implements Spliterator<E> {
     }
 
     private static ReentrantLock getQueueLock(LinkedBlockingDeque<?> queue) {
-        return (ReentrantLock) UNSAFE.getObject(queue, LOCK_OFF);
+        return (ReentrantLock) U.getObject(queue, LOCK_OFF);
     }
 
     private static Object getQueueFirst(LinkedBlockingDeque<?> queue) {
-        return UNSAFE.getObject(queue, FIRST_OFF);
+        return U.getObject(queue, FIRST_OFF);
     }
 
     /**
      * Returns node.next as an Object
      */
     private static Object getNextNode(Object node) {
-        return UNSAFE.getObject(node, NODE_NEXT_OFF);
+        return U.getObject(node, NODE_NEXT_OFF);
     }
 
     /**
      * Returns node.item as a T
      */
     private static <T> T getNodeItem(Object node) {
-        return (T) UNSAFE.getObject(node, NODE_ITEM_OFF);
+        return (T) U.getObject(node, NODE_ITEM_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long FIRST_OFF;
     private static final long LOCK_OFF;
     private static final long NODE_ITEM_OFF;
     private static final long NODE_NEXT_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> lbdc = LinkedBlockingDeque.class;
             Class<?> nc = Class
                     .forName("java.util.concurrent.LinkedBlockingDeque$Node");
-            FIRST_OFF = UNSAFE
-                    .objectFieldOffset(lbdc.getDeclaredField("first"));
-            LOCK_OFF = UNSAFE.objectFieldOffset(lbdc.getDeclaredField("lock"));
-            NODE_ITEM_OFF = UNSAFE.objectFieldOffset(nc
+            FIRST_OFF = U.objectFieldOffset(LinkedBlockingDeque.class
+                    .getDeclaredField("first"));
+            LOCK_OFF = U.objectFieldOffset(LinkedBlockingDeque.class
+                    .getDeclaredField("lock"));
+            NODE_ITEM_OFF = U.objectFieldOffset(nc
                     .getDeclaredField("item"));
-            NODE_NEXT_OFF = UNSAFE.objectFieldOffset(nc
+            NODE_NEXT_OFF = U.objectFieldOffset(nc
                     .getDeclaredField("next"));
         } catch (Exception e) {
             throw new Error(e);

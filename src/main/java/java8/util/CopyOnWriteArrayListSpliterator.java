@@ -37,19 +37,17 @@ final class CopyOnWriteArrayListSpliterator {
     }
 
     static <T> Object[] getArray(CopyOnWriteArrayList<T> list) {
-        return (Object[]) UNSAFE.getObject(list, ARRAY_OFF);
+        return (Object[]) U.getObject(list, ARRAY_OFF);
     }
 
     // Unsafe mechanics
-    private static final sun.misc.Unsafe UNSAFE;
+    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long ARRAY_OFF;
     static {
         try {
-            UNSAFE = UnsafeAccess.unsafe;
-            Class<?> cowAl = CopyOnWriteArrayList.class;
             String arrayFieldName = Spliterators.IS_ANDROID ? "elements"
                     : "array";
-            ARRAY_OFF = UNSAFE.objectFieldOffset(cowAl
+            ARRAY_OFF = U.objectFieldOffset(CopyOnWriteArrayList.class
                     .getDeclaredField(arrayFieldName));
         } catch (Exception e) {
             throw new Error(e);
