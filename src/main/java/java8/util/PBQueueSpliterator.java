@@ -30,15 +30,16 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java8.util.function.Consumer;
 import java8.util.Spliterator;
 
+// Spliterator for java.util.concurrent.PriorityBlockingQueue
 // Avoids commitment to toArray() until needed
-final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
+final class PBQueueSpliterator<E> implements Spliterator<E> {
 
     private final PriorityBlockingQueue<E> queue;
     private Object[] array;
     private int index;
     private int fence;
 
-    private PriorityBlockingQueueSpliterator(PriorityBlockingQueue<E> queue,
+    private PBQueueSpliterator(PriorityBlockingQueue<E> queue,
             Object[] array, int index, int fence) {
         this.queue = queue;
         this.array = array;
@@ -47,7 +48,7 @@ final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
     }
 
     static <T> Spliterator<T> spliterator(PriorityBlockingQueue<T> queue) {
-        return new PriorityBlockingQueueSpliterator<T>(queue, null, 0, -1);
+        return new PBQueueSpliterator<T>(queue, null, 0, -1);
     }
 
     private int getFence() {
@@ -61,7 +62,7 @@ final class PriorityBlockingQueueSpliterator<E> implements Spliterator<E> {
     @Override
     public Spliterator<E> trySplit() {
         int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
-        return (lo >= mid) ? null : new PriorityBlockingQueueSpliterator<E>(
+        return (lo >= mid) ? null : new PBQueueSpliterator<E>(
                 queue, array, lo, index = mid);
     }
 

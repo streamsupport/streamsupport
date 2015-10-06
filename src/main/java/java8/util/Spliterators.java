@@ -914,7 +914,7 @@ public final class Spliterators {
             }
 
             if (c instanceof CopyOnWriteArrayList) {
-                return CopyOnWriteArrayListSpliterator
+                return COWArrayListSpliterator
                         .spliterator((CopyOnWriteArrayList<T>) c);
             }
             if (c instanceof LinkedList) {
@@ -962,7 +962,7 @@ public final class Spliterators {
         }
 
         if ((NATIVE_SPECIALIZATION || IS_ANDROID) && c instanceof CopyOnWriteArraySet) {
-            return CopyOnWriteArraySetSpliterator
+            return COWArraySetSpliterator
                     .spliterator((CopyOnWriteArraySet<T>) c);
         }
 
@@ -987,10 +987,10 @@ public final class Spliterators {
                 return LBDSpliterator.spliterator((LinkedBlockingDeque<T>) c);
             }
             if (c instanceof PriorityBlockingQueue) {
-                return PriorityBlockingQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
+                return PBQueueSpliterator.spliterator((PriorityBlockingQueue<T>) c);
             }
             if (c instanceof PriorityQueue) {
-                return PriorityQueueSpliterator.spliterator((PriorityQueue<T>) c);
+                return PQueueSpliterator.spliterator((PriorityQueue<T>) c);
             }
         }
 
