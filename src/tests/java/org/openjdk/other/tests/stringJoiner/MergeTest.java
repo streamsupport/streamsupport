@@ -1,6 +1,6 @@
 package org.openjdk.other.tests.stringJoiner;
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2014 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,144 +24,148 @@ package org.openjdk.other.tests.stringJoiner;
 
 /**
  * @test
- * @bug 8017231 8020977
+ * @bug 8017231 8020977 8054221
  * @summary test  StringJoiner::merge
  * @run testng MergeTest
  */
 
 import java8.util.StringJoiner;
-import java8.util.function.Consumer;
 import java8.util.stream.RefStreams;
-
+import java8.util.stream.Stream;
 import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
 
 @Test
 public class MergeTest {
-    public void testNull() {
-        StringJoiner sj = new StringJoiner(",", "{", "}");
-        try {
-            sj.merge(null);
-            fail("Should throw NullPointerException!");
-        } catch (NullPointerException npe) {
-            // expected
+    static final String PREFIXES[] = {"", "{", "@#$%"};
+    static final String SUFFIXES[] = {"", "}", "*&%$"};
+
+    private static class Fixes {
+        public String pre0, suf0;
+        public String pre1, suf1;
+        public Fixes(String prefix0, String suffix0,
+                     String prefix1, String suffix1) {
+            this.pre0 = prefix0;
+            this.suf0 = suffix0;
+            this.pre1 = prefix1;
+            this.suf1 = suffix1;
         }
     }
 
-    public void testSimple() {
-        final StringJoiner sj = new StringJoiner(",", "{", "}");
-        final StringJoiner other = new StringJoiner(",", "[", "]");
-        RefStreams.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                sj.add(s);
+    static Stream<Fixes> fixesStream() {
+        Stream.Builder<Fixes> builder = RefStreams.builder();
+        for (final String prefix0 : PREFIXES) {
+            for (final String suffix0 : SUFFIXES) {
+                for (final String prefix1 : PREFIXES) {
+                    for (final String suffix1 : SUFFIXES) {
+                        builder.accept(new Fixes(prefix0, suffix0,
+                                                 prefix1, suffix1));
+                    }
+                }
             }
-        });
-        RefStreams.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                other.add(s);
-            }
-        });
+        }
+        return builder.build();
+    }
 
-        sj.merge(other);
-        assertEquals(sj.toString(), "{a,b,c,d,e,f}");
+    @Test(expectedExceptions = {NullPointerException.class})
+    public void testNull() {
+        StringJoiner sj = new StringJoiner(",", "{", "}");
+        sj.merge(null);
+    }
+
+    public void testSimple() {
+        fixesStream().forEach(fixes -> {
+            StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0);
+            StringJoiner other = new StringJoiner(",", fixes.pre1, fixes.suf1);
+            RefStreams.of("a", "b", "c").forEachOrdered(sj::add);
+            RefStreams.of("d", "e", "f").forEachOrdered(other::add);
+
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + "a,b,c,d,e,f" + fixes.suf0);
+        });
     }
 
     public void testEmptyOther() {
-        final StringJoiner sj = new StringJoiner(",", "{", "}");
-        StringJoiner other = new StringJoiner(",", "[", "]");
-        RefStreams.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                sj.add(s);
-            }
+        fixesStream().forEach(fixes -> {
+            StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0);
+            StringJoiner other = new StringJoiner(",", fixes.pre1, fixes.suf1);
+            RefStreams.of("a", "b", "c").forEachOrdered(sj::add);
+
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + "a,b,c" + fixes.suf0);
+
+            other.setEmptyValue("EMPTY");
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + "a,b,c" + fixes.suf0);
         });
-
-        sj.merge(other);
-        assertEquals(sj.toString(), "{a,b,c}");
-
-        other.setEmptyValue("EMPTY");
-        sj.merge(other);
-        assertEquals(sj.toString(), "{a,b,c}");
     }
 
     public void testEmptyThis() {
-        StringJoiner sj = new StringJoiner(",", "{", "}");
-        final StringJoiner other = new StringJoiner(":", "[", "]");
-        RefStreams.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                other.add(s);
-            }
+        fixesStream().forEach(fixes -> {
+            StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0);
+            StringJoiner other = new StringJoiner(":", fixes.pre1, fixes.suf1);
+            RefStreams.of("d", "e", "f").forEachOrdered(other::add);
+
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + "d:e:f" + fixes.suf0);
+
+            sj = new StringJoiner(",", fixes.pre0, fixes.suf0).setEmptyValue("EMPTY");
+            assertEquals(sj.toString(), "EMPTY");
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + "d:e:f" + fixes.suf0);
         });
-
-        sj.merge(other);
-        assertEquals(sj.toString(), "{d:e:f}");
-
-        sj = new StringJoiner(",", "{", "}").setEmptyValue("EMPTY");
-        assertEquals(sj.toString(), "EMPTY");
-        sj.merge(other);
-        assertEquals(sj.toString(), "{d:e:f}");
     }
 
     public void testEmptyBoth() {
-        StringJoiner sj = new StringJoiner(",", "{", "}");
-        StringJoiner other = new StringJoiner(":", "[", "]");
+        fixesStream().forEach(fixes -> {
+            StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0);
+            StringJoiner other = new StringJoiner(":", fixes.pre1, fixes.suf1);
 
-        sj.merge(other);
-        assertEquals(sj.toString(), "{}");
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + fixes.suf0);
 
-        other.setEmptyValue("NOTHING");
-        sj.merge(other);
-        assertEquals(sj.toString(), "{}");
+            other.setEmptyValue("NOTHING");
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + fixes.suf0);
 
-        sj = new StringJoiner(",", "{", "}").setEmptyValue("EMPTY");
-        assertEquals(sj.toString(), "EMPTY");
-        sj.merge(other);
-        assertEquals(sj.toString(), "EMPTY");
+            sj = new StringJoiner(",", fixes.pre0, fixes.suf0).setEmptyValue("EMPTY");
+            assertEquals(sj.toString(), "EMPTY");
+            sj.merge(other);
+            assertEquals(sj.toString(), "EMPTY");
+        });
     }
 
     public void testCascadeEmpty() {
-        StringJoiner sj = new StringJoiner(",", "{", "}");
-        StringJoiner o1 = new StringJoiner(":", "[", "]").setEmptyValue("Empty1");
-        StringJoiner o2 = new StringJoiner(",", "<", ">").setEmptyValue("Empty2");
+        fixesStream().forEach(fixes -> {
+            StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0);
+            StringJoiner o1 = new StringJoiner(":", fixes.pre1, fixes.suf1).setEmptyValue("Empty1");
+            StringJoiner o2 = new StringJoiner(",", "<", ">").setEmptyValue("Empty2");
 
-        o1.merge(o2);
-        assertEquals(o1.toString(), "Empty1");
+            o1.merge(o2);
+            assertEquals(o1.toString(), "Empty1");
 
-        sj.merge(o1);
-        assertEquals(sj.toString(), "{}");
+            sj.merge(o1);
+            assertEquals(sj.toString(), fixes.pre0 + fixes.suf0);
+        });
     }
 
     public void testDelimiter() {
-        final StringJoiner sj = new StringJoiner(",", "{", "}");
-        final StringJoiner other = new StringJoiner(":", "[", "]");
-        RefStreams.of("a", "b", "c").forEachOrdered((Consumer<String>) new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                sj.add(s);
-            }
-        });
-        RefStreams.of("d", "e", "f").forEachOrdered((Consumer<String>) new Consumer<String>() {
-            @Override
-            public void accept(String s) {
-                other.add(s);
-            }
-        });
+        fixesStream().forEach(fixes -> {
+            StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0);
+            StringJoiner other = new StringJoiner(":", fixes.pre1, fixes.suf1);
+            RefStreams.of("a", "b", "c").forEachOrdered(sj::add);
+            RefStreams.of("d", "e", "f").forEachOrdered(other::add);
 
-        sj.merge(other);
-        assertEquals(sj.toString(), "{a,b,c,d:e:f}");
+            sj.merge(other);
+            assertEquals(sj.toString(), fixes.pre0 + "a,b,c,d:e:f" + fixes.suf0);
+        });
     }
 
     public void testMergeSelf() {
-        final StringJoiner sj = new StringJoiner(",", "[", "]").add("a").add("b");
-        assertEquals(sj.merge(sj).toString(), "[a,b,a,b]");
-        assertEquals(sj.merge(sj).toString(), "[a,b,a,b,a,b,a,b]");
-
-        final StringJoiner sj2 = new StringJoiner(",").add("c").add("d");
-        assertEquals(sj2.merge(sj2).toString(), "c,d,c,d");
+        fixesStream().forEach(fixes -> {
+            final StringJoiner sj = new StringJoiner(",", fixes.pre0, fixes.suf0).add("a").add("b");
+            assertEquals(sj.merge(sj).toString(), fixes.pre0 + "a,b,a,b" + fixes.suf0);
+            assertEquals(sj.merge(sj).toString(), fixes.pre0 + "a,b,a,b,a,b,a,b" + fixes.suf0);
+        });
     }
 }
