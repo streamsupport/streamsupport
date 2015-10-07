@@ -90,7 +90,7 @@ public class ForkJoinWorkerThread extends Thread {
 
     // note that this will never get called on Android
     /**
-     * Version for InnocuousForkJoinWorkerThread
+     * Version for InnocuousForkJoinWorkerThread.
      */
     ForkJoinWorkerThread(ForkJoinPool pool, ThreadGroup threadGroup,
                          AccessControlContext acc) {
