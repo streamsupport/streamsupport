@@ -565,8 +565,6 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
      * @return the exception, or null if none
      */
     private Throwable getThrowableException() {
-        if ((status & DONE_MASK) != EXCEPTIONAL)
-            return null;
         int h = System.identityHashCode(this);
         ExceptionNode e;
         final ReentrantLock lock = exceptionTableLock;
@@ -612,7 +610,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     }
 
     /**
-     * Poll stale refs and remove them. Call only while holding lock.
+     * Polls stale refs and removes them. Call only while holding lock.
      */
     private static void expungeStaleExceptions() {
         for (Object x; (x = exceptionTableRefQueue.poll()) != null;) {
@@ -639,7 +637,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     }
 
     /**
-     * If lock is available, poll stale refs and remove them.
+     * If lock is available, polls stale refs and removes them.
      * Called from ForkJoinPool when pools become quiescent.
      */
     static final void helpExpungeStaleExceptions() {
@@ -657,8 +655,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
      * A version of "sneaky throw" to relay exceptions.
      */
     static void rethrow(Throwable ex) {
-        if (ex != null)
-            ForkJoinTask.<RuntimeException>uncheckedThrow(ex);
+        ForkJoinTask.<RuntimeException>uncheckedThrow(ex);
     }
 
     /**
@@ -668,7 +665,10 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
      */
     @SuppressWarnings("unchecked") static <T extends Throwable>
         void uncheckedThrow(Throwable t) throws T {
-        throw (T) t; // rely on vacuous cast
+        if (t != null)
+            throw (T) t; // rely on vacuous cast
+        else
+            throw new Error("Unknown Exception");
     }
 
     /**
@@ -1002,11 +1002,10 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     public final V get() throws InterruptedException, ExecutionException {
         int s = (Thread.currentThread() instanceof ForkJoinWorkerThread) ?
             doJoin() : externalInterruptibleAwaitDone();
-        Throwable ex;
         if ((s &= DONE_MASK) == CANCELLED)
             throw new CancellationException();
-        if (s == EXCEPTIONAL && (ex = getThrowableException()) != null)
-            throw new ExecutionException(ex);
+        if (s == EXCEPTIONAL)
+            throw new ExecutionException(getThrowableException());
         return getRawResult();
     }
 
@@ -1061,13 +1060,11 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
         if (s >= 0)
             s = status;
         if ((s &= DONE_MASK) != NORMAL) {
-            Throwable ex;
             if (s == CANCELLED)
                 throw new CancellationException();
             if (s != EXCEPTIONAL)
                 throw new TimeoutException();
-            if ((ex = getThrowableException()) != null)
-                throw new ExecutionException(ex);
+            throw new ExecutionException(getThrowableException());
         }
         return getRawResult();
     }
