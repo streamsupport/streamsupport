@@ -1329,17 +1329,17 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     }
 
     /**
-     * Atomically sets the tag value for this task.
+     * Atomically sets the tag value for this task and returns the old value.
      *
-     * @param tag the tag value
+     * @param newValue the new tag value
      * @return the previous value of the tag
      * @since 1.8
      */
-    public final short setForkJoinTaskTag(short tag) {
+    public final short setForkJoinTaskTag(short newValue) {
         for (int s;;) {
             if (U.compareAndSwapInt(this, STATUS, s = status,
-                                    (s & ~SMASK) | (tag & SMASK)))
-                return (short)s;
+                                    (s & ~SMASK) | (newValue & SMASK)))
+                return (short) s;
         }
     }
 
@@ -1351,18 +1351,18 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
      * before processing, otherwise exiting because the node has
      * already been visited.
      *
-     * @param e the expected tag value
-     * @param tag the new tag value
+     * @param expect the expected tag value
+     * @param update the new tag value
      * @return {@code true} if successful; i.e., the current value was
-     * equal to e and is now tag.
+     * equal to {@code expect} and was changed to {@code update}.
      * @since 1.8
      */
-    public final boolean compareAndSetForkJoinTaskTag(short e, short tag) {
+    public final boolean compareAndSetForkJoinTaskTag(short expect, short update) {
         for (int s;;) {
-            if ((short) (s = status) != e)
+            if ((short) (s = status) != expect)
                 return false;
             if (U.compareAndSwapInt(this, STATUS, s,
-                                    (s & ~SMASK) | (tag & SMASK)))
+                                    (s & ~SMASK) | (update & SMASK)))
                 return true;
         }
     }
