@@ -1129,11 +1129,13 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     }
 
     /**
-     * Returns the pool hosting the current task execution, or null
-     * if this task is executing outside of any ForkJoinPool.
+     * Returns the pool hosting the current thread, or {@code null}
+     * if the current thread is executing outside of any ForkJoinPool.
      *
+     * <p>This method returns {@code null} if and only if
+     * {@link #inForkJoinPool()} returns {@code false}.
+     * 
      * @return the pool, or {@code null} if none
-     * @see #inForkJoinPool
      */
     public static ForkJoinPool getPool() {
         Thread t = Thread.currentThread();
