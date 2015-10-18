@@ -313,9 +313,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @throws NullPointerException if subscriber is null
      */
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
-        Objects.requireNonNull(subscriber);
         BufferedSubscription<T> subscription =
-            new BufferedSubscription<T>(subscriber, executor,
+            new BufferedSubscription<T>(Objects.requireNonNull(subscriber), executor,
                                         onNextHandler, maxBufferCapacity);
         synchronized (this) {
             for (BufferedSubscription<T> b = clients, pred = null;;) {
@@ -861,7 +860,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      */
     public CompletableFuture<Void> consume(Consumer<? super T> consumer) {
         Objects.requireNonNull(consumer);
-        CompletableFuture<Void> status = new CompletableFuture<Void>();
+        CompletableFuture<Void> status = new CompletableFuture<>();
         subscribe(new ConsumerSubscriber<T>(status, consumer));
         return status;
     }
@@ -1601,8 +1600,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         private static final long CTL;
         private static final long HEAD;
         private static final long DEMAND;
-        private static final int  ABASE;
-        private static final int  ASHIFT;
+        private static final int ABASE;
+        private static final int ASHIFT;
 
         static {
             try {

@@ -191,7 +191,6 @@ public final class Flow {
      *
      * @param <T> the published item type
      */
-    //@FunctionalInterface
     public static interface Publisher<T> {
         /**
          * Adds the given Subscriber if possible.  If already
@@ -300,7 +299,7 @@ public final class Flow {
      * @param <T> the subscribed item type
      * @param <R> the published item type
      */
-    public static interface Processor<T, R> extends Subscriber<T>, Publisher<R> {
+    public static interface Processor<T,R> extends Subscriber<T>, Publisher<R> {
     }
 
     static final int DEFAULT_BUFFER_SIZE = 256;
