@@ -32,14 +32,15 @@
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
+
 package java8.util.concurrent;
 
-import java8.util.function.Consumer;
-import java8.util.function.BiConsumer;
-import java8.util.function.Function;
-import java8.util.function.BiFunction;
-
 import java.util.concurrent.Executor;
+
+import java8.util.function.BiConsumer;
+import java8.util.function.BiFunction;
+import java8.util.function.Consumer;
+import java8.util.function.Function;
 
 /**
  * A stage of a possibly asynchronous computation, that performs an
@@ -138,7 +139,7 @@ public interface CompletionStage<T> {
      * @param <U> the function's return type
      * @return the new CompletionStage
      */
-    public <U> CompletionStage<U> thenApply(Function<? super T, ? extends U> fn);
+    public <U> CompletionStage<U> thenApply(Function<? super T,? extends U> fn);
 
     /**
      * Returns a new CompletionStage that, when this stage completes
@@ -155,7 +156,7 @@ public interface CompletionStage<T> {
      * @return the new CompletionStage
      */
     public <U> CompletionStage<U> thenApplyAsync
-        (Function<? super T, ? extends U> fn);
+        (Function<? super T,? extends U> fn);
 
     /**
      * Returns a new CompletionStage that, when this stage completes
@@ -172,7 +173,7 @@ public interface CompletionStage<T> {
      * @return the new CompletionStage
      */
     public <U> CompletionStage<U> thenApplyAsync
-        (Function<? super T, ? extends U> fn,
+        (Function<? super T,? extends U> fn,
          Executor executor);
 
     /**
@@ -276,9 +277,9 @@ public interface CompletionStage<T> {
      * @param <V> the function's return type
      * @return the new CompletionStage
      */
-    public <U, V> CompletionStage<V> thenCombine
+    public <U,V> CompletionStage<V> thenCombine
         (CompletionStage<? extends U> other,
-         BiFunction<? super T, ? super U, ? extends V> fn);
+         BiFunction<? super T,? super U,? extends V> fn);
 
     /**
      * Returns a new CompletionStage that, when this and the other
@@ -296,9 +297,9 @@ public interface CompletionStage<T> {
      * @param <V> the function's return type
      * @return the new CompletionStage
      */
-    public <U, V> CompletionStage<V> thenCombineAsync
+    public <U,V> CompletionStage<V> thenCombineAsync
         (CompletionStage<? extends U> other,
-         BiFunction<? super T, ? super U, ? extends V> fn);
+         BiFunction<? super T,? super U,? extends V> fn);
 
     /**
      * Returns a new CompletionStage that, when this and the other
@@ -317,9 +318,9 @@ public interface CompletionStage<T> {
      * @param <V> the function's return type
      * @return the new CompletionStage
      */
-    public <U, V> CompletionStage<V> thenCombineAsync
+    public <U,V> CompletionStage<V> thenCombineAsync
         (CompletionStage<? extends U> other,
-         BiFunction<? super T, ? super U, ? extends V> fn,
+         BiFunction<? super T,? super U,? extends V> fn,
          Executor executor);
 
     /**
@@ -603,7 +604,7 @@ public interface CompletionStage<T> {
     /**
      * Returns a new CompletionStage that, when this stage completes
      * normally, is executed using this stage's default asynchronous
-     * execution facility, with this stage result as the argument to the
+     * execution facility, with this stage's result as the argument to the
      * supplied function.
      *
      * See the {@link CompletionStage} documentation for rules
