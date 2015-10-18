@@ -307,7 +307,7 @@ public class JSR166TestCase extends TestCase {
     public static Test suite() {
         // Java7+ test classes
         TestSuite suite = newTestSuite(
-                /*
+            /*
             ForkJoinPoolTest.suite(),
             ForkJoinTaskTest.suite(),
             RecursiveActionTest.suite(),
@@ -378,6 +378,7 @@ public class JSR166TestCase extends TestCase {
         // Java8+ test classes
         if (atLeastJava8()) {
             String[] java8TestClassNames = {
+            	/*
                 "Atomic8Test",
                 "CompletableFutureTest",
                 "ConcurrentHashMap8Test",
@@ -392,6 +393,7 @@ public class JSR166TestCase extends TestCase {
                 "StampedLockTest",
                 "SubmissionPublisherTest",
                 "ThreadLocalRandom8Test",
+                */
             };
             addNamedTestClasses(suite, java8TestClassNames);
         }
