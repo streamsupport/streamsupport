@@ -184,7 +184,7 @@ package java8.util.concurrent;
  *   }
  * }}</pre>
  *
- * As a further improvement, notice that the left task need not even exist.
+ * As a further optimization, notice that the left task need not even exist.
  * Instead of creating a new one, we can iterate using the original task,
  * and add a pending count for each fork.  Additionally, because no task
  * in this tree implements an {@link #onCompletion(CountedCompleter)} method,
@@ -207,7 +207,7 @@ package java8.util.concurrent;
  *   }
  * }}</pre>
  *
- * Additional improvements of such classes might entail precomputing
+ * Additional optimizations of such classes might entail precomputing
  * pending counts so that they can be established in constructors,
  * specializing classes for leaf steps, subdividing by say, four,
  * instead of two per iteration, and using an adaptive threshold
