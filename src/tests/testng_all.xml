@@ -123,7 +123,10 @@
       <class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.WhileOpStatefulTest"/>
 
-      <!-- block 11 (superseded & questionable tests) -->
+      <!-- block 11 (Java9 Flow API - streamsupport-flow) -->
+      <class name="org.openjdk.other.tests.flow.SubmissionPublisherTest"/>
+
+      <!-- block 12 (superseded & questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>
