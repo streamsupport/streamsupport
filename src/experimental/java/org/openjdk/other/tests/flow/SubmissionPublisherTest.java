@@ -25,12 +25,15 @@ import junit.framework.TestSuite;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+@org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
 
+    /*
     public static void main(String[] args) {
         System.out.println("Running " + SubmissionPublisherTest.class.getSimpleName());
         main(suite(), args);
     }
+    */
 
     public static Test suite() {
         return new TestSuite(SubmissionPublisherTest.class);
@@ -1039,5 +1042,4 @@ public class SubmissionPublisherTest extends JSR166TestCase {
             p.submit(i);
         assertTrue(count.get() < n);
     }
-
 }

@@ -55,6 +55,9 @@ import java8.util.concurrent.RecursiveTask;
 
 import java.util.regex.Pattern;
 
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -378,7 +381,7 @@ public class JSR166TestCase extends TestCase {
         // Java8+ test classes
         if (atLeastJava8()) {
             String[] java8TestClassNames = {
-            	/*
+                /*
                 "Atomic8Test",
                 "CompletableFutureTest",
                 "ConcurrentHashMap8Test",
@@ -529,6 +532,7 @@ public class JSR166TestCase extends TestCase {
         threadFailure.compareAndSet(null, t);
     }
 
+    @BeforeMethod
     public void setUp() {
         setDelays();
     }
@@ -549,6 +553,7 @@ public class JSR166TestCase extends TestCase {
      *
      * Triggers test case failure if interrupt status is set in the main thread.
      */
+    @AfterMethod
     public void tearDown() throws Exception {
         Throwable t = threadFailure.getAndSet(null);
         if (t != null) {
