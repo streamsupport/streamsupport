@@ -100,7 +100,6 @@
       <class name="org.openjdk.other.tests.phaser.PhaseOverflow"/>
       <class name="org.openjdk.other.tests.phaser.TieredArriveLoops"/>
       <class name="org.openjdk.tests.java.util.SplittableRandomTest"/>
-      <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
@@ -114,8 +113,6 @@
       <class name="org.openjdk.tests.java.util.SpliteratorLateBindingFailFastTest"/>
       <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest"/>
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
-      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
-      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
 
       <!-- block 10 (Java9: Stream takeWhile / dropWhile) -->
       <class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
@@ -136,7 +133,15 @@
       <!-- Caution: SubmissionPublisher(Test) has a dependency on CF (streamsupport-cfuture) -->
       <class name="org.openjdk.other.tests.flow.SubmissionPublisherTest"/>
 
-      <!-- block 13 (superseded & questionable tests) -->
+      <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar -->
+
+      <!-- block 13 (j8.u.c.atomic package - streamsupport-atomic) -->
+      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
+      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
+      <!-- Not an j8.u.c.atomic test, but a test with a dependency on LongAdder (streamsupport-atomic)-->
+      <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
+
+      <!-- block 14 (superseded & questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>
