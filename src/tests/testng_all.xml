@@ -3,6 +3,8 @@
 <suite name="streamsupport-OpenJDK-TestSuite">
   <test verbose="2" name="streamsupport_all_tests">
     <classes>
+      <!-- Test dependencies block 1 - block 10: streamsupport.jar -->
+
       <!-- block 1 -->
       <class name="java8.util.stream.FlagOpTest"/>
       <class name="java8.util.stream.StreamOpFlagsTest"/>
@@ -23,9 +25,6 @@
       <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
       <class name="org.openjdk.tests.java.util.comparator.TypeTest"/>
       <class name="org.openjdk.tests.java.util.map.DefaultsTest"/>
-      <class name="org.openjdk.tests.java.util.concurrent.Basic"/>
-      <class name="org.openjdk.tests.java.util.concurrent.ThenComposeAsyncTest"/>
-      <class name="org.openjdk.tests.java.util.concurrent.ThenComposeExceptionTest"/>
 
       <!-- block 3 -->
       <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/>
@@ -78,7 +77,6 @@
       <class name="org.openjdk.tests.java.util.stream.ConcatTest"/>
 
       <!-- block 8 -->
-      <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
       <class name="org.openjdk.other.tests.forkjoin.SubmissionTest"/>
       <class name="org.openjdk.other.tests.function.BasicTest"/>
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
@@ -123,10 +121,22 @@
       <class name="org.openjdk.tests.java.util.stream.WhileOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.WhileOpStatefulTest"/>
 
-      <!-- block 11 (Java9 Flow API - streamsupport-flow) -->
+      <!-- Test dependencies block 11: streamsupport.jar + streamsupport-cfuture.jar -->
+
+      <!-- block 11 (CompletableFuture w. Java9 exts - streamsupport-cfuture) -->
+      <class name="org.openjdk.tests.java.util.concurrent.Basic"/>
+      <class name="org.openjdk.tests.java.util.concurrent.ThenComposeAsyncTest"/>
+      <class name="org.openjdk.tests.java.util.concurrent.ThenComposeExceptionTest"/>
+      <!-- Not a CF test, but a test with a dependency on CF -->
+      <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
+
+      <!-- Test dependencies block 12: streamsupport.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
+
+      <!-- block 12 (Java9 Flow API - streamsupport-flow) -->
+      <!-- Caution: SubmissionPublisher(Test) has a dependency on CF (streamsupport-cfuture) -->
       <class name="org.openjdk.other.tests.flow.SubmissionPublisherTest"/>
 
-      <!-- block 12 (superseded & questionable tests) -->
+      <!-- block 13 (superseded & questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>
