@@ -712,7 +712,8 @@ public class ForkJoinPool extends AbstractExecutorService {
          * Returns a new worker thread operating in the given pool.
          *
          * @param pool the pool this thread works in
-         * @return the new worker thread
+         * @return the new worker thread, or {@code null} if the request
+         * to create a thread is rejected
          * @throws NullPointerException if the pool is null
          */
         public ForkJoinWorkerThread newThread(ForkJoinPool pool);
