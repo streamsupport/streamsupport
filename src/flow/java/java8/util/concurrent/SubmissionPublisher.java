@@ -730,7 +730,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * @return list of current subscribers
      */
     public List<Flow.Subscriber<? super T>> getSubscribers() {
-        ArrayList<Flow.Subscriber<? super T>> subs = new ArrayList<>();
+        ArrayList<Flow.Subscriber<? super T>> subs = new ArrayList<Flow.Subscriber<? super T>>();
         synchronized (this) {
             BufferedSubscription<T> pred = null, next;
             for (BufferedSubscription<T> b = clients; b != null; b = next) {
@@ -860,7 +860,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      */
     public CompletableFuture<Void> consume(Consumer<? super T> consumer) {
         Objects.requireNonNull(consumer);
-        CompletableFuture<Void> status = new CompletableFuture<>();
+        CompletableFuture<Void> status = new CompletableFuture<Void>();
         subscribe(new ConsumerSubscriber<T>(status, consumer));
         return status;
     }
@@ -875,9 +875,15 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                            Consumer<? super T> consumer) {
             this.status = status; this.consumer = consumer;
         }
-        public final void onSubscribe(Flow.Subscription subscription) {
+        public final void onSubscribe(final Flow.Subscription subscription) {
             this.subscription = subscription;
-            status.whenComplete((v, e) -> subscription.cancel());
+//          status.whenComplete((v, e) -> subscription.cancel());
+            status.whenComplete(new BiConsumer<Void, Throwable>() {
+                @Override
+                public void accept(Void v, Throwable e) {
+                    subscription.cancel();
+                }
+            });
             if (!status.isDone())
                 subscription.request(Long.MAX_VALUE);
         }
@@ -1260,16 +1266,24 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                     try {
                         e.execute(new ConsumerTask<T>(this));
                         break;
-                    } catch (RuntimeException | Error ex) { // back out
-                        do {} while (((c = ctl) & DISABLED) == 0 &&
-                                     (c & ACTIVE) != 0 &&
-                                     !U.compareAndSwapInt(this, CTL, c,
-                                                          c & ~ACTIVE));
+                    } catch (RuntimeException ex) { // back out
+                        back_out();
+                        throw ex;
+                    } catch (Error ex) { // back out
+                        back_out();
                         throw ex;
                     }
                 }
             }
             return stat;
+        }
+
+        private void back_out() {
+            int c;
+            do {} while (((c = ctl) & DISABLED) == 0 &&
+                    (c & ACTIVE) != 0 &&
+                    !U.compareAndSwapInt(this, CTL, c,
+                                         c & ~ACTIVE));
         }
 
         private void signalWaiter(Thread w) {
