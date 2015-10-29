@@ -1321,7 +1321,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             throw new NullPointerException();
         CompletableFuture<Void> d = newIncompleteFuture();
         if (e != null || !d.biRun(this, b, f, null)) {
-            BiRun<T,?> c = new BiRun<>(e, d, this, b, f);
+            BiRun<T,?> c = new BiRun(e, d, this, b, f);
             bipush(b, c);
             c.tryFire(SYNC);
         }
@@ -1377,7 +1377,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                       andTree(cfs, mid+1, hi))) == null)
                 throw new NullPointerException();
             if (!d.biRelay(a, b)) {
-                BiRelay<?,?> c = new BiRelay<>(d, a, b);
+                BiRelay<?,?> c = new BiRelay(d, a, b);
                 a.bipush(b, c);
                 c.tryFire(SYNC);
             }
@@ -1584,7 +1584,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             throw new NullPointerException();
         CompletableFuture<Void> d = newIncompleteFuture();
         if (e != null || !d.orRun(this, b, f, null)) {
-            OrRun<T,?> c = new OrRun<>(e, d, this, b, f);
+            OrRun<T,?> c = new OrRun(e, d, this, b, f);
             orpush(b, c);
             c.tryFire(SYNC);
         }
@@ -1631,7 +1631,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                       orTree(cfs, mid+1, hi))) == null)
                 throw new NullPointerException();
             if (!d.orRelay(a, b)) {
-                OrRelay<?,?> c = new OrRelay<>(d, a, b);
+                OrRelay<?,?> c = new OrRelay(d, a, b);
                 a.orpush(b, c);
                 c.tryFire(SYNC);
             }
@@ -2009,7 +2009,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      */
     public T getNow(T valueIfAbsent) {
         Object r;
-        return ((r = result) == null) ? valueIfAbsent : reportJoin(r);
+        return ((r = result) == null) ? valueIfAbsent : (T) reportJoin(r);
     }
 
     /**
