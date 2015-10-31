@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-atomic</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.4</version>
 	<name>net.sourceforge.streamsupport:streamsupport-atomic</name>
 	<description>streamsupport-atomic is a backport of the java.util.concurrent.atomic classes
  added in Java 8 (Double/Long Accumulator/Adder) for Java 6 / 7 and Android developers</description>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport</artifactId>
-			<version>1.4-SNAPSHOT</version>
+			<version>1.4</version>
 		</dependency>
 	</dependencies>
 	<properties>
