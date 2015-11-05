@@ -281,6 +281,8 @@ public final class Optional<T> {
      * If a value is present, returns an {@code Optional} describing the value,
      * otherwise returns an {@code Optional} produced by the supplying function.
      *
+     * @param <S> the type of the Optional's value produced by the supplying
+     *        function, a subtype of T
      * @param supplier the supplying function that produces an {@code Optional}
      *        to be returned
      * @return returns an {@code Optional} describing the value of this
@@ -290,12 +292,12 @@ public final class Optional<T> {
      *         produces a {@code null} result
      * @since 9
      */
-    public Optional<T> or(Supplier<Optional<T>> supplier) {
+    public <S extends T> Optional<T> or(Supplier<Optional<S>> supplier) {
         Objects.requireNonNull(supplier);
         if (isPresent()) {
             return this;
         } else {
-            return Objects.requireNonNull(supplier.get());
+            return (Optional<T>) Objects.requireNonNull(supplier.get());
         }
     }
 
