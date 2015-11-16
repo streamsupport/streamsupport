@@ -48,16 +48,22 @@ import java8.util.function.Function;
  * A stage completes upon termination of its computation, but this may
  * in turn trigger other dependent stages.  The functionality defined
  * in this interface takes only a few basic forms, which expand out to
- * a larger set of methods to capture a range of usage styles: <ul>
+ * a larger set of methods to capture a range of usage styles:
+ *
+ * <ul>
  *
  * <li>The computation performed by a stage may be expressed as a
  * Function, Consumer, or Runnable (using methods with names including
  * <em>apply</em>, <em>accept</em>, or <em>run</em>, respectively)
  * depending on whether it requires arguments and/or produces results.
- * For example, {@code stage.thenApply(x -> square(x)).thenAccept(x ->
- * System.out.print(x)).thenRun(() -> System.out.println())}. An
- * additional form (<em>compose</em>) applies functions of stages
- * themselves, rather than their results.
+ * For example:
+ * <pre> {@code
+ * stage.thenApply(x -> square(x))
+ *    .thenAccept(x -> System.out.print(x))
+ *    .thenRun(() -> System.out.println())}.</pre>
+ *
+ * An additional form (<em>compose</em>) allows the construction of
+ * computation pipelines from functions returning completion stages.
  *
  * <li>One stage's execution may be triggered by completion of a
  * single stage, or both of two stages, or either of two stages.
@@ -66,8 +72,7 @@ import java8.util.function.Function;
  * <em>both</em> of two stages may <em>combine</em> their results or
  * effects, using correspondingly named methods. Those triggered by
  * <em>either</em> of two stages make no guarantees about which of the
- * results or effects are used for the dependent stage's
- * computation.
+ * results or effects are used for the dependent stage's computation.
  *
  * <li>Dependencies among stages control the triggering of
  * computations, but do not otherwise guarantee any particular
@@ -100,8 +105,10 @@ import java8.util.function.Function;
  * exceptionally, no guarantees are made about whether the dependent
  * stage completes normally or exceptionally. In the case of method
  * {@code whenComplete}, when the supplied action itself encounters an
- * exception, then the stage exceptionally completes with this
- * exception if not already completed exceptionally.
+ * exception, then the stage completes exceptionally with this
+ * exception unless the source stage also completed exceptionally, in
+ * which case the exceptional completion from the source stage is
+ * given preference and propagated to the dependent stage.
  *
  * </ul>
  *
@@ -130,6 +137,10 @@ public interface CompletionStage<T> {
      * Returns a new CompletionStage that, when this stage completes
      * normally, is executed with this stage's result as the argument
      * to the supplied function.
+     *
+     * <p>This method is analogous to
+     * {@link java8.util.Optional#map Optional.map} and
+     * {@link java8.util.stream.Stream#map Stream.map}.
      *
      * See the {@link CompletionStage} documentation for rules
      * covering exceptional completion.
@@ -587,48 +598,78 @@ public interface CompletionStage<T> {
          Executor executor);
 
     /**
-     * Returns a new CompletionStage that, when this stage completes
-     * normally, is executed with this stage's result as the argument
-     * to the supplied function.
+     * Returns a new CompletionStage that is completed with the same
+     * value as the CompletionStage returned by the given function.
      *
-     * See the {@link CompletionStage} documentation for rules
+     * <p>When this stage completes normally, the given function is
+     * invoked with this stage's result as the argument, returning
+     * another CompletionStage.  When that stage completes normally,
+     * the CompletionStage returned by this method is completed with
+     * the same value.
+     *
+     * <p>To ensure progress, the supplied function must arrange
+     * eventual completion of its result.
+     *
+     * <p>This method is analogous to
+     * {@link java8.util.Optional#flatMap Optional.flatMap} and
+     * {@link java8.util.stream.Stream#flatMap Stream.flatMap}.
+     *
+     * <p>See the {@link CompletionStage} documentation for rules
      * covering exceptional completion.
      *
-     * @param fn the function returning a new CompletionStage
+     * @param fn the function to use to compute another CompletionStage
      * @param <U> the type of the returned CompletionStage's result
-     * @return the CompletionStage
+     * @return the new CompletionStage
      */
     public <U> CompletionStage<U> thenCompose
         (Function<? super T, ? extends CompletionStage<U>> fn);
 
     /**
-     * Returns a new CompletionStage that, when this stage completes
-     * normally, is executed using this stage's default asynchronous
-     * execution facility, with this stage's result as the argument to the
-     * supplied function.
+     * Returns a new CompletionStage that is completed with the same
+     * value as the CompletionStage returned by the given function,
+     * executed using this stage's default asynchronous execution
+     * facility.
      *
-     * See the {@link CompletionStage} documentation for rules
+     * <p>When this stage completes normally, the given function is
+     * invoked with this stage's result as the argument, returning
+     * another CompletionStage.  When that stage completes normally,
+     * the CompletionStage returned by this method is completed with
+     * the same value.
+     *
+     * <p>To ensure progress, the supplied function must arrange
+     * eventual completion of its result.
+     *
+     * <p>See the {@link CompletionStage} documentation for rules
      * covering exceptional completion.
      *
-     * @param fn the function returning a new CompletionStage
+     * @param fn the function to use to compute another CompletionStage
      * @param <U> the type of the returned CompletionStage's result
-     * @return the CompletionStage
+     * @return the new CompletionStage
      */
     public <U> CompletionStage<U> thenComposeAsync
         (Function<? super T, ? extends CompletionStage<U>> fn);
 
     /**
-     * Returns a new CompletionStage that, when this stage completes
-     * normally, is executed using the supplied Executor, with this
-     * stage's result as the argument to the supplied function.
+     * Returns a new CompletionStage that is completed with the same
+     * value as the CompletionStage returned by the given function,
+     * executed using the supplied Executor.
      *
-     * See the {@link CompletionStage} documentation for rules
+     * <p>When this stage completes normally, the given function is
+     * invoked with this stage's result as the argument, returning
+     * another CompletionStage.  When that stage completes normally,
+     * the CompletionStage returned by this method is completed with
+     * the same value.
+     *
+     * <p>To ensure progress, the supplied function must arrange
+     * eventual completion of its result.
+     *
+     * <p>See the {@link CompletionStage} documentation for rules
      * covering exceptional completion.
      *
-     * @param fn the function returning a new CompletionStage
+     * @param fn the function to use to compute another CompletionStage
      * @param executor the executor to use for asynchronous execution
      * @param <U> the type of the returned CompletionStage's result
-     * @return the CompletionStage
+     * @return the new CompletionStage
      */
     public <U> CompletionStage<U> thenComposeAsync
         (Function<? super T, ? extends CompletionStage<U>> fn,
