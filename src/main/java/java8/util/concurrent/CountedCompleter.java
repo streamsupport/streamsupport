@@ -259,9 +259,9 @@ package java8.util.concurrent;
  * }}</pre>
  *
  * In this example, as well as others in which tasks have no other
- * effects except to compareAndSet a common result, the trailing
- * unconditional invocation of {@code tryComplete} could be made
- * conditional ({@code if (result.get() == null) tryComplete();})
+ * effects except to {@code compareAndSet} a common result, the
+ * trailing unconditional invocation of {@code tryComplete} could be
+ * made conditional ({@code if (result.get() == null) tryComplete();})
  * because no further bookkeeping is required to manage completions
  * once the root task completes.
  *
@@ -634,7 +634,7 @@ public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
      * any one (versus all) of several subtask results are obtained.
      * However, in the common (and recommended) case in which {@code
      * setRawResult} is not overridden, this effect can be obtained
-     * more simply using {@code quietlyCompleteRoot();}.
+     * more simply using {@link #quietlyCompleteRoot()}.
      *
      * @param rawResult the raw result
      */
