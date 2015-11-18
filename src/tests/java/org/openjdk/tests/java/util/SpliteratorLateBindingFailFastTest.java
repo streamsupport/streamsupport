@@ -240,9 +240,9 @@ public class SpliteratorLateBindingFailFastTest {
         // Android's PriorityQueue fails in 5 tests
 //        db.addCollection(PriorityQueue::new);
 
-        // ArrayDeque fails some tests since it's fail-fast support is weaker
+        // ArrayDeque fails some tests since its fail-fast support is weaker
         // than other collections and limited to detecting most, but not all,
-        // removals.  It probably requires it's own test since it is difficult
+        // removals.  It probably requires its own test since it is difficult
         // to abstract out the conditions under which it fails-fast.
 //        db.addCollection(ArrayDeque::new);
 
