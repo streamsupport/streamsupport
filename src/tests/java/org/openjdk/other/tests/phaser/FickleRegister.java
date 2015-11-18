@@ -38,12 +38,12 @@
  */
 package org.openjdk.other.tests.phaser;
 
-import java.util.*;
-import java.util.concurrent.atomic.*;
-
-import org.testng.annotations.Test;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 import java8.util.concurrent.Phaser;
+
+import org.testng.annotations.Test;
 
 public class FickleRegister {
     final AtomicLong count = new AtomicLong(0);

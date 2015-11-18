@@ -41,6 +41,11 @@
  */
 package org.openjdk.tests.java.util.concurrent;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static java8.util.concurrent.CompletableFuture.runAsync;
+import static java8.util.concurrent.CompletableFuture.supplyAsync;
+import static java8.util.concurrent.ForkJoinPool.commonPool;
+
 import java.lang.reflect.Array;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
@@ -53,9 +58,6 @@ import org.testng.annotations.Test;
 import java8.util.concurrent.Phaser;
 import java8.util.concurrent.CompletableFuture;
 import java8.util.concurrent.CompletionException;
-import static java.util.concurrent.TimeUnit.*;
-import static java8.util.concurrent.CompletableFuture.*;
-import static java8.util.concurrent.ForkJoinPool.*;
 
 public class Basic {
 
@@ -116,7 +118,7 @@ public class Basic {
             test(executor);
         } finally {
             executor.shutdown();
-            executor.awaitTermination(30, SECONDS);
+            executor.awaitTermination(30L, SECONDS);
         }
     }
 

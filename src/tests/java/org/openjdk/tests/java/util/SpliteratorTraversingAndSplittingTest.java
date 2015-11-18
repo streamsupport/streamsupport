@@ -86,7 +86,7 @@ import static org.testng.Assert.*;
 @Test
 public class SpliteratorTraversingAndSplittingTest {
 
-    private static List<Integer> SIZES = Arrays.asList(0, 1, 10, 100, 1000);
+    private static List<Integer> SIZES = Arrays.asList(0, 1, 10, 42);
 
     private static class SpliteratorDataBuilder<T> {
         List<Object[]> data;
