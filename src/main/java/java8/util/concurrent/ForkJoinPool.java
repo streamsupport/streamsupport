@@ -1063,7 +1063,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         }
 
         /**
-         * Shared version of pop.
+         * Shared version of tryUnpush.
          */
         final boolean trySharedUnpush(ForkJoinTask<?> task) {
             boolean popped = false;
@@ -1074,7 +1074,8 @@ public class ForkJoinPool extends AbstractExecutorService {
                 ForkJoinTask<?> t = (ForkJoinTask<?>) U.getObject(a, offset);
                 if (t == task &&
                     U.compareAndSwapInt(this, QLOCK, 0, 1)) {
-                    if (U.compareAndSwapObject(a, offset, task, null)) {
+                    if (top == s + 1 && array == a &&
+                        U.compareAndSwapObject(a, offset, task, null)) {
                         popped = true;
                         top = s;
                     }
@@ -1279,12 +1280,14 @@ public class ForkJoinPool extends AbstractExecutorService {
                     for (CountedCompleter<?> r = t;;) {
                         if (r == task) {
                             if ((mode & IS_OWNED) == 0) {
-                                boolean popped;
+                                boolean popped = false;
                                 if (U.compareAndSwapInt(this, QLOCK, 0, 1)) {
-                                    if (popped =
-                                        U.compareAndSwapObject(a, offset,
-                                                               t, null))
+                                    if (top == s && array == a &&
+                                            U.compareAndSwapObject(a, offset,
+                                                                   t, null)) {
+                                        popped = true;
                                         top = s - 1;
+                                    }
                                     U.putOrderedInt(this, QLOCK, 0);
                                     if (popped)
                                         return t;
