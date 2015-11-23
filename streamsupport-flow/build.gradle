@@ -13,7 +13,7 @@ sourceCompatibility = '1.6'
 
 sourceSets {
   main {
-      java.srcDir 'src/flow'
+      java.srcDir '../src/flow'
   }
 }
 
@@ -25,6 +25,7 @@ repositories {
 
 dependencies {
     compile project(':streamsupport')
+    compile project(':streamsupport-cfuture')
 }
 
 tasks.withType(Test) {
