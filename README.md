@@ -31,6 +31,9 @@ build.gradle:
 ```gradle
 dependencies {
     compile 'net.sourceforge.streamsupport:streamsupport:1.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4'
 }
 ```
 
