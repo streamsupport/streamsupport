@@ -34,3 +34,5 @@ tasks.withType(Test) {
     showStandardStreams = true
   }
 }
+
+apply plugin: 'maven'

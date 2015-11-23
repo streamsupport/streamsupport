@@ -56,3 +56,4 @@ tasks.withType(JavaCompile) {
     options.encoding = 'Cp1252'
 }
 
+apply plugin: 'maven'
