@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
+}
+
+apply plugin: 'java'
+
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+}
+
+tasks.withType(Test) {
+  testLogging {
+    exceptionFormat "full"
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+    showStandardStreams = true
+  }
+}
+
+apply plugin: 'maven'
+
+apply plugin: 'com.novoda.bintray-release'
+
+def getRepositoryUsername() {
+    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
+}
+
+def getRepositoryPassword() {
+    return hasProperty('BINTRAY_KEY') ? BINTRAY_KEY : ""
+}
+
+publish {
+    userOrg = 'yongjhih'
+    groupId = 'com.infstory'
+    artifactId = 'streamsupport'
+    //uploadName = ''
+    publishVersion = '1.4'
+    desc = 'Backport of Java 8 java.util.stream API to Java 6/7 and Android'
+    website = 'https://github.com/yongjhih/streamsupport'
+    bintrayUser = getRepositoryUsername()
+    bintrayKey = getRepositoryPassword()
+    dryRun = false
+}

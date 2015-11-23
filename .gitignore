@@ -1,0 +1,22 @@
+.project
+.classpath
+.settings/
+bin/
+gen/
+
+# git
+*.orig
+
+# vim
+*.sw*
+*~
+
+build/
+.gradle/
+.idea/
+.apt_generated/
+*.iml
+
+local.properties
+
+.zip/
