@@ -24,6 +24,29 @@ Want also lambdas? https://github.com/orfjackal/retrolambda
 * Includes miscellaneous Java 8 goodies (Optional, StringJoiner, ...)
 * Supports Android
 
+## Installation
+
+build.gradle:
+
+```gradle
+dependencies {
+    compile 'net.sourceforge.streamsupport:streamsupport:1.4'
+}
+```
+
+or via jitpack:
+
+```gradle
+repositories {
+    // ...
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile 'com.github.yongjhih:streamsupport:-SNAPSHOT'
+}
+```
+
 ## RELEASE NOTES
 
  - "1.4-stable" is the current stable release
