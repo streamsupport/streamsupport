@@ -1,0 +1,6 @@
+include ':streamsupport'
+include ':streamsupport-atomic'
+include ':streamsupport-flow'
+include ':streamsupport-cfuture'
+include ':streamsupport-experimental'
+//include ':streamsupport-alternative'

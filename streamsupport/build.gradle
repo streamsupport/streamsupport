@@ -1,0 +1,58 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
+    }
+}
+
+apply plugin: 'java'
+
+apply plugin: 'me.tatarka.retrolambda'
+
+//retrolambda {
+//    jvmArgs '-noverify'
+//    jdk System.getenv("JAVA8_HOME")
+//    oldJdk System.getenv("JAVA7_HOME")
+//    javaVersion JavaVersion.VERSION_1_7
+//}
+
+sourceSets {
+  main {
+      java.srcDir '../src/main'
+  }
+  test {
+      java.srcDir 'src/tests'
+  }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    testCompile 'junit:junit:3.8.2'
+    testCompile 'org.testng:testng:6.8.17'
+    testCompile project(':streamsupport-atomic')
+    testCompile project(':streamsupport-cfuture')
+    testCompile project(':streamsupport-flow')
+}
+
+tasks.withType(Test) {
+  testLogging {
+    exceptionFormat "full"
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+    showStandardStreams = true
+  }
+}
+
+targetCompatibility = '1.8'
+sourceCompatibility = '1.8'
+
+tasks.withType(JavaCompile) {
+    //targetCompatibility = '1.8'
+    //sourceCompatibility = '1.8'
+    options.encoding = 'Cp1252'
+}
+

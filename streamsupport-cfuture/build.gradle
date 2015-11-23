@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+    }
+}
+
+apply plugin: 'java'
+
+targetCompatibility = '1.6'
+sourceCompatibility = '1.6'
+
+sourceSets {
+  main {
+      java.srcDir '../src/cfuture'
+  }
+}
+
+repositories {
+    jcenter()
+}
+
+// encoding: Cp1252
+
+dependencies {
+    compile project(':streamsupport')
+}
+
+tasks.withType(Test) {
+  testLogging {
+    exceptionFormat "full"
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+    showStandardStreams = true
+  }
+}
