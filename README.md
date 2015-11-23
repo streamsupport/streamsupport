@@ -38,8 +38,8 @@ build.gradle:
 ```gradle
 dependencies {
     compile 'net.sourceforge.streamsupport:streamsupport:1.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4'
     compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4'
     compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4'
 }
 ```
@@ -53,7 +53,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.yongjhih:streamsupport:-SNAPSHOT'
+    compile 'com.github.yongjhih.streamsupport:streamsupport:-SNAPSHOT'
+    compile 'com.github.yongjhih.streamsupport:streamsupport-cfuture:-SNAPSHOT'
+    compile 'com.github.yongjhih.streamsupport:streamsupport-atomic:-SNAPSHOT'
+    compile 'com.github.yongjhih.streamsupport:streamsupport-flow:-SNAPSHOT'
 }
 ```
 
