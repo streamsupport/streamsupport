@@ -31,6 +31,35 @@ Want also lambdas? https://github.com/orfjackal/retrolambda
 * Includes miscellaneous Java 8 goodies (Optional, StringJoiner, ...)
 * Supports Android
 
+## Usage
+
+After:
+
+```java
+RefStreams.of("one", "two", "three", "four")
+    .filter(e -> e.length() > 3)
+    .peek(e -> System.out.println("Filtered value: " + e))
+    .map(String::toUpperCase)
+    .peek(e -> System.out.println("Mapped value: " + e))
+    .collect(Collectors.toList());
+```
+
+After:
+
+```java
+public static List<String> getNames(List<User> users) {
+    return StreamSupport.stream(users).map(user -> user.name()).collect(Collectors.toList());
+}
+```
+
+After:
+
+```java
+public static String[] getNames(User[] users) {
+    return J8Arrays.stream(users).map(user -> user.name()).toArray(length -> new String[length]);
+}
+```
+
 ## Installation
 
 build.gradle:
