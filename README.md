@@ -1,3 +1,10 @@
+[![JitPack](https://img.shields.io/github/tag/yongjhih/streamsupport.svg?label=JitPack)](https://jitpack.io/#yongjhih/streamsupport)
+<!--[![Download](https://api.bintray.com/packages/yongjhih/maven/streamsupport/images/download.svg) ](https://bintray.com/yongjhih/maven/streamsupport/_latestVersion)-->
+<!--[![javadoc](https://img.shields.io/github/tag/yongjhih/streamsupport.svg?label=javadoc)](https://jitpack.io/com/github/yongjhih/streamsupport//javadoc/)-->
+[![Build Status](https://travis-ci.org/yongjhih/streamsupport.svg)](https://travis-ci.org/yongjhih/streamsupport)
+<!--[![Join the chat at https://gitter.im/yongjhih/streamsupport](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/streamsupport?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
+<!--[![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/streamsupport/badge.svg)](http://www.javadoc.io/doc/com.infstory/streamsupport/)-->
+
 Import from http://hg.code.sf.net/p/streamsupport/code
 
 streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams) API for users of Java 6 or 7 supplemented with selected additions from java.util.concurrent which didn't exist back in Java 6.
