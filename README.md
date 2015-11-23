@@ -5,6 +5,8 @@
 <!--[![Join the chat at https://gitter.im/yongjhih/streamsupport](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/streamsupport?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
 <!--[![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/streamsupport/badge.svg)](http://www.javadoc.io/doc/com.infstory/streamsupport/)-->
 
+![](art/streamsupport.png)
+
 Import from http://hg.code.sf.net/p/streamsupport/code
 
 streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams) API for users of Java 6 or 7 supplemented with selected additions from java.util.concurrent which didn't exist back in Java 6.
