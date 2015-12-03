@@ -192,20 +192,6 @@ public final class Collectors {
     }
 
     /**
-     * Returns a merge function, suitable for use in
-     * {@link Map#merge(Object, Object, BiFunction) Map.merge()} or
-     * {@link #toMap(Function, Function, BinaryOperator) toMap()}, which always
-     * throws {@code IllegalStateException}.  This can be used to enforce the
-     * assumption that the elements being collected are distinct.
-     *
-     * @param <T> the type of input arguments to the merge function
-     * @return a merge function which always throw {@code IllegalStateException}
-     */
-//    private static <T> BinaryOperator<T> throwingMerger() {
-//        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
-//    }
-
-    /**
      * Construct an {@code IllegalStateException} with appropriate message.
      *
      * @param k the duplicate key
@@ -278,11 +264,6 @@ public final class Collectors {
             }
         };
     }
-
-//    @SuppressWarnings("unchecked")
-//    private static <I, R> Function<I, R> castingIdentity() {
-//        return i -> (R) i;
-//    }
 
     /**
      * Simple implementation class for {@code Collector}.
@@ -1433,7 +1414,6 @@ public final class Collectors {
     public static <T, K, U>
     Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
                                     Function<? super T, ? extends U> valueMapper) {
-//      return toMap(keyMapper, valueMapper, throwingMerger(), HashMap::new);
         return new CollectorImpl<>(HashMap::new,
                 uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
                 uniqKeysMapMerger(),
@@ -1609,7 +1589,6 @@ public final class Collectors {
                 uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
                 uniqKeysMapMerger(),
                 CH_CONCURRENT_ID);
-//        return toConcurrentMap(keyMapper, valueMapper, throwingMerger(), ConcurrentHashMap::new);
     }
 
     /**
