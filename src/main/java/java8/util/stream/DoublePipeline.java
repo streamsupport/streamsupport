@@ -460,7 +460,6 @@ abstract class DoublePipeline<E_IN>
 
     @Override
     public final long count() {
-        //return mapToLong(e -> 1L).sum();
         return evaluate(ReduceOps.makeDoubleCounting());
     }
 
@@ -611,7 +610,6 @@ abstract class DoublePipeline<E_IN>
                     StreamShape inputShape,
                     int opFlags) {
             super(upstream, opFlags);
-//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
@@ -639,7 +637,6 @@ abstract class DoublePipeline<E_IN>
                    StreamShape inputShape,
                    int opFlags) {
             super(upstream, opFlags);
-//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
