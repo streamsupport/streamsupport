@@ -440,7 +440,6 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public final long count() {
-        //return map(e -> 1L).sum();
         return evaluate(ReduceOps.makeLongCounting());
     }
 
@@ -588,7 +587,6 @@ abstract class LongPipeline<E_IN>
                     StreamShape inputShape,
                     int opFlags) {
             super(upstream, opFlags);
-//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
@@ -615,7 +613,6 @@ abstract class LongPipeline<E_IN>
                    StreamShape inputShape,
                    int opFlags) {
             super(upstream, opFlags);
-//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
