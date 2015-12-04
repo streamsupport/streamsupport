@@ -224,7 +224,6 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
      * @return the result
      */
     final <R> R evaluate(TerminalOp<E_OUT, R> terminalOp) {
-//        assert getOutputShape() == terminalOp.inputShape();
         if (linkedOrConsumed)
             throw new IllegalStateException(MSG_STREAM_LINKED);
         linkedOrConsumed = true;

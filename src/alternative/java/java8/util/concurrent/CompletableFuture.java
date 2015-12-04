@@ -887,7 +887,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             super(null, dep, src); this.fn = fn;
         }
         final CompletableFuture<T> tryFire(int mode) { // never ASYNC
-            // assert mode != ASYNC;
             CompletableFuture<T> d; CompletableFuture<T> a;
             if ((d = dep) == null || !d.uniExceptionally(a = src, fn, this)) {
                 return null;
