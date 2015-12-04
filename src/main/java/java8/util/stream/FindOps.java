@@ -188,12 +188,10 @@ final class FindOps {
 
         @Override
         public void begin(long size) {
-            //SinkDefaults.begin(this, size);
         }
 
         @Override
         public void end() {
-            //SinkDefaults.end(this);
         }
 
         @Override
