@@ -1810,7 +1810,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -1894,7 +1893,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2280,7 +2278,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2354,7 +2351,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2428,7 +2424,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2489,7 +2484,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2596,7 +2590,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2697,7 +2690,6 @@ final class Nodes {
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
@@ -2832,12 +2824,10 @@ final class Nodes {
 
         @Override
         public void end() {
-            //SinkDefaults.end(this);
         }
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 
