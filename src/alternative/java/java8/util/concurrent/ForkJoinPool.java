@@ -2617,7 +2617,6 @@ public class ForkJoinPool extends AbstractExecutorService {
      * @since 1.8
      */
     public static ForkJoinPool commonPool() {
-        // assert common != null : "static init error";
         return common;
     }
 

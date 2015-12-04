@@ -55,7 +55,6 @@ import java8.util.function.Supplier;
  */
 public final class Objects {
     private Objects() {
-        throw new AssertionError();
     }
 
     /**
