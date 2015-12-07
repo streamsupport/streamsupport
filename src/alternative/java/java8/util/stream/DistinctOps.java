@@ -100,13 +100,15 @@ final class DistinctOps {
                     Set<T> keys = map.keySet();
                     if (seenNull.get()) {
                         // TODO Implement a more efficient set-union view, rather than copying
-
-                        keys = new HashSet<>(keys); // XXX
-                        keys.add(null);
-
-                    	/*
-                    	keys = new KeysAndNullSet<>(keys); // XXX
-                    	*/
+                        int size = keys.size();
+                        if (size >= 128) {
+                            keys = new KeysAndNullSet<>(keys, size);
+                        } else {
+                            HashSet<T> tmp = new HashSet<>(Math.max((int) ((size + 1) / 0.75f) + 1, 16));
+                            tmp.addAll(keys);
+                            tmp.add(null);
+                            keys = tmp;
+                        }
                     }
                     return Nodes.node(keys);
                 }
@@ -196,48 +198,44 @@ final class DistinctOps {
 
     static final class KeysAndNullSet<E> extends AbstractSet<E> {
 
-    	final Set<E> keys;
-    	int size = -1;
+        final Set<E> keys;
+        final int size;
 
-    	KeysAndNullSet(Set<E> keys) {
-    		this.keys = keys;
-    	}
+        KeysAndNullSet(Set<E> keys, int size) {
+            this.keys = keys;
+            this.size = size + 1;
+        }
 
-    	@Override
-    	public Iterator<E> iterator() {
-    		return new Iterator<E>() {
-    			boolean nullSeen = false;
-    			final Iterator<E> keysIt = keys.iterator();
-    			@Override
-    			public boolean hasNext() {
-    				if (!nullSeen) {
-    					return true;
-    				}
-    				return keysIt.hasNext();
-    			}
+        @Override
+        public Iterator<E> iterator() {
+            return new Iterator<E>() {
+                boolean nullDelivered = false;
+                final Iterator<E> it = keys.iterator();
+                @Override
+                public boolean hasNext() {
+                    if (!nullDelivered) {
+                        return true;
+                    }
+                    return it.hasNext();
+                }
+                @Override
+                public E next() {
+                    if (!nullDelivered) {
+                        nullDelivered = true;
+                        return null;
+                    }
+                    return it.next();
+                }
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
 
-    			@Override
-    			public E next() {
-    				if (!nullSeen) {
-    					nullSeen = true;
-    					return null;
-    				}
-    				return keysIt.next();
-    			}
-
-    			@Override
-    			public void remove() {
-    				throw new UnsupportedOperationException();
-    			}
-    		};
-    	}
-
-    	@Override
-    	public int size() {
-    		if (size == -1) {
-    			size = keys.size() + 1;
-    		}
-    		return size;
-    	}
+        @Override
+        public int size() {
+            return size;
+        }
     }
 }
