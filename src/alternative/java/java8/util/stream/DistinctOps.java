@@ -101,7 +101,7 @@ final class DistinctOps {
                     if (seenNull.get()) {
                         // TODO Implement a more efficient set-union view, rather than copying
                         int size = keys.size();
-                        if (size >= 128) {
+                        if (size >= 127) {
                             keys = new KeysAndNullSet<>(keys, size);
                         } else {
                             HashSet<T> tmp = new HashSet<>(Math.max((int) ((size + 1) / 0.75f) + 1, 16));
