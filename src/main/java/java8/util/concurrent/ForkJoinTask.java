@@ -551,16 +551,16 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     }
 
     /**
-     * Returns a rethrowable exception for the given task, if
-     * available. To provide accurate stack traces, if the exception
-     * was not thrown by the current thread, we try to create a new
-     * exception of the same type as the one thrown, but with the
-     * recorded exception as its cause. If there is no such
-     * constructor, we instead try to use a no-arg constructor,
-     * followed by initCause, to the same effect. If none of these
-     * apply, or any fail due to other exceptions, we return the
-     * recorded exception, which is still correct, although it may
-     * contain a misleading stack trace.
+     * Returns a rethrowable exception for this task, if available.
+     * To provide accurate stack traces, if the exception was not
+     * thrown by the current thread, we try to create a new exception
+     * of the same type as the one thrown, but with the recorded
+     * exception as its cause. If there is no such constructor, we
+     * instead try to use a no-arg constructor, followed by initCause,
+     * to the same effect. If none of these apply, or any fail due to
+     * other exceptions, we return the recorded exception, which is
+     * still correct, although it may contain a misleading stack
+     * trace.
      *
      * @return the exception, or null if none
      */
