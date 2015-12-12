@@ -582,26 +582,20 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
         if (e == null || (ex = e.ex) == null)
             return null;
         if (e.thrower != Thread.currentThread().getId()) {
-            Class<? extends Throwable> ec = ex.getClass();
             try {
                 Constructor<?> noArgCtor = null;
-                Constructor<?>[] cs = ec.getConstructors();// public ctors only
-                for (int i = 0; i < cs.length; ++i) {
-                    Constructor<?> c = cs[i];
+                // public ctors only
+                for (Constructor<?> c : ex.getClass().getConstructors()) {
                     Class<?>[] ps = c.getParameterTypes();
                     if (ps.length == 0)
                         noArgCtor = c;
-                    else if (ps.length == 1 && ps[0] == Throwable.class) {
-                        Throwable wx = (Throwable) c.newInstance(ex);
-                        return (wx == null) ? ex : wx;
-                    }
+                    else if (ps.length == 1 && ps[0] == Throwable.class)
+                        return (Throwable)c.newInstance(ex);
                 }
                 if (noArgCtor != null) {
-                    Throwable wx = (Throwable) (noArgCtor.newInstance());
-                    if (wx != null) {
-                        wx.initCause(ex);
-                        return wx;
-                    }
+                    Throwable wx = (Throwable)noArgCtor.newInstance();
+                    wx.initCause(ex);
+                    return wx;
                 }
             } catch (Exception ignore) {
             }
