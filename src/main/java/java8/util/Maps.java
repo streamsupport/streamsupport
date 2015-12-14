@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import java8.util.Objects;
+import java8.util.concurrent.ConcurrentMaps;
 import java8.util.function.BiConsumer;
 import java8.util.function.BiFunction;
 import java8.util.function.Function;
@@ -38,7 +39,7 @@ import java8.util.function.Function;
 /**
  * A place for static default implementations of the new Java 8
  * default interface methods and static interface methods in the
- * {@link Map} and {@link ConcurrentMap} interfaces. 
+ * {@link Map} interface. 
  */
 public final class Maps {
     /**
@@ -163,27 +164,7 @@ public final class Maps {
      */
     public static <K, V> V mergeConcurrent(ConcurrentMap<K, V> map, K key, V value,
             BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
-        Objects.requireNonNull(map);
-        Objects.requireNonNull(remappingFunction);
-        Objects.requireNonNull(value);
-        V oldValue = map.get(key);
-        for (;;) {
-            if (oldValue != null) {
-                V newValue = remappingFunction.apply(oldValue, value);
-                if (newValue != null) {
-                    if (map.replace(key, oldValue, newValue)) {
-                        return newValue;
-                    }
-                } else if (map.remove(key, oldValue)) {
-                    return null;
-                }
-                oldValue = map.get(key);
-            } else {
-                if ((oldValue = map.putIfAbsent(key, value)) == null) {
-                    return value;
-                }
-            }
-        }
+        return ConcurrentMaps.merge(map, key, value, remappingFunction);
     }
 
     /**
@@ -257,12 +238,7 @@ public final class Maps {
      */
     public static <K, V> V computeIfAbsentConcurrent(ConcurrentMap<K, V> map, K key,
             Function<? super K, ? extends V> mappingFunction) {
-        Objects.requireNonNull(map);
-        Objects.requireNonNull(mappingFunction);
-        V v, newValue;
-        return ((v = map.get(key)) == null &&
-                (newValue = mappingFunction.apply(key)) != null &&
-                (v = map.putIfAbsent(key, newValue)) == null) ? newValue : v;
+        return ConcurrentMaps.computeIfAbsent(map, key, mappingFunction);
     }
 
     /**
@@ -312,17 +288,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> void replaceAllConcurrent(ConcurrentMap<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
-        Objects.requireNonNull(map);
-        Objects.requireNonNull(function);
-        forEachConcurrent(map, (k,v) -> {
-            while (!map.replace(k, v, function.apply(k, v))) {
-                // v changed or k is gone
-                if ( (v = map.get(k)) == null) {
-                    // k is no longer in the map.
-                    break;
-                }
-            }
-        });
+        ConcurrentMaps.replaceAll(map, function);
     }
 
     /**
@@ -348,9 +314,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> V getOrDefaultConcurrent(ConcurrentMap<K, V> map, Object key, V defaultValue) {
-        Objects.requireNonNull(map);
-        V v;
-        return ((v = map.get(key)) != null) ? v : defaultValue;
+        return ConcurrentMaps.getOrDefault(map, key, defaultValue);
     }
 
     /**
@@ -413,20 +377,7 @@ public final class Maps {
      * @since 1.8
      */
     public static <K, V> void forEachConcurrent(ConcurrentMap<K, V> map, BiConsumer<? super K, ? super V> action) {
-        Objects.requireNonNull(map);
-        Objects.requireNonNull(action);
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            K k;
-            V v;
-            try {
-                k = entry.getKey();
-                v = entry.getValue();
-            } catch (IllegalStateException ise) {
-                // this usually means the entry is no longer in the map.
-                continue;
-            }
-            action.accept(k, v);
-        }
+        ConcurrentMaps.forEach(map, action);
     }
 
     /**

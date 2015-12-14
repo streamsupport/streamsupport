@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import java8.util.Maps;
+import java8.util.concurrent.ConcurrentMaps;
 import java8.util.function.BiFunction;
 import java8.util.function.Supplier;
 
@@ -143,7 +144,7 @@ public class DefaultsTest {
         Set<String> EACH_REPLACE = new HashSet<String>(map.size());
 
         if (map instanceof ConcurrentMap) {
-            Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k, v) -> {
+            ConcurrentMaps.replaceAll((ConcurrentMap<IntegerEnum, String>) map, (k, v) -> {
                 int idx = (null == k) ? 0 : k.ordinal(); // substitute for index.
                 assertNull(EACH_KEY[idx]);
                 EACH_KEY[idx] = (idx == 0) ? KEYS[0] : k; // substitute for comparison.
@@ -174,11 +175,11 @@ public class DefaultsTest {
     public static void testReplaceAllNoNullReplacement(String description, Map<IntegerEnum, String> map) {
         if (map instanceof ConcurrentMap) {
             assertThrows(
-                    () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, null); },
+                    () -> { ConcurrentMaps.replaceAll((ConcurrentMap<IntegerEnum, String>) map, null); },
                     NullPointerException.class,
                     description);
                 assertThrows(
-                    () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k,v) -> null); },
+                    () -> { ConcurrentMaps.replaceAll((ConcurrentMap<IntegerEnum, String>) map, (k,v) -> null); },
                     NullPointerException.class,
                     description + " should not allow replacement with null value");
         } else {
@@ -311,7 +312,7 @@ public class DefaultsTest {
         assertNull(map.get(null), "value not null");
         if (map instanceof ConcurrentMap) {
             ConcurrentMap<IntegerEnum, String> concMap = (ConcurrentMap<IntegerEnum, String>) map;
-            assertSame(Maps.computeIfAbsentConcurrent(concMap, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
+            assertSame(ConcurrentMaps.computeIfAbsent(concMap, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
         } else {
             assertSame(Maps.computeIfAbsent(map, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
         }
@@ -517,7 +518,7 @@ public class DefaultsTest {
 
             String returned = null;
             if (map instanceof ConcurrentMap) {
-                returned = Maps.mergeConcurrent( (ConcurrentMap<IntegerEnum, String>) map, EXTRA_KEY,
+                returned = ConcurrentMaps.merge( (ConcurrentMap<IntegerEnum, String>) map, EXTRA_KEY,
                         newValue == Merging.Value.NULL ? (String) null : VALUES[2],
                         merger
                         );
