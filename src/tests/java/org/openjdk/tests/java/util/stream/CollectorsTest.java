@@ -65,6 +65,7 @@ import org.testng.annotations.Test;
 
 import static java8.util.stream.Collectors.collectingAndThen;
 import static java8.util.stream.Collectors.flatMapping;
+import static java8.util.stream.Collectors.filtering;
 import static java8.util.stream.Collectors.groupingBy;
 import static java8.util.stream.Collectors.groupingByConcurrent;
 import static java8.util.stream.Collectors.mapping;
@@ -123,6 +124,23 @@ public class CollectorsTest extends OpTestCase {
         void assertValue(R value, Supplier<Stream<T>> source, boolean ordered) throws Exception {
             downstream.assertValue(value,
                                    () -> source.get().flatMap(mapper::apply),
+                                   ordered);
+        }
+    }
+
+    static class FilteringAssertion<T, R> extends CollectorAssertion<T, R> {
+        private final Predicate<T> filter;
+        private final CollectorAssertion<T, R> downstream;
+
+        public FilteringAssertion(Predicate<T> filter, CollectorAssertion<T, R> downstream) {
+            this.filter = filter;
+            this.downstream = downstream;
+        }
+
+        @Override
+        void assertValue(R value, Supplier<Stream<T>> source, boolean ordered) throws Exception {
+            downstream.assertValue(value,
+                                   () -> source.get().filter(filter),
                                    ordered);
         }
     }
@@ -556,6 +574,36 @@ public class CollectorsTest extends OpTestCase {
                               groupingBy(classifier, flatMapping(flatMapperBy2, toList())),
                               new GroupingByAssertion<>(classifier, HashMap.class,
                                                         new FlatMappingAssertion<>(flatMapperBy2,
+                                                                                   new ToListAssertion<>())));
+    }
+
+    @Test(dataProvider = "StreamTestData<Integer>", dataProviderClass = StreamTestDataProvider.class)
+    public void testGroupingByWithFiltering(String name, TestData.OfRef<Integer> data) throws Exception {
+        Function<Integer, Integer> classifier = i -> i % 3;
+        Predicate<Integer> filteringByMod2 = i -> i % 2 == 0;
+        Predicate<Integer> filteringByUnder100 = i -> i % 2 < 100;
+        Predicate<Integer> filteringByTrue = i -> true;
+        Predicate<Integer> filteringByFalse = i -> false;
+
+        exerciseMapCollection(data,
+                              groupingBy(classifier, filtering(filteringByMod2, toList())),
+                              new GroupingByAssertion<>(classifier, HashMap.class,
+                                                        new FilteringAssertion<>(filteringByMod2,
+                                                                                   new ToListAssertion<>())));
+        exerciseMapCollection(data,
+                              groupingBy(classifier, filtering(filteringByUnder100, toList())),
+                              new GroupingByAssertion<>(classifier, HashMap.class,
+                                                        new FilteringAssertion<>(filteringByUnder100,
+                                                                                   new ToListAssertion<>())));
+        exerciseMapCollection(data,
+                              groupingBy(classifier, filtering(filteringByTrue, toList())),
+                              new GroupingByAssertion<>(classifier, HashMap.class,
+                                                        new FilteringAssertion<>(filteringByTrue,
+                                                                                   new ToListAssertion<>())));
+        exerciseMapCollection(data,
+                              groupingBy(classifier, filtering(filteringByFalse, toList())),
+                              new GroupingByAssertion<>(classifier, HashMap.class,
+                                                        new FilteringAssertion<>(filteringByFalse,
                                                                                    new ToListAssertion<>())));
     }
 

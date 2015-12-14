@@ -61,6 +61,7 @@ import java8.util.function.ToLongFunction;
 import java8.util.stream.Collector.Characteristics;
 import java8.util.Optional;
 import java8.util.StringJoiner;
+import java8.util.concurrent.ConcurrentMaps;
 
 /**
  * Implementations of {@link Collector} that implement various useful reduction
@@ -455,7 +456,7 @@ public final class Collectors {
     BinaryOperator<M> mapMergerConcurrent(final BinaryOperator<V> mergeFunction) {
         return (m1, m2) -> {
             for (Map.Entry<K,V> e : m2.entrySet()) {
-                Maps.mergeConcurrent(m1, e.getKey(), e.getValue(), mergeFunction);
+                ConcurrentMaps.merge(m1, e.getKey(), e.getValue(), mergeFunction);
             }
             return m1;
         };
@@ -555,6 +556,53 @@ public final class Collectors {
     }
 
     /**
+     * Adapts a {@code Collector} to one accepting elements of the same type
+     * {@code T} by applying the predicate to each input element and only
+     * accumulating if the predicate returns {@code true}.
+     *
+     * <p><b>API Note:</b><br>
+     * The {@code filtering()} collectors are most useful when used in a
+     * multi-level reduction, such as downstream of a {@code groupingBy} or
+     * {@code partitioningBy}.  For example, given a stream of
+     * {@code Employee}, to accumulate the employees in each department that have a
+     * salary above a certain threshold:
+     * <pre>{@code
+     *     Map<Department, Set<Employee>> wellPaidEmployeesByDepartment
+     *         = employees.stream().collect(groupingBy(Employee::getDepartment,
+     *                                              filtering(e -> e.getSalary() > 2000, toSet())));
+     * }</pre>
+     * A filtering collector differs from a stream's {@code filter()} operation.
+     * In this example, suppose there are no employees whose salary is above the
+     * threshold in some department.  Using a filtering collector as shown above
+     * would result in a mapping from that department to an empty {@code Set}.
+     * If a stream {@code filter()} operation were done instead, there would be
+     * no mapping for that department at all.
+     *
+     * @param <T> the type of the input elements
+     * @param <A> intermediate accumulation type of the downstream collector
+     * @param <R> result type of collector
+     * @param predicate a predicate to be applied to the input elements
+     * @param downstream a collector which will accept values that match the
+     * predicate
+     * @return a collector which applies the predicate to the input elements
+     * and provides matching elements to the downstream collector
+     * @since 9
+     */
+    public static <T, A, R>
+    Collector<T, ?, R> filtering(Predicate<? super T> predicate,
+                               Collector<? super T, A, R> downstream) {
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+        return new CollectorImpl<>(downstream.supplier(),
+                                   (r, t) -> {
+                                       if (predicate.test(t)) {
+                                           downstreamAccumulator.accept(r, t);
+                                       }
+                                   },
+                                   downstream.combiner(), downstream.finisher(),
+                                   downstream.characteristics());
+    }
+
+    /**
      * Adapts a {@code Collector} to perform an additional finishing
      * transformation.  For example, one could adapt the {@link #toList()}
      * collector to always produce an immutable list with:
@@ -607,7 +655,7 @@ public final class Collectors {
      */
     public static <T> Collector<T, ?, Long>
     counting() {
-    	return summingLong(e -> 1L);
+        return summingLong(e -> 1L);
     }
 
     /**
@@ -1262,14 +1310,14 @@ public final class Collectors {
         if (downstream.characteristics().contains(Collector.Characteristics.CONCURRENT)) {
             accumulator = (m, t) -> {
                 K key = Objects.requireNonNull(classifier.apply(t), "element cannot be mapped to a null key");
-                A resultContainer = Maps.computeIfAbsentConcurrent(m, key, k -> downstreamSupplier.get());
+                A resultContainer = ConcurrentMaps.computeIfAbsent(m, key, k -> downstreamSupplier.get());
                 downstreamAccumulator.accept(resultContainer, t);
             };
         }
         else {
             accumulator = (m, t) -> {
                 K key = Objects.requireNonNull(classifier.apply(t), "element cannot be mapped to a null key");
-                A resultContainer = Maps.computeIfAbsentConcurrent(m, key, k -> downstreamSupplier.get());
+                A resultContainer = ConcurrentMaps.computeIfAbsent(m, key, k -> downstreamSupplier.get());
                 synchronized (resultContainer) {
                     downstreamAccumulator.accept(resultContainer, t);
                 }
@@ -1283,7 +1331,7 @@ public final class Collectors {
             @SuppressWarnings("unchecked")
             Function<A, A> downstreamFinisher = (Function<A, A>) downstream.finisher();
             Function<ConcurrentMap<K, A>, M> finisher = intermediate -> {
-                Maps.replaceAllConcurrent(intermediate, (k, v) -> downstreamFinisher.apply(v));
+                ConcurrentMaps.replaceAll(intermediate, (k, v) -> downstreamFinisher.apply(v));
                 @SuppressWarnings("unchecked")
                 M castResult = (M) intermediate;
                 return castResult;
@@ -1629,7 +1677,7 @@ public final class Collectors {
      * @param valueMapper a mapping function to produce values
      * @param mergeFunction a merge function, used to resolve collisions between
      *                      values associated with the same key, as supplied
-     *                      to {@link Maps#mergeConcurrent(ConcurrentMap, Object, Object, BiFunction)}
+     *                      to {@link ConcurrentMaps#merge(ConcurrentMap, Object, Object, BiFunction)}
      * @return a concurrent, unordered {@code Collector} which collects elements into a
      * {@code ConcurrentMap} whose keys are the result of applying a key mapping
      * function to the input elements, and whose values are the result of
@@ -1669,7 +1717,7 @@ public final class Collectors {
      * @param valueMapper a mapping function to produce values
      * @param mergeFunction a merge function, used to resolve collisions between
      *                      values associated with the same key, as supplied
-     *                      to {@link Maps#mergeConcurrent(ConcurrentMap, Object, Object, BiFunction)}
+     *                      to {@link ConcurrentMaps#merge(ConcurrentMap, Object, Object, BiFunction)}
      * @param mapSupplier a function which returns a new, empty {@code Map} into
      *                    which the results will be inserted
      * @return a concurrent, unordered {@code Collector} which collects elements into a
@@ -1688,7 +1736,7 @@ public final class Collectors {
                                        final BinaryOperator<U> mergeFunction,
                                        Supplier<M> mapSupplier) {
         BiConsumer<M, T> accumulator
-                = (map, element) -> Maps.mergeConcurrent(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
+                = (map, element) -> ConcurrentMaps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
         return new CollectorImpl<>(mapSupplier, accumulator, mapMergerConcurrent(mergeFunction), CH_CONCURRENT_ID);
     }
 
