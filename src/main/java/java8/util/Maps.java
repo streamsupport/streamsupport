@@ -66,7 +66,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code putIfAbsent} operation.
+     * @param map the {@code Map} on which to execute the {@code putIfAbsent}
+     * operation.
      * @param key key with which the specified value is to be associated
      * @param value value to be associated with the specified key
      * @return the previous value associated with the specified key, or
@@ -110,7 +111,8 @@ public final class Maps {
      * If the remapping function itself throws an (unchecked) exception, the
      * exception is rethrown, and the current mapping is left unchanged.
      *
-     * <p>The remapping function itself should not modify the passed map during computation.
+     * <p>The remapping function itself should not modify the passed map during
+     * computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -145,7 +147,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code mergeConcurrent} operation.
+     * @param map the {@code Map} on which to execute the {@code mergeConcurrent}
+     * operation.
      * @param key key with which the resulting value is to be associated
      * @param value the non-null value to be merged with the existing value
      *        associated with the key or, if no existing value or a null value
@@ -161,7 +164,10 @@ public final class Maps {
      *         does not support null keys or the value or remappingFunction is
      *         null
      * @since 1.8
+     * @deprecated Use {@link ConcurrentMaps#merge(ConcurrentMap, Object, Object, BiFunction)}
+     * instead
      */
+    @Deprecated
     public static <K, V> V mergeConcurrent(ConcurrentMap<K, V> map, K key, V value,
             BiFunction<? super V, ? super V, ? extends V> remappingFunction) {
         return ConcurrentMaps.merge(map, key, value, remappingFunction);
@@ -189,7 +195,8 @@ public final class Maps {
      * map.computeIfAbsent(key, k -> new HashSet<V>()).add(v);
      * }</pre>
      *
-     * <p>The mapping function itself should not modify the passed map during computation.
+     * <p>The mapping function itself should not modify the passed map during
+     * computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to the following steps for the
@@ -222,7 +229,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code computeIfAbsentConcurrent} operation.
+     * @param map the {@code Map} on which to execute the
+     * {@code computeIfAbsentConcurrent} operation.
      * @param key key with which the specified value is to be associated
      * @param mappingFunction the mapping function to compute a value
      * @return the current (existing or computed) value associated with
@@ -235,7 +243,10 @@ public final class Maps {
      * @throws ClassCastException if the class of the specified key or value
      *         prevents it from being stored in the map (optional)
      * @since 1.8
+     * @deprecated Use {@link ConcurrentMaps#computeIfAbsent(ConcurrentMap, Object, Function)}
+     * instead
      */
+    @Deprecated
     public static <K, V> V computeIfAbsentConcurrent(ConcurrentMap<K, V> map, K key,
             Function<? super K, ? extends V> mappingFunction) {
         return ConcurrentMaps.computeIfAbsent(map, key, mappingFunction);
@@ -268,7 +279,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code replaceAllConcurrent} operation.
+     * @param map the {@code Map} on which to execute the
+     * {@code replaceAllConcurrent} operation.
      * @param function the function to apply to each entry
      * @throws UnsupportedOperationException if the {@code set} operation
      * is not supported by the map's entry set iterator.
@@ -286,7 +298,10 @@ public final class Maps {
      * @throws ConcurrentModificationException if an entry is found to be
      * removed during iteration
      * @since 1.8
+     * @deprecated Use {@link ConcurrentMaps#replaceAll(ConcurrentMap, BiFunction)}
+     * instead
      */
+    @Deprecated
     public static <K, V> void replaceAllConcurrent(ConcurrentMap<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
         ConcurrentMaps.replaceAll(map, function);
     }
@@ -298,11 +313,13 @@ public final class Maps {
      * <p><b>Implementation Note:</b><br> This implementation assumes that the
      * ConcurrentMap cannot contain null values and {@code get()} returning
      * null unambiguously means the key is absent. Implementations which
-     * support null values <strong>must</strong> override this default implementation.
+     * support null values <strong>must</strong> override this default
+     * implementation.
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code ConcurrentMap} on which to execute the {@code getOrDefaultConcurrent} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the
+     * {@code getOrDefaultConcurrent} operation.
      * @param key the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the value to which the specified key is mapped, or
@@ -312,7 +329,10 @@ public final class Maps {
      * @throws NullPointerException if the specified key is null and the map
      * does not permit null keys (optional)
      * @since 1.8
+     * @deprecated Use {@link ConcurrentMaps#getOrDefault(ConcurrentMap, Object, Object)}
+     * instead
      */
+    @Deprecated
     public static <K, V> V getOrDefaultConcurrent(ConcurrentMap<K, V> map, Object key, V defaultValue) {
         return ConcurrentMaps.getOrDefault(map, key, defaultValue);
     }
@@ -329,7 +349,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code getOrDefault} operation.
+     * @param map the {@code Map} on which to execute the {@code getOrDefault}
+     * operation.
      * @param key the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the value to which the specified key is mapped, or
@@ -355,8 +376,8 @@ public final class Maps {
      * the order of entry set iteration (if an iteration order is specified.)
      * Exceptions thrown by the action are relayed to the caller.
      *
-     * <p><b>Implementation Requirements:</b><br> The default implementation is equivalent to, for the
-     * {@code map}:
+     * <p><b>Implementation Requirements:</b><br> The default implementation is
+     * equivalent to, for the {@code map}:
      * <pre> {@code
      * for ((Map.Entry<K, V> entry : map.entrySet())
      *     action.accept(entry.getKey(), entry.getValue());
@@ -369,13 +390,17 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code ConcurrentMap} on which to execute the {@code forEachConcurrent} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the
+     * {@code forEachConcurrent} operation.
      * @param action The action to be performed for each entry
      * @throws NullPointerException if the specified map or action is null
      * @throws ConcurrentModificationException if an entry is found to be
      * removed during iteration
      * @since 1.8
+     * @deprecated Use {@link ConcurrentMaps#forEach(ConcurrentMap, BiConsumer)}
+     * instead
      */
+    @Deprecated
     public static <K, V> void forEachConcurrent(ConcurrentMap<K, V> map, BiConsumer<? super K, ? super V> action) {
         ConcurrentMaps.forEach(map, action);
     }
@@ -401,7 +426,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code forEach} operation.
+     * @param map the {@code Map} on which to execute the {@code forEach}
+     * operation.
      * @param action The action to be performed for each entry
      * @throws NullPointerException if the specified map or action is null
      * @throws ConcurrentModificationException if an entry is found to be
@@ -442,7 +468,8 @@ public final class Maps {
      * If the remapping function itself throws an (unchecked) exception, the
      * exception is rethrown, and the current mapping is left unchanged.
      *
-     * <p>The remapping function itself should not modify the passed map during computation.
+     * <p>The remapping function itself should not modify the passed map during
+     * computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -535,7 +562,8 @@ public final class Maps {
      * map.computeIfAbsent(key, k -> new HashSet<V>()).add(v);
      * }</pre>
      *
-     * <p>The mapping function itself should not modify the passed map during computation.
+     * <p>The mapping function itself should not modify the passed map during
+     * computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to the following steps for the
@@ -571,7 +599,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code computeIfAbsent} operation.
+     * @param map the {@code Map} on which to execute the {@code computeIfAbsent}
+     * operation.
      * @param key key with which the specified value is to be associated
      * @param mappingFunction the mapping function to compute a value
      * @return the current (existing or computed) value associated with
@@ -722,7 +751,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code replaceAll} operation.
+     * @param map the {@code Map} on which to execute the {@code replaceAll}
+     * operation.
      * @param function the function to apply to each entry
      * @throws UnsupportedOperationException if the {@code set} operation
      * is not supported by the map's entry set iterator.
@@ -786,7 +816,8 @@ public final class Maps {
      * throws an (unchecked) exception, the exception is rethrown, and the current
      * mapping is left unchanged.
      *
-     * <p>The remapping function itself should not modify the passed map during computation.
+     * <p>The remapping function itself should not modify the passed map during
+     * computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -875,7 +906,8 @@ public final class Maps {
      * If the remapping function itself throws an (unchecked) exception, the
      * exception is rethrown, and the current mapping is left unchanged.
      *
-     * <p>The remapping function itself should not modify the passed map during computation.
+     * <p>The remapping function itself should not modify the passed map during
+     * computation.
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
@@ -914,7 +946,8 @@ public final class Maps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code computeIfPresent} operation.
+     * @param map the {@code Map} on which to execute the {@code computeIfPresent}
+     * operation.
      * @param key key with which the specified value is to be associated
      * @param remappingFunction the remapping function to compute a value
      * @return the new value associated with the specified key, or null if none
