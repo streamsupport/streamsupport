@@ -365,6 +365,10 @@ public final class Maps {
      */
     public static <K, V> V getOrDefault(Map<K, V> map, Object key, V defaultValue) {
         Objects.requireNonNull(map);
+        if (map instanceof ConcurrentMap) {
+            return ConcurrentMaps.getOrDefault((ConcurrentMap<K, V>) map, key, defaultValue);
+        }
+
         V v;
         return (((v = map.get(key)) != null) || map.containsKey(key))
             ? v
@@ -439,17 +443,21 @@ public final class Maps {
     public static <K, V> void forEach(Map<K, V> map, BiConsumer<? super K, ? super V> action) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(action);
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            K k;
-            V v;
-            try {
-                k = entry.getKey();
-                v = entry.getValue();
-            } catch (IllegalStateException ise) {
-                // this usually means the entry is no longer in the map.
-                throw new ConcurrentModificationException(ise);
+        if (map instanceof ConcurrentMap) {
+            ConcurrentMaps.forEach((ConcurrentMap<K, V>) map, action);
+        } else {
+            for (Map.Entry<K, V> entry : map.entrySet()) {
+                K k;
+                V v;
+                try {
+                    k = entry.getKey();
+                    v = entry.getValue();
+                } catch (IllegalStateException ise) {
+                    // this usually means the entry is no longer in the map.
+                    throw new ConcurrentModificationException(ise);
+                }
+                action.accept(k, v);
             }
-            action.accept(k, v);
         }
     }
 
@@ -533,6 +541,10 @@ public final class Maps {
         Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
+        if (map instanceof ConcurrentMap) {
+            return ConcurrentMaps.merge((ConcurrentMap<K, V>) map, key, value, remappingFunction);
+        }
+
         V oldValue = map.get(key);
         V newValue = (oldValue == null) ? value :
                    remappingFunction.apply(oldValue, value);
@@ -624,6 +636,10 @@ public final class Maps {
             Function<? super K, ? extends V> mappingFunction) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(mappingFunction);
+        if (map instanceof ConcurrentMap) {
+            return ConcurrentMaps.computeIfAbsent((ConcurrentMap<K, V>) map, key, mappingFunction);
+        }
+
         V v;
         if ((v = map.get(key)) == null) {
             V newValue;
@@ -780,29 +796,33 @@ public final class Maps {
     public static <K, V> void replaceAll(Map<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(function);
-        for (Map.Entry<K, V> entry : map.entrySet()) {
-            K k;
-            V v;
-            try {
-                k = entry.getKey();
-                v = entry.getValue();
-            } catch (IllegalStateException ise) {
-                // this usually means the entry is no longer in the map.
-                ConcurrentModificationException cmex = new ConcurrentModificationException();
-                cmex.initCause(ise);
-                throw cmex;
-            }
-
-            // ise thrown from function is not a cme.
-            v = function.apply(k, v);
-
-            try {
-                entry.setValue(v);
-            } catch (IllegalStateException ise) {
-                // this usually means the entry is no longer in the map.
-                ConcurrentModificationException cmex = new ConcurrentModificationException();
-                cmex.initCause(ise);
-                throw cmex;
+        if (map instanceof ConcurrentMap) {
+            ConcurrentMaps.replaceAll((ConcurrentMap<K, V>) map, function);
+        } else {
+            for (Map.Entry<K, V> entry : map.entrySet()) {
+                K k;
+                V v;
+                try {
+                    k = entry.getKey();
+                    v = entry.getValue();
+                } catch (IllegalStateException ise) {
+                    // this usually means the entry is no longer in the map.
+                    ConcurrentModificationException cmex = new ConcurrentModificationException();
+                    cmex.initCause(ise);
+                    throw cmex;
+                }
+    
+                // ise thrown from function is not a cme.
+                v = function.apply(k, v);
+    
+                try {
+                    entry.setValue(v);
+                } catch (IllegalStateException ise) {
+                    // this usually means the entry is no longer in the map.
+                    ConcurrentModificationException cmex = new ConcurrentModificationException();
+                    cmex.initCause(ise);
+                    throw cmex;
+                }
             }
         }
     }
