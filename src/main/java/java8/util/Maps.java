@@ -87,6 +87,11 @@ public final class Maps {
      */
     public static <K, V> V putIfAbsent(Map<K, V> map, K key, V value) {
         Objects.requireNonNull(map);
+        // safety measure
+        if (map instanceof ConcurrentMap) {
+            return ((ConcurrentMap<K, V>) map).putIfAbsent(key, value);
+        }
+
         V v = map.get(key);
         if (v == null) {
             v = map.put(key, value);
@@ -365,6 +370,7 @@ public final class Maps {
      */
     public static <K, V> V getOrDefault(Map<K, V> map, Object key, V defaultValue) {
         Objects.requireNonNull(map);
+        // safety measure
         if (map instanceof ConcurrentMap) {
             return ConcurrentMaps.getOrDefault((ConcurrentMap<K, V>) map, key, defaultValue);
         }
@@ -443,6 +449,7 @@ public final class Maps {
     public static <K, V> void forEach(Map<K, V> map, BiConsumer<? super K, ? super V> action) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(action);
+        // safety measure
         if (map instanceof ConcurrentMap) {
             ConcurrentMaps.forEach((ConcurrentMap<K, V>) map, action);
         } else {
@@ -541,6 +548,7 @@ public final class Maps {
         Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
+        // safety measure
         if (map instanceof ConcurrentMap) {
             return ConcurrentMaps.merge((ConcurrentMap<K, V>) map, key, value, remappingFunction);
         }
@@ -636,6 +644,7 @@ public final class Maps {
             Function<? super K, ? extends V> mappingFunction) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(mappingFunction);
+        // safety measure
         if (map instanceof ConcurrentMap) {
             return ConcurrentMaps.computeIfAbsent((ConcurrentMap<K, V>) map, key, mappingFunction);
         }
@@ -696,6 +705,11 @@ public final class Maps {
      */
     public static <K, V> boolean replace(Map<K, V> map, K key, V oldValue, V newValue) {
         Objects.requireNonNull(map);
+        // safety measure
+        if (map instanceof ConcurrentMap) {
+            return ((ConcurrentMap<K, V>) map).replace(key, oldValue, newValue);
+        }
+
         Object curValue = map.get(key);
         if (!Objects.equals(curValue, oldValue) ||
             (curValue == null && !map.containsKey(key))) {
@@ -746,6 +760,11 @@ public final class Maps {
      */
     public static <K, V> V replace(Map<K, V> map, K key, V value) {
         Objects.requireNonNull(map);
+        // safety measure
+        if (map instanceof ConcurrentMap) {
+            return ((ConcurrentMap<K, V>) map).replace(key, value);
+        }
+
         V curValue;
         if (((curValue = map.get(key)) != null) || map.containsKey(key)) {
             curValue = map.put(key, value);
@@ -796,6 +815,7 @@ public final class Maps {
     public static <K, V> void replaceAll(Map<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(function);
+        // safety measure
         if (map instanceof ConcurrentMap) {
             ConcurrentMaps.replaceAll((ConcurrentMap<K, V>) map, function);
         } else {
@@ -1041,6 +1061,11 @@ public final class Maps {
      */
     public static <K, V> boolean remove(Map<K, V> map, Object key, Object value) {
         Objects.requireNonNull(map);
+        // safety measure
+        if (map instanceof ConcurrentMap) {
+            return ((ConcurrentMap<K, V>) map).remove(key, value);
+        }
+
         Object curValue = map.get(key);
         if (!Objects.equals(curValue, value) ||
             (curValue == null && !map.containsKey(key))) {
