@@ -163,6 +163,8 @@ public final class Maps {
      * @throws NullPointerException if the specified key is null and the map
      *         does not support null keys or the value or remappingFunction is
      *         null
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in the map (optional)
      * @since 1.8
      * @deprecated Use {@link ConcurrentMaps#merge(ConcurrentMap, Object, Object, BiFunction)}
      * instead
@@ -296,7 +298,7 @@ public final class Maps {
      * @throws IllegalArgumentException if some property of a replacement value
      *         prevents it from being stored in the map (optional)
      * @throws ConcurrentModificationException if an entry is found to be
-     * removed during iteration
+     *         removed during iteration
      * @since 1.8
      * @deprecated Use {@link ConcurrentMaps#replaceAll(ConcurrentMap, BiFunction)}
      * instead
@@ -522,6 +524,8 @@ public final class Maps {
      * @throws NullPointerException if the specified key is null and the map
      *         does not support null keys or the value or remappingFunction is
      *         null
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V merge(Map<K, V> map, K key, V value,
@@ -612,6 +616,8 @@ public final class Maps {
      *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
      *         prevents it from being stored in the map (optional)
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in the map (optional)
      * @since 1.8
      */
     public static <K, V> V computeIfAbsent(Map<K, V> map, K key,
@@ -768,7 +774,7 @@ public final class Maps {
      * @throws IllegalArgumentException if some property of a replacement value
      *         prevents it from being stored in the map (optional)
      * @throws ConcurrentModificationException if an entry is found to be
-     * removed during iteration
+     *         removed during iteration
      * @since 1.8
      */
     public static <K, V> void replaceAll(Map<K, V> map, BiFunction<? super K, ? super V, ? extends V> function) {
