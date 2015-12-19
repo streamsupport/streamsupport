@@ -91,7 +91,8 @@ public final class ConcurrentMaps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code merge} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the {@code merge}
+     * operation.
      * @param key key with which the resulting value is to be associated
      * @param value the non-null value to be merged with the existing value
      *        associated with the key or, if no existing value or a null value
@@ -190,7 +191,8 @@ public final class ConcurrentMaps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code computeIfAbsent} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the {@code computeIfAbsent}
+     * operation.
      * @param key key with which the specified value is to be associated
      * @param mappingFunction the mapping function to compute a value
      * @return the current (existing or computed) value associated with
@@ -214,6 +216,182 @@ public final class ConcurrentMaps {
         return ((v = map.get(key)) == null &&
                 (newValue = mappingFunction.apply(key)) != null &&
                 (v = map.putIfAbsent(key, newValue)) == null) ? newValue : v;
+    }
+
+    /**
+     * If the value for the specified key is present and non-null, attempts to
+     * compute a new mapping given the key and its current mapped value.
+     *
+     * <p>If the remapping function returns {@code null}, the mapping is removed.
+     * If the remapping function itself throws an (unchecked) exception, the
+     * exception is rethrown, and the current mapping is left unchanged.
+     *
+     * <p>The remapping function itself should not modify the passed map during
+     * computation.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation is equivalent to performing the following
+     * steps for the {@code map}, then returning the current value or
+     * {@code null} if now absent:
+     *
+     * <pre> {@code
+     * if (map.get(key) != null) {
+     *   V oldValue = map.get(key);
+     *   V newValue = remappingFunction.apply(key, oldValue);
+     *   if (newValue != null)
+     *     map.replace(key, oldValue, newValue);
+     *   else
+     *     map.remove(key, oldValue);
+     * }}</pre>
+     *
+     * The default implementation may retry these steps when multiple threads
+     * attempt updates including potentially calling the remapping function
+     * multiple times.
+     *
+     * <p>This implementation assumes that the ConcurrentMap cannot contain null
+     * values and {@code get()} returning null unambiguously means the key is
+     * absent. Implementations which support null values <strong>must</strong>
+     * override this default implementation.
+     *
+     * @param <K> the type of keys maintained by the passed map
+     * @param <V> the type of mapped values in the passed map
+     * @param map the {@code ConcurrentMap} on which to execute the
+     * {@code computeIfPresent} operation.
+     * @param key key with which the specified value is to be associated
+     * @param remappingFunction the remapping function to compute a value
+     * @return the new value associated with the specified key, or null if none
+     * @throws NullPointerException if the specified key is null and
+     *         the map does not support null keys, or the
+     *         remappingFunction is null
+     * @throws UnsupportedOperationException if the {@code put} operation
+     *         is not supported by the map (optional)
+     * @throws ClassCastException if the class of the specified key or value
+     *         prevents it from being stored in the map (optional)
+     * @since 1.8
+     */
+    public static <K, V> V computeIfPresent(ConcurrentMap<K, V> map, K key,
+            BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        Objects.requireNonNull(map);
+        Objects.requireNonNull(remappingFunction);
+        V oldValue;
+        while ((oldValue = map.get(key)) != null) {
+            V newValue = remappingFunction.apply(key, oldValue);
+            if (newValue != null) {
+                if (map.replace(key, oldValue, newValue))
+                    return newValue;
+            } else if (map.remove(key, oldValue))
+                return null;
+        }
+        return oldValue;
+    }
+
+    /**
+     * Attempts to compute a mapping for the specified key and its current
+     * mapped value (or {@code null} if there is no current mapping). For
+     * example, to either create or append a {@code String} msg to a value
+     * mapping:
+     *
+     * <pre> {@code
+     * map.compute(key, (k, v) -> (v == null) ? msg : v.concat(msg))}</pre>
+     * (Method {@link #merge merge()} is often simpler to use for such purposes.)
+     *
+     * <p>If the remapping function returns {@code null}, the mapping is removed
+     * (or remains absent if initially absent).  If the remapping function itself
+     * throws an (unchecked) exception, the exception is rethrown, and the current
+     * mapping is left unchanged.
+     *
+     * <p>The remapping function itself should not modify the passed map during
+     * computation.
+     *
+     * <p><b>Implementation Requirements:</b><br>
+     * The default implementation is equivalent to performing the following
+     * steps for the {@code map}, then returning the current value or
+     * {@code null} if absent:
+     *
+     * <pre> {@code
+     * V oldValue = map.get(key);
+     * V newValue = remappingFunction.apply(key, oldValue);
+     * if (oldValue != null ) {
+     *   if (newValue != null)
+     *     map.replace(key, oldValue, newValue);
+     *   else
+     *     map.remove(key, oldValue);
+     * } else {
+     *   if (newValue != null)
+     *     map.putIfAbsent(key, newValue);
+     *   else
+     *     return null;
+     * }}</pre>
+     *
+     * The default implementation may retry these steps when multiple
+     * threads attempt updates including potentially calling the remapping
+     * function multiple times.
+     *
+     * <p>This implementation assumes that the ConcurrentMap cannot contain null
+     * values and {@code get()} returning null unambiguously means the key is
+     * absent. Implementations which support null values <strong>must</strong>
+     * override this default implementation.
+     *
+     * @param <K> the type of keys maintained by the passed map
+     * @param <V> the type of mapped values in the passed map
+     * @param map the {@code ConcurrentMap} on which to execute the {@code compute}
+     * operation.
+     * @param key key with which the specified value is to be associated
+     * @param remappingFunction the remapping function to compute a value
+     * @return the new value associated with the specified key, or null if none
+     * @throws NullPointerException if the specified key is null and
+     *         the map does not support null keys, or the
+     *         remappingFunction is null
+     * @throws UnsupportedOperationException if the {@code put} operation
+     *         is not supported by the map (optional)
+     * @throws ClassCastException if the class of the specified key or value
+     *         prevents it from being stored in the map (optional)
+     * @since 1.8
+     */
+    public static <K, V> V compute(ConcurrentMap<K, V> map, K key,
+            BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        Objects.requireNonNull(map);
+        Objects.requireNonNull(remappingFunction);
+        V oldValue = map.get(key);
+        for (;;) {
+            V newValue = remappingFunction.apply(key, oldValue);
+            if (newValue == null) {
+                // delete mapping
+                if (oldValue != null || map.containsKey(key)) {
+                    // something to remove
+                    if (map.remove(key, oldValue)) {
+                        // removed the old value as expected
+                        return null;
+                    }
+
+                    // some other value replaced old value. try again.
+                    oldValue = map.get(key);
+                } else {
+                    // nothing to do. Leave things as they were.
+                    return null;
+                }
+            } else {
+                // add or replace old mapping
+                if (oldValue != null) {
+                    // replace
+                    if (map.replace(key, oldValue, newValue)) {
+                        // replaced as expected.
+                        return newValue;
+                    }
+
+                    // some other value replaced old value. try again.
+                    oldValue = map.get(key);
+                } else {
+                    // add (replace if oldValue was null)
+                    if ((oldValue = map.putIfAbsent(key, newValue)) == null) {
+                        // replaced
+                        return newValue;
+                    }
+
+                    // some other value replaced old value. try again.
+                }
+            }
+        }
     }
 
     /**
@@ -243,7 +421,8 @@ public final class ConcurrentMaps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code Map} on which to execute the {@code replaceAll} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the {@code replaceAll}
+     * operation.
      * @param function the function to apply to each entry
      * @throws UnsupportedOperationException if the {@code set} operation
      * is not supported by the map's entry set iterator.
@@ -287,7 +466,8 @@ public final class ConcurrentMaps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code ConcurrentMap} on which to execute the {@code getOrDefault} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the {@code getOrDefault}
+     * operation.
      * @param key the key whose associated value is to be returned
      * @param defaultValue the default mapping of the key
      * @return the value to which the specified key is mapped, or
@@ -311,7 +491,8 @@ public final class ConcurrentMaps {
      * the order of entry set iteration (if an iteration order is specified.)
      * Exceptions thrown by the action are relayed to the caller.
      *
-     * <p><b>Implementation Requirements:</b><br> The default implementation is equivalent to, for the
+     * <p><b>Implementation Requirements:</b><br> The default implementation
+     * is equivalent to, for the
      * {@code map}:
      * <pre> {@code
      * for ((Map.Entry<K, V> entry : map.entrySet())
@@ -325,7 +506,8 @@ public final class ConcurrentMaps {
      *
      * @param <K> the type of keys maintained by the passed map
      * @param <V> the type of mapped values in the passed map
-     * @param map the {@code ConcurrentMap} on which to execute the {@code forEach} operation.
+     * @param map the {@code ConcurrentMap} on which to execute the {@code forEach}
+     * operation.
      * @param action The action to be performed for each entry
      * @throws NullPointerException if the specified map or action is null
      * @throws ConcurrentModificationException if an entry is found to be
