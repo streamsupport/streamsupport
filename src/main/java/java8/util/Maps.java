@@ -924,6 +924,11 @@ public final class Maps {
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
+        // safety measure
+        if (map instanceof ConcurrentMap) {
+            return ConcurrentMaps.compute((ConcurrentMap<K, V>) map, key, remappingFunction);
+        }
+
         V oldValue = map.get(key);
 
         V newValue = remappingFunction.apply(key, oldValue);
@@ -1010,6 +1015,10 @@ public final class Maps {
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
+        if (map instanceof ConcurrentMap) {
+            return ConcurrentMaps.computeIfPresent((ConcurrentMap<K, V>) map, key, remappingFunction);
+        }
+
         V oldValue;
         if ((oldValue = map.get(key)) != null) {
             V newValue = remappingFunction.apply(key, oldValue);
