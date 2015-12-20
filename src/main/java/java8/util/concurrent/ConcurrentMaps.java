@@ -60,22 +60,25 @@ public final class ConcurrentMaps {
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
-     * steps for the {@code map}, then returning the current value or
-     * {@code null} if absent:
+     * steps for the {@code map}:
      *
      * <pre> {@code
-     * V oldValue = map.get(key);
-     * V newValue = (oldValue == null) ? value :
-     *              remappingFunction.apply(oldValue, value);
-     * if (newValue == null)
-     *     map.remove(key);
-     * else
-     *     map.put(key, newValue);
-     * }</pre>
-     *
-     * <p>The default implementation may retry these steps when multiple
-     * threads attempt updates including potentially calling the remapping
-     * function multiple times.
+     * for (;;) {
+     *   V oldValue = map.get(key);
+     *   if (oldValue != null) {
+     *     V newValue = remappingFunction.apply(oldValue, value);
+     *     if (newValue != null) {
+     *       if (map.replace(key, oldValue, newValue))
+     *         return newValue;
+     *     } else if (map.remove(key, oldValue)) {
+     *       return null;
+     *     }
+     *   } else if (map.putIfAbsent(key, value) == null) {
+     *     return value;
+     *   }
+     * }}</pre>
+     * When multiple threads attempt updates, map operations and the
+     * remapping function may be called multiple times.
      *
      * <p>This implementation assumes that the ConcurrentMap cannot contain null
      * values and {@code get()} returning null unambiguously means the key is
@@ -116,21 +119,23 @@ public final class ConcurrentMaps {
         Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
         Objects.requireNonNull(value);
-        V oldValue = map.get(key);
-        for (;;) {
-            if (oldValue != null) {
-                V newValue = remappingFunction.apply(oldValue, value);
-                if (newValue != null) {
-                    if (map.replace(key, oldValue, newValue)) {
-                        return newValue;
+        retry: for (;;) {
+            V oldValue = map.get(key);
+            // if putIfAbsent fails, opportunistically use its return value
+            haveOldValue: for (;;) {
+                if (oldValue != null) {
+                    V newValue = remappingFunction.apply(oldValue, value);
+                    if (newValue != null) {
+                        if (map.replace(key, oldValue, newValue))
+                            return newValue;
+                    } else if (map.remove(key, oldValue)) {
+                        return null;
                     }
-                } else if (map.remove(key, oldValue)) {
-                    return null;
-                }
-                oldValue = map.get(key);
-            } else {
-                if ((oldValue = map.putIfAbsent(key, value)) == null) {
-                    return value;
+                    continue retry;
+                } else {
+                    if ((oldValue = map.putIfAbsent(key, value)) == null)
+                        return value;
+                    continue haveOldValue;
                 }
             }
         }
@@ -162,20 +167,15 @@ public final class ConcurrentMaps {
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to the following steps for the
-     * {@code map}, then returning the current value or {@code null} if now
-     * absent:
+     * {@code map}:
      *
      * <pre> {@code
-     * if (map.get(key) == null) {
-     *     V newValue = mappingFunction.apply(key);
-     *     if (newValue != null)
-     *         return map.putIfAbsent(key, newValue);
-     * }
-     * }</pre>
-     *
-     * The default implementation may retry these steps when multiple
-     * threads attempt updates including potentially calling the mapping
-     * function multiple times.
+     * V oldValue, newValue;
+     * return ((oldValue = map.get(key)) == null
+     *         && (newValue = mappingFunction.apply(key)) != null
+     *         && (oldValue = map.putIfAbsent(key, newValue)) == null)
+     *   ? newValue
+     *   : oldValue;}</pre>
      *
      * <p>This implementation assumes that the ConcurrentMap cannot contain null
      * values and {@code get()} returning null unambiguously means the key is
@@ -212,10 +212,12 @@ public final class ConcurrentMaps {
             Function<? super K, ? extends V> mappingFunction) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(mappingFunction);
-        V v, newValue;
-        return ((v = map.get(key)) == null &&
-                (newValue = mappingFunction.apply(key)) != null &&
-                (v = map.putIfAbsent(key, newValue)) == null) ? newValue : v;
+        V oldValue, newValue;
+        return ((oldValue = map.get(key)) == null
+                && (newValue = mappingFunction.apply(key)) != null
+                && (oldValue = map.putIfAbsent(key, newValue)) == null)
+            ? newValue
+            : oldValue;
     }
 
     /**
@@ -231,22 +233,19 @@ public final class ConcurrentMaps {
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
-     * steps for the {@code map}, then returning the current value or
-     * {@code null} if now absent:
+     * steps for the {@code map}:
      *
      * <pre> {@code
-     * if (map.get(key) != null) {
-     *   V oldValue = map.get(key);
+     * for (V oldValue; (oldValue = map.get(key)) != null; ) {
      *   V newValue = remappingFunction.apply(key, oldValue);
-     *   if (newValue != null)
-     *     map.replace(key, oldValue, newValue);
-     *   else
-     *     map.remove(key, oldValue);
-     * }}</pre>
-     *
-     * The default implementation may retry these steps when multiple threads
-     * attempt updates including potentially calling the remapping function
-     * multiple times.
+     *   if ((newValue == null)
+     *       ? map.remove(key, oldValue)
+     *       : map.replace(key, oldValue, newValue))
+     *     return newValue;
+     * }
+     * return null;}</pre>
+     * When multiple threads attempt updates, map operations and the
+     * remapping function may be called multiple times.
      *
      * <p>This implementation assumes that the ConcurrentMap cannot contain null
      * values and {@code get()} returning null unambiguously means the key is
@@ -275,16 +274,14 @@ public final class ConcurrentMaps {
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(map);
         Objects.requireNonNull(remappingFunction);
-        V oldValue;
-        while ((oldValue = map.get(key)) != null) {
+        for (V oldValue; (oldValue = map.get(key)) != null; ) {
             V newValue = remappingFunction.apply(key, oldValue);
-            if (newValue != null) {
-                if (map.replace(key, oldValue, newValue))
-                    return newValue;
-            } else if (map.remove(key, oldValue))
-                return null;
+            if ((newValue == null)
+                ? map.remove(key, oldValue)
+                : map.replace(key, oldValue, newValue))
+                return newValue;
         }
-        return oldValue;
+        return null;
     }
 
     /**
@@ -307,27 +304,23 @@ public final class ConcurrentMaps {
      *
      * <p><b>Implementation Requirements:</b><br>
      * The default implementation is equivalent to performing the following
-     * steps for the {@code map}, then returning the current value or
-     * {@code null} if absent:
+     * steps for the {@code map}:
      *
      * <pre> {@code
-     * V oldValue = map.get(key);
-     * V newValue = remappingFunction.apply(key, oldValue);
-     * if (oldValue != null ) {
-     *   if (newValue != null)
-     *     map.replace(key, oldValue, newValue);
-     *   else
-     *     map.remove(key, oldValue);
-     * } else {
-     *   if (newValue != null)
-     *     map.putIfAbsent(key, newValue);
-     *   else
+     * for (;;) {
+     *   V oldValue = map.get(key);
+     *   V newValue = remappingFunction.apply(key, oldValue);
+     *   if (newValue != null) {
+     *     if ((oldValue != null)
+     *       ? map.replace(key, oldValue, newValue)
+     *       : map.putIfAbsent(key, newValue) == null)
+     *       return newValue;
+     *   } else if (oldValue == null || map.remove(key, oldValue)) {
      *     return null;
+     *   }
      * }}</pre>
-     *
-     * The default implementation may retry these steps when multiple
-     * threads attempt updates including potentially calling the remapping
-     * function multiple times.
+     * When multiple threads attempt updates, map operations and the
+     * remapping function may be called multiple times.
      *
      * <p>This implementation assumes that the ConcurrentMap cannot contain null
      * values and {@code get()} returning null unambiguously means the key is
@@ -355,45 +348,23 @@ public final class ConcurrentMaps {
     public static <K, V> V compute(ConcurrentMap<K, V> map, K key,
             BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
         Objects.requireNonNull(map);
-        Objects.requireNonNull(remappingFunction);
-        V oldValue = map.get(key);
-        for (;;) {
-            V newValue = remappingFunction.apply(key, oldValue);
-            if (newValue == null) {
-                // delete mapping
-                if (oldValue != null || map.containsKey(key)) {
-                    // something to remove
-                    if (map.remove(key, oldValue)) {
-                        // removed the old value as expected
-                        return null;
+        retry: for (;;) {
+            V oldValue = map.get(key);
+            // if putIfAbsent fails, opportunistically use its return value
+            haveOldValue: for (;;) {
+                V newValue = remappingFunction.apply(key, oldValue);
+                if (newValue != null) {
+                    if (oldValue != null) {
+                        if (map.replace(key, oldValue, newValue))
+                            return newValue;
                     }
-
-                    // some other value replaced old value. try again.
-                    oldValue = map.get(key);
-                } else {
-                    // nothing to do. Leave things as they were.
+                    else if ((oldValue = map.putIfAbsent(key, newValue)) == null)
+                        return newValue;
+                    else continue haveOldValue;
+                } else if (oldValue == null || map.remove(key, oldValue)) {
                     return null;
                 }
-            } else {
-                // add or replace old mapping
-                if (oldValue != null) {
-                    // replace
-                    if (map.replace(key, oldValue, newValue)) {
-                        // replaced as expected.
-                        return newValue;
-                    }
-
-                    // some other value replaced old value. try again.
-                    oldValue = map.get(key);
-                } else {
-                    // add (replace if oldValue was null)
-                    if ((oldValue = map.putIfAbsent(key, newValue)) == null) {
-                        // replaced
-                        return newValue;
-                    }
-
-                    // some other value replaced old value. try again.
-                }
+                continue retry;
             }
         }
     }
