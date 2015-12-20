@@ -401,7 +401,7 @@ public class DefaultsTest {
                 "Should throw NPE");
     }
 
-     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
+    @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
     public void testComputeNulls(String description, Map<IntegerEnum, String> map) {
         assertTrue(map.containsKey(null), "null key absent");
         assertNull(map.get(null), "value not null");
@@ -444,7 +444,7 @@ public class DefaultsTest {
             return null;
         }), null, description + ": null resulted expected");
         assertFalse(map.containsKey(EXTRA_KEY),  description + ": null key present");
-       // compute with map containing null value
+        // compute with map containing null value
         assertNull(map.put(EXTRA_KEY, null),  description + ": unexpected value");
         assertSame(Maps.compute(map, EXTRA_KEY, (k, v) -> {
             assertSame(k, EXTRA_KEY);
