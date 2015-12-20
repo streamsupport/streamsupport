@@ -267,6 +267,8 @@ public final class ConcurrentMaps {
      *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
      *         prevents it from being stored in the map (optional)
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in this map (optional)
      * @since 1.8
      */
     public static <K, V> V computeIfPresent(ConcurrentMap<K, V> map, K key,
@@ -346,6 +348,8 @@ public final class ConcurrentMaps {
      *         is not supported by the map (optional)
      * @throws ClassCastException if the class of the specified key or value
      *         prevents it from being stored in the map (optional)
+     * @throws IllegalArgumentException if some property of the specified key
+     *         or value prevents it from being stored in this map (optional)
      * @since 1.8
      */
     public static <K, V> V compute(ConcurrentMap<K, V> map, K key,
