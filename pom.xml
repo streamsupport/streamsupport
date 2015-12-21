@@ -36,7 +36,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -67,6 +67,21 @@
 						<!-- exclude j.u.Random compilation stub -->
 						<exclude>java/**</exclude>
 					</excludes>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifestEntries>
+							<Archiver-Version/>
+							<Created-By/>
+							<Built-By/>
+							<Build-Jdk/>
+							<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+							<Bundle-SymbolicName>${project.groupId}</Bundle-SymbolicName>
+							<Bundle-Version>${project.version}</Bundle-Version>
+							<Export-Package>java8.lang;java8.util;java8.util.concurrent;java8.util.f
+unction;java8.util.stream</Export-Package>
+							<Import-Package>sun.misc;resolution:=optional</Import-Package>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -85,7 +100,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.1</version>
+				<version>2.10.3</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
