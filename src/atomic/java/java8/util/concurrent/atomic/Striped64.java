@@ -245,14 +245,6 @@ abstract class Striped64 extends Number {
         if (uncontended.intValue() == 1) {
             wasUncontended = true;
         }
-        /*
-        int h;
-        if ((h = getProbe()) == 0) {
-            forceTLRandomInit(); // force initialization
-            h = getProbe();
-            wasUncontended = true;
-        }
-        */
         boolean collide = false;                // True if last slot nonempty
         done: for (;;) {
             Cell[] as; Cell a; int n; long v;
@@ -339,14 +331,6 @@ abstract class Striped64 extends Number {
         if (uncontended.intValue() == 1) {
             wasUncontended = true;
         }
-        /*
-        int h;
-        if ((h = getProbe()) == 0) {
-            forceTLRandomInit(); // force initialization
-            h = getProbe();
-            wasUncontended = true;
-        }
-        */
         boolean collide = false;                // True if last slot nonempty
         done: for (;;) {
             Cell[] as; Cell a; int n; long v;
