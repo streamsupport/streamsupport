@@ -381,11 +381,10 @@ final class HMSpliterators {
                         .getDeclaredField("table"));
                 MODCOUNT_OFF = U.objectFieldOffset(HashMap.class
                         .getDeclaredField("modCount"));
-//              String ncName = Spliterators.IS_ANDROID ? "HashMapEntry"
-//                      : Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
-                String ncName = Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
-                ncName = "java.util.HashMap$" + ncName;
-                Class<?> nc = Class.forName(ncName);
+                String nodeName = Spliterators.IS_ANDROID ? "HashMapEntry"
+                        : Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
+                nodeName = "java.util.HashMap$" + nodeName;
+                Class<?> nc = Class.forName(nodeName);
                 NODE_KEY_OFF = U.objectFieldOffset(nc
                         .getDeclaredField("key"));
                 NODE_VAL_OFF = U.objectFieldOffset(nc
@@ -427,8 +426,6 @@ final class HMSpliterators {
             Class<?> vc = Class.forName("java.util.HashMap$Values");
             Class<?> ksc = Class.forName("java.util.HashMap$KeySet");
             Class<?> esc = Class.forName("java.util.HashMap$EntrySet");
-//          String hsMapFieldName = Spliterators.IS_ANDROID ? "backingMap"
-//                  : "map";
             VALUES_$0_OFF = U.objectFieldOffset(vc
                     .getDeclaredField("this$0"));
             KEYSET_$0_OFF = U.objectFieldOffset(ksc
@@ -436,7 +433,7 @@ final class HMSpliterators {
             ENTRYSET_$0_OFF = U.objectFieldOffset(esc
                     .getDeclaredField("this$0"));
             HASHSET_MAP_OFF = U.objectFieldOffset(HashSet.class
-                    .getDeclaredField("map")); // hsMapFieldName
+                    .getDeclaredField("map"));
         } catch (Exception e) {
             throw new Error(e);
         }

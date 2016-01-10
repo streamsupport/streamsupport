@@ -203,7 +203,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
                     .getDeclaredField("modCount"));
             SIZE_OFF = U.objectFieldOffset(ArrayList.class
                     .getDeclaredField("size"));
-            String arrayFieldName = Spliterators.IS_ANDROID ? "array"
+            String arrayFieldName = Spliterators.IS_HARMONY_ANDROID ? "array"
                     : "elementData";
             DATA_OFF = U.objectFieldOffset(ArrayList.class
                     .getDeclaredField(arrayFieldName));

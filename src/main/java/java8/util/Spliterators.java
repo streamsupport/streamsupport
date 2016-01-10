@@ -75,10 +75,12 @@ public final class Spliterators {
     static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
     // defaults to true
     static final boolean JRE_DELEGATION_ENABLED = getBooleanPropertyValue(JRE_DELEGATION_ENABLED_PROP);
-    // defaults to false
+    // is this Android? (defaults to false)
     static final boolean IS_ANDROID = isAndroid();
-    // defaults to false (Caution: Android is also Java6)
-    static final boolean IS_JAVA6 = isJava6();
+    // is this an Apache Harmony-based Android? (defaults to false)
+    static final boolean IS_HARMONY_ANDROID = IS_ANDROID && isHarmony();
+    // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
+    static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
     static final boolean JRE_HAS_STREAMS = isStreamEnabledJRE();
 
@@ -895,7 +897,7 @@ public final class Spliterators {
             return queueSpliterator((Queue<T>) c);
         }
 
-        if ((!IS_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
+        if ((!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
             return HMSpliterators.getValuesSpliterator((Collection<T>) c);
         }
 
@@ -930,7 +932,7 @@ public final class Spliterators {
     }
 
     private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
-        if (!IS_ANDROID && NATIVE_SPECIALIZATION) {
+        if (!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) {
             if ("java.util.HashMap$EntrySet".equals(className)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
@@ -944,7 +946,7 @@ public final class Spliterators {
             return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
         }
 
-        if (!IS_ANDROID && NATIVE_SPECIALIZATION) {
+        if (!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) {
             if (c instanceof HashSet) {
                 return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
             }
@@ -3177,13 +3179,27 @@ public final class Spliterators {
     }
 
     /**
-     * Are we running on a Dalvik VM or maybe even ART?
+     * Are we running on Android?
      * @return {@code true} if yes, otherwise {@code false}.
      */
     private static boolean isAndroid() {
         Class<?> clazz = null;
         try {
             clazz = Class.forName("android.util.DisplayMetrics");
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
+    }
+
+    /**
+     * Are we running on a platform that is based on Apache Harmony?
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    private static boolean isHarmony() {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("org.apache.harmony.security.PublicKeyImpl");
         } catch (Throwable notPresent) {
             // ignore
         }
