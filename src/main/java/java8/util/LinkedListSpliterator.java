@@ -51,7 +51,7 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
         this.list = list;
         this.est = est;
         this.expectedModCount = expectedModCount;
-        this.endOfList = (IS_JAVA6 || IS_ANDROID) ? getHeader(list) : null;
+        this.endOfList = (IS_JAVA6 || IS_HARMONY) ? getHeader(list) : null;
     }
 
     static <E> Spliterator<E> spliterator(LinkedList<E> list) {
@@ -170,7 +170,7 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
     }
 
     private Object getFirst(LinkedList<?> list) {
-        if (IS_JAVA6 || IS_ANDROID) {
+        if (IS_JAVA6 || IS_HARMONY) {
             // endOfList is the 'header'/'voidLink' member
             return getNextNode(endOfList);
         }
@@ -201,7 +201,7 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
     }
 
     // Unsafe mechanics
-    private static final boolean IS_ANDROID = Spliterators.IS_ANDROID;
+    private static final boolean IS_HARMONY = Spliterators.IS_HARMONY_ANDROID;
     private static final boolean IS_JAVA6 = Spliterators.IS_JAVA6;
     private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long SIZE_OFF;
@@ -213,12 +213,12 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
         try {
             MODCOUNT_OFF = U.objectFieldOffset(AbstractList.class
                     .getDeclaredField("modCount"));
-            String firstFieldName = IS_ANDROID ? "voidLink"
+            String firstFieldName = IS_HARMONY ? "voidLink"
                     : IS_JAVA6 ? "header" : "first";
-            String nodeClassName = IS_ANDROID ? "java.util.LinkedList$Link"
+            String nodeClassName = IS_HARMONY ? "java.util.LinkedList$Link"
                     : IS_JAVA6 ? "java.util.LinkedList$Entry"
                             : "java.util.LinkedList$Node";
-            String nodeItemName = IS_ANDROID ? "data" : IS_JAVA6 ? "element"
+            String nodeItemName = IS_HARMONY ? "data" : IS_JAVA6 ? "element"
                     : "item";
             Class<?> nc = Class.forName(nodeClassName);
             SIZE_OFF = U.objectFieldOffset(LinkedList.class

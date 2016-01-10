@@ -153,7 +153,7 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
     }
 
     private static <T> int getModCount(PriorityQueue<T> pq) {
-        if (IS_ANDROID) {
+        if (IS_HARMONY) {
             return 0;
         }
         return U.getInt(pq, MODCOUNT_OFF);
@@ -164,7 +164,7 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
     }
 
     // Unsafe mechanics
-    private static final boolean IS_ANDROID = Spliterators.IS_ANDROID;
+    private static final boolean IS_HARMONY = Spliterators.IS_HARMONY_ANDROID;
     private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long SIZE_OFF;
     private static final long MODCOUNT_OFF;
@@ -173,13 +173,13 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
         try {
             SIZE_OFF = U.objectFieldOffset(PriorityQueue.class
                     .getDeclaredField("size"));
-            if (!IS_ANDROID) {
+            if (!IS_HARMONY) {
                 MODCOUNT_OFF = U.objectFieldOffset(PriorityQueue.class
                         .getDeclaredField("modCount"));
             } else {
                 MODCOUNT_OFF = 0L; // unused
             }
-            String queueFieldName = IS_ANDROID ? "elements" : "queue";
+            String queueFieldName = IS_HARMONY ? "elements" : "queue";
             QUEUE_OFF = U.objectFieldOffset(PriorityQueue.class
                     .getDeclaredField(queueFieldName));
         } catch (Exception e) {
