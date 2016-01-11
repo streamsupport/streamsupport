@@ -229,18 +229,18 @@ public final class SplittableRandom {
     private static final AtomicLong defaultGen = new AtomicLong(initialSeed());
 
     private static long initialSeed() {
-        String pp = java.security.AccessController
-                .doPrivileged(new PrivilegedAction<String>() {
-                    @Override
-                    public String run() {
-                        return System.getProperty("java.util.secureRandomSeed");
-                    }
-                });
-        if (pp != null && pp.equalsIgnoreCase("true")) {
+        PrivilegedAction<Boolean> action = new PrivilegedAction<Boolean>() {
+            @Override
+            public Boolean run() {
+                return Boolean.getBoolean("java.util.secureRandomSeed");
+            }
+        };
+        if (java.security.AccessController.doPrivileged(action)) {
             byte[] seedBytes = java.security.SecureRandom.getSeed(8);
-            long s = (long)(seedBytes[0]) & 0xffL;
-            for (int i = 1; i < 8; ++i)
-                s = (s << 8) | ((long) (seedBytes[i]) & 0xffL);
+            long s = (long) seedBytes[0] & 0xffL;
+            for (int i = 1; i < 8; ++i) {
+                s = (s << 8) | ((long) seedBytes[i] & 0xffL);
+            }
             return s;
         }
         return (mix64(System.currentTimeMillis()) ^
