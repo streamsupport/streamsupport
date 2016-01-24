@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -25,11 +25,14 @@ package org.openjdk.tests.java.util.stream;
 import java.util.Arrays;
 
 import java8.util.stream.OpTestCase;
+import java8.util.stream.RefStreams;
 import java8.util.stream.Stream;
 
 import org.testng.annotations.Test;
 
 import static java8.util.stream.LambdaTestHelpers.countTo;
+import static java8.util.stream.ThrowableHelper.checkNPE;
+import static java8.util.stream.ThrowableHelper.checkISE;
 
 import java8.util.stream.StreamSupport;
 
@@ -40,6 +43,10 @@ import java8.util.stream.StreamSupport;
  */
 @Test(groups = { "serialization-hostile" })
 public class StreamCloseTest extends OpTestCase {
+    public void testNullCloseHandler() {
+        checkNPE(() -> RefStreams.of(1).onClose(null));
+    }
+
     public void testEmptyCloseHandler() {
         Stream<Integer> ints = null;
         try {
@@ -233,9 +240,41 @@ public class StreamCloseTest extends OpTestCase {
         assertTrue(e.getMessage().equals("1"));
         /*
         assertTrue(e.getSuppressed().length == n - 1);
-        for (int i=0; i<n-1; i++) {
+        for (int i = 0; i < n-1; i++) {
             assertTrue(e.getSuppressed()[i].getMessage().equals(String.valueOf(i + 2)));
         }
         */
+    }
+
+    public void testConsumed() {
+        Stream<Integer> s1 = StreamSupport.stream(countTo(100));
+        try {
+            s1.forEach(i -> {});
+            checkISE(() -> s1.onClose(() -> fail("s1")));
+        } finally {
+            if (s1 != null) {
+                s1.close();
+            }
+        }
+
+        Stream<Integer> s2 = StreamSupport.stream(countTo(100));
+        try {
+            s2.map(x -> x).forEach(i -> {});
+            checkISE(() -> s2.onClose(() -> fail("s2")));
+        } finally {
+            if (s2 != null) {
+                s2.close();
+            }
+        }
+
+        Stream<Integer> s3 = StreamSupport.stream(countTo(100));
+        try {
+            s3.close();
+            checkISE(() -> s3.onClose(() -> fail("s3")));
+        } finally {
+            if (s3 != null) {
+                s3.close();
+            }
+        }
     }
 }
