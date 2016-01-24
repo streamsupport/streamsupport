@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -325,6 +325,8 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     @Override
     @SuppressWarnings("unchecked")
     public S onClose(Runnable closeHandler) {
+        if (linkedOrConsumed)
+            throw new IllegalStateException(MSG_STREAM_LINKED);
         Objects.requireNonNull(closeHandler);
         Runnable existingHandler = sourceStage.sourceCloseAction;
         sourceStage.sourceCloseAction =
@@ -407,14 +409,14 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
             // Adapt the source spliterator, evaluating each stateful op
             // in the pipeline up to and including this pipeline stage.
             // The depth and flags of each pipeline stage are adjusted accordingly.
-        	int depth = 1;
+            int depth = 1;
             for (AbstractPipeline u = sourceStage, p = sourceStage.nextStage, e = this;
                  u != e;
                  u = p, p = p.nextStage) {
 
                 int thisOpFlags = p.sourceOrOpFlags;
                 if (p.opIsStateful()) {
-                	depth = 0;
+                    depth = 0;
 
                     if (StreamOpFlag.SHORT_CIRCUIT.isKnown(thisOpFlags)) {
                         // Clear the short circuit flag for next pipeline stage
