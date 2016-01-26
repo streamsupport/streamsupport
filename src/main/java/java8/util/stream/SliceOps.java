@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -604,8 +604,15 @@ final class SliceOps {
                 return nb.build();
             }
             else {
-                Node<P_OUT> node = helper.wrapAndCopyInto(helper.makeNodeBuilder(-1, generator),
-                                                          spliterator).build();
+                Node.Builder<P_OUT> nb = op.makeNodeBuilder(-1, generator);
+                if (targetOffset == 0) { // limit only
+                    Sink<P_OUT> opSink = op.opWrapSink(helper.getStreamAndOpFlags(), nb);
+                    helper.copyIntoWithCancel(helper.wrapSink(opSink), spliterator);
+                }
+                else {
+                    helper.wrapAndCopyInto(nb, spliterator);
+                }
+                Node<P_OUT> node = nb.build();
                 thisNodeSize = node.count();
                 completed = true;
                 spliterator = null;
