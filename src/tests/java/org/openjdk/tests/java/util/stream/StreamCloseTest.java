@@ -250,6 +250,8 @@ public class StreamCloseTest extends OpTestCase {
         Stream<Integer> s1 = StreamSupport.stream(countTo(100));
         try {
             s1.forEach(i -> {});
+            // Adding onClose handler when stream is consumed is illegal
+            // handler must not be registered
             checkISE(() -> s1.onClose(() -> fail("s1")));
         } finally {
             if (s1 != null) {
@@ -257,23 +259,16 @@ public class StreamCloseTest extends OpTestCase {
             }
         }
 
+        // close() must be idempotent:
+        // second close() invoked at the end of try-with-resources must have no effect
         Stream<Integer> s2 = StreamSupport.stream(countTo(100));
         try {
-            s2.map(x -> x).forEach(i -> {});
+            s2.close();
+            // Adding onClose handler when stream is closed is also illegal
             checkISE(() -> s2.onClose(() -> fail("s2")));
         } finally {
             if (s2 != null) {
                 s2.close();
-            }
-        }
-
-        Stream<Integer> s3 = StreamSupport.stream(countTo(100));
-        try {
-            s3.close();
-            checkISE(() -> s3.onClose(() -> fail("s3")));
-        } finally {
-            if (s3 != null) {
-                s3.close();
             }
         }
     }
