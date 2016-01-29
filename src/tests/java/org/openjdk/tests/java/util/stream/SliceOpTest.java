@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -44,6 +44,7 @@ import java8.util.stream.IntStream;
 import java8.util.stream.IntStreams;
 import java8.util.stream.LambdaTestHelpers;
 import java8.util.stream.LongStream;
+import java8.util.stream.LongStreams;
 import java8.util.stream.OpTestCase;
 import java8.util.stream.Stream;
 import java8.util.stream.StreamSupport;
@@ -359,6 +360,15 @@ public class SliceOpTest extends OpTestCase {
         }
         else {
             return Arrays.asList(0, 1, size / 2, size - 1, size, size + 1, 2 * size);
+        }
+    }
+
+    public void testLimitParallelHugeInput() {
+        for (int n : new int[] {10, 100, 1000, 10000}) {
+            long[] actual = LongStreams.range(0, Long.MAX_VALUE)
+                                  .parallel().filter(x -> true) // remove SIZED
+                                  .limit(n).toArray();
+            assertEquals(LongStreams.range(0, n).toArray(), actual);
         }
     }
 }

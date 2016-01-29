@@ -139,7 +139,7 @@ final class SliceOps {
                 }
                 else {
                     // @@@ OOMEs will occur for LongStream.range(0, Long.MAX_VALUE).filter(i -> true).limit(n)
-                    //     regardless of the value of n
+                    //     when n * parallelismLevel is sufficiently large.
                     //     Need to adjust the target size of splitting for the
                     //     SliceTask from say (size / k) to say min(size / k, 1 << 14)
                     //     This will limit the size of the buffers created at the leaf nodes
