@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -43,6 +43,7 @@ public class LongStreamTestDataProvider {
     private static final long[] pseudoRandom;
 
     private static final Object[][] testData;
+    private static final Object[][] testSmallData;
     private static final Object[][] spliteratorTestData;
 
     static {
@@ -80,10 +81,14 @@ public class LongStreamTestDataProvider {
 
     static {
         {
-            List<Object[]> list = new ArrayList<>();
+            List<Object[]> listSmall = new ArrayList<>();
+            List<Object[]> list1000 = new ArrayList<>();
+            List<Object[]> list = null;
             for (Object[] data : arrays) {
                 final Object name = data[0];
                 final long[] longs = (long[]) data[1];
+
+                list = longs.length >= 1000 ? list1000 : listSmall;
 
                 list.add(new Object[]{"array:" + name,
                         TestData.Factory.ofArray("array:" + name, longs)});
@@ -100,7 +105,9 @@ public class LongStreamTestDataProvider {
                 list.add(streamDataDescr("LongStream.longRangeClosed(0,l): " + longs.length,
                                          () -> LongStreams.rangeClosed(0, longs.length)));
             }
-            testData = list.toArray(new Object[0][]);
+            testSmallData = listSmall.toArray(new Object[0][]);
+            list1000.addAll(listSmall);
+            testData = list1000.toArray(new Object[0][]);
         }
 
         {
@@ -149,6 +156,11 @@ public class LongStreamTestDataProvider {
     @DataProvider(name = "LongStreamTestData")
     public static Object[][] makeLongStreamTestData() {
         return testData;
+    }
+
+    @DataProvider(name = "LongStreamTestData.small")
+    public static Object[][] makeSmallLongStreamTestData() {
+        return testSmallData;
     }
 
     // returns an array of (String name, Supplier<PrimitiveSpliterator<Long>>)
