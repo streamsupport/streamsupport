@@ -961,6 +961,22 @@ public class JSR166TestCase extends TestCase {
     public static final Integer m5  = new Integer(-5);
     public static final Integer m6  = new Integer(-6);
     public static final Integer m10 = new Integer(-10);
+    // is this Android? (defaults to false)
+    private static final boolean IS_ANDROID = isAndroid();
+
+    /**
+     * Are we running on Android?
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    private static boolean isAndroid() {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("android.util.DisplayMetrics");
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
+    }
 
     /**
      * Runs Runnable r with a security policy that permits precisely
@@ -974,7 +990,9 @@ public class JSR166TestCase extends TestCase {
         if (sm == null) {
             r.run();
         }
-        runWithSecurityManagerWithPermissions(r, permissions);
+        if (!IS_ANDROID) {
+            runWithSecurityManagerWithPermissions(r, permissions);
+        }
     }
 
     /**

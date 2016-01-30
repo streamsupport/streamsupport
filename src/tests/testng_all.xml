@@ -141,7 +141,28 @@
       <!-- Not an j8.u.c.atomic test, but a test with a dependency on LongAdder (streamsupport-atomic)-->
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
 
-      <!-- block 14 (superseded & questionable tests) -->
+      <!-- Test dependencies block 14: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
+
+      <!-- block 14 (JSR 166 tck tests) -->
+      <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
+      <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
+      <class name="org.openjdk.tests.tck.DoubleAccumulatorTest"/>
+      <class name="org.openjdk.tests.tck.DoubleAdderTest"/>
+      <class name="org.openjdk.tests.tck.ForkJoinPool8Test"/>
+      <class name="org.openjdk.tests.tck.ForkJoinPoolTest"/>
+      <class name="org.openjdk.tests.tck.ForkJoinTask8Test"/>
+      <class name="org.openjdk.tests.tck.ForkJoinTaskTest"/>
+      <class name="org.openjdk.tests.tck.LongAccumulatorTest"/>
+      <class name="org.openjdk.tests.tck.LongAdderTest"/>
+      <class name="org.openjdk.tests.tck.PhaserTest"/>
+      <class name="org.openjdk.tests.tck.RecursiveActionTest"/>
+      <class name="org.openjdk.tests.tck.RecursiveTaskTest"/>
+      <class name="org.openjdk.tests.tck.SplittableRandomTest"/>
+      <class name="org.openjdk.tests.tck.SubmissionPublisherTest"/>
+      <class name="org.openjdk.tests.tck.ThreadLocalRandom8Test"/>
+      <class name="org.openjdk.tests.tck.ThreadLocalRandomTest"/>
+
+      <!-- block 15 (superseded or questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>
