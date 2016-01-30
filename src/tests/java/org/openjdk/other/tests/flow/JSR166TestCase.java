@@ -756,6 +756,52 @@ public class JSR166TestCase extends TestCase {
     }
 
     /**
+     * Allows use of try-with-resources with per-test thread pools.
+     */
+    protected class PoolCleaner /*implements AutoCloseable*/ {
+        private final ExecutorService pool;
+        public PoolCleaner(ExecutorService pool) { this.pool = pool; }
+        public void close() { joinPool(pool); }
+    }
+
+    /**
+     * An extension of PoolCleaner that has an action to release the pool.
+     */
+    class PoolCleanerWithReleaser extends PoolCleaner {
+        private final Runnable releaser;
+        public PoolCleanerWithReleaser(ExecutorService pool, Runnable releaser) {
+            super(pool);
+            this.releaser = releaser;
+        }
+        public void close() {
+            try {
+                releaser.run();
+            } finally {
+                super.close();
+            }
+        }
+    }
+
+    protected PoolCleaner cleaner(ExecutorService pool) {
+        return new PoolCleaner(pool);
+    }
+
+    PoolCleaner cleaner(ExecutorService pool, Runnable releaser) {
+        return new PoolCleanerWithReleaser(pool, releaser);
+    }
+
+    protected PoolCleaner cleaner(ExecutorService pool, CountDownLatch latch) {
+        return new PoolCleanerWithReleaser(pool, releaser(latch));
+    }
+
+    Runnable releaser(final CountDownLatch latch) {
+        return new Runnable() { public void run() {
+            do { latch.countDown(); }
+            while (latch.getCount() > 0);
+        }};
+    }
+
+    /**
      * Waits out termination of a thread pool or fails doing so.
      */
     void joinPool(ExecutorService pool) {
@@ -772,14 +818,14 @@ public class JSR166TestCase extends TestCase {
     }
 
     /** Like Runnable, but with the freedom to throw anything */
-    interface Action { public void run() throws Throwable; }
+    protected interface Action { public void run() throws Throwable; }
 
     /**
      * Runs all the given actions in parallel, failing if any fail.
      * Useful for running multiple variants of tests that are
      * necessarily individually slow because they must block.
      */
-    void testInParallel(Action ... actions) {
+    protected void testInParallel(Action ... actions) {
         ExecutorService pool = Executors.newCachedThreadPool();
         try {
             ArrayList<Future<?>> futures = new ArrayList<Future<?>>(actions.length);
@@ -834,7 +880,7 @@ public class JSR166TestCase extends TestCase {
      * Checks that the threads do not terminate within the default
      * millisecond delay of {@code timeoutMillis()}.
      */
-    void assertThreadsStayAlive(Thread... threads) {
+    protected void assertThreadsStayAlive(Thread... threads) {
         assertThreadsStayAlive(timeoutMillis(), threads);
     }
 
@@ -1038,7 +1084,7 @@ public class JSR166TestCase extends TestCase {
      * Spin-waits up to the specified number of milliseconds for the given
      * thread to enter a wait state: BLOCKED, WAITING, or TIMED_WAITING.
      */
-    void waitForThreadToEnterWaitState(Thread thread, long timeoutMillis) {
+    protected void waitForThreadToEnterWaitState(Thread thread, long timeoutMillis) {
         long startTime = System.nanoTime();
         for (;;) {
             Thread.State s = thread.getState();
@@ -1099,14 +1145,14 @@ public class JSR166TestCase extends TestCase {
             throw new AssertionFailedError("timed get did not return promptly");
     }
 
-    <T> void checkTimedGet(Future<T> f, T expectedValue) {
+    protected <T> void checkTimedGet(Future<T> f, T expectedValue) {
         checkTimedGet(f, expectedValue, LONG_DELAY_MS);
     }
 
     /**
      * Returns a new started daemon Thread running the given runnable.
      */
-    Thread newStartedThread(Runnable runnable) {
+    protected Thread newStartedThread(Runnable runnable) {
         Thread t = new Thread(runnable);
         t.setDaemon(true);
         t.start();
@@ -1136,7 +1182,7 @@ public class JSR166TestCase extends TestCase {
      * terminate (using {@link Thread#join(long)}), else interrupts
      * the thread (in the hope that it may terminate later) and fails.
      */
-    void awaitTermination(Thread t) {
+    protected void awaitTermination(Thread t) {
         awaitTermination(t, LONG_DELAY_MS);
     }
 
@@ -1501,7 +1547,8 @@ public class JSR166TestCase extends TestCase {
     public abstract class CheckedRecursiveTask<T> extends RecursiveTask<T> {
         protected abstract T realCompute() throws Throwable;
 
-        @Override protected final T compute() {
+        @Override
+        protected final T compute() {
             try {
                 return realCompute();
             } catch (Throwable fail) {
@@ -1588,7 +1635,7 @@ public class JSR166TestCase extends TestCase {
     }
 
     @SuppressWarnings("unchecked")
-    <T> T serialClone(T o) {
+    protected <T> T serialClone(T o) {
         try {
             ObjectInputStream ois = new ObjectInputStream
                 (new ByteArrayInputStream(serialBytes(o)));
