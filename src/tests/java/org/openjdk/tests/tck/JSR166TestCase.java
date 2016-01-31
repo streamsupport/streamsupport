@@ -249,7 +249,7 @@ public class JSR166TestCase extends TestCase {
             for (TestCase lastTestCase = currentTestCase;;) {
                 try { MINUTES.sleep(timeoutMinutes); }
                 catch (InterruptedException unexpected) { break; }
-                if (lastTestCase == currentTestCase) {
+                if (lastTestCase != null && lastTestCase == currentTestCase) {
                     System.err.printf(
                         "Looks like we're stuck running test: %s%n",
                         lastTestCase);
@@ -261,7 +261,7 @@ public class JSR166TestCase extends TestCase {
                     dumpTestThreads();
                     // one stack dump is probably enough; more would be spam
                     break;
-                }
+                } else if (lastTestCase == null) {break;}
                 lastTestCase = currentTestCase;
             }}};
         Thread thread = new Thread(checkForWedgedTest, "checkForWedgedTest");
