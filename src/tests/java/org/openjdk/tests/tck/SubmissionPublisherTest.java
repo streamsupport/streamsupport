@@ -44,8 +44,6 @@ import java8.util.concurrent.SubmissionPublisher;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.openjdk.other.tests.flow.JSR166TestCase;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import static java8.util.concurrent.Flow.Subscriber;

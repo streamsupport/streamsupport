@@ -47,8 +47,6 @@ import java8.util.concurrent.RecursiveAction;
 
 import java.util.concurrent.TimeoutException;
 
-import org.openjdk.other.tests.flow.JSR166TestCase;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

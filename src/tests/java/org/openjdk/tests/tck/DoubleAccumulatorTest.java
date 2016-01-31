@@ -33,10 +33,9 @@
 package org.openjdk.tests.tck;
 
 import java8.lang.Doubles;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-
-import org.openjdk.other.tests.flow.JSR166TestCase;
 
 import java8.util.concurrent.Phaser;
 import java8.util.concurrent.atomic.DoubleAccumulator;

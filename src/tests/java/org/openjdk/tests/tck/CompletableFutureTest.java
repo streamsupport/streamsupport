@@ -69,8 +69,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.openjdk.other.tests.flow.JSR166TestCase;
-
 import java8.util.function.BiConsumer;
 import java8.util.function.BiFunction;
 import java8.util.function.Consumer;

@@ -36,8 +36,6 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
-import org.openjdk.other.tests.flow.JSR166TestCase;
-
 import java8.util.concurrent.atomic.DoubleAdder;
 import junit.framework.Test;
 import junit.framework.TestSuite;

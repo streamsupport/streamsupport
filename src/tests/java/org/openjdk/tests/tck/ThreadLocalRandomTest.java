@@ -37,8 +37,6 @@ import java8.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.openjdk.other.tests.flow.JSR166TestCase;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
