@@ -49,8 +49,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.openjdk.other.tests.flow.JSR166TestCase;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

@@ -1,13 +1,48 @@
 /*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+/*
+ * This file is available under and governed by the GNU General Public
+ * License version 2 only, as published by the Free Software Foundation.
+ * However, the following notice accompanied the original version of this
+ * file:
+ *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
  * Other contributors include Andrew Wright, Jeffrey Hayes,
  * Pat Fisher, Mike Judd.
  */
-package org.openjdk.other.tests.flow;
+package org.openjdk.tests.tck;
+
+/*
+ * @test
+ * @summary JSR-166 tck tests
+ * @build *
+ * @run junit/othervm/timeout=1000 -Djsr166.testImplementationDetails=true JSR166TestCase
+ */
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +51,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -41,18 +77,20 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+
+import java8.util.concurrent.ForkJoinPool;
+
 import java.util.concurrent.Future;
+
+import java8.util.concurrent.RecursiveAction;
+import java8.util.concurrent.RecursiveTask;
+
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
-
-import java8.util.concurrent.ForkJoinPool;
-import java8.util.concurrent.RecursiveAction;
-import java8.util.concurrent.RecursiveTask;
-
 import java.util.regex.Pattern;
 
 import org.testng.annotations.AfterMethod;
@@ -113,8 +151,7 @@ import junit.framework.TestSuite;
  * methods as there are exceptions the method can throw. Sometimes
  * there are multiple tests per JSR166 method when the different
  * "normal" behaviors differ significantly. And sometimes testcases
- * cover multiple methods when they cannot be tested in
- * isolation.
+ * cover multiple methods when they cannot be tested in isolation.
  *
  * <li>The documentation style for testcases is to provide as javadoc
  * a simple sentence or two describing the property that the testcase
@@ -150,7 +187,6 @@ public class JSR166TestCase extends TestCase {
      */
 //    protected static final boolean testImplementationDetails =
 //        Boolean.getBoolean("jsr166.testImplementationDetails");
-
     protected static final boolean testImplementationDetails = true;
 
     /**
@@ -179,6 +215,12 @@ public class JSR166TestCase extends TestCase {
     private static final int suiteRuns =
         Integer.getInteger("jsr166.suiteRuns", 1);
 
+    /**
+     * The scaling factor to apply to standard delays used in tests.
+     */
+    private static final int delayFactor =
+        Integer.getInteger("jsr166.delay.factor", 1);
+
     public JSR166TestCase() { super(); }
     public JSR166TestCase(String name) { super(name); }
 
@@ -194,7 +236,41 @@ public class JSR166TestCase extends TestCase {
         return (regex == null) ? null : Pattern.compile(regex);
     }
 
+    // Instrumentation to debug very rare, but very annoying hung test runs.
+    static volatile TestCase currentTestCase;
+    // static volatile int currentRun = 0;
+    static {
+        Runnable checkForWedgedTest = new Runnable() { public void run() {
+            // Avoid spurious reports with enormous runsPerTest.
+            // A single test case run should never take more than 1 second.
+            // But let's cap it at the high end too ...
+            final int timeoutMinutes =
+                Math.min(15, Math.max(runsPerTest / 60, 1));
+            for (TestCase lastTestCase = currentTestCase;;) {
+                try { MINUTES.sleep(timeoutMinutes); }
+                catch (InterruptedException unexpected) { break; }
+                if (lastTestCase == currentTestCase) {
+                    System.err.printf(
+                        "Looks like we're stuck running test: %s%n",
+                        lastTestCase);
+//                     System.err.printf(
+//                         "Looks like we're stuck running test: %s (%d/%d)%n",
+//                         lastTestCase, currentRun, runsPerTest);
+//                     System.err.println("availableProcessors=" +
+//                         Runtime.getRuntime().availableProcessors());
+                    dumpTestThreads();
+                    // one stack dump is probably enough; more would be spam
+                    break;
+                }
+                lastTestCase = currentTestCase;
+            }}};
+        Thread thread = new Thread(checkForWedgedTest, "checkForWedgedTest");
+        thread.setDaemon(true);
+        thread.start();
+    }
+
     public void runBare() throws Throwable {
+        currentTestCase = this;
         if (methodFilter == null
             || methodFilter.matcher(toString()).find())
             super.runBare();
@@ -202,6 +278,7 @@ public class JSR166TestCase extends TestCase {
 
     protected void runTest() throws Throwable {
         for (int i = 0; i < runsPerTest; i++) {
+            // currentRun = i;
             if (profileTests)
                 runTestProfiled();
             else
@@ -230,18 +307,46 @@ public class JSR166TestCase extends TestCase {
         main(suite(), args);
     }
 
+    static class PithyResultPrinter extends junit.textui.ResultPrinter {
+        PithyResultPrinter(java.io.PrintStream writer) { super(writer); }
+        long runTime;
+        public void startTest(Test test) {}
+        protected void printHeader(long runTime) {
+            this.runTime = runTime; // defer printing for later
+        }
+        protected void printFooter(TestResult result) {
+            if (result.wasSuccessful()) {
+                getWriter().println("OK (" + result.runCount() + " tests)"
+                    + "  Time: " + elapsedTimeAsString(runTime));
+            } else {
+                getWriter().println("Time: " + elapsedTimeAsString(runTime));
+                super.printFooter(result);
+            }
+        }
+    }
+
+    /**
+     * Returns a TestRunner that doesn't bother with unnecessary
+     * fluff, like printing a "." for each test case.
+     */
+    static junit.textui.TestRunner newPithyTestRunner() {
+        junit.textui.TestRunner runner = new junit.textui.TestRunner();
+        runner.setPrinter(new PithyResultPrinter(System.out));
+        return runner;
+    }
+
     /**
      * Runs all unit tests in the given test suite.
      * Actual behavior influenced by jsr166.* system properties.
      */
-    protected static void main(Test suite, String[] args) {
+    static void main(Test suite, String[] args) {
         if (useSecurityManager) {
             System.err.println("Setting a permissive security manager");
             Policy.setPolicy(permissivePolicy());
             System.setSecurityManager(new SecurityManager());
         }
         for (int i = 0; i < suiteRuns; i++) {
-            TestResult result = junit.textui.TestRunner.run(suite);
+            TestResult result = newPithyTestRunner().doRun(suite);
             if (!result.wasSuccessful())
                 System.exit(1);
             System.gc();
@@ -311,94 +416,11 @@ public class JSR166TestCase extends TestCase {
      */
     public static Test suite() {
         // Java7+ test classes
-        TestSuite suite = newTestSuite(
-            /*
-            ForkJoinPoolTest.suite(),
-            ForkJoinTaskTest.suite(),
-            RecursiveActionTest.suite(),
-            RecursiveTaskTest.suite(),
-            LinkedTransferQueueTest.suite(),
-            PhaserTest.suite(),
-            ThreadLocalRandomTest.suite(),
-            AbstractExecutorServiceTest.suite(),
-            AbstractQueueTest.suite(),
-            AbstractQueuedSynchronizerTest.suite(),
-            AbstractQueuedLongSynchronizerTest.suite(),
-            ArrayBlockingQueueTest.suite(),
-            ArrayDequeTest.suite(),
-            AtomicBooleanTest.suite(),
-            AtomicIntegerArrayTest.suite(),
-            AtomicIntegerFieldUpdaterTest.suite(),
-            AtomicIntegerTest.suite(),
-            AtomicLongArrayTest.suite(),
-            AtomicLongFieldUpdaterTest.suite(),
-            AtomicLongTest.suite(),
-            AtomicMarkableReferenceTest.suite(),
-            AtomicReferenceArrayTest.suite(),
-            AtomicReferenceFieldUpdaterTest.suite(),
-            AtomicReferenceTest.suite(),
-            AtomicStampedReferenceTest.suite(),
-            ConcurrentHashMapTest.suite(),
-            ConcurrentLinkedDequeTest.suite(),
-            ConcurrentLinkedQueueTest.suite(),
-            ConcurrentSkipListMapTest.suite(),
-            ConcurrentSkipListSubMapTest.suite(),
-            ConcurrentSkipListSetTest.suite(),
-            ConcurrentSkipListSubSetTest.suite(),
-            CopyOnWriteArrayListTest.suite(),
-            CopyOnWriteArraySetTest.suite(),
-            CountDownLatchTest.suite(),
-            CyclicBarrierTest.suite(),
-            DelayQueueTest.suite(),
-            EntryTest.suite(),
-            ExchangerTest.suite(),
-            ExecutorsTest.suite(),
-            ExecutorCompletionServiceTest.suite(),
-            FutureTaskTest.suite(),
-            LinkedBlockingDequeTest.suite(),
-            LinkedBlockingQueueTest.suite(),
-            LinkedListTest.suite(),
-            LockSupportTest.suite(),
-            PriorityBlockingQueueTest.suite(),
-            PriorityQueueTest.suite(),
-            ReentrantLockTest.suite(),
-            ReentrantReadWriteLockTest.suite(),
-            ScheduledExecutorTest.suite(),
-            ScheduledExecutorSubclassTest.suite(),
-            SemaphoreTest.suite(),
-            SynchronousQueueTest.suite(),
-            SystemTest.suite(),
-            ThreadLocalTest.suite(),
-            ThreadPoolExecutorTest.suite(),
-            ThreadPoolExecutorSubclassTest.suite(),
-            ThreadTest.suite(),
-            TimeUnitTest.suite(),
-            TreeMapTest.suite(),
-            TreeSetTest.suite(),
-            TreeSubMapTest.suite(),
-            TreeSubSetTest.suite()
-            */
-            );
+        TestSuite suite = newTestSuite();
 
         // Java8+ test classes
         if (atLeastJava8()) {
             String[] java8TestClassNames = {
-                /*
-                "Atomic8Test",
-                "CompletableFutureTest",
-                "ConcurrentHashMap8Test",
-                "CountedCompleterTest",
-                "DoubleAccumulatorTest",
-                "DoubleAdderTest",
-                "ForkJoinPool8Test",
-                "ForkJoinTask8Test",
-                "LongAccumulatorTest",
-                "LongAdderTest",
-                "SplittableRandomTest",
-                "StampedLockTest",
-                "SubmissionPublisherTest",
-                "ThreadLocalRandom8Test",
-                */
             };
             addNamedTestClasses(suite, java8TestClassNames);
         }
@@ -406,7 +428,6 @@ public class JSR166TestCase extends TestCase {
         // Java9+ test classes
         if (atLeastJava9()) {
             String[] java9TestClassNames = {
-                // Currently empty, but expecting varhandle tests
             };
             addNamedTestClasses(suite, java9TestClassNames);
         }
@@ -473,7 +494,6 @@ public class JSR166TestCase extends TestCase {
         } else {
             return new TestSuite();
         }
-
     }
 
     // Delays for timing-dependent tests, in milliseconds.
@@ -484,11 +504,11 @@ public class JSR166TestCase extends TestCase {
     public static long LONG_DELAY_MS;
 
     /**
-     * Returns the shortest timed delay. This could
-     * be reimplemented to use for example a Property.
+     * Returns the shortest timed delay. This can be scaled up for
+     * slow machines using the jsr166.delay.factor system property.
      */
     protected long getShortDelay() {
-        return 50;
+        return 50 * delayFactor;
     }
 
     /**
@@ -531,6 +551,8 @@ public class JSR166TestCase extends TestCase {
      * the same test have no effect.
      */
     public void threadRecordFailure(Throwable t) {
+        System.err.println(t);
+        dumpTestThreads();
         threadFailure.compareAndSet(null, t);
     }
 
@@ -542,7 +564,7 @@ public class JSR166TestCase extends TestCase {
     void tearDownFail(String format, Object... args) {
         String msg = toString() + ": " + String.format(format, args);
         System.err.println(msg);
-        printAllStackTraces();
+        dumpTestThreads();
         throw new AssertionFailedError(msg);
     }
 
@@ -580,7 +602,7 @@ public class JSR166TestCase extends TestCase {
     }
 
     /**
-     * Finds missing try { ... } finally { joinPool(e); }
+     * Finds missing PoolCleaners
      */
     void checkForkJoinPoolThreadLeaks() throws InterruptedException {
         Thread[] survivors = new Thread[7];
@@ -612,7 +634,7 @@ public class JSR166TestCase extends TestCase {
             fail(reason);
         } catch (AssertionFailedError t) {
             threadRecordFailure(t);
-            fail(reason);
+            throw t;
         }
     }
 
@@ -739,22 +761,20 @@ public class JSR166TestCase extends TestCase {
     /**
      * Delays, via Thread.sleep, for the given millisecond delay, but
      * if the sleep is shorter than specified, may re-sleep or yield
-     * until time elapses.
+     * until time elapses.  Ensures that the given time, as measured
+     * by System.nanoTime(), has elapsed.
      */
     static void delay(long millis) throws InterruptedException {
-        long startTime = System.nanoTime();
-        long ns = millis * 1000 * 1000;
-        for (;;) {
+        long nanos = millis * (1000 * 1000);
+        final long wakeupTime = System.nanoTime() + nanos;
+        do {
             if (millis > 0L)
                 Thread.sleep(millis);
             else // too short to sleep
                 Thread.yield();
-            long d = ns - (System.nanoTime() - startTime);
-            if (d > 0L)
-                millis = d / (1000 * 1000);
-            else
-                break;
-        }
+            nanos = wakeupTime - System.nanoTime();
+            millis = nanos / (1000 * 1000);
+        } while (nanos >= 0L);
     }
 
     /**
@@ -809,13 +829,20 @@ public class JSR166TestCase extends TestCase {
     void joinPool(ExecutorService pool) {
         try {
             pool.shutdown();
-            if (!pool.awaitTermination(2 * LONG_DELAY_MS, MILLISECONDS))
-                fail("ExecutorService " + pool +
-                     " did not terminate in a timely manner");
+            if (!pool.awaitTermination(2 * LONG_DELAY_MS, MILLISECONDS)) {
+                try {
+                    threadFail("ExecutorService " + pool +
+                               " did not terminate in a timely manner");
+                } finally {
+                    // last resort, for the benefit of subsequent tests
+                    pool.shutdownNow();
+                    pool.awaitTermination(MEDIUM_DELAY_MS, MILLISECONDS);
+                }
+            }
         } catch (SecurityException ok) {
             // Allowed in case test doesn't have privs
         } catch (InterruptedException fail) {
-            fail("Unexpected InterruptedException");
+            threadFail("Unexpected InterruptedException");
         }
     }
 
@@ -829,8 +856,10 @@ public class JSR166TestCase extends TestCase {
      */
     protected void testInParallel(Action ... actions) {
         ExecutorService pool = Executors.newCachedThreadPool();
+        PoolCleaner cleaner = null;
         try {
-            ArrayList<Future<?>> futures = new ArrayList<Future<?>>(actions.length);
+            cleaner = cleaner(pool);
+            ArrayList<Future<?>> futures = new ArrayList<>(actions.length);
             for (final Action action : actions)
                 futures.add(pool.submit(new CheckedRunnable() {
                     public void realRun() throws Throwable { action.run();}}));
@@ -843,18 +872,34 @@ public class JSR166TestCase extends TestCase {
                     threadUnexpectedException(ex);
                 }
         } finally {
-            joinPool(pool);
+            if (cleaner != null) {
+                cleaner.close();
+            }
         }
     }
 
     /**
-     * A debugging tool to print all stack traces, as jstack does.
+     * A debugging tool to print stack traces of most threads, as jstack does.
+     * Uninteresting threads are filtered out.
      */
-    static void printAllStackTraces() {
-        for (ThreadInfo info :
-                 ManagementFactory.getThreadMXBean()
-                 .dumpAllThreads(true, true))
+    static void dumpTestThreads() {
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        System.err.println("------ stacktrace dump start ------");
+        for (ThreadInfo info : threadMXBean.dumpAllThreads(true, true)) {
+            String name = info.getThreadName();
+            if ("Signal Dispatcher".equals(name))
+                continue;
+            if ("Reference Handler".equals(name)
+                && info.getLockName().startsWith("java.lang.ref.Reference$Lock"))
+                continue;
+            if ("Finalizer".equals(name)
+                && info.getLockName().startsWith("java.lang.ref.ReferenceQueue$Lock"))
+                continue;
+            if ("checkForWedgedTest".equals(name))
+                continue;
             System.err.print(info);
+        }
+        System.err.println("------ stacktrace dump end ------");
     }
 
     /**
@@ -874,7 +919,7 @@ public class JSR166TestCase extends TestCase {
             delay(millis);
             assertTrue(thread.isAlive());
         } catch (InterruptedException fail) {
-            fail("Unexpected InterruptedException");
+            threadFail("Unexpected InterruptedException");
         }
     }
 
@@ -896,7 +941,7 @@ public class JSR166TestCase extends TestCase {
             for (Thread thread : threads)
                 assertTrue(thread.isAlive());
         } catch (InterruptedException fail) {
-            fail("Unexpected InterruptedException");
+            threadFail("Unexpected InterruptedException");
         }
     }
 
@@ -1139,19 +1184,6 @@ public class JSR166TestCase extends TestCase {
         return NANOSECONDS.toMillis(System.nanoTime() - startNanoTime);
     }
 
-//     void assertTerminatesPromptly(long timeoutMillis, Runnable r) {
-//         long startTime = System.nanoTime();
-//         try {
-//             r.run();
-//         } catch (Throwable fail) { threadUnexpectedException(fail); }
-//         if (millisElapsedSince(startTime) > timeoutMillis/2)
-//             throw new AssertionFailedError("did not return promptly");
-//     }
-
-//     void assertTerminatesPromptly(Runnable r) {
-//         assertTerminatesPromptly(LONG_DELAY_MS/2, r);
-//     }
-
     /**
      * Checks that timed f.get() returns the expected value, and does not
      * wait for the timeout to elapse before returning.
@@ -1192,7 +1224,7 @@ public class JSR166TestCase extends TestCase {
         } finally {
             if (t.getState() != Thread.State.TERMINATED) {
                 t.interrupt();
-                fail("Test timed out");
+                threadFail("timed out waiting for thread to terminate");
             }
         }
     }
@@ -1340,16 +1372,29 @@ public class JSR166TestCase extends TestCase {
             }};
     }
 
-    public Runnable awaiter(final CountDownLatch latch) {
-        return new CheckedRunnable() {
-            public void realRun() throws InterruptedException {
-                await(latch);
-            }};
+    class LatchAwaiter extends CheckedRunnable {
+        static final int NEW = 0;
+        static final int RUNNING = 1;
+        static final int DONE = 2;
+        final CountDownLatch latch;
+        int state = NEW;
+        LatchAwaiter(CountDownLatch latch) { this.latch = latch; }
+        public void realRun() throws InterruptedException {
+            state = 1;
+            await(latch);
+            state = 2;
+        }
+    }
+
+    public LatchAwaiter awaiter(CountDownLatch latch) {
+        return new LatchAwaiter(latch);
     }
 
     public void await(CountDownLatch latch) {
         try {
-            assertTrue(latch.await(LONG_DELAY_MS, MILLISECONDS));
+            if (!latch.await(LONG_DELAY_MS, MILLISECONDS))
+                fail("timed out waiting for CountDownLatch for "
+                     + (LONG_DELAY_MS/1000) + " sec");
         } catch (Throwable fail) {
             threadUnexpectedException(fail);
         }
@@ -1357,30 +1402,13 @@ public class JSR166TestCase extends TestCase {
 
     public void await(Semaphore semaphore) {
         try {
-            assertTrue(semaphore.tryAcquire(LONG_DELAY_MS, MILLISECONDS));
+            if (!semaphore.tryAcquire(LONG_DELAY_MS, MILLISECONDS))
+                fail("timed out waiting for Semaphore for "
+                     + (LONG_DELAY_MS/1000) + " sec");
         } catch (Throwable fail) {
             threadUnexpectedException(fail);
         }
     }
-
-//     /**
-//      * Spin-waits up to LONG_DELAY_MS until flag becomes true.
-//      */
-//     public void await(AtomicBoolean flag) {
-//         await(flag, LONG_DELAY_MS);
-//     }
-
-//     /**
-//      * Spin-waits up to the specified timeout until flag becomes true.
-//      */
-//     public void await(AtomicBoolean flag, long timeoutMillis) {
-//         long startTime = System.nanoTime();
-//         while (!flag.get()) {
-//             if (millisElapsedSince(startTime) > timeoutMillis)
-//                 throw new AssertionFailedError("timed out");
-//             Thread.yield();
-//         }
-//     }
 
     public static class NPETask implements Callable<String> {
         public String call() { throw new NullPointerException(); }

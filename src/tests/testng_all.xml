@@ -127,23 +127,17 @@
       <!-- Not a CF test, but a test with a dependency on CF -->
       <class name="org.openjdk.other.tests.chm.ConcurrentAssociateTest"/>
 
-      <!-- Test dependencies block 12: streamsupport.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
+      <!-- Test dependencies block 12: streamsupport.jar + streamsupport-atomic.jar -->
 
-      <!-- block 12 (Java9 Flow API - streamsupport-flow) -->
-      <!-- Caution: SubmissionPublisher(Test) has a dependency on CF (streamsupport-cfuture) -->
-      <class name="org.openjdk.other.tests.flow.SubmissionPublisherTest"/>
-
-      <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar -->
-
-      <!-- block 13 (j8.u.c.atomic package - streamsupport-atomic) -->
+      <!-- block 12 (j8.u.c.atomic package - streamsupport-atomic) -->
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
       <!-- Not an j8.u.c.atomic test, but a test with a dependency on LongAdder (streamsupport-atomic)-->
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
 
-      <!-- Test dependencies block 14: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
+      <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
 
-      <!-- block 14 (JSR 166 tck tests) -->
+      <!-- block 13 (JSR 166 TCK tests) -->
       <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
       <class name="org.openjdk.tests.tck.DoubleAccumulatorTest"/>
@@ -162,7 +156,7 @@
       <class name="org.openjdk.tests.tck.ThreadLocalRandom8Test"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandomTest"/>
 
-      <!-- block 15 (superseded or questionable tests) -->
+      <!-- block 14 (superseded or questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>
