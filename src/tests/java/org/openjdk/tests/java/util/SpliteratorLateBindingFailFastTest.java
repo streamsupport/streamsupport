@@ -51,8 +51,8 @@ import java8.util.Spliterator;
 import java8.util.Spliterators;
 import java8.util.function.Consumer;
 import java8.util.function.Function;
+import java8.util.function.Functions;
 import java8.util.function.Supplier;
-
 import static org.testng.Assert.*;
 
 /**
@@ -139,8 +139,8 @@ public class SpliteratorLateBindingFailFastTest {
         }
 
         void addList(Function<Collection<T>, ? extends List<T>> l) {
-            // @@@ If collection is instance of List then add sub-list tests
             addCollection(l);
+            addCollection(Functions.andThen(l, list -> list.subList(0, list.size())));
         }
 
         void addMap(Function<Map<T, T>, ? extends Map<T, T>> mapConstructor) {
