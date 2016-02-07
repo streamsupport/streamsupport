@@ -13,6 +13,8 @@ SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 
 SET JIT_BUG=-XX:CompileCommand="exclude,java8/util/stream/SpinedBuffer$OfPrimitive.ensureCapacity,(J)V"
 
+SET PAR_GC=-XX:+UseParallelGC
+
 SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 
@@ -25,7 +27,7 @@ SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 %JAVA8% %NO_DELEG% -cp .;./* %ARGS%
 
-%JAVA9% -cp .;./* %ARGS%
+%JAVA9% %PAR_GC% -cp .;./* %ARGS%
 
-%JAVA9% %NO_DELEG% -cp .;./* %ARGS%
+%JAVA9% %NO_DELEG% %PAR_GC% -cp .;./* %ARGS%
 
