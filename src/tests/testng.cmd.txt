@@ -3,11 +3,11 @@ SET JAVA6=F:/Java/sun-jdk1.6.0_45-64bit/bin/java
 
 SET JAVA7=F:/Java/sun-jdk1.7.0_80-64bit/bin/java
 
-SET JAVA8=F:/Java/jdk1.8.0_72-64bit/bin/java
+SET JAVA8=F:/Java/jdk1.8.0_74-64bit/bin/java
 
-SET JAVA9=F:/Java/jdk9_ea_b104-64bit/bin/java
+SET JAVA9=F:/Java/jdk9_ea_b105-64bit/bin/java
 
-SET TEST_JAR=streamsupport-all-tests-1.4.2.jar
+SET TEST_JAR=streamsupport-all-tests-1.4.3-SNAPSHOT.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 
