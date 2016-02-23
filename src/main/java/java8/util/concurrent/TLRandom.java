@@ -46,48 +46,6 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 /*package*/ final class TLRandom {
 
-    /** Generates per-thread initialization/probe field */
-    private static final AtomicInteger probeGenerator = new AtomicInteger();
-
-    /**
-     * The next seed for default constructors.
-     */
-    private static final AtomicLong seeder = new AtomicLong(initialSeed());
-
-    private static long initialSeed() {
-        if (java.security.AccessController.doPrivileged(
-                new PrivilegedAction<Boolean>() {
-                    @Override
-                    public Boolean run() {
-                        return Boolean.getBoolean("java.util.secureRandomSeed");
-                    }
-                })) {
-            byte[] seedBytes = java.security.SecureRandom.getSeed(8);
-            long s = (long) seedBytes[0] & 0xffL;
-            for (int i = 1; i < 8; ++i) {
-                s = (s << 8) | ((long) seedBytes[i] & 0xffL);
-            }
-            return s;
-        }
-        return (mix64(System.currentTimeMillis()) ^
-                mix64(System.nanoTime()));
-    }
-
-    /**
-     * The seed increment.
-     */
-    private static final long GAMMA = 0x9e3779b97f4a7c15L;
-
-    /**
-     * The increment for generating probe values.
-     */
-    private static final int PROBE_INCREMENT = 0x9e3779b9;
-
-    /**
-     * The increment of seeder per new instance.
-     */
-    private static final long SEEDER_INCREMENT = 0xbb67ae8584caa73bL;
-
     static long mix64(long z) {
         z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
         z = (z ^ (z >>> 33)) * 0xc4ceb9fe1a85ec53L;
@@ -183,13 +141,6 @@ import java.util.concurrent.atomic.AtomicLong;
         int threadSecondarySeed;
     }
 
-    private static final ThreadLocal<SeedsHolder> localSeeds = new ThreadLocal<SeedsHolder>() {
-        @Override
-        protected SeedsHolder initialValue() {
-            return new SeedsHolder();
-        }
-    };
-
     // package-private for access from ThreadLocalRandom
     static long getThreadLocalRandomSeed() {
         return localSeeds.get().threadSeed;
@@ -231,6 +182,23 @@ import java.util.concurrent.atomic.AtomicLong;
         return p;
     }
 
+    // Static initialization
+
+    /**
+     * The seed increment.
+     */
+    private static final long GAMMA = 0x9e3779b97f4a7c15L;
+
+    /**
+     * The increment for generating probe values.
+     */
+    private static final int PROBE_INCREMENT = 0x9e3779b9;
+
+    /**
+     * The increment of seeder per new instance.
+     */
+    private static final long SEEDER_INCREMENT = 0xbb67ae8584caa73bL;
+
     // Unsafe mechanics
     private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long VALUE_OFF;
@@ -240,6 +208,40 @@ import java.util.concurrent.atomic.AtomicLong;
                     .getDeclaredField("value"));
         } catch (Exception e) {
             throw new Error(e);
+        }
+    }
+
+    private static final ThreadLocal<SeedsHolder> localSeeds = new ThreadLocal<SeedsHolder>() {
+        @Override
+        protected SeedsHolder initialValue() {
+            return new SeedsHolder();
+        }
+    };
+
+    /** Generates per-thread initialization/probe field */
+    private static final AtomicInteger probeGenerator = new AtomicInteger();
+
+    /**
+     * The next seed for default constructors.
+     */
+    private static final AtomicLong seeder = new AtomicLong(
+            mix64(System.currentTimeMillis()) ^ mix64(System.nanoTime()));
+
+    // at end of <clinit> to survive static initialization circularity
+    static {
+        if (java.security.AccessController.doPrivileged(
+                new PrivilegedAction<Boolean>() {
+                    @Override
+                    public Boolean run() {
+                        return Boolean.getBoolean("java.util.secureRandomSeed");
+                    }
+                })) {
+            byte[] seedBytes = java.security.SecureRandom.getSeed(8);
+            long s = (long) seedBytes[0] & 0xffL;
+            for (int i = 1; i < 8; ++i) {
+                s = (s << 8) | ((long) seedBytes[i] & 0xffL);
+            }
+            seeder.set(s);
         }
     }
 }
