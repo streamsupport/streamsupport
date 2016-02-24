@@ -134,10 +134,13 @@ public class LongStreamTestDataProvider {
                 spliterators.add(splitDescr("Primitives.s(SpinedBuffer.iterator()):" + name,
                                             () -> Spliterators.spliteratorUnknownSize(isl.iterator(), 0)));
 
-                spliterators.add(splitDescr("LongStream.longRange(0,l):" + name,
+                spliterators.add(splitDescr("LongStreams.longRange(0, l):" + name,
                                             () -> LongStreams.range(0, longs.length).spliterator()));
-                spliterators.add(splitDescr("LongStream.longRangeClosed(0,l):" + name,
+                spliterators.add(splitDescr("LongStreams.longRangeClosed(0, l):" + name,
                                             () -> LongStreams.rangeClosed(0, longs.length).spliterator()));
+                spliterators.add(splitDescr("LongStreams.iterate(0, x -> x<l, x -> x+1):" + name,
+                                            () -> LongStreams.iterate(0L, x -> x < longs.length, x -> x + 1L)
+                                                             .spliterator()));
                 // Need more!
             }
             spliteratorTestData = spliterators.toArray(new Object[0][]);
