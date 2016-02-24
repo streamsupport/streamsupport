@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -610,11 +610,6 @@ public class SpliteratorTraversingAndSplittingTest {
                         return false;
                     }
                 }
-
-                @Override
-                public boolean tryAdvance(Consumer<? super Integer> action) {
-                    return Spliterators.OfInt.tryAdvance(this, action);
-                }
             }
             db.add("new Spliterators.AbstractIntAdvancingSpliterator()",
                    () -> new IntSpliteratorFromArray(exp));
@@ -767,11 +762,6 @@ public class SpliteratorTraversingAndSplittingTest {
                     else {
                         return false;
                     }
-                }
-
-                @Override
-                public boolean tryAdvance(Consumer<? super Long> action) {
-                    return Spliterators.OfLong.tryAdvance(this, action);
                 }
             }
             db.add("new Spliterators.AbstractLongAdvancingSpliterator()",
@@ -932,11 +922,6 @@ public class SpliteratorTraversingAndSplittingTest {
                     else {
                         return false;
                     }
-                }
-
-                @Override
-                public boolean tryAdvance(Consumer<? super Double> action) {
-                    return Spliterators.OfDouble.tryAdvance(this, action);
                 }
             }
             db.add("new Spliterators.AbstractDoubleAdvancingSpliterator()",
