@@ -128,6 +128,9 @@ public class DoubleStreamTestDataProvider {
                                             () -> Spliterators.spliterator(isl.iterator(), doubles.length, 0)));
                 spliterators.add(splitDescr("Primitives.s(SpinedBuffer.iterator()):" + name,
                                             () -> Spliterators.spliteratorUnknownSize(isl.iterator(), 0)));
+                spliterators.add(splitDescr("DoubleStreams.iterate(0, x -> x<l, x -> x+1):" + name,
+                                            () -> DoubleStreams.iterate(0.0, x -> x < doubles.length, x -> x + 1.0)
+                                                               .spliterator()));
                 // Need more!
             }
             spliteratorTestData = spliterators.toArray(new Object[0][]);

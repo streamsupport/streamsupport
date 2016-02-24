@@ -134,10 +134,12 @@ public class IntStreamTestDataProvider {
                 spliterators.add(splitDescr("Primitives.s(SpinedBuffer.iterator()):" + name,
                                             () -> Spliterators.spliteratorUnknownSize(isl.iterator(), 0)));
 
-                spliterators.add(splitDescr("IntStream.intRange(0,l):" + name,
+                spliterators.add(splitDescr("IntStreams.intRange(0, l):" + name,
                                             () -> IntStreams.range(0, ints.length).spliterator()));
-                spliterators.add(splitDescr("IntStream.intRangeClosed(0,l):" + name,
+                spliterators.add(splitDescr("IntStreams.intRangeClosed(0, l):" + name,
                                             () -> IntStreams.rangeClosed(0, ints.length).spliterator()));
+                spliterators.add(splitDescr("IntStreams.iterate(0, x -> x<l, x -> x+1): " + name,
+                                            () -> IntStreams.iterate(0, x -> x < ints.length, x -> x + 1).spliterator()));
                 // Need more!
             }
             spliteratorTestData = spliterators.toArray(new Object[0][]);

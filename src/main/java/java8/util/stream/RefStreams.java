@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,11 +24,10 @@
  */
 package java8.util.stream;
 
-import java.util.Iterator;
-
 import java8.util.Objects;
 import java8.util.Spliterator;
 import java8.util.Spliterators;
+import java8.util.function.Consumer;
 import java8.util.function.Predicate;
 import java8.util.function.Supplier;
 import java8.util.function.UnaryOperator;
@@ -280,28 +279,106 @@ public final class RefStreams {
      */
     public static <T, S extends T> Stream<T> iterate(S seed, UnaryOperator<S> f) {
         Objects.requireNonNull(f);
-        final Iterator<T> iterator = new Iterator<T>() {
-            @SuppressWarnings("unchecked")
-            S s = (S) Streams.NONE;
+        Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, 
+               Spliterator.ORDERED | Spliterator.IMMUTABLE) {
+            S prev;
+            boolean started;
 
             @Override
-            public boolean hasNext() {
+            public boolean tryAdvance(Consumer<? super T> action) {
+                Objects.requireNonNull(action);
+                S s;
+                if (started) {
+                    s = f.apply(prev);
+                } else {
+                    s = seed;
+                    started = true;
+                }
+                action.accept(prev = s);
+                return true;
+            }
+        };
+        return StreamSupport.stream(spliterator, false);
+    }
+
+    /**
+     * Returns a sequential ordered {@code Stream} produced by iterative
+     * application of a function to an initial element, conditioned on 
+     * satisfying the supplied predicate.  The stream terminates as soon as
+     * the predicate function returns false.
+     *
+     * <p>
+     * {@code RefStreams.iterate} should produce the same sequence of elements as
+     * produced by the corresponding for-loop:
+     * <pre>{@code
+     *     for (T index=seed; predicate.test(index); index = f.apply(index)) { 
+     *         ... 
+     *     }
+     * }</pre>
+     *
+     * <p>
+     * The resulting sequence may be empty if the predicate does not hold on 
+     * the seed value.  Otherwise the first element will be the supplied seed
+     * value, the next element (if present) will be the result of applying the
+     * function f to the seed value, and so on iteratively until the predicate
+     * indicates that the stream should terminate.
+     *
+     * @param <S> the type of the operand, predicate input and seed, a subtype of T
+     * @param <T> the type of stream elements
+     * @param seed the initial element
+     * @param predicate a predicate to apply to elements to determine when the 
+     *          stream must terminate.
+     * @param f a function to be applied to the previous element to produce
+     *          a new element
+     * @return a new sequential {@code Stream}
+     * @since 9
+     */
+    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<S> predicate, UnaryOperator<S> f) {
+        Objects.requireNonNull(f);
+        Objects.requireNonNull(predicate);
+        Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, 
+               Spliterator.ORDERED | Spliterator.IMMUTABLE) {
+            S prev;
+            boolean started, finished;
+
+            @Override
+            public boolean tryAdvance(Consumer<? super T> action) {
+                Objects.requireNonNull(action);
+                if (finished) {
+                    return false;
+                }
+                S s;
+                if (started) {
+                    s = f.apply(prev);
+                } else {
+                    s = seed;
+                    started = true;
+                }
+                if (!predicate.test(s)) {
+                    prev = null;
+                    finished = true;
+                    return false;
+                }
+                action.accept(prev = s);
                 return true;
             }
 
             @Override
-            public T next() {
-                return s = (s == Streams.NONE) ? seed : f.apply(s);
-            }
-
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("remove");
+            public void forEachRemaining(Consumer<? super T> action) {
+                Objects.requireNonNull(action);
+                if (finished) {
+                    return;
+                }
+                finished = true;
+                S s = started ? f.apply(prev) : seed;
+                prev = null;
+                while (predicate.test(s)) {
+                    action.accept(s);
+                    s = f.apply(s);
+                }
             }
         };
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(
-                iterator,
-                Spliterator.ORDERED | Spliterator.IMMUTABLE), false);
+        return StreamSupport.stream(spliterator, false);
     }
 
     /**
