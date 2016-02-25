@@ -195,7 +195,8 @@ public class ForkJoinWorkerThread extends Thread {
     private static boolean isAndroid() {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("android.util.DisplayMetrics");
+            clazz = Class.forName("android.util.DisplayMetrics", false,
+            		ForkJoinWorkerThread.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }
@@ -209,7 +210,8 @@ public class ForkJoinWorkerThread extends Thread {
     private static boolean isIBMPre8() {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("com.ibm.misc.JarVersion");
+            clazz = Class.forName("com.ibm.misc.JarVersion", false,
+            		ForkJoinWorkerThread.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }
