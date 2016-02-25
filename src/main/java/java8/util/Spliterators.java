@@ -76,9 +76,9 @@ public final class Spliterators {
     // defaults to true
     static final boolean JRE_DELEGATION_ENABLED = getBooleanPropertyValue(JRE_DELEGATION_ENABLED_PROP);
     // is this Android? (defaults to false)
-    static final boolean IS_ANDROID = isAndroid();
+    static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics");
     // is this an Apache Harmony-based Android? (defaults to false)
-    static final boolean IS_HARMONY_ANDROID = IS_ANDROID && isHarmony();
+    static final boolean IS_HARMONY_ANDROID = IS_ANDROID && isClassPresent("org.apache.harmony.security.PublicKeyImpl");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
@@ -3203,27 +3203,21 @@ public final class Spliterators {
     }
 
     /**
-     * Are we running on Android?
-     * @return {@code true} if yes, otherwise {@code false}.
+     * Used to detect the presence or absence of android.util.DisplayMetrics and
+     * org.apache.harmony.security.PublicKeyImpl. Gets employed when we need to
+     * establish whether we are running on Android and, if yes, whether the
+     * version of Android is based on Apache Harmony.
+     * 
+     * @param name
+     *            fully qualified class name
+     * @return {@code true} if class is present, otherwise {@code false}.
      */
-    private static boolean isAndroid() {
+    private static boolean isClassPresent(String name) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("android.util.DisplayMetrics");
-        } catch (Throwable notPresent) {
-            // ignore
-        }
-        return clazz != null;
-    }
-
-    /**
-     * Are we running on a platform that is based on Apache Harmony?
-     * @return {@code true} if yes, otherwise {@code false}.
-     */
-    private static boolean isHarmony() {
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName("org.apache.harmony.security.PublicKeyImpl");
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false, Spliterators.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }

@@ -1047,7 +1047,8 @@ public class JSR166TestCase extends TestCase {
     private static boolean isAndroid() {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("android.util.DisplayMetrics");
+            clazz = Class.forName("android.util.DisplayMetrics", false,
+            		JSR166TestCase.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }
