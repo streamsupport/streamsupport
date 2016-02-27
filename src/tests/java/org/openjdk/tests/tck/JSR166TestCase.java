@@ -1048,7 +1048,7 @@ public class JSR166TestCase extends TestCase {
         Class<?> clazz = null;
         try {
             clazz = Class.forName("android.util.DisplayMetrics", false,
-            		JSR166TestCase.class.getClassLoader());
+                    JSR166TestCase.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }

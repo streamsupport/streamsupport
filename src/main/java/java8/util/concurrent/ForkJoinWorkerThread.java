@@ -196,7 +196,7 @@ public class ForkJoinWorkerThread extends Thread {
         Class<?> clazz = null;
         try {
             clazz = Class.forName("android.util.DisplayMetrics", false,
-            		ForkJoinWorkerThread.class.getClassLoader());
+                    ForkJoinWorkerThread.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }
@@ -211,7 +211,7 @@ public class ForkJoinWorkerThread extends Thread {
         Class<?> clazz = null;
         try {
             clazz = Class.forName("com.ibm.misc.JarVersion", false,
-            		ForkJoinWorkerThread.class.getClassLoader());
+                    ForkJoinWorkerThread.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }
