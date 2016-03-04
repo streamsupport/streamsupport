@@ -77,6 +77,7 @@ import java8.util.Spliterators;
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
 import java8.util.function.Function;
+import java8.util.function.Functions;
 import java8.util.function.IntConsumer;
 import java8.util.function.LongConsumer;
 import java8.util.function.Supplier;
@@ -89,6 +90,8 @@ public class SpliteratorTraversingAndSplittingTest {
     private static List<Integer> SIZES = Arrays.asList(0, 1, 10, 42);
 
     private static class SpliteratorDataBuilder<T> {
+        private static final boolean hasJDK8148748SublistBug = JDK8148748SublistBugIndicator.BUG_IS_PRESENT;
+
         List<Object[]> data;
 
         List<T> exp;
@@ -124,8 +127,10 @@ public class SpliteratorTraversingAndSplittingTest {
         }
 
         void addList(Function<Collection<T>, ? extends List<T>> l) {
-            // @@@ If collection is instance of List then add sub-list tests
             addCollection(l);
+            if (!hasJDK8148748SublistBug) {
+                addCollection(Functions.andThen(l, list -> list.subList(0, list.size())));
+            }
         }
 
         void addMap(Function<Map<T, T>, ? extends Map<T, T>> m) {
