@@ -343,6 +343,8 @@ public class SpliteratorTraversingAndSplittingTest {
             db.add("Arrays.asList().spliterator()",
                    () -> Spliterators.spliterator(Arrays.asList(exp.toArray(new Integer[0])), 0));
 
+            db.addList(RandomAccessList::new);
+
             db.addList(ArrayList::new);
 
             db.addList(LinkedList::new);
@@ -1400,5 +1402,4 @@ public class SpliteratorTraversingAndSplittingTest {
                    String.format("Exception thrown %s not an instance of %s",
                                  caught.getClass().getName(), expected.getName()));
     }
-
 }
