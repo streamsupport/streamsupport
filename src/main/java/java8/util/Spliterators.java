@@ -27,6 +27,7 @@ package java8.util;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.AbstractList;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.RandomAccess;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Vector;
@@ -68,13 +70,16 @@ import java8.util.function.LongConsumer;
  */
 public final class Spliterators {
 
-    private static final String NATIVE_OPT_ENABLED_PROP = Spliterators.class.getName() + ".assume.oracle.collections.impl";
-    private static final String JRE_DELEGATION_ENABLED_PROP = Spliterators.class.getName() + ".jre.delegation.enabled";
+    private static final String NATIVE_OPT_ENABLED_P = Spliterators.class.getName() + ".assume.oracle.collections.impl";
+    private static final String JRE_DELEGATION_ENABLED_P = Spliterators.class.getName() + ".jre.delegation.enabled";
+    private static final String RNDACC_SPLITER_ENABLED_P = Spliterators.class.getName() + ".randomaccess.spliterator.enabled";
 
     // defaults to true
-    static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
+    static final boolean NATIVE_SPECIALIZATION = getBooleanPropVal(NATIVE_OPT_ENABLED_P, true);
     // defaults to true
-    static final boolean JRE_DELEGATION_ENABLED = getBooleanPropertyValue(JRE_DELEGATION_ENABLED_PROP);
+    static final boolean JRE_DELEGATION_ENABLED = getBooleanPropVal(JRE_DELEGATION_ENABLED_P, true);
+    // introduced in 1.4.3 - just in case something gets wrong (defaults to true)
+    private static final boolean ALLOW_RNDACC_SPLITER_OPT = getBooleanPropVal(RNDACC_SPLITER_ENABLED_P, true);
     // is this Android? (defaults to false)
     static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics");
     // is this an Apache Harmony-based Android? (defaults to false)
@@ -925,6 +930,13 @@ public final class Spliterators {
             if (c instanceof Vector) {
                 return VectorSpliterator.spliterator((Vector<T>) c);
             }
+        }
+
+        // this doesn't count as a native specialization since AbstractList's
+        // 'modCount' field is a well-documented part of its API
+        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess
+                && c instanceof AbstractList) {
+            return RAAbstractListSpliterator.spliterator((AbstractList<T>) c);
         }
 
         // default from j.u.List
@@ -3186,18 +3198,18 @@ public final class Spliterators {
         }
     }
 
-    private static boolean getBooleanPropertyValue(final String property) {
+    private static boolean getBooleanPropVal(final String prop, final boolean defVal) {
         return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
             @Override
             public Boolean run() {
-                boolean value = true;
+                boolean val = defVal;
                 try {
-                    String s = System.getProperty(property, Boolean.TRUE.toString());
-                    value = (s == null) || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
+                    String s = System.getProperty(prop, Boolean.toString(defVal));
+                    val = Boolean.parseBoolean(s.trim());
                 } catch (IllegalArgumentException ignore) {
                 } catch (NullPointerException ignore) {
                 }
-                return value;
+                return val;
             }
         });
     }
