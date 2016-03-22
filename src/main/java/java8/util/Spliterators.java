@@ -80,8 +80,10 @@ public final class Spliterators {
     static final boolean JRE_DELEGATION_ENABLED = getBooleanPropVal(JRE_DELEGATION_ENABLED_P, true);
     // introduced in 1.4.3 - just in case something gets wrong (defaults to true)
     private static final boolean ALLOW_RNDACC_SPLITER_OPT = getBooleanPropVal(RNDACC_SPLITER_ENABLED_P, true);
+    // is this RoboVM? (defaults to false)
+    private static final boolean IS_ROBOVM = isClassPresent("org.robovm.rt.bro.Bro");
     // is this Android? (defaults to false)
-    static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics");
+    static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
     // is this an Apache Harmony-based Android? (defaults to false)
     static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("java.util.function.Function");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
