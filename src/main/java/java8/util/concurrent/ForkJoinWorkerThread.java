@@ -190,17 +190,16 @@ public class ForkJoinWorkerThread extends Thread {
     }
 
     /**
-     * Are we running on Android? 
+     * Are we running on Android?
      */
     private static boolean isAndroid() {
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName("android.util.DisplayMetrics", false,
-                    ForkJoinWorkerThread.class.getClassLoader());
-        } catch (Throwable notPresent) {
-            // ignore
+        if (isClassPresent("android.util.DisplayMetrics")) {
+            return true;
+        } else {
+            // RoboVM must be treated as Android but it doesn't
+            // have the android.util.DisplayMetrics class
+            return isClassPresent("org.robovm.rt.bro.Bro");
         }
-        return clazz != null;
     }
 
     /**
@@ -208,14 +207,7 @@ public class ForkJoinWorkerThread extends Thread {
      * @return
      */
     private static boolean isIBMPre8() {
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName("com.ibm.misc.JarVersion", false,
-                    ForkJoinWorkerThread.class.getClassLoader());
-        } catch (Throwable notPresent) {
-            // ignore
-        }
-        if (clazz != null) {
+        if (isClassPresent("com.ibm.misc.JarVersion")) {
             String ver = System.getProperty("java.class.version", "45");
             if (ver != null && ver.length() >= 2) {
                 ver = ver.substring(0, 2);
@@ -225,6 +217,19 @@ public class ForkJoinWorkerThread extends Thread {
             }
         }
         return false;
+    }
+
+    private static boolean isClassPresent(String name) {
+        Class<?> clazz = null;
+        try {
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false,
+                    ForkJoinWorkerThread.class.getClassLoader());
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
     }
 
     // Set up to allow setting thread fields in constructor
