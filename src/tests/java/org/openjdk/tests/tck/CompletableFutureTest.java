@@ -3336,7 +3336,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             () -> f.obtrudeException(null),
 
             () -> CompletableFuture.delayedExecutor(1L, SECONDS, null),
-            () -> CompletableFuture.delayedExecutor(1L, null, new ThreadExecutor()),
+            () -> CompletableFuture.delayedExecutor(1L, null, exec),
             () -> CompletableFuture.delayedExecutor(1L, null),
 
             () -> f.orTimeout(1L, null),
