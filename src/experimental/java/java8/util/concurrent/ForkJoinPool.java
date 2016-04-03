@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
@@ -145,7 +146,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.307
+// CVS rev. 1.310
     /*
      * Implementation Overview
      *
@@ -1534,7 +1535,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         int t, n, sp;
         long c = ctl;
         WorkQueue[] ws = workQueues;
-        if ((t = (short)(c >> TC_SHIFT)) >= 0) {
+        if ((t = (short)(c >>> TC_SHIFT)) >= 0) {
             if (ws == null || (n = ws.length) <= 0 || w == null)
                 return 0;                        // disabled
             else if ((sp = (int)c) != 0) {       // replace or release
@@ -2419,7 +2420,6 @@ public class ForkJoinPool extends AbstractExecutorService {
         long c = ((((long)(-parallelism) << TC_SHIFT) & TC_MASK) |
                   (((long)(-parallelism) << RC_SHIFT) & RC_MASK));
         int b = ((1 - parallelism) & SMASK) | (COMMON_MAX_SPARES << SWIDTH);
-        int m = (parallelism < 1) ? 1 : parallelism;
         int n = (parallelism > 1) ? parallelism - 1 : 1;
         n |= n >>> 1; n |= n >>> 2; n |= n >>> 4; n |= n >>> 8; n |= n >>> 16;
         n = (n + 1) << 1;
@@ -2431,7 +2431,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         this.saturate = null;
         this.keepAlive = DEFAULT_KEEPALIVE;
         this.bounds = b;
-        this.mode = m;
+        this.mode = parallelism;
         this.ctl = c;
     }
 
@@ -2604,7 +2604,8 @@ public class ForkJoinPool extends AbstractExecutorService {
      * @return the targeted parallelism level of this pool
      */
     public int getParallelism() {
-        return mode & SMASK;
+        int par = mode & SMASK;
+        return (par > 0) ? par : 1;
     }
 
     /**
@@ -2686,7 +2687,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         for (;;) {
             long c = ctl;
             int md = mode, pc = md & SMASK;
-            int tc = pc + (short)(c >> TC_SHIFT);
+            int tc = pc + (short)(c >>> TC_SHIFT);
             int rc = pc + (int)(c >> RC_SHIFT);
             if ((md & (STOP | TERMINATED)) != 0)
                 return true;
@@ -3176,6 +3177,64 @@ public class ForkJoinPool extends AbstractExecutorService {
         }
     }
 
+    /**
+     * If the given executor is a ForkJoinPool, poll and execute
+     * AsynchronousCompletionTasks from worker's queue until none are
+     * available or blocker is released.
+     */
+    static void helpAsyncBlocker(Executor e, ManagedBlocker blocker) {
+        if (blocker != null && (e instanceof ForkJoinPool)) {
+            WorkQueue w; ForkJoinWorkerThread wt; WorkQueue[] ws; int r, n;
+            ForkJoinPool p = (ForkJoinPool)e;
+            Thread thread = Thread.currentThread();
+            if (thread instanceof ForkJoinWorkerThread &&
+                (wt = (ForkJoinWorkerThread)thread).pool == p)
+                w = wt.workQueue;
+            else if ((r = TLRandom.getProbe()) != 0 &&
+                     (ws = p.workQueues) != null && (n = ws.length) > 0)
+                w = ws[(n - 1) & r & SQMASK];
+            else
+                w = null;
+            if (w != null) {
+                for (;;) {
+                    int b = w.base, s = w.top, d, al; ForkJoinTask<?>[] a;
+                    if ((a = w.array) != null && (d = b - s) < 0 &&
+                        (al = a.length) > 0) {
+                        int index = (al - 1) & b;
+                        long offset = ((long)index << ASHIFT) + ABASE;
+                        ForkJoinTask<?> t = (ForkJoinTask<?>)
+                            U.getObjectVolatile(a, offset);
+                        if (blocker.isReleasable())
+                            break;
+                        else if (b++ == w.base) {
+                            if (t == null) {
+                                if (d == -1)
+                                    break;
+                            }
+                            else if (!isInstanceOfAsynCompTask(t))
+                                break;
+                            else if (U.compareAndSwapObject(a, offset,
+                                                            t, null)) {
+                                w.base = b;
+                                t.doExec();
+                            }
+                        }
+                    }
+                    else
+                        break;
+                }
+            }
+        }
+    }
+
+    static boolean isInstanceOfAsynCompTask(ForkJoinTask<?> t) {
+        Class<?> asynCompTaskClz;
+        if (t != null && (asynCompTaskClz = ACTCLASS) != null) {
+            return asynCompTaskClz.isAssignableFrom(t.getClass());
+        }
+        return false;
+    }
+
     // AbstractExecutorService overrides.  These rely on undocumented
     // fact that ForkJoinTask.adapt returns ForkJoinTasks that also
     // implement RunnableFuture.
@@ -3194,6 +3253,7 @@ public class ForkJoinPool extends AbstractExecutorService {
     private static final long MODE;
     private static final int ABASE;
     private static final int ASHIFT;
+    private static final Class<?> ACTCLASS;
 
     static {
         try {
@@ -3233,7 +3293,19 @@ public class ForkJoinPool extends AbstractExecutorService {
                     public ForkJoinPool run() {
                         return new ForkJoinPool((byte)0); }});
 
-        COMMON_PARALLELISM = common.mode & SMASK;
+        COMMON_PARALLELISM = Math.max(common.mode & SMASK, 1);
+        // attempt to load CompletableFuture.AsynchronousCompletionTask
+        {
+            Class<?> c = null;
+            try {
+                c = Class
+                        .forName("java8.util.concurrent.CompletableFuture.AsynchronousCompletionTask");
+            } catch (Exception ign) {
+                // ignore
+            } finally {
+                ACTCLASS = c;
+            }
+        }
     }
 
     /**
