@@ -1854,7 +1854,8 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         while ((r = result) == null) {
             if (q == null) {
                 q = new Signaller(interruptible, 0L, 0L);
-                ForkJoinPool.helpAsyncBlocker(defaultExecutor(), q);
+                if (Thread.currentThread() instanceof ForkJoinWorkerThread)
+                    ForkJoinPool.helpAsyncBlocker(defaultExecutor(), q);
             }
             else if (!queued)
                 queued = tryPushStack(q);
@@ -1896,7 +1897,8 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             while ((r = result) == null) { // similar to untimed
                 if (q == null) {
                     q = new Signaller(true, nanos, deadline);
-                    ForkJoinPool.helpAsyncBlocker(defaultExecutor(), q);
+                    if (Thread.currentThread() instanceof ForkJoinWorkerThread)
+                        ForkJoinPool.helpAsyncBlocker(defaultExecutor(), q);
                 }
                 else if (!queued)
                     queued = tryPushStack(q);
