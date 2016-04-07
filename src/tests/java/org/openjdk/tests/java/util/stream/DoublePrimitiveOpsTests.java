@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -31,11 +31,18 @@ import java8.util.J8Arrays;
 
 import java.util.Random;
 
+import java8.util.Spliterator;
 import java8.util.stream.DoubleStreams;
 import java8.util.stream.LongStreams;
 import java8.util.stream.StreamSupport;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
+/**
+ * @test
+ * @bug 8153293
+ */
 @Test
 public class DoublePrimitiveOpsTests {
 
@@ -44,6 +51,13 @@ public class DoublePrimitiveOpsTests {
     public void testUnBox() {
         double sum = StreamSupport.stream(Arrays.asList(1.0, 2.0, 3.0, 4.0, 5.0)).mapToDouble(i -> i).reduce(0.0, java8.lang.Doubles::sum);
         assertEquals(sum, 1.0 + 2.0 + 3.0 + 4.0 + 5.0);
+    }
+
+    public void testFlags() {
+        assertTrue(LongStreams.range(1, 10).asDoubleStream().boxed().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(DoubleStreams.of(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
     }
 
     public void testToArray() {
