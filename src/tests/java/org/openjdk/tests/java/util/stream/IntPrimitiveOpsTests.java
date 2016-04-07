@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,9 +34,16 @@ import java8.util.function.IntConsumer;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 import java8.util.J8Arrays;
+import java8.util.Spliterator;
 import java8.util.stream.IntStreams;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
+/**
+ * @test
+ * @bug 8153293
+ */
 @Test
 public class IntPrimitiveOpsTests {
 
@@ -85,6 +92,29 @@ public class IntPrimitiveOpsTests {
     public void testUnBox() {
         long sum = StreamSupport.stream(Arrays.asList(1, 2, 3, 4, 5)).mapToInt(i -> (int) i).sum();
         assertEquals(sum, 15);
+    }
+
+    public void testFlags() {
+        assertTrue(IntStreams.range(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED | Spliterator.DISTINCT));
+        assertFalse(IntStreams.of(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(IntStreams.of(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.DISTINCT));
+
+        assertTrue(IntStreams.range(1, 10).asLongStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED | Spliterator.DISTINCT));
+        assertFalse(IntStreams.of(1, 10).asLongStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(IntStreams.of(1, 10).asLongStream().spliterator()
+                      .hasCharacteristics(Spliterator.DISTINCT));
+
+        assertTrue(IntStreams.range(1, 10).asDoubleStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED | Spliterator.DISTINCT));
+//        assertFalse(IntStreams.range(1, 10).asDoubleStream().spliterator()
+//                      .hasCharacteristics(Spliterator.DISTINCT));
+//        assertFalse(IntStreams.of(1, 10).boxed().spliterator()
+//                      .hasCharacteristics(Spliterator.SORTED));
     }
 
     public void testToArray() {
