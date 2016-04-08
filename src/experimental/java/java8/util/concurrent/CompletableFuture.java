@@ -123,7 +123,7 @@ import java8.util.function.Supplier;
  * and {@code get} methods
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.185
+// CVS rev. 1.187
     /*
      * Overview:
      *
@@ -1730,7 +1730,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
         public final Void getRawResult() { return null; }
         public final void setRawResult(Void v) {}
-        public final boolean exec() { run(); return true; }
+        public final boolean exec() { run(); return false; }
 
         public void run() {
             CompletableFuture<T> d; Supplier<? extends T> f;
@@ -1766,7 +1766,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
         public final Void getRawResult() { return null; }
         public final void setRawResult(Void v) {}
-        public final boolean exec() { run(); return true; }
+        public final boolean exec() { run(); return false; }
 
         public void run() {
             CompletableFuture<Void> d; Runnable f;
