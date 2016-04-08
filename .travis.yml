@@ -2,9 +2,6 @@ language: java
 jdk:
     - oraclejdk7
     - oraclejdk8
-android:
-  licenses:
-    - '.+'
 
 before_install:
     - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
