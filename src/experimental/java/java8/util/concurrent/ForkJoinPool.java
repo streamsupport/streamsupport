@@ -1946,7 +1946,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                         a[(al - 1) & s] = task;
                         q.top = s + 1;        // relaxed writes OK here
                         q.phase = 0;
-                        if (d < 0 && q.base - s < 0)
+                        if (d < 0 && q.base - s < -1)
                             break;            // no signal needed
                     }
                     else
