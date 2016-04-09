@@ -81,6 +81,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
+// CVS rev. 1.144
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -677,12 +678,8 @@ public class CompletableFutureTest extends JSR166TestCase {
 
         ASYNC {
             public void checkExecutionMode() {
-                // If tests are added that may run across different
-                // pools, this needs to be weakened to no-op.
-                ForkJoinPool p = ForkJoinTask.getPool();
-                assertTrue(p == null ||
-                           (defaultExecutorIsCommonPool &&
-                            p == ForkJoinPool.commonPool()));
+                assertEquals(defaultExecutorIsCommonPool,
+                       (ForkJoinPool.commonPool() == ForkJoinTask.getPool()));
             }
             public CompletableFuture<Void> runAsync(Runnable a) {
                 return CompletableFuture.runAsync(a);
