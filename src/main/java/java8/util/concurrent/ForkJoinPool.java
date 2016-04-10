@@ -173,6 +173,7 @@ import java8.util.Objects;
  */
 //@sun.misc.Contended
 public class ForkJoinPool extends AbstractExecutorService {
+// CVS rev. 1.298
 
     /*
      * Implementation Overview
@@ -813,6 +814,9 @@ public class ForkJoinPool extends AbstractExecutorService {
          */
         static final int MAXIMUM_QUEUE_CAPACITY = 1 << 26; // 64M
 
+        // Heuristic padding to ameliorate unfortunate memory placements
+        volatile long pad00, pad01, pad02, pad03, pad04, pad05, pad06;
+
         // Instance fields
 
         volatile int scanState;    // versioned, negative if inactive
@@ -830,6 +834,10 @@ public class ForkJoinPool extends AbstractExecutorService {
         volatile ForkJoinTask<?> currentJoin;  // task being joined in awaitJoin
         /*@sun.misc.Contended("group2")*/ // separate from other fields
         volatile ForkJoinTask<?> currentSteal; // nonnull when running some task
+
+        // padding
+        volatile Object pad10, pad11, pad12, pad13, pad14, pad15, pad16, pad17;
+        volatile Object pad18, pad19, pad1a, pad1b, pad1c, pad1d;
 
         WorkQueue(ForkJoinPool pool, ForkJoinWorkerThread owner) {
             this.pool = pool;
@@ -1386,7 +1394,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                 throw new Error(e);
             }
         }
-    }
+    } // WorkQueue
 
     // static fields (initialized in static initializer below)
 
@@ -1513,6 +1521,9 @@ public class ForkJoinPool extends AbstractExecutorService {
     private static final int  TERMINATED = 1 << 2;
     private static final int  SHUTDOWN   = 1 << 31;
 
+    // Heuristic padding to ameliorate unfortunate memory placements
+    volatile long pad00, pad01, pad02, pad03, pad04, pad05, pad06;
+
     // Instance fields
     volatile long ctl;                   // main pool control
     volatile int runState;
@@ -1522,6 +1533,10 @@ public class ForkJoinPool extends AbstractExecutorService {
     final String workerNamePrefix;       // to create worker name string
     final ForkJoinWorkerThreadFactory factory;
     final UncaughtExceptionHandler ueh;  // per-worker UEH
+
+    // padding
+    volatile Object pad10, pad11, pad12, pad13, pad14, pad15, pad16, pad17;
+    volatile Object pad18, pad19, pad1a, pad1b;
 
     /**
      * Atomically adds the given value to the current value of a field
