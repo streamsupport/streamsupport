@@ -90,6 +90,24 @@ public class DoublePrimitiveOpsTests {
         }
     }
 
+    public void testSortDistinct() {
+        {
+            double[] range = LongStreams.range(0, 10).asDoubleStream().toArray();
+
+            assertEquals(LongStreams.range(0, 10).asDoubleStream().sorted().distinct().toArray(), range);
+            assertEquals(LongStreams.range(0, 10).asDoubleStream().parallel().sorted().distinct().toArray(), range);
+        }
+
+        {
+            double[] data = {5, 3, 1, 1, 5, Double.NaN, 3, 9, Double.POSITIVE_INFINITY,
+                             Double.NEGATIVE_INFINITY, 2, 9, 1, 0, 8, Double.NaN, -0.0};
+            double[] expected = {Double.NEGATIVE_INFINITY, -0.0, 0, 1, 2, 3, 5, 8, 9,
+                                 Double.POSITIVE_INFINITY, Double.NaN};
+            assertEquals(DoubleStreams.of(data).sorted().distinct().toArray(), expected);
+            assertEquals(DoubleStreams.of(data).parallel().sorted().distinct().toArray(), expected);
+        }
+    }
+
     public void testSortSort() {
         Random r = new Random();
 
