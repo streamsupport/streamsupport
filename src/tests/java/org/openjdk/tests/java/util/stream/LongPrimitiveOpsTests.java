@@ -28,10 +28,12 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import java8.util.J8Arrays;
 import java8.util.Spliterator;
+import java8.util.concurrent.ThreadLocalRandom;
 import java8.util.function.LongConsumer;
 import java8.util.stream.Collectors;
 import java8.util.stream.LongStreams;
@@ -106,8 +108,8 @@ public class LongPrimitiveOpsTests {
                       .hasCharacteristics(Spliterator.SORTED));
         assertFalse(LongStreams.range(1, 10).asDoubleStream().spliterator()
                       .hasCharacteristics(Spliterator.DISTINCT));
-//        assertFalse(LongStreams.of(1, 10).boxed().spliterator()
-//                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(LongStreams.of(1, 10).asDoubleStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
     }
 
     public void testToArray() {
@@ -137,6 +139,32 @@ public class LongPrimitiveOpsTests {
         {
             long[] array =  J8Arrays.stream(content).parallel().sorted().toArray();
             assertEquals(array, sortedContent);
+        }
+    }
+
+    public void testSortDistinct() {
+        {
+            long[] range = LongStreams.range(0, 10).toArray();
+
+            assertEquals(LongStreams.range(0, 10).sorted().distinct().toArray(), range);
+            assertEquals(LongStreams.range(0, 10).parallel().sorted().distinct().toArray(), range);
+        }
+
+        {
+            long[] data = {5, 3, 1, 1, 5, 3, 9, 2, 9, 1, 0, 8};
+            long[] expected = {0, 1, 2, 3, 5, 8, 9};
+            assertEquals(LongStreams.of(data).sorted().distinct().toArray(), expected);
+            assertEquals(LongStreams.of(data).parallel().sorted().distinct().toArray(), expected);
+        }
+
+        {
+            long[] input = ThreadLocalRandom.current().longs(100, -10, 10).map(x -> x + Long.MAX_VALUE).toArray();
+
+            TreeSet<Double> doubles = new TreeSet<>();
+            for (long i : input) doubles.add((double) i);
+            double[] expectedDoubles = StreamSupport.stream(doubles).mapToDouble(Double::doubleValue).toArray();
+            assertEquals(LongStreams.of(input).sorted().distinct().asDoubleStream()
+                         .sorted().distinct().toArray(), expectedDoubles);
         }
     }
 
