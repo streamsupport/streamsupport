@@ -102,9 +102,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new CheeseListFragment(), "Category 1");
-        adapter.addFragment(new CheeseListFragment(), "Category 2");
-        adapter.addFragment(new CheeseListFragment(), "Category 3");
+        adapter.addFragment(new CheeseListFragment(), "Cat 1");
+        adapter.addFragment(new CheeseListFragment(), "Cat 2");
+        adapter.addFragment(new CheeseListFragment(), "Cat 3");
+        java8.util.stream.IntStreams.range(4, 7).forEach(i -> {
+                adapter.addFragment(new CheeseListFragment(), "Cat " + i);
+            });
         viewPager.setAdapter(adapter);
     }
 
