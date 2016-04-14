@@ -23,7 +23,10 @@ retrolambda {
 
 sourceSets {
   main {
-      java.srcDir '../src/main'
+      java {
+          srcDir '../src/main'
+          exclude 'java/java/**'
+      }
   }
   test {
       java.srcDir '../src/tests'
