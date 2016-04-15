@@ -9,8 +9,8 @@ buildscript {
 
 apply plugin: 'java'
 
-targetCompatibility = '1.8'
-sourceCompatibility = '1.8'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 apply plugin: 'me.tatarka.retrolambda'
 
@@ -19,6 +19,8 @@ retrolambda {
     jdk System.getenv("JAVA8_HOME")
     oldJdk System.getenv("JAVA7_HOME")
     javaVersion JavaVersion.VERSION_1_7
+    //defaultMethods true
+    //incremental false
 }
 
 sourceSets {
