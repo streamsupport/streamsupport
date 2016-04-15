@@ -867,8 +867,8 @@ public class DefaultsTest {
 
     /**
      * A simple mutable map implementation that provides only default
-     * implementations of all methods. ie. none of the Map interface default
-     * methods have overridden implementations.
+     * implementations of all methods, i.e. none of the (Java 8) Map
+     * interface default methods have overridden implementations.
      *
      * @param <K> Type of keys
      * @param <V> Type of values
@@ -909,8 +909,8 @@ public class DefaultsTest {
 
     /**
      * A simple mutable concurrent map implementation that provides only default
-     * implementations of all methods. ie. none of the ConcurrentMap interface
-     * default methods have overridden implementations.
+     * implementations of all methods, i.e. none of the (Java 8) ConcurrentMap
+     * interface default methods have overridden implementations.
      *
      * @param <K> Type of keys
      * @param <V> Type of values
@@ -918,7 +918,7 @@ public class DefaultsTest {
     public static class ImplementsConcurrentMap<K, V> extends ExtendsAbstractMap<ConcurrentMap<K, V>, K, V> implements ConcurrentMap<K, V> {
         public ImplementsConcurrentMap() { super(new ConcurrentHashMap<K, V>()); }
 
-        // ConcurrentMap reabstracts these methods
+        // Java 8 ConcurrentMap re-abstracts these (in Java 8 Map default) methods
 
         public V replace(K k, V v) { return ((ConcurrentMap<K, V>) map).replace(k, v); };
 
