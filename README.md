@@ -69,10 +69,10 @@ build.gradle:
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.4.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4.2'
 }
 ```
 
@@ -80,7 +80,6 @@ or via jitpack:
 
 ```gradle
 repositories {
-    // ...
     maven { url "https://jitpack.io" }
 }
 
@@ -94,7 +93,7 @@ dependencies {
 
 ## RELEASE NOTES
 
- - "1.4-stable" is the current stable release
+ - "1.4.2-stable" is the current stable release
 
 
 ## GENERAL
@@ -105,15 +104,15 @@ dependencies {
 
  - The static methods from interface j.u.s.Stream are located in j8.u.s.RefStreams
    which also contains the new Java 9 j.u.s.Stream default methods. The equivalent
-   methods in j8.u.s.StreamSupport are deprecated since 1.3.2 and will be removed
-   in a future release.
+   methods in j8.u.s.StreamSupport are deprecated since 1.3.2 and have been removed
+   in release 1.4.1
 
  - As of release 1.4, the former single streamsupport.jar has been partitioned into
    a core streamsupport.jar and 3 additional optional components:
 
    * streamsupport-cfuture (CompletableFuture API)
    * streamsupport-atomic  (j8.u.c.atomic package)
-   * streamsupport-flow    (Flow API)
+   * streamsupport-flow    (Java 9 Flow API)
 
    All of them have a dependency on the core streamsupport.jar
 
@@ -121,30 +120,19 @@ dependencies {
    Retrolambda (https://github.com/orfjackal/retrolambda) to build the core
    streamsupport.jar from its sources
 
- - It is possible to turn off the automatic use of native specializations
-   with the boolean system property
+ - It is possible to turn on an OpenJDK "compatibility mode" by setting the
+   boolean system property
 
    java8.util.Spliterators.assume.oracle.collections.impl=false
 
-   The property must have been set not later than the java8.util.Spliterators class
-   is loaded. This switch is provided for users on non-OpenJDK based JREs (e.g. IBM
-   Java 6/7) to increase the odds that streamsupport can be used on their platform.
-   This switch has no effect on Android.
-
- - Release 1.2 improves upon the ForkJoin threadpool implementation and is
-   the first release that begins to expand the API into the Java 9 realm.
+   This switch is provided for users of non-OpenJDK based JREs (e.g. IBM Java 6/7)
+   to increase the odds that streamsupport can be used on their platform.
+   This switch is not needed (and has no effect) on Android.
 
  - Release 1.3 adds the new Java 9 Stream methods takeWhile() and dropWhile().
    If anyone longs for the default method implementations, they are available
    in j8.u.s.RefStreams (but that shouldn't be necessary as all Streams created
    via StreamSupport#stream()/#parallelStream() already implement these methods).
-
- - As of 1.3.1, on Android, it is no longer necessary to set the system property
-   "java8.util.Spliterators.assume.oracle.collections.impl" to "false".
-
- - As of 1.3.2, the static methods from interface j.u.s.Stream that are located
-   in j8.u.s.StreamSupport are deprecated. Please use the equivalent methods in
-   j8.u.s.RefStreams.
 
  - Release 1.4 completes the Java 9 "More Concurrency Updates" JEP 266.
    See http://openjdk.java.net/jeps/266
@@ -153,9 +141,49 @@ dependencies {
    to j.u.c.CompletableFuture and fork/join as well as improvements to their
    implementation.
 
+ - As of 1.4.1, the deprecated static methods from interface j.u.s.Stream that
+   were located in j8.u.s.StreamSupport have been removed. Please use the
+   equivalent methods in j8.u.s.RefStreams.
+
+ - As of 1.4.2, the deprecated "concurrent" methods in j8.u.Maps have been
+   removed. Please use the equivalent methods in j8.u.c.ConcurrentMaps.
+
 
 
 ## VERSION HISTORY
+
+1.4.2-stable (2016-02-12)
+ - JDK-8148250: limit() optimization for ordered source
+ - JDK-8148115: findFirst() optimization for unordered source
+ - JDK-8148838: flatMap() splitting after partial traversal
+ - JDK-8147505: onClose() behavior after stream is consumed
+ - JDK-8146467: integrate JSR 166 TCK tests
+ - JDK-8148638: TCK test failure
+ - JDK-8148928: SequentialOpTest.java timeout
+ - JDK-8076458: FlatMapOpTest.java timeout
+ - updated TLRandom to JSR 166 CVS rev 1.39 (Ticket#152)
+ - updated SplittableRandom to JSR 166 CVS rev 1.30 (Ticket#153)
+ - updated CompletionStage to JSR 166 CVS rev. 1.38 (Ticket#160)
+ - added sublist test to SpliteratorLateBindingFailFastTest (Ticket#168)
+ - added preliminary support for Android N (Ticket#154)
+ - removed the deprecated methods from j8.u.Maps (Ticket#148)
+
+1.4.1-stable (2015-12-27)
+ - JDK-8144675: add a filtering collector
+ - edge case performance improvement for parallel distinct (Ticket#139)
+ - moved the "concurrent" methods from j8.u.Maps to j8.u.c.ConcurrentMaps
+   The "concurrent" methods in j8.u.Maps are deprecated now and will be
+   removed in a future release (Ticket#140)
+ - added compute() and computeIfPresent() to ConcurrentMaps (Ticket#144)
+ - JDK-8145164: default impl of ConcurrentMap::compute can throw NPE
+ - JSR166 jdk9 integration "wave 2" (Ticket#131) with sub-tasks:
+   * JDK-8142441: improve jtreg tests for j.u.concurrent
+   * JDK-8141031: j.u.c.Phaser Basic test fails intermittently
+   * JDK-8143087: miscellaneous changes from JSR166 CVS
+   * JDK-8139927: improve Javadoc for CompletableFuture composition
+   * JDK-8143086: document that newThread() can return null
+ - update FJPool to JSR166 CVS rev 1.298 (Ticket#136)
+ - removed the deprecated methods from j8.u.s.StreamSupport (Ticket#145)
 
 1.4-stable (2015-11-15)
  - JDK-8134852: Java 9 fork/join with API enhancements (JEP 266)
@@ -169,7 +197,6 @@ dependencies {
  - JDK-8142493: check indexes/ranges behavior when oobe produces null
  - JDK-8138963: new Objects methods to default to non-null
  - JDK-8141652: rename methods nonNullElse* to requireNonNullElse*
- - this release also got tested on Android 6.0 (API 23)
 
 1.3.2-stable (2015-10-04)
  - JDK-8080418: add Optional.or()
