@@ -1,7 +1,5 @@
 package java8.util.stream;
 
-import org.openjdk.tests.java.util.map.DefaultsTest;
-
 final class AndroidNDetector {
     // is this Android? (defaults to false)
     private static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics");
@@ -39,7 +37,7 @@ final class AndroidNDetector {
         try {
             // avoid <clinit> which triggers a lot of JNI code in the case
             // of android.util.DisplayMetrics
-            clazz = Class.forName(name, false, DefaultsTest.class.getClassLoader());
+            clazz = Class.forName(name, false, AndroidNDetector.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }
