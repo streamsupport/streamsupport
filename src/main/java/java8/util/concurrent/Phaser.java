@@ -465,7 +465,6 @@ public class Phaser {
                                 ((long) phase << PHASE_SHIFT) | adjust)) {
                             s = state;
                             phase = (int) (root.state >>> PHASE_SHIFT);
-                            // assert (int) s == EMPTY;
                         }
                         break;
                     }
@@ -1030,7 +1029,6 @@ public class Phaser {
      * @return current phase
      */
     private int internalAwaitAdvance(int phase, QNode node) {
-        // assert root == this;
         releaseWaiters(phase-1);          // ensure old queue clean
         boolean queued = false;           // true when node is enqueued
         int lastUnarrived = 0;            // to increase spins upon change

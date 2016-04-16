@@ -2,27 +2,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-all-tests</artifactId>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.3-SNAPSHOT</version>
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-atomic</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-cfuture</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-flow</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -39,7 +39,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -57,8 +57,24 @@
 					</execution>
 				</executions>
 				<configuration>
-					<java8home>F:/Java/sun-jdk1.8.0_66-64bit/</java8home>
+					<java8home>F:/Java/sun-jdk1.8.0_77-64bit/</java8home>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifestEntries>
+							<Archiver-Version/>
+							<Created-By/>
+							<Built-By/>
+							<Build-Jdk/>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>

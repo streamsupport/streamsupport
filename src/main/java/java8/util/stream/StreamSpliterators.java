@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -195,7 +195,7 @@ class StreamSpliterators {
 
         @Override
         public Spliterator<P_OUT> trySplit() {
-            if (isParallel && !finished) {
+            if (isParallel && buffer == null && !finished) {
                 init();
 
                 Spliterator<P_IN> split = spliterator.trySplit();
@@ -356,16 +356,13 @@ class StreamSpliterators {
             Sink.OfInt trampoline = new Sink.OfInt() {
                 @Override
                 public void end() {
-                    //SinkDefaults.end(this);
                 }
                 @Override
                 public boolean cancellationRequested() {
-                    //return SinkDefaults.cancellationRequested(this);
                     return false;
                 }
                 @Override
                 public void begin(long size) {
-                    //SinkDefaults.begin(this, size);
                 }
                 @Override
                 public void accept(double value) {
@@ -416,16 +413,13 @@ class StreamSpliterators {
                 Sink.OfInt trampoline = new Sink.OfInt() {
                     @Override
                     public void end() {
-                        //SinkDefaults.end(this);
                     }
                     @Override
                     public boolean cancellationRequested() {
-                        //return SinkDefaults.cancellationRequested(this);
                         return false;
                     }
                     @Override
                     public void begin(long size) {
-                        //SinkDefaults.begin(this, size);
                     }
                     @Override
                     public void accept(double value) {
@@ -487,16 +481,13 @@ class StreamSpliterators {
             Sink.OfLong trampoline = new Sink.OfLong() {
                 @Override
                 public void end() {
-                    //SinkDefaults.end(this);
                 }
                 @Override
                 public boolean cancellationRequested() {
-                    //return SinkDefaults.cancellationRequested(this);
                     return false;
                 }
                 @Override
                 public void begin(long size) {
-                    //SinkDefaults.begin(this, size);
                 }
                 @Override
                 public void accept(double value) {
@@ -547,16 +538,13 @@ class StreamSpliterators {
                 Sink.OfLong trampoline = new Sink.OfLong() {
                     @Override
                     public void end() {
-                        //SinkDefaults.end(this);
                     }
                     @Override
                     public boolean cancellationRequested() {
-                        //return SinkDefaults.cancellationRequested(this);
                         return false;
                     }
                     @Override
                     public void begin(long size) {
-                        //SinkDefaults.begin(this, size);
                     }
                     @Override
                     public void accept(double value) {
@@ -618,15 +606,12 @@ class StreamSpliterators {
             Sink.OfDouble trampoline = new Sink.OfDouble() {
                 @Override
                 public void begin(long size) {
-                    //SinkDefaults.begin(this, size);
                 }
                 @Override
                 public void end() {
-                    //SinkDefaults.end(this);
                 }
                 @Override
                 public boolean cancellationRequested() {
-                    //return SinkDefaults.cancellationRequested(this);
                     return false;
                 }
                 @Override
@@ -678,15 +663,12 @@ class StreamSpliterators {
                 Sink.OfDouble trampoline = new Sink.OfDouble() {
                     @Override
                     public void begin(long size) {
-                        //SinkDefaults.begin(this, size);
                     }
                     @Override
                     public void end() {
-                        //SinkDefaults.end(this);
                     }
                     @Override
                     public boolean cancellationRequested() {
-                        //return SinkDefaults.cancellationRequested(this);
                         return false;
                     }
                     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -28,15 +28,24 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import java8.util.concurrent.ThreadLocalRandom;
 import java8.util.function.IntConsumer;
 import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 import java8.util.J8Arrays;
+import java8.util.Spliterator;
 import java8.util.stream.IntStreams;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
+/**
+ * @test
+ * @bug 8153293
+ */
 @Test
 public class IntPrimitiveOpsTests {
 
@@ -87,6 +96,29 @@ public class IntPrimitiveOpsTests {
         assertEquals(sum, 15);
     }
 
+    public void testFlags() {
+        assertTrue(IntStreams.range(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED | Spliterator.DISTINCT));
+        assertFalse(IntStreams.of(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(IntStreams.of(1, 10).boxed().spliterator()
+                      .hasCharacteristics(Spliterator.DISTINCT));
+
+        assertTrue(IntStreams.range(1, 10).asLongStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED | Spliterator.DISTINCT));
+        assertFalse(IntStreams.of(1, 10).asLongStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(IntStreams.of(1, 10).asLongStream().spliterator()
+                      .hasCharacteristics(Spliterator.DISTINCT));
+
+        assertTrue(IntStreams.range(1, 10).asDoubleStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED | Spliterator.DISTINCT));
+        assertFalse(IntStreams.of(1, 10).asDoubleStream().spliterator()
+                      .hasCharacteristics(Spliterator.SORTED));
+        assertFalse(IntStreams.of(1, 10).asDoubleStream().spliterator()
+                      .hasCharacteristics(Spliterator.DISTINCT));
+    }
+
     public void testToArray() {
         {
             int[] array =  IntStreams.range(1, 10).map(i -> i * 2).toArray();
@@ -114,6 +146,37 @@ public class IntPrimitiveOpsTests {
         {
             int[] array =  J8Arrays.stream(content).parallel().sorted().toArray();
             assertEquals(array, sortedContent);
+        }
+    }
+
+    public void testSortDistinct() {
+        {
+            int[] range = IntStreams.range(0, 10).toArray();
+
+            assertEquals(IntStreams.range(0, 10).sorted().distinct().toArray(), range);
+            assertEquals(IntStreams.range(0, 10).parallel().sorted().distinct().toArray(), range);
+        }
+
+        {
+            int[] data = {5, 3, 1, 1, 5, 3, 9, 2, 9, 1, 0, 8};
+            int[] expected = {0, 1, 2, 3, 5, 8, 9};
+            assertEquals(IntStreams.of(data).sorted().distinct().toArray(), expected);
+            assertEquals(IntStreams.of(data).parallel().sorted().distinct().toArray(), expected);
+        }
+
+        {
+            int[] input = ThreadLocalRandom.current().ints(100, -10, 10).map(x -> x + Integer.MAX_VALUE).toArray();
+            TreeSet<Long> longs = new TreeSet<>();
+            for (int i : input) longs.add((long) i);
+            long[] expectedLongs = StreamSupport.stream(longs).mapToLong(Long::longValue).toArray();
+            assertEquals(IntStreams.of(input).sorted().asLongStream().sorted().distinct().toArray(),
+                         expectedLongs);
+
+            TreeSet<Double> doubles = new TreeSet<>();
+            for (int i : input) doubles.add((double) i);
+            double[] expectedDoubles = StreamSupport.stream(doubles).mapToDouble(Double::doubleValue).toArray();
+            assertEquals(IntStreams.of(input).sorted().distinct().asDoubleStream()
+                         .sorted().distinct().toArray(), expectedDoubles);
         }
     }
 

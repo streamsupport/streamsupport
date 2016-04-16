@@ -564,7 +564,6 @@ abstract class ReferencePipeline<P_IN, P_OUT>
 
     @Override
     public final long count() {
-        //return mapToLong(e -> 1L).sum();
         return evaluate(ReduceOps.makeRefCounting());
     }
 
@@ -658,7 +657,6 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                     StreamShape inputShape,
                     int opFlags) {
             super(upstream, opFlags);
-//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override
@@ -687,7 +685,6 @@ abstract class ReferencePipeline<P_IN, P_OUT>
                    StreamShape inputShape,
                    int opFlags) {
             super(upstream, opFlags);
-//            assert upstream.getOutputShape() == inputShape;
         }
 
         @Override

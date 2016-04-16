@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-cfuture</artifactId>
-	<version>1.4.1-SNAPSHOT</version>
+	<version>1.4.3-SNAPSHOT</version>
 	<name>net.sourceforge.streamsupport:streamsupport-cfuture</name>
 	<description>streamsupport-cfuture is a backport of the Java 8 CompletableFuture API with the current
  (still experimental) Java 9 enhancements (JDK-8134851) for Java 6 / 7 and Android developers</description>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport</artifactId>
-			<version>1.4.1-SNAPSHOT</version>
+			<version>1.4.3-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<properties>
@@ -42,10 +42,26 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>false</addMavenDescriptor>
+						<manifestEntries>
+							<Archiver-Version/>
+							<Created-By/>
+							<Built-By/>
+							<Build-Jdk/>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -64,7 +80,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.1</version>
+				<version>2.10.3</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>

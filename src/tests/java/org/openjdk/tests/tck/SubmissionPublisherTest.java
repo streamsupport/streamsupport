@@ -1,39 +1,61 @@
 /*
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+
+/*
+ * This file is available under and governed by the GNU General Public
+ * License version 2 only, as published by the Free Software Foundation.
+ * However, the following notice accompanied the original version of this
+ * file:
+ *
  * Written by Doug Lea and Martin Buchholz with assistance from
  * members of JCP JSR-166 Expert Group and released to the public
  * domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
-package org.openjdk.other.tests.flow;
+package org.openjdk.tests.tck;
+
+import java8.util.concurrent.CompletableFuture;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import java8.util.concurrent.CompletableFuture;
 import java8.util.concurrent.Flow;
 import java8.util.concurrent.ForkJoinPool;
 import java8.util.concurrent.SubmissionPublisher;
-import java8.util.concurrent.Flow.Subscriber;
-import java8.util.concurrent.Flow.Subscription;
-import java8.util.function.BiConsumer;
-import java8.util.function.BiPredicate;
-import java8.util.function.Consumer;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
+import static java8.util.concurrent.Flow.Subscriber;
+import static java8.util.concurrent.Flow.Subscription;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
 
-    /*
-    public static void main(String[] args) {
-        System.out.println("Running " + SubmissionPublisherTest.class.getSimpleName());
-        main(suite(), args);
-    }
-    */
+//    public static void main(String[] args) {
+//        main(suite(), args);
+//    }
 
     public static Test suite() {
         return new TestSuite(SubmissionPublisherTest.class);
@@ -452,14 +474,10 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * subscriber throws an exception in onNext
      */
     public void testThrowOnNextHandler() {
-        final AtomicInteger calls = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
         SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>
-            (basicExecutor, 8, new BiConsumer<Subscriber<? super Integer>, Throwable>() {
-                @Override
-                public void accept(Subscriber<? super Integer> s, Throwable e) {
-                    calls.getAndIncrement();
-                }
-            });
+            (basicExecutor, 8,
+             (s, e) -> calls.getAndIncrement());
         TestSubscriber s1 = new TestSubscriber();
         TestSubscriber s2 = new TestSubscriber();
         p.subscribe(s1);
@@ -747,7 +765,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * offer invokes drop handler if saturated
      */
     public void testHandledDroppedOffer() {
-        final AtomicInteger calls = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
         SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
             basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
@@ -758,33 +776,12 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         p.subscribe(s2);
         s2.awaitSubscribe();
         s1.awaitSubscribe();
-        for (int i = 1; i <= 4; ++i) {
-            assertTrue(p.offer(i, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-                @Override
-                public boolean test(Subscriber<? super Integer> s, Integer x) {
-                    return noopHandle(calls);
-                }
-            }) >= 0);
-        }
-        p.offer(4, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-            @Override
-            public boolean test(Subscriber<? super Integer> s, Integer x) {
-                return noopHandle(calls);
-            }
-        });
-        assertTrue(p.offer(6, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-            @Override
-            public boolean test(Subscriber<? super Integer> s, Integer x) {
-                return noopHandle(calls);
-            }
-        }) < 0);
+        for (int i = 1; i <= 4; ++i)
+            assertTrue(p.offer(i, (s, x) -> noopHandle(calls)) >= 0);
+        p.offer(4, (s, x) -> noopHandle(calls));
+        assertTrue(p.offer(6, (s, x) -> noopHandle(calls)) < 0);
         s1.sn.request(64);
-        assertTrue(p.offer(7, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-            @Override
-            public boolean test(Subscriber<? super Integer> s, Integer x) {
-                return noopHandle(calls);
-            }
-        }) < 0);
+        assertTrue(p.offer(7, (s, x) -> noopHandle(calls)) < 0);
         s2.sn.request(64);
         p.close();
         s2.awaitComplete();
@@ -796,7 +793,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * offer succeeds if drop handler forces request
      */
     public void testRecoveredHandledDroppedOffer() {
-        final AtomicInteger calls = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
         SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
             basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
@@ -809,12 +806,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         s1.awaitSubscribe();
         int n = 0;
         for (int i = 1; i <= 8; ++i) {
-            int d = p.offer(i, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-                @Override
-                public boolean test(Subscriber<? super Integer> s, Integer x) {
-                    return reqHandle(calls, s);
-                }
-            });
+            int d = p.offer(i, (s, x) -> reqHandle(calls, s));
             n = n + 2 + (d < 0 ? d : 0);
         }
         p.close();
@@ -914,7 +906,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * Timed offer invokes drop handler if saturated
      */
     public void testHandledDroppedTimedOffer() {
-        final AtomicInteger calls = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
         SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
             basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
@@ -927,26 +919,11 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         s1.awaitSubscribe();
         long delay = timeoutMillis();
         for (int i = 1; i <= 4; ++i)
-            assertTrue(p.offer(i, delay, MILLISECONDS, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-                @Override
-                public boolean test(Subscriber<? super Integer> s, Integer x) {
-                    return noopHandle(calls);
-                }
-            }) >= 0);
+            assertTrue(p.offer(i, delay, MILLISECONDS, (s, x) -> noopHandle(calls)) >= 0);
         long startTime = System.nanoTime();
-        assertTrue(p.offer(5, delay, MILLISECONDS, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-            @Override
-            public boolean test(Subscriber<? super Integer> s, Integer x) {
-                return noopHandle(calls);
-            }
-        }) < 0);
+        assertTrue(p.offer(5, delay, MILLISECONDS, (s, x) -> noopHandle(calls)) < 0);
         s1.sn.request(64);
-        assertTrue(p.offer(6, delay, MILLISECONDS, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-            @Override
-            public boolean test(Subscriber<? super Integer> s, Integer x) {
-                return noopHandle(calls);
-            }
-        }) < 0);
+        assertTrue(p.offer(6, delay, MILLISECONDS, (s, x) -> noopHandle(calls)) < 0);
         assertTrue(millisElapsedSince(startTime) >= delay);
         s2.sn.request(64);
         p.close();
@@ -959,7 +936,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * Timed offer succeeds if drop handler forces request
      */
     public void testRecoveredHandledDroppedTimedOffer() {
-        final AtomicInteger calls = new AtomicInteger();
+        AtomicInteger calls = new AtomicInteger();
         SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
             basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
@@ -974,12 +951,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         long delay = timeoutMillis();
         long startTime = System.nanoTime();
         for (int i = 1; i <= 6; ++i) {
-            int d = p.offer(i, delay, MILLISECONDS, new BiPredicate<Subscriber<? super Integer>, Integer>() {
-                @Override
-                public boolean test(Subscriber<? super Integer> s, Integer x) {
-                    return reqHandle(calls, s);
-                }
-            });
+            int d = p.offer(i, delay, MILLISECONDS, (s, x) -> reqHandle(calls, s));
             n = n + 2 + (d < 0 ? d : 0);
         }
         assertTrue(millisElapsedSince(startTime) >= delay);
@@ -995,15 +967,10 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * publisher completes
      */
     public void testConsume() {
-        final AtomicInteger sum = new AtomicInteger();
+        AtomicInteger sum = new AtomicInteger();
         SubmissionPublisher<Integer> p = basicPublisher();
         CompletableFuture<Void> f =
-            p.consume(new Consumer<Integer>() {
-                @Override
-                public void accept(Integer x) {
-                    sum.getAndAdd(x.intValue());
-                }
-            });
+            p.consume((Integer x) -> { sum.getAndAdd(x.intValue()); });
         int n = 20;
         for (int i = 1; i <= n; ++i)
             p.submit(i);
@@ -1028,14 +995,9 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * consume eventually stops processing published items if cancelled
      */
     public void testCancelledConsume() {
-        final AtomicInteger count = new AtomicInteger();
+        AtomicInteger count = new AtomicInteger();
         SubmissionPublisher<Integer> p = basicPublisher();
-        CompletableFuture<Void> f = p.consume(new Consumer<Integer>() {
-            @Override
-            public void accept(Integer x) {
-                count.getAndIncrement();
-            }
-        });
+        CompletableFuture<Void> f = p.consume(x -> count.getAndIncrement());
         f.cancel(true);
         int n = 1000000; // arbitrary limit
         for (int i = 1; i <= n; ++i)

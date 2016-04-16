@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -49,14 +49,6 @@ final class Streams {
     private Streams() {
         throw new Error("no instances");
     }
-
-    /**
-     * An object instance representing no value, that cannot be an actual
-     * data element of a stream.  Used when processing streams that can contain
-     * {@code null} elements to distinguish between a {@code null} value and no
-     * value.
-     */
-    static final Object NONE = new Object();
 
     /**
      * An {@code int} range spliterator.
@@ -822,7 +814,7 @@ final class Streams {
         @Override
         public T_SPLITR trySplit() {
             @SuppressWarnings("unchecked")
-			T_SPLITR ret = beforeSplit ? aSpliterator : (T_SPLITR) bSpliterator.trySplit();
+            T_SPLITR ret = beforeSplit ? aSpliterator : (T_SPLITR) bSpliterator.trySplit();
             beforeSplit = false;
             return ret;
         }
