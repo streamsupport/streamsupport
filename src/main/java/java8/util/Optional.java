@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -259,8 +259,10 @@ public final class Optional<T> {
      * invoked, {@code flatMap} does not wrap it within an additional
      * {@code Optional}.
      *
+     * @param <V> The type of value of the {@code Optional} returned by
+     * {@code flatMap}, a supertype of U
      * @param <U> The type of value of the {@code Optional} returned by the
-     * mapping function
+     * {@code mapper} function, a subtype of V  
      * @param mapper the mapping function to apply to a value, if present
      * @return the result of applying an {@code Optional}-bearing mapping
      * function to the value of this {@code Optional}, if a value is present,
@@ -268,12 +270,12 @@ public final class Optional<T> {
      * @throws NullPointerException if the mapping function is {@code null} or
      * returns a {@code null} result
      */
-    public <U> Optional<U> flatMap(Function<? super T, Optional<U>> mapper) {
+    public <V, U extends V> Optional<V> flatMap(Function<? super T, Optional<U>> mapper) {
         Objects.requireNonNull(mapper);
         if (!isPresent()) {
             return empty();
         } else {
-            return Objects.requireNonNull(mapper.apply(value));
+            return (Optional<V>) Objects.requireNonNull(mapper.apply(value));
         }
     }
 
