@@ -730,6 +730,19 @@ public class DefaultsTest {
     }
 
     private static Collection<Object[]> makeRWNoNullsMaps() {
+        if (IS_ANDROID_N) {
+            // temporary workaround for Android N (preview-2) issue 207090 
+            return Arrays.asList(
+                    // null key and value hostile
+                    new Object[]{"Hashtable", makeMap(Hashtable::new, false, false)},
+                    new Object[]{"ConcurrentHashMap", makeMap(ConcurrentHashMap::new, false, false)},
+                    new Object[]{"ConcurrentSkipListMap", makeMap(ConcurrentSkipListMap::new, false, false)},
+                    new Object[]{"Collections.synchronizedMap(ConcurrentHashMap)", Collections.synchronizedMap(makeMap(ConcurrentHashMap::new, false, false))},
+                    new Object[]{"Collections.checkedMap(ConcurrentHashMap)", Collections.checkedMap(makeMap(ConcurrentHashMap::new, false, false), IntegerEnum.class, String.class)},
+                    new Object[]{"ExtendsAbstractMap(ConcurrentHashMap)", makeMap(() -> {return new ExtendsAbstractMap(new ConcurrentHashMap());}, false, false)}
+                    );
+        }
+        // general case
         return Arrays.asList(
             // null key and value hostile
             new Object[]{"Hashtable", makeMap(Hashtable::new, false, false)},
@@ -927,5 +940,33 @@ public class DefaultsTest {
         public boolean remove(Object k, Object v) { return ((ConcurrentMap<K, V>) map).remove(k, v); }
 
         public V putIfAbsent(K k, V v) { return ((ConcurrentMap<K, V>) map).putIfAbsent(k, v); }
+    }
+
+    // is this Android? (defaults to false)
+    private static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics");
+
+    // is this Android N developer preview? (defaults to false)
+    private static final boolean IS_ANDROID_N = IS_ANDROID && isClassPresent("java.util.function.Function");
+
+    /**
+     * Used to detect the presence or absence of android.util.DisplayMetrics
+     * and other classes. Gets employed when we need to establish whether we
+     * are running on Android and, if yes, whether the version of Android is
+     * based on Apache Harmony or on OpenJDK.
+     * 
+     * @param name
+     *            fully qualified class name
+     * @return {@code true} if class is present, otherwise {@code false}.
+     */
+    private static boolean isClassPresent(String name) {
+        Class<?> clazz = null;
+        try {
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false, DefaultsTest.class.getClassLoader());
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
     }
 }
