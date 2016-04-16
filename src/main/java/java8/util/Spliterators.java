@@ -3217,10 +3217,10 @@ public final class Spliterators {
     }
 
     /**
-     * Used to detect the presence or absence of android.util.DisplayMetrics and
-     * org.apache.harmony.security.PublicKeyImpl. Gets employed when we need to
-     * establish whether we are running on Android and, if yes, whether the
-     * version of Android is based on Apache Harmony.
+     * Used to detect the presence or absence of android.util.DisplayMetrics
+     * and other classes. Gets employed when we need to establish whether we
+     * are running on Android and, if yes, whether the version of Android is
+     * based on Apache Harmony or on OpenJDK.
      * 
      * @param name
      *            fully qualified class name
