@@ -78,7 +78,7 @@ dependencies {
 }
 ```
 
-or via jitpack:
+or via jitpack (comming soon):
 
 ```gradle
 repositories {
