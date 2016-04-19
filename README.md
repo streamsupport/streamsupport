@@ -93,6 +93,20 @@ dependencies {
 }
 ```
 
+## Build
+
+### maven
+
+```sh
+./mvnw clean install
+```
+
+### gradle
+
+```sh
+./gradlew clean assemble
+```
+
 ## RELEASE NOTES
 
  - "1.4.2-stable" is the current stable release
