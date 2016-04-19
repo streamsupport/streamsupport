@@ -1,9 +1,9 @@
-[![JitPack](https://img.shields.io/github/tag/yongjhih/streamsupport.svg?label=JitPack)](https://jitpack.io/#yongjhih/streamsupport)
+[![JitPack](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=JitPack)](https://jitpack.io/#streamsupport/streamsupport)
 [![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge.streamsupport/streamsupport.svg?maxAge=2592000)](http://mvnrepository.com/artifact/net.sourceforge.streamsupport/streamsupport)
-[![Build Status](https://travis-ci.org/yongjhih/streamsupport.svg)](https://travis-ci.org/yongjhih/streamsupport)
-<!--[![Download](https://api.bintray.com/packages/yongjhih/maven/streamsupport/images/download.svg) ](https://bintray.com/yongjhih/maven/streamsupport/_latestVersion)-->
-<!--[![javadoc](https://img.shields.io/github/tag/yongjhih/streamsupport.svg?label=javadoc)](https://jitpack.io/com/github/yongjhih/streamsupport//javadoc/)-->
-<!--[![Join the chat at https://gitter.im/yongjhih/streamsupport](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/streamsupport?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
+[![Build Status](https://travis-ci.org/streamsupport/streamsupport.svg)](https://travis-ci.org/streamsupport/streamsupport)
+<!--[![Download](https://api.bintray.com/packages/streamsupport/maven/streamsupport/images/download.svg) ](https://bintray.com/streamsupport/maven/streamsupport/_latestVersion)-->
+<!--[![javadoc](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=javadoc)](https://jitpack.io/com/github/streamsupport/streamsupport//javadoc/)-->
+<!--[![Join the chat at https://gitter.im/streamsupport/streamsupport](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/streamsupport/streamsupport?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
 <!--[![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/streamsupport/badge.svg)](http://www.javadoc.io/doc/com.infstory/streamsupport/)-->
 
 ![](art/streamsupport.png)
@@ -84,10 +84,10 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.yongjhih.streamsupport:streamsupport:-SNAPSHOT'
-    compile 'com.github.yongjhih.streamsupport:streamsupport-cfuture:-SNAPSHOT'
-    compile 'com.github.yongjhih.streamsupport:streamsupport-atomic:-SNAPSHOT'
-    compile 'com.github.yongjhih.streamsupport:streamsupport-flow:-SNAPSHOT'
+    compile 'com.github.streamsupport.streamsupport:streamsupport:-SNAPSHOT'
+    compile 'com.github.streamsupport.streamsupport:streamsupport-cfuture:-SNAPSHOT'
+    compile 'com.github.streamsupport.streamsupport:streamsupport-atomic:-SNAPSHOT'
+    compile 'com.github.streamsupport.streamsupport:streamsupport-flow:-SNAPSHOT'
 }
 ```
 
