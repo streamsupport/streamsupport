@@ -18,6 +18,8 @@ For ease of use, the default methods for most of the functional interfaces were 
 
 Want also lambdas? https://github.com/orfjackal/retrolambda
 
+[![](art/streamsupport-sf.png)](http://streamsupport.sourceforge.net/)
+
 [streamsupport Web Site](http://streamsupport.sourceforge.net/)
 
 ## Categories
