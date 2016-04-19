@@ -123,7 +123,7 @@ import java8.util.function.Supplier;
  * and {@code get} methods
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.187
+// CVS rev. 1.188
     /*
      * Overview:
      *
@@ -551,11 +551,20 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         final boolean isLive() { return dep != null; }
     }
 
-    /** Pushes the given completion (if it exists) unless done. */
-    final void push(UniCompletion<?,?> c) {
+    /**
+     * Pushes the given completion unless it completes while trying.
+     * Caller should have first checked that result is null.
+     */
+    final void unipush(UniCompletion<?,?> c) {
         if (c != null) {
-            while (result == null && !tryPushStack(c))
-                lazySetNext(c, null); // clear on failure
+            while (!tryPushStack(c)) {
+                if (result != null) {
+                    lazySetNext(c, null);
+                    break;
+                }
+            }
+            if (result != null)
+                c.tryFire(SYNC);
         }
     }
 
@@ -639,8 +648,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 }
             }
             else {
-                push(c);
-                c.tryFire(SYNC);
+                unipush(c);
             }
         }
         return d;
@@ -703,8 +711,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 }
             }
             else {
-                push(c);
-                c.tryFire(SYNC);
+                unipush(c);
             }
         }
         return d;
@@ -760,8 +767,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 }
             }
             else {
-                push(c);
-                c.tryFire(SYNC);
+                unipush(c);
             }
         }
         return d;
@@ -830,8 +836,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 }
             }
             else {
-                push(c);
-                c.tryFire(SYNC);
+                unipush(c);
             }
         }
         return d;
@@ -895,8 +900,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 }
             }
             else {
-                push(c);
-                c.tryFire(SYNC);
+                unipush(c);
             }
         }
         return d;
@@ -944,9 +948,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         Objects.requireNonNull(f);
         CompletableFuture<T> d = newIncompleteFuture();
         if (!d.uniExceptionally(this, f, null)) {
-            UniExceptionally<T> c = new UniExceptionally<T>(d, this, f);
-            push(c);
-            c.tryFire(SYNC);
+            unipush(new UniExceptionally<T>(d, this, f));
         }
         return d;
     }
@@ -980,9 +982,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         if ((r = result) != null)
             d.completeRelay(r);
         else {
-            UniRelay<T> c = new UniRelay<T>(d, this);
-            push(c);
-            c.tryFire(SYNC);
+            unipush(new UniRelay<T>(d, this));
         }
         return d;
     }
@@ -992,9 +992,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         if ((r = result) != null)
             return new MinimalStage<T>(encodeRelay(r));
         MinimalStage<T> d = new MinimalStage<T>();
-        UniRelay<T> c = new UniRelay<T>(d, this);
-        push(c);
-        c.tryFire(SYNC);
+        unipush(new UniRelay<T>(d, this));
         return d;
     }
 
@@ -1037,9 +1035,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 @SuppressWarnings("unchecked") S s = (S) r;
                 CompletableFuture<T> g = f.apply(s).toCompletableFuture();
                 if (g.result == null || !uniRelay(g)) {
-                    UniRelay<T> copy = new UniRelay<T>(this, g);
-                    g.push(copy);
-                    copy.tryFire(SYNC);
+                    g.unipush(new UniRelay<T>(this, g));
                     if (result == null)
                         return false;
                 }
@@ -1069,9 +1065,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 if ((s = g.result) != null)
                     d.completeRelay(s);
                 else {
-                    UniRelay<V> c = new UniRelay<V>(d, g);
-                    g.push(c);
-                    c.tryFire(SYNC);
+                    g.unipush(new UniRelay<V>(d, g));
                 }
                 return d;
             } catch (Throwable ex) {
@@ -1079,7 +1073,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 return d;
             }
         }
-        UniCompose<T,V> c = new UniCompose<T,V>(e, d, this, f);
         if (r != null && e != null) {
             try {
                 e.execute(new UniCompose<T,V>(null, d, this, f));
@@ -1088,8 +1081,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
         }
         else {
-            push(c);
-            c.tryFire(SYNC);
+            unipush(new UniCompose<T,V>(e, d, this, f));
         }
         return d;
     }
