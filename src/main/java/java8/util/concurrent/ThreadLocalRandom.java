@@ -82,6 +82,7 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  */
 public class ThreadLocalRandom extends Random {
+// CVS rev. 1.42
     /*
      * This class implements the java.util.Random API (and subclasses
      * Random) using a single static instance that accesses random
@@ -472,7 +473,7 @@ public class ThreadLocalRandom extends Random {
             s = v1 * v1 + v2 * v2;
         } while (s >= 1 || s == 0);
         double multiplier = StrictMath.sqrt(-2 * StrictMath.log(s)/s);
-        nextLocalGaussian.set(new Double(v2 * multiplier));
+        nextLocalGaussian.set(Double.valueOf(v2 * multiplier));
         return v1 * multiplier;
     }
 
