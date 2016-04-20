@@ -27,7 +27,7 @@ sourceSets {
   main {
       java {
           srcDir '../src/main'
-          exclude 'java/java/**'
+//          exclude 'java/java/**'
       }
   }
   test {
