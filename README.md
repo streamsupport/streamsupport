@@ -1,5 +1,5 @@
 [![JitPack](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=JitPack)](https://jitpack.io/#streamsupport/streamsupport)
-[![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge.streamsupport/streamsupport.svg?maxAge=2592000)](http://mvnrepository.com/artifact/net.sourceforge.streamsupport/streamsupport)
+[![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge.streamsupport/streamsupport.svg)](http://mvnrepository.com/artifact/net.sourceforge.streamsupport/streamsupport)
 [![Build Status](https://travis-ci.org/streamsupport/streamsupport.svg)](https://travis-ci.org/streamsupport/streamsupport)
 <!--[![Download](https://api.bintray.com/packages/streamsupport/maven/streamsupport/images/download.svg) ](https://bintray.com/streamsupport/maven/streamsupport/_latestVersion)-->
 <!--[![javadoc](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=javadoc)](https://jitpack.io/com/github/streamsupport/streamsupport//javadoc/)-->
