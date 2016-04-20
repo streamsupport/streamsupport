@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-flow</artifactId>
-	<version>1.4.3</version>
+	<version>1.5-SNAPSHOT</version>
 	<name>net.sourceforge.streamsupport:streamsupport-flow</name>
 	<description>streamsupport-flow is a backport of the new (still experimental) Java 9 (JDK-8134850)
  reactive-streams Flow and SubmissionPublisher API for Java 6 / 7 and Android developers</description>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-cfuture</artifactId>
-			<version>1.4.3</version>
+			<version>1.5-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<properties>
