@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -145,12 +145,17 @@ final class DualPivotQuicksort {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count <= 1) { // The array is already sorted
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // A single ascending or transformed descending run
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Include final run
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
@@ -597,12 +602,17 @@ final class DualPivotQuicksort {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count <= 1) { // The array is already sorted
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // A single ascending or transformed descending run
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Include final run
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
@@ -1085,12 +1095,17 @@ final class DualPivotQuicksort {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count <= 1) { // The array is already sorted
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // A single ascending or transformed descending run
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Include final run
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
@@ -1573,12 +1588,17 @@ final class DualPivotQuicksort {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count <= 1) { // The array is already sorted
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // A single ascending or transformed descending run
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Include final run
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
@@ -2157,12 +2177,17 @@ final class DualPivotQuicksort {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count <= 1) { // The array is already sorted
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // A single ascending or transformed descending run
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Include final run
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
@@ -2700,12 +2725,17 @@ final class DualPivotQuicksort {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count <= 1) { // The array is already sorted
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // A single ascending or transformed descending run
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Include final run
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
