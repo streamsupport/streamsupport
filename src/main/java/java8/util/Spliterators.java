@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,6 +27,7 @@ package java8.util;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.AbstractList;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +42,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.RandomAccess;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Vector;
@@ -68,17 +70,24 @@ import java8.util.function.LongConsumer;
  */
 public final class Spliterators {
 
-    private static final String NATIVE_OPT_ENABLED_PROP = Spliterators.class.getName() + ".assume.oracle.collections.impl";
-    private static final String JRE_DELEGATION_ENABLED_PROP = Spliterators.class.getName() + ".jre.delegation.enabled";
+    private static final String NATIVE_OPT_ENABLED_P = Spliterators.class.getName() + ".assume.oracle.collections.impl";
+    private static final String JRE_DELEGATION_ENABLED_P = Spliterators.class.getName() + ".jre.delegation.enabled";
+    private static final String RNDACC_SPLITER_ENABLED_P = Spliterators.class.getName() + ".randomaccess.spliterator.enabled";
 
     // defaults to true
-    static final boolean NATIVE_SPECIALIZATION = getBooleanPropertyValue(NATIVE_OPT_ENABLED_PROP);
+    static final boolean NATIVE_SPECIALIZATION = getBooleanPropVal(NATIVE_OPT_ENABLED_P, true);
     // defaults to true
-    static final boolean JRE_DELEGATION_ENABLED = getBooleanPropertyValue(JRE_DELEGATION_ENABLED_PROP);
-    // defaults to false
-    static final boolean IS_ANDROID = isAndroid();
-    // defaults to false (Caution: Android is also Java6)
-    static final boolean IS_JAVA6 = isJava6();
+    static final boolean JRE_DELEGATION_ENABLED = getBooleanPropVal(JRE_DELEGATION_ENABLED_P, true);
+    // introduced in 1.4.3 - just in case something gets wrong (defaults to true)
+    private static final boolean ALLOW_RNDACC_SPLITER_OPT = getBooleanPropVal(RNDACC_SPLITER_ENABLED_P, true);
+    // is this RoboVM? (defaults to false)
+    private static final boolean IS_ROBOVM = isClassPresent("org.robovm.rt.bro.Bro");
+    // is this Android? (defaults to false)
+    static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
+    // is this an Apache Harmony-based Android? (defaults to false)
+    static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("java.util.function.Function");
+    // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
+    static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
     static final boolean JRE_HAS_STREAMS = isStreamEnabledJRE();
 
@@ -895,7 +904,7 @@ public final class Spliterators {
             return queueSpliterator((Queue<T>) c);
         }
 
-        if ((!IS_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
+        if ((!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
             return HMSpliterators.getValuesSpliterator((Collection<T>) c);
         }
 
@@ -925,12 +934,19 @@ public final class Spliterators {
             }
         }
 
+        // this doesn't count as a native specialization since AbstractList's
+        // 'modCount' field is a well-documented part of its API
+        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess
+                && c instanceof AbstractList) {
+            return RAAbstractListSpliterator.spliterator((AbstractList<T>) c);
+        }
+
         // default from j.u.List
         return spliterator(c, Spliterator.ORDERED);
     }
 
     private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
-        if (!IS_ANDROID && NATIVE_SPECIALIZATION) {
+        if (!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) {
             if ("java.util.HashMap$EntrySet".equals(className)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
@@ -944,7 +960,7 @@ public final class Spliterators {
             return spliterator(c, Spliterator.DISTINCT | Spliterator.ORDERED);
         }
 
-        if (!IS_ANDROID && NATIVE_SPECIALIZATION) {
+        if (!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) {
             if (c instanceof HashSet) {
                 return HMSpliterators.getHashSetSpliterator((HashSet<T>) c);
             }
@@ -2341,6 +2357,14 @@ public final class Spliterators {
         public void forEachRemaining(Consumer<? super Integer> action) {
             Spliterators.OfInt.forEachRemaining(this, action);
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean tryAdvance(Consumer<? super Integer> action) {
+            return Spliterators.OfInt.tryAdvance(this, action);
+        }
     }
 
     /**
@@ -2491,6 +2515,14 @@ public final class Spliterators {
         public void forEachRemaining(Consumer<? super Long> action) {
             Spliterators.OfLong.forEachRemaining(this, action);
         }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean tryAdvance(Consumer<? super Long> action) {
+            return Spliterators.OfLong.tryAdvance(this, action);
+        }
     }
 
     /**
@@ -2640,6 +2672,14 @@ public final class Spliterators {
         @Override
         public void forEachRemaining(Consumer<? super Double> action) {
             Spliterators.OfDouble.forEachRemaining(this, action);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean tryAdvance(Consumer<? super Double> action) {
+            return Spliterators.OfDouble.tryAdvance(this, action);
         }
     }
 
@@ -3160,30 +3200,38 @@ public final class Spliterators {
         }
     }
 
-    private static boolean getBooleanPropertyValue(final String property) {
+    private static boolean getBooleanPropVal(final String prop, final boolean defVal) {
         return AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
             @Override
             public Boolean run() {
-                boolean value = true;
+                boolean val = defVal;
                 try {
-                    String s = System.getProperty(property, Boolean.TRUE.toString());
-                    value = (s == null) || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
+                    String s = System.getProperty(prop, Boolean.toString(defVal));
+                    val = Boolean.parseBoolean(s.trim());
                 } catch (IllegalArgumentException ignore) {
                 } catch (NullPointerException ignore) {
                 }
-                return value;
+                return val;
             }
         });
     }
 
     /**
-     * Are we running on a Dalvik VM or maybe even ART?
-     * @return {@code true} if yes, otherwise {@code false}.
+     * Used to detect the presence or absence of android.util.DisplayMetrics
+     * and other classes. Gets employed when we need to establish whether we
+     * are running on Android and, if yes, whether the version of Android is
+     * based on Apache Harmony or on OpenJDK.
+     * 
+     * @param name
+     *            fully qualified class name
+     * @return {@code true} if class is present, otherwise {@code false}.
      */
-    private static boolean isAndroid() {
+    private static boolean isClassPresent(String name) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("android.util.DisplayMetrics");
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false, Spliterators.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
         }

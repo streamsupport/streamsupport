@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016 Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -77,6 +77,7 @@ import java8.util.Spliterators;
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
 import java8.util.function.Function;
+import java8.util.function.Functions;
 import java8.util.function.IntConsumer;
 import java8.util.function.LongConsumer;
 import java8.util.function.Supplier;
@@ -89,6 +90,8 @@ public class SpliteratorTraversingAndSplittingTest {
     private static List<Integer> SIZES = Arrays.asList(0, 1, 10, 42);
 
     private static class SpliteratorDataBuilder<T> {
+        private static final boolean hasJDK8148748SublistBug = JDK8148748SublistBugIndicator.BUG_IS_PRESENT;
+
         List<Object[]> data;
 
         List<T> exp;
@@ -124,8 +127,10 @@ public class SpliteratorTraversingAndSplittingTest {
         }
 
         void addList(Function<Collection<T>, ? extends List<T>> l) {
-            // @@@ If collection is instance of List then add sub-list tests
             addCollection(l);
+            if (!hasJDK8148748SublistBug) {
+                addCollection(Functions.andThen(l, list -> list.subList(0, list.size())));
+            }
         }
 
         void addMap(Function<Map<T, T>, ? extends Map<T, T>> m) {
@@ -337,6 +342,8 @@ public class SpliteratorTraversingAndSplittingTest {
 
             db.add("Arrays.asList().spliterator()",
                    () -> Spliterators.spliterator(Arrays.asList(exp.toArray(new Integer[0])), 0));
+
+            db.addList(RandomAccessList::new);
 
             db.addList(ArrayList::new);
 
@@ -610,11 +617,6 @@ public class SpliteratorTraversingAndSplittingTest {
                         return false;
                     }
                 }
-
-                @Override
-                public boolean tryAdvance(Consumer<? super Integer> action) {
-                    return Spliterators.OfInt.tryAdvance(this, action);
-                }
             }
             db.add("new Spliterators.AbstractIntAdvancingSpliterator()",
                    () -> new IntSpliteratorFromArray(exp));
@@ -767,11 +769,6 @@ public class SpliteratorTraversingAndSplittingTest {
                     else {
                         return false;
                     }
-                }
-
-                @Override
-                public boolean tryAdvance(Consumer<? super Long> action) {
-                    return Spliterators.OfLong.tryAdvance(this, action);
                 }
             }
             db.add("new Spliterators.AbstractLongAdvancingSpliterator()",
@@ -932,11 +929,6 @@ public class SpliteratorTraversingAndSplittingTest {
                     else {
                         return false;
                     }
-                }
-
-                @Override
-                public boolean tryAdvance(Consumer<? super Double> action) {
-                    return Spliterators.OfDouble.tryAdvance(this, action);
                 }
             }
             db.add("new Spliterators.AbstractDoubleAdvancingSpliterator()",
@@ -1410,5 +1402,4 @@ public class SpliteratorTraversingAndSplittingTest {
                    String.format("Exception thrown %s not an instance of %s",
                                  caught.getClass().getName(), expected.getName()));
     }
-
 }

@@ -144,17 +144,14 @@ final class ForEachOps {
 
         @Override
         public void begin(long size) {
-            //SinkDefaults.begin(this, size);
         }
 
         @Override
         public void end() {
-            //SinkDefaults.end(this);
         }
 
         @Override
         public boolean cancellationRequested() {
-            //return SinkDefaults.cancellationRequested(this);
             return false;
         }
 

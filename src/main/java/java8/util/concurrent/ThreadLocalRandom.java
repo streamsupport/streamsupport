@@ -82,6 +82,7 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  */
 public class ThreadLocalRandom extends Random {
+// CVS rev. 1.42
     /*
      * This class implements the java.util.Random API (and subclasses
      * Random) using a single static instance that accesses random
@@ -127,14 +128,6 @@ public class ThreadLocalRandom extends Random {
      * but we provide identical statistical properties.
      */
 
-    // Constants from SplittableRandom
-    private static final double DOUBLE_UNIT = 0x1.0p-53;  // 1.0  / (1L << 53)
-    private static final float  FLOAT_UNIT  = 0x1.0p-24f; // 1.0f / (1 << 24)
-
-    /** Rarely-used holder for the second of a pair of Gaussians */
-    private static final ThreadLocal<Double> nextLocalGaussian =
-        new ThreadLocal<>();
-
     /**
      * Field used only during singleton initialization.
      * True when constructor completes.
@@ -145,9 +138,6 @@ public class ThreadLocalRandom extends Random {
     private ThreadLocalRandom() {
         initialized = true; // false during super() call
     }
-
-    /** The common ThreadLocalRandom */
-    private static final ThreadLocalRandom instance = new ThreadLocalRandom();
 
     /**
      * Returns the current thread's {@code ThreadLocalRandom}.
@@ -179,11 +169,6 @@ public class ThreadLocalRandom extends Random {
     private final long nextSeed() {
         return TLRandom.nextSeed();
     }
-
-    // IllegalArgumentException messages
-    private static final String BAD_BOUND = "bound must be positive";
-    private static final String BAD_RANGE = "bound must be greater than origin";
-    private static final String BAD_SIZE  = "size must be non-negative";
 
     /**
      * The form of nextLong used by LongStream Spliterators.  If
@@ -488,7 +473,7 @@ public class ThreadLocalRandom extends Random {
             s = v1 * v1 + v2 * v2;
         } while (s >= 1 || s == 0);
         double multiplier = StrictMath.sqrt(-2 * StrictMath.log(s)/s);
-        nextLocalGaussian.set(new Double(v2 * multiplier));
+        nextLocalGaussian.set(Double.valueOf(v2 * multiplier));
         return v1 * multiplier;
     }
 
@@ -1045,4 +1030,22 @@ public class ThreadLocalRandom extends Random {
     private Object readResolve() {
         return current();
     }
+
+    // Static initialization
+
+    // Constants from SplittableRandom
+    private static final double DOUBLE_UNIT = 0x1.0p-53;  // 1.0  / (1L << 53)
+    private static final float  FLOAT_UNIT  = 0x1.0p-24f; // 1.0f / (1 << 24)
+
+    // IllegalArgumentException messages
+    private static final String BAD_BOUND = "bound must be positive";
+    private static final String BAD_RANGE = "bound must be greater than origin";
+    private static final String BAD_SIZE  = "size must be non-negative";
+
+    /** Rarely-used holder for the second of a pair of Gaussians */
+    private static final ThreadLocal<Double> nextLocalGaussian =
+        new ThreadLocal<>();
+
+    /** The common ThreadLocalRandom */
+    private static final ThreadLocalRandom instance = new ThreadLocalRandom();
 }

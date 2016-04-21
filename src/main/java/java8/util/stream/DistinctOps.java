@@ -24,7 +24,9 @@
  */
 package java8.util.stream;
 
+import java.util.AbstractSet;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -97,9 +99,16 @@ final class DistinctOps {
                     // and add null
                     Set<T> keys = map.keySet();
                     if (seenNull.get()) {
-                        // TODO Implement a more efficient set-union view, rather than copying
-                        keys = new HashSet<>(keys);
-                        keys.add(null);
+                        int size = keys.size();
+                        if (size >= 127) {
+                            // a more efficient set-union view, rather than copying
+                            keys = new KeysAndNullSet<>(keys, size);
+                        } else {
+                            HashSet<T> tmp = new HashSet<>(Math.max((int) ((size + 1) / 0.75f) + 1, 16));
+                            tmp.addAll(keys);
+                            tmp.add(null);
+                            keys = tmp;
+                        }
                     }
                     return Nodes.node(keys);
                 }
@@ -185,5 +194,48 @@ final class DistinctOps {
                 }
             }
         };
+    }
+
+    static final class KeysAndNullSet<E> extends AbstractSet<E> {
+
+        final Set<E> keys;
+        final int size;
+
+        KeysAndNullSet(Set<E> keys, int size) {
+            this.keys = keys;
+            this.size = size + 1;
+        }
+
+        @Override
+        public Iterator<E> iterator() {
+            return new Iterator<E>() {
+                boolean nullDelivered = false;
+                final Iterator<E> it = keys.iterator();
+                @Override
+                public boolean hasNext() {
+                    if (!nullDelivered) {
+                        return true;
+                    }
+                    return it.hasNext();
+                }
+                @Override
+                public E next() {
+                    if (!nullDelivered) {
+                        nullDelivered = true;
+                        return null;
+                    }
+                    return it.next();
+                }
+                @Override
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+
+        @Override
+        public int size() {
+            return size;
+        }
     }
 }

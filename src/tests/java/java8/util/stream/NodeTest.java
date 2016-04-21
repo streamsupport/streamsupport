@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import java8.util.function.Function;
 
 import org.testng.annotations.DataProvider;
@@ -35,11 +36,14 @@ import org.testng.annotations.Test;
 @Test
 public class NodeTest extends OpTestCase {
 
+    // see https://sourceforge.net/p/streamsupport/tickets/149/?limit=25&page=1#145a
+    private static final int MAX_SIZE = AndroidNDetector.hasStackOverflowErrorProblem() ? AndroidNDetector.MAX_SIZE : 1000;
+
     @DataProvider(name = "nodes")
     public Object[][] createSizes() {
         List<Object[]> params = new ArrayList<>();
 
-        for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, 1000)) {
+        for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, MAX_SIZE)) {
             Integer[] array = new Integer[size];
             for (int i = 0; i < array.length; i++) {
                 array[i] = i;

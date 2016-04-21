@@ -7,7 +7,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
-//import android.java.util.AndroidHashSet;
 import java8.util.Spliterator;
 import java8.util.Spliterators;
 
@@ -31,7 +30,7 @@ public final class Characteristics {
         if (c instanceof TreeSet<?>) {
             return Spliterator.DISTINCT | Spliterator.SORTED | Spliterator.ORDERED;
         }
-        if (c instanceof HashSet<?> /*|| c instanceof AndroidHashSet<?>*/) {
+        if (c instanceof HashSet<?>) {
             return Spliterator.DISTINCT;
         }
         if ("java.util.ArrayList$SubList".equals(cn)) { // JRE7 and above (ArrayList.subList())

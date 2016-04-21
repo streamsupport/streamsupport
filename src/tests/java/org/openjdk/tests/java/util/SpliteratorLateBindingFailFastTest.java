@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -51,8 +51,8 @@ import java8.util.Spliterator;
 import java8.util.Spliterators;
 import java8.util.function.Consumer;
 import java8.util.function.Function;
+import java8.util.function.Functions;
 import java8.util.function.Supplier;
-
 import static org.testng.Assert.*;
 
 /**
@@ -70,6 +70,8 @@ public class SpliteratorLateBindingFailFastTest {
     }
 
     private static class SpliteratorDataBuilder<T> {
+        private static final boolean hasJDK8148748SublistBug = JDK8148748SublistBugIndicator.BUG_IS_PRESENT;
+
         final List<Object[]> data;
 
         final T newValue;
@@ -139,8 +141,10 @@ public class SpliteratorLateBindingFailFastTest {
         }
 
         void addList(Function<Collection<T>, ? extends List<T>> l) {
-            // @@@ If collection is instance of List then add sub-list tests
             addCollection(l);
+            if (!hasJDK8148748SublistBug) {
+                addCollection(Functions.andThen(l, list -> list.subList(0, list.size())));
+            }
         }
 
         void addMap(Function<Map<T, T>, ? extends Map<T, T>> mapConstructor) {
@@ -220,6 +224,8 @@ public class SpliteratorLateBindingFailFastTest {
         SpliteratorDataBuilder<Integer> db = new SpliteratorDataBuilder<>(data, 5, Arrays.asList(1, 2, 3, 4));
 
         // Collections
+
+        db.addList(RandomAccessList::new);
 
         db.addList(ArrayList::new);
 
@@ -392,5 +398,4 @@ public class SpliteratorLateBindingFailFastTest {
                    String.format("Exception thrown %s not an instance of %s",
                                  caught.getClass().getName(), expected.getName()));
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -66,7 +66,7 @@ public class CollectionAndMapModifyStreamTest {
                 return new HashMap<Integer, Integer>(content);
             }
         });
-        maps.put(HashMap.class.getName(), new Supplier<Map<Integer, Integer>>() {
+        maps.put(LinkedHashMap.class.getName(), new Supplier<Map<Integer, Integer>>() {
             @Override
             public Map<Integer, Integer> get() {
                 return new LinkedHashMap<Integer, Integer>(content);

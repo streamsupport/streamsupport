@@ -51,6 +51,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import java8.util.Maps;
+import java8.util.concurrent.ConcurrentMaps;
 import java8.util.function.BiFunction;
 import java8.util.function.Supplier;
 
@@ -143,7 +144,7 @@ public class DefaultsTest {
         Set<String> EACH_REPLACE = new HashSet<String>(map.size());
 
         if (map instanceof ConcurrentMap) {
-            Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k, v) -> {
+            ConcurrentMaps.replaceAll((ConcurrentMap<IntegerEnum, String>) map, (k, v) -> {
                 int idx = (null == k) ? 0 : k.ordinal(); // substitute for index.
                 assertNull(EACH_KEY[idx]);
                 EACH_KEY[idx] = (idx == 0) ? KEYS[0] : k; // substitute for comparison.
@@ -174,11 +175,11 @@ public class DefaultsTest {
     public static void testReplaceAllNoNullReplacement(String description, Map<IntegerEnum, String> map) {
         if (map instanceof ConcurrentMap) {
             assertThrows(
-                    () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, null); },
+                    () -> { ConcurrentMaps.replaceAll((ConcurrentMap<IntegerEnum, String>) map, null); },
                     NullPointerException.class,
                     description);
                 assertThrows(
-                    () -> { Maps.replaceAllConcurrent((ConcurrentMap<IntegerEnum, String>) map, (k,v) -> null); },
+                    () -> { ConcurrentMaps.replaceAll((ConcurrentMap<IntegerEnum, String>) map, (k,v) -> null); },
                     NullPointerException.class,
                     description + " should not allow replacement with null value");
         } else {
@@ -311,7 +312,7 @@ public class DefaultsTest {
         assertNull(map.get(null), "value not null");
         if (map instanceof ConcurrentMap) {
             ConcurrentMap<IntegerEnum, String> concMap = (ConcurrentMap<IntegerEnum, String>) map;
-            assertSame(Maps.computeIfAbsentConcurrent(concMap, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
+            assertSame(ConcurrentMaps.computeIfAbsent(concMap, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
         } else {
             assertSame(Maps.computeIfAbsent(map, null, (k) -> EXTRA_VALUE), EXTRA_VALUE, "not mapped to result");
         }
@@ -400,7 +401,7 @@ public class DefaultsTest {
                 "Should throw NPE");
     }
 
-     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
+    @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
     public void testComputeNulls(String description, Map<IntegerEnum, String> map) {
         assertTrue(map.containsKey(null), "null key absent");
         assertNull(map.get(null), "value not null");
@@ -443,7 +444,7 @@ public class DefaultsTest {
             return null;
         }), null, description + ": null resulted expected");
         assertFalse(map.containsKey(EXTRA_KEY),  description + ": null key present");
-       // compute with map containing null value
+        // compute with map containing null value
         assertNull(map.put(EXTRA_KEY, null),  description + ": unexpected value");
         assertSame(Maps.compute(map, EXTRA_KEY, (k, v) -> {
             assertSame(k, EXTRA_KEY);
@@ -517,7 +518,7 @@ public class DefaultsTest {
 
             String returned = null;
             if (map instanceof ConcurrentMap) {
-                returned = Maps.mergeConcurrent( (ConcurrentMap<IntegerEnum, String>) map, EXTRA_KEY,
+                returned = ConcurrentMaps.merge( (ConcurrentMap<IntegerEnum, String>) map, EXTRA_KEY,
                         newValue == Merging.Value.NULL ? (String) null : VALUES[2],
                         merger
                         );
@@ -729,6 +730,19 @@ public class DefaultsTest {
     }
 
     private static Collection<Object[]> makeRWNoNullsMaps() {
+        if (IS_ANDROID_N) {
+            // temporary workaround for Android N (preview-2) issue 207090 
+            return Arrays.asList(
+                    // null key and value hostile
+                    new Object[]{"Hashtable", makeMap(Hashtable::new, false, false)},
+                    new Object[]{"ConcurrentHashMap", makeMap(ConcurrentHashMap::new, false, false)},
+                    new Object[]{"ConcurrentSkipListMap", makeMap(ConcurrentSkipListMap::new, false, false)},
+                    new Object[]{"Collections.synchronizedMap(ConcurrentHashMap)", Collections.synchronizedMap(makeMap(ConcurrentHashMap::new, false, false))},
+                    new Object[]{"Collections.checkedMap(ConcurrentHashMap)", Collections.checkedMap(makeMap(ConcurrentHashMap::new, false, false), IntegerEnum.class, String.class)},
+                    new Object[]{"ExtendsAbstractMap(ConcurrentHashMap)", makeMap(() -> {return new ExtendsAbstractMap(new ConcurrentHashMap());}, false, false)}
+                    );
+        }
+        // general case
         return Arrays.asList(
             // null key and value hostile
             new Object[]{"Hashtable", makeMap(Hashtable::new, false, false)},
@@ -866,8 +880,8 @@ public class DefaultsTest {
 
     /**
      * A simple mutable map implementation that provides only default
-     * implementations of all methods. ie. none of the Map interface default
-     * methods have overridden implementations.
+     * implementations of all methods, i.e. none of the (Java 8) Map
+     * interface default methods have overridden implementations.
      *
      * @param <K> Type of keys
      * @param <V> Type of values
@@ -908,8 +922,8 @@ public class DefaultsTest {
 
     /**
      * A simple mutable concurrent map implementation that provides only default
-     * implementations of all methods. ie. none of the ConcurrentMap interface
-     * default methods have overridden implementations.
+     * implementations of all methods, i.e. none of the (Java 8) ConcurrentMap
+     * interface default methods have overridden implementations.
      *
      * @param <K> Type of keys
      * @param <V> Type of values
@@ -917,7 +931,7 @@ public class DefaultsTest {
     public static class ImplementsConcurrentMap<K, V> extends ExtendsAbstractMap<ConcurrentMap<K, V>, K, V> implements ConcurrentMap<K, V> {
         public ImplementsConcurrentMap() { super(new ConcurrentHashMap<K, V>()); }
 
-        // ConcurrentMap reabstracts these methods
+        // Java 8 ConcurrentMap re-abstracts these (in Java 8 Map default) methods
 
         public V replace(K k, V v) { return ((ConcurrentMap<K, V>) map).replace(k, v); };
 
@@ -926,5 +940,33 @@ public class DefaultsTest {
         public boolean remove(Object k, Object v) { return ((ConcurrentMap<K, V>) map).remove(k, v); }
 
         public V putIfAbsent(K k, V v) { return ((ConcurrentMap<K, V>) map).putIfAbsent(k, v); }
+    }
+
+    // is this Android? (defaults to false)
+    private static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics");
+
+    // is this Android N developer preview? (defaults to false)
+    private static final boolean IS_ANDROID_N = IS_ANDROID && isClassPresent("java.util.function.Function");
+
+    /**
+     * Used to detect the presence or absence of android.util.DisplayMetrics
+     * and other classes. Gets employed when we need to establish whether we
+     * are running on Android and, if yes, whether the version of Android is
+     * based on Apache Harmony or on OpenJDK.
+     * 
+     * @param name
+     *            fully qualified class name
+     * @return {@code true} if class is present, otherwise {@code false}.
+     */
+    private static boolean isClassPresent(String name) {
+        Class<?> clazz = null;
+        try {
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false, DefaultsTest.class.getClassLoader());
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
     }
 }

@@ -938,7 +938,6 @@ public class StampedLock implements java.io.Serializable {
      * @return new stamp on success, else zero
      */
     private long tryIncReaderOverflow(long s) {
-        // assert (s & ABITS) >= RFULL;
         if ((s & ABITS) == RFULL) {
             if (U.compareAndSwapLong(this, STATE, s, s | RBITS)) {
                 ++readerOverflow;
@@ -958,7 +957,6 @@ public class StampedLock implements java.io.Serializable {
      * @return new stamp on success, else zero
      */
     private long tryDecReaderOverflow(long s) {
-        // assert (s & ABITS) >= RFULL;
         if ((s & ABITS) == RFULL) {
             if (U.compareAndSwapLong(this, STATE, s, s | RBITS)) {
                 int r; long next;

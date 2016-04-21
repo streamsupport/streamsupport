@@ -98,7 +98,7 @@ abstract class PipelineHelper<P_OUT> {
      * <p><b>Implementation Requirements:</b><br>
      * The implementation behaves as if:
      * <pre>{@code
-     *     intoWrapped(wrapSink(sink), spliterator);
+     *     copyInto(wrapSink(sink), spliterator);
      * }</pre>
      *
      * @param sink the {@code Sink} to receive the results
@@ -114,7 +114,7 @@ abstract class PipelineHelper<P_OUT> {
      * <p><b>Implementation Requirements:</b><br>
      * The implementation behaves as if:
      * <pre>{@code
-     *     intoWrapped(wrapSink(sink), spliterator);
+     *     copyInto(wrapSink(sink), spliterator);
      * }</pre>
      *
      * @param sink the {@code SinkConsumer} to receive the results

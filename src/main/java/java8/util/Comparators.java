@@ -484,6 +484,5 @@ public final class Comparators {
     }
 
     private Comparators() {
-        throw new AssertionError("no instances");
     }
 }
