@@ -71,10 +71,10 @@ build.gradle:
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.4.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4.2'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.4.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4.3'
 }
 ```
 
@@ -109,7 +109,7 @@ dependencies {
 
 ## RELEASE NOTES
 
- - "1.4.2-stable" is the current stable release
+ - "1.4.3-stable" is the current stable release
 
 
 ## GENERAL
@@ -119,9 +119,7 @@ dependencies {
    j8.u.s.StreamSupport#parallelStream(Collection)
 
  - The static methods from interface j.u.s.Stream are located in j8.u.s.RefStreams
-   which also contains the new Java 9 j.u.s.Stream default methods. The equivalent
-   methods in j8.u.s.StreamSupport are deprecated since 1.3.2 and have been removed
-   in release 1.4.1
+   which also contains the new Java 9 j.u.s.Stream default methods.
 
  - As of release 1.4, the former single streamsupport.jar has been partitioned into
    a core streamsupport.jar and 3 additional optional components:
@@ -151,7 +149,6 @@ dependencies {
    via StreamSupport#stream()/#parallelStream() already implement these methods).
 
  - Release 1.4 completes the Java 9 "More Concurrency Updates" JEP 266.
-   See http://openjdk.java.net/jeps/266
    This covers, among other things, the introduction of the Java 9 Flow API
    (the preliminary implementation of reactive streams) and Java 9 enhancements
    to j.u.c.CompletableFuture and fork/join as well as improvements to their
@@ -164,9 +161,32 @@ dependencies {
  - As of 1.4.2, the deprecated "concurrent" methods in j8.u.Maps have been
    removed. Please use the equivalent methods in j8.u.c.ConcurrentMaps.
 
+ - As of 1.4.3, the signature of the checkIndex() methods in j8.u.Objects
+   has changed. See https://bugs.openjdk.java.net/browse/JDK-8146458
+
 
 
 ## VERSION HISTORY
+
+1.4.3-stable (2016-04-17)
+ - JDK-8072727: add variation of Stream.iterate() that's finite
+ - JDK-8153293: preserve SORTED/DISTINCT for primitive stream ops
+ - JDK-8152924: improve scalability of CompletableFuture
+ - JDK-8151123: summingDouble/averagingDouble call mapper twice
+ - JDK-8146458: better exception reports for index check methods
+ - JDK-8152617: add wildcards to Optional flatMap()
+ - JDK-8150417: make TLRandom robust against initialization cycles
+ - perf. optimization for RandomAccess AbstractList subclasses (#176)
+ - added support for the Android N developer preview (#149, #155, #191)
+ - add tryAdvance() to the primitive AbstractSpliterator classes (#170)
+ - optimize FJPool / Striped64 to avoid false sharing (#190)
+ - updated CompletableFuture(Test) to latest jsr166 CVS revision (#185)
+ - JDK-8151344: improve timeout factor handling in JSR166TestCase
+ - JDK-8151511: one CollectionAndMapModifyStreamTest not executed
+ - JDK-8151785: typo in j.u.stream.PipelineHelper
+ - updated JSR166TestCase to latest jsr166 CVS revision (#181)
+ - added subList() test to SpliteratorTraversingAndSplittingTest (#174)
+ - added subList() test(s) for Java 9 test platform (#189)
 
 1.4.2-stable (2016-02-12)
  - JDK-8148250: limit() optimization for ordered source
