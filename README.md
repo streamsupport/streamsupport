@@ -450,3 +450,7 @@ alpha-2 (2014-05-17)
 
 alpha-1 (2014-05-10)
  - initial drop
+
+# LICENSE
+
+GPL2, CE (GNU General Public License, version 2, with the Classpath Exception)
