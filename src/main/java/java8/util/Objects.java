@@ -549,12 +549,6 @@ public final class Objects {
      *  <li>{@code length < 0}, which is implied from the former inequalities</li>
      * </ul>
      *
-     * <p>This method behaves as if {@link #checkIndex(int, int, BiFunction)}
-     * was called with same out-of-bounds arguments and an exception formatter
-     * argument produced from an invocation of
-     * {@code outOfBoundsExceptionFormatter(IndexOutOfBounds::new)} (though it may
-     * be more efficient).
-     *
      * @param index the index
      * @param length the upper-bound (exclusive) of the range
      * @return {@code index} if it is within bounds of the range
@@ -623,12 +617,6 @@ public final class Objects {
      *  <li>{@code toIndex > length}</li>
      *  <li>{@code length < 0}, which is implied from the former inequalities</li>
      * </ul>
-     *
-     * <p>This method behaves as if {@link #checkFromToIndex(int, int, int, BiFunction)}
-     * was called with same out-of-bounds arguments and an exception formatter
-     * argument produced from an invocation of
-     * {@code outOfBoundsExceptionFormatter(IndexOutOfBounds::new)} (though it may
-     * be more efficient).
      *
      * @param fromIndex the lower-bound (inclusive) of the sub-range
      * @param toIndex the upper-bound (exclusive) of the sub-range
@@ -702,12 +690,6 @@ public final class Objects {
      *  <li>{@code fromIndex + size > length}, taking into account integer overflow</li>
      *  <li>{@code length < 0}, which is implied from the former inequalities</li>
      * </ul>
-     *
-     * <p>This method behaves as if {@link #checkFromIndexSize(int, int, int, BiFunction)}
-     * was called with same out-of-bounds arguments and an exception formatter
-     * argument produced from an invocation of
-     * {@code outOfBoundsExceptionFormatter(IndexOutOfBounds::new)} (though it may
-     * be more efficient).
      *
      * @param fromIndex the lower-bound (inclusive) of the sub-interval
      * @param size the size of the sub-range
