@@ -145,16 +145,25 @@ final class DualPivotQuicksort {
             }
         }
 
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
         if (count == 0) {
             // A single equal run
             return;
         } else if (count == 1 && run[count] > right) {
-            // A single ascending or transformed descending run
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
             return;
         }
         right++;
         if (run[count] < right) {
-            // Include final run
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
             run[++count] = right;
         }
 
@@ -602,16 +611,25 @@ final class DualPivotQuicksort {
             }
         }
 
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
         if (count == 0) {
             // A single equal run
             return;
         } else if (count == 1 && run[count] > right) {
-            // A single ascending or transformed descending run
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
             return;
         }
         right++;
         if (run[count] < right) {
-            // Include final run
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
             run[++count] = right;
         }
 
@@ -1095,16 +1113,25 @@ final class DualPivotQuicksort {
             }
         }
 
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
         if (count == 0) {
             // A single equal run
             return;
         } else if (count == 1 && run[count] > right) {
-            // A single ascending or transformed descending run
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
             return;
         }
         right++;
         if (run[count] < right) {
-            // Include final run
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
             run[++count] = right;
         }
 
@@ -1588,16 +1615,25 @@ final class DualPivotQuicksort {
             }
         }
 
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
         if (count == 0) {
             // A single equal run
             return;
         } else if (count == 1 && run[count] > right) {
-            // A single ascending or transformed descending run
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
             return;
         }
         right++;
         if (run[count] < right) {
-            // Include final run
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
             run[++count] = right;
         }
 
@@ -2177,16 +2213,25 @@ final class DualPivotQuicksort {
             }
         }
 
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
         if (count == 0) {
             // A single equal run
             return;
         } else if (count == 1 && run[count] > right) {
-            // A single ascending or transformed descending run
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
             return;
         }
         right++;
         if (run[count] < right) {
-            // Include final run
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
             run[++count] = right;
         }
 
@@ -2725,16 +2770,25 @@ final class DualPivotQuicksort {
             }
         }
 
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
         if (count == 0) {
             // A single equal run
             return;
         } else if (count == 1 && run[count] > right) {
-            // A single ascending or transformed descending run
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
             return;
         }
         right++;
         if (run[count] < right) {
-            // Include final run
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
             run[++count] = right;
         }
 
