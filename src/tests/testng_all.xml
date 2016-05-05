@@ -91,7 +91,6 @@
       <class name="org.openjdk.other.tests.java.util.stream.LongPrimitiveOpsTests"/>
       <class name="org.openjdk.other.tests.java.util.stream.StreamParSeqTest"/>
       <class name="org.openjdk.other.tests.objects.BasicObjectsTest"/>
-      <class name="org.openjdk.other.tests.objects.CheckIndex"/>
       <class name="org.openjdk.other.tests.optional.Basic"/>
       <class name="org.openjdk.other.tests.optional.BasicDouble"/>
       <class name="org.openjdk.other.tests.optional.BasicInt"/>
@@ -106,6 +105,7 @@
       <class name="org.openjdk.other.tests.sumAndAverage.TestDoubleSumAverage"/>
 
       <!-- block 9 -->
+      <class name="java8.util.CheckIndex"/>
       <class name="java8.util.Sorting"/>
       <class name="java8.util.SortingNearlySortedPrimitive"/>
       <class name="java8.util.Ticket66Test"/>
