@@ -20,7 +20,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package java8.util;
+package org.openjdk.other.tests.objects;
 
 /**
  * @test
@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import java8.util.Objects;
 import java8.util.function.BiConsumer;
 import java8.util.function.BiFunction;
 import java8.util.function.Function;
@@ -76,6 +77,10 @@ public class CheckIndex {
 //        };
 //    }
 
+    private static final int CHECK_INDEX = 1;
+    private static final int CHECK_FROM_TO_INDEX = 2;
+    private static final int CHECK_FROM_INDEX_SIZE = 3;
+
     static <EX extends RuntimeException>
     BiFunction<Integer, List<Integer>, EX> outOfBoundsExceptionFormatter(Function<String, EX> f) {
         return new BiFunction<Integer, List<Integer>, EX>() {
@@ -84,9 +89,25 @@ public class CheckIndex {
                 int arg0 = args.get(0);
                 int arg1 = args.get(1);
                 int arg2 = args.size() == 3 ? args.get(2) : -1; 
-                return f.apply(Preconditions.outOfBoundsMessage(checkKind, arg0, arg1, arg2));
+                return f.apply(outOfBoundsMessage(checkKind, arg0, arg1, arg2));
             }
         };
+    }
+
+    private static String outOfBoundsMessage(int checkKind, int arg0, int arg1, int arg2) {
+        if (checkKind == CHECK_INDEX) { // "checkIndex" (1)
+            return String.format("Index %d out-of-bounds for length %d",
+                    arg0, arg1);
+        }
+        if (checkKind == CHECK_FROM_TO_INDEX) { // "checkFromToIndex" (2)
+            return String.format("Range [%d, %d) out-of-bounds for length %d",
+                    arg0, arg1, arg2);
+        }
+        if (checkKind == CHECK_FROM_INDEX_SIZE) { // "checkFromIndexSize" (3)
+            return String.format("Range [%d, %<d + %d) out-of-bounds for length %d",
+                    arg0, arg1, arg2);
+        }
+        throw new IllegalStateException();
     }
 
     static final int[] VALUES = {0, 1, Integer.MAX_VALUE - 1, Integer.MAX_VALUE, -1, Integer.MIN_VALUE + 1, Integer.MIN_VALUE};
@@ -114,7 +135,7 @@ public class CheckIndex {
         String expectedMessage = withinBounds
                                  ? null
                                  : outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
-                apply(Preconditions.CHECK_INDEX /*"checkIndex"*/, Arrays.asList(index, length)).getMessage();
+                apply(CHECK_INDEX /*"checkIndex"*/, Arrays.asList(index, length)).getMessage();
 
         BiConsumer<Class<? extends RuntimeException>, IntSupplier> checker = (ec, s) -> {
             try {
@@ -176,7 +197,7 @@ public class CheckIndex {
         String expectedMessage = withinBounds
                                  ? null
                                  : outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
-                apply(Preconditions.CHECK_FROM_TO_INDEX /*"checkFromToIndex"*/, Arrays.asList(fromIndex, toIndex, length)).getMessage();
+                apply(CHECK_FROM_TO_INDEX /*"checkFromToIndex"*/, Arrays.asList(fromIndex, toIndex, length)).getMessage();
 
         BiConsumer<Class<? extends RuntimeException>, IntSupplier> check = (ec, s) -> {
             try {
@@ -245,7 +266,7 @@ public class CheckIndex {
         String expectedMessage = withinBounds
                                  ? null
                                  : outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
-                apply(Preconditions.CHECK_FROM_INDEX_SIZE /*"checkFromIndexSize"*/, Arrays.asList(fromIndex, size, length)).getMessage();
+                apply(CHECK_FROM_INDEX_SIZE /*"checkFromIndexSize"*/, Arrays.asList(fromIndex, size, length)).getMessage();
 
         BiConsumer<Class<? extends RuntimeException>, IntSupplier> check = (ec, s) -> {
             try {
@@ -290,9 +311,9 @@ public class CheckIndex {
 
         List<String> messages = new ArrayList<>();
         // Exact arguments
-        messages.add(f.apply(Preconditions.CHECK_INDEX /*"checkIndex"*/, Arrays.asList(-1, 0)).getMessage());
-        messages.add(f.apply(Preconditions.CHECK_FROM_TO_INDEX /*"checkFromToIndex"*/, Arrays.asList(-1, 0, 0)).getMessage());
-        messages.add(f.apply(Preconditions.CHECK_FROM_INDEX_SIZE /*"checkFromIndexSize"*/, Arrays.asList(-1, 0, 0)).getMessage());
+        messages.add(f.apply(CHECK_INDEX /*"checkIndex"*/, Arrays.asList(-1, 0)).getMessage());
+        messages.add(f.apply(CHECK_FROM_TO_INDEX /*"checkFromToIndex"*/, Arrays.asList(-1, 0, 0)).getMessage());
+        messages.add(f.apply(CHECK_FROM_INDEX_SIZE /*"checkFromIndexSize"*/, Arrays.asList(-1, 0, 0)).getMessage());
 //        // Unknown check kind
 //        messages.add(f.apply("checkUnknown", Arrays.asList(-1, 0, 0)).getMessage());
 //        // Known check kind with more arguments

@@ -390,7 +390,11 @@ public final class Objects {
      */
     public static
     int checkIndex(int index, int length) {
-        return Preconditions.checkIndex(index, length);
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException(String.format(
+                    "Index %d out-of-bounds for length %d", index, length));
+        }
+        return index;
     }
 
     /**
@@ -416,7 +420,12 @@ public final class Objects {
      */
     public static
     int checkFromToIndex(int fromIndex, int toIndex, int length) {
-        return Preconditions.checkFromToIndex(fromIndex, toIndex, length);
+        if (fromIndex < 0 || fromIndex > toIndex || toIndex > length) {
+            throw new IndexOutOfBoundsException(String.format(
+                    "Range [%d, %d) out-of-bounds for length %d", fromIndex,
+                    toIndex, length));
+        }
+        return fromIndex;
     }
 
     /**
@@ -442,6 +451,11 @@ public final class Objects {
      */
     public static
     int checkFromIndexSize(int fromIndex, int size, int length) {
-        return Preconditions.checkFromIndexSize(fromIndex, size, length);
+        if ((length | fromIndex | size) < 0 || size > length - fromIndex) {
+            throw new IndexOutOfBoundsException(String.format(
+                    "Range [%d, %<d + %d) out-of-bounds for length %d",
+                    fromIndex, size, length));
+        }
+        return fromIndex;
     }
 }
