@@ -169,7 +169,7 @@ public class CheckIndex {
                 int rIndex = s.getAsInt();
                 if (!withinBounds)
                     fail(String.format(
-                            "Range [%d, %d) is out of bounds of [0, %d), but was reported to be withing bounds", fromIndex, toIndex, length));
+                            "Range [%d, %d) is out of bounds of [0, %d), but was reported to be within bounds", fromIndex, toIndex, length));
                 assertEquals(rIndex, fromIndex);
             }
             catch (RuntimeException e) {
@@ -238,7 +238,7 @@ public class CheckIndex {
                 int rIndex = s.getAsInt();
                 if (!withinBounds)
                     fail(String.format(
-                            "Range [%d, %d + %d) is out of bounds of [0, %d), but was reported to be withing bounds", fromIndex, fromIndex, size, length));
+                            "Range [%d, %d + %d) is out of bounds of [0, %d), but was reported to be within bounds", fromIndex, fromIndex, size, length));
                 assertEquals(rIndex, fromIndex);
             }
             catch (RuntimeException e) {

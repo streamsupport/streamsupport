@@ -41,7 +41,7 @@ final class Preconditions {
      *        to the name of one of the range check methods, checkIndex,
      *        checkFromToIndex, checkFromIndexSize
      * @param args the out-of-bounds arguments that failed the range check.
-     *        If the checkKind corresponds a the name of a range check method
+     *        If the checkKind corresponds to the name of a range check method
      *        then the bounds arguments are those that can be passed in order
      *        to the method.
      * @param oobef the exception formatter that when applied with a checkKind
@@ -63,7 +63,7 @@ final class Preconditions {
     }
 
     // Specific out-of-bounds exception producing methods that avoid
-    // the varargs-based code in the critical methods there by reducing their
+    // the varargs-based code in the critical methods thereby reducing
     // the byte code size, and therefore less likely to perturb inlining
 
     private static RuntimeException outOfBoundsCheckIndex(
