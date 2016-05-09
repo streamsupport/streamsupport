@@ -390,7 +390,7 @@ public final class Objects {
      */
     public static
     int checkIndex(int index, int length) {
-        return Preconditions.checkIndex(index, length, null);
+        return Preconditions.checkIndex(index, length);
     }
 
     /**
@@ -416,7 +416,7 @@ public final class Objects {
      */
     public static
     int checkFromToIndex(int fromIndex, int toIndex, int length) {
-        return Preconditions.checkFromToIndex(fromIndex, toIndex, length, null);
+        return Preconditions.checkFromToIndex(fromIndex, toIndex, length);
     }
 
     /**
@@ -442,6 +442,6 @@ public final class Objects {
      */
     public static
     int checkFromIndexSize(int fromIndex, int size, int length) {
-        return Preconditions.checkFromIndexSize(fromIndex, size, length, null);
+        return Preconditions.checkFromIndexSize(fromIndex, size, length);
     }
 }
