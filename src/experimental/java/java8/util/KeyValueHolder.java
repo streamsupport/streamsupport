@@ -30,12 +30,12 @@ import java.util.Map;
  * An immutable container for a key and a value, suitable for use
  * in creating and populating {@code Map} instances.
  *
- * <p>This is a <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>
+ * <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a>
  * class; use of identity-sensitive operations (including reference equality
  * ({@code ==}), identity hash code, or synchronization) on instances of
  * {@code KeyValueHolder} may have unpredictable results and should be avoided.
  *
- * @apiNote
+ * <p><b>API Note:</b><br>
  * This class is not public. Instances can be created using the
  * {@link Map#entry Map.entry(k, v)} factory method, which is public.
  *
