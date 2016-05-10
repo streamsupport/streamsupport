@@ -34,9 +34,8 @@ public final class Integers {
      * {@code Integer.hashCode()}.
      *
      * @param value the value to hash
-     * @since 1.8
-     *
      * @return a hash code value for a {@code int} value.
+     * @since 1.8
      */
     public static int hashCode(int value) {
         return value;
