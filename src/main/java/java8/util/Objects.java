@@ -41,14 +41,6 @@ import java8.util.function.Supplier;
  * {@link Objects#checkFromToIndex}, and {@link Objects#checkFromIndexSize} are
  * provided for the convenience of checking if values corresponding to indexes
  * and sub-ranges are out-of-bounds.
- * Variations of these static methods support customization of the runtime
- * exception, and corresponding exception detail message, that is thrown when
- * values are out-of-bounds.  Such methods accept a functional interface
- * argument, instances of {@code BiFunction}, that maps out-of-bound values to a
- * runtime exception.  Care should be taken when using such methods in
- * combination with an argument that is a lambda expression, method reference or
- * class that capture values.  In such cases the cost of capture, related to
- * functional interface allocation, may exceed the cost of checking bounds.
  *
  * @since 1.7
  */
