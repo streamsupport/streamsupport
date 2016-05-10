@@ -45,7 +45,7 @@ import java8.util.stream.Stream;
  * {@link #ifPresent(java8.util.function.Consumer) ifPresent()} (performs an
  * action if a value is present).
  *
- * <p>This is a <a href="../lang/doc-files/ValueBased.html">value-based</a>
+ * <p>This is a <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>
  * class; use of identity-sensitive operations (including reference equality
  * ({@code ==}), identity hash code, or synchronization) on instances of
  * {@code Optional} may have unpredictable results and should be avoided.
