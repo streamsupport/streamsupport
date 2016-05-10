@@ -27,11 +27,11 @@ final class J8Collections {
      */
     @SuppressWarnings("unchecked")
     static <T> Iterator<T> emptyIterator() {
-        return (Iterator<T>) EmptyIterator.EMPTY_ITERATOR;
+        return (Iterator<T>) EmptyIt.EMPTY_ITERATOR;
     }
 
     static <E> Iterator<E> singletonIterator(final E e) {
-        return new Iterator<E>() {
+        return new ImmutableIt<E>() {
             private boolean hasNext = true;
             public boolean hasNext() {
                 return hasNext;
@@ -43,14 +43,11 @@ final class J8Collections {
                 }
                 throw new NoSuchElementException();
             }
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
         };
     }
 
-    private static class EmptyIterator<E> implements Iterator<E> {
-        static final EmptyIterator<Object> EMPTY_ITERATOR = new EmptyIterator<Object>();
+    static final class EmptyIt<E> extends ImmutableIt<E> {
+        static final EmptyIt<Object> EMPTY_ITERATOR = new EmptyIt<Object>();
 
         public boolean hasNext() {
             return false;
@@ -59,9 +56,12 @@ final class J8Collections {
         public E next() {
             throw new NoSuchElementException();
         }
+    }
 
+    static abstract class ImmutableIt<T> implements Iterator<T> {
+        @Override
         public void remove() {
-            throw new IllegalStateException();
+            throw new UnsupportedOperationException("remove");
         }
     }
 

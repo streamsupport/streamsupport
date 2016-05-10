@@ -281,7 +281,7 @@ final class ImmutableCollections {
 
         @Override
         public Iterator<E> iterator() {
-            return new Iterator<E>() {
+            return new J8Collections.ImmutableIt<E>() {
                 private int idx = 0;
 
                 @Override
@@ -300,11 +300,6 @@ final class ImmutableCollections {
                     } else {
                         throw new NoSuchElementException();
                     }
-                }
-
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("remove");
                 }
             };
         }
@@ -351,13 +346,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            Objects.requireNonNull(o);
-            return probe(o) >= 0;
+            return probe(Objects.requireNonNull(o)) >= 0;
         }
 
         @Override
         public Iterator<E> iterator() {
-            return new Iterator<E>() {
+            return new J8Collections.ImmutableIt<E>() {
                 private int idx = 0;
 
                 @Override
@@ -372,15 +366,10 @@ final class ImmutableCollections {
 
                 @Override
                 public E next() {
-                    if (! hasNext()) {
+                    if (!hasNext()) {
                         throw new NoSuchElementException();
                     }
                     return elements[idx++];
-                }
-
-                @Override
-                public void remove() {
-                    throw new UnsupportedOperationException("remove");
                 }
             };
         }
@@ -553,7 +542,7 @@ final class ImmutableCollections {
 
                 @Override
                 public Iterator<Map.Entry<K,V>> iterator() {
-                    return new Iterator<Map.Entry<K,V>>() {
+                    return new J8Collections.ImmutableIt<Map.Entry<K,V>>() {
                         int idx = 0;
 
                         @Override
@@ -577,11 +566,6 @@ final class ImmutableCollections {
                             } else {
                                 throw new NoSuchElementException();
                             }
-                        }
-
-                        @Override
-                        public void remove() {
-                            throw new UnsupportedOperationException("remove");
                         }
                     };
                 }
