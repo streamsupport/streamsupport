@@ -45,7 +45,7 @@ import java.util.Map;
  * @param <K> the key type
  * @param <V> the value type
  *
- * @see Map#ofEntries Map.ofEntries()
+ * @see Maps#ofEntries Maps.ofEntries()
  * @since 9
  */
 final class KeyValueHolder<K,V> implements Map.Entry<K,V> {

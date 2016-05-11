@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.RandomAccess;
 import java.util.Set;
+
 import java8.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -72,6 +73,8 @@ final class ImmutableCollections {
     // ---------- List Implementations ----------
 
     static final class List0<E> extends AbstractList<E> implements RandomAccess, Serializable {
+        static final List0<Object> EMPTY_LIST = new List0<Object>();
+
         List0() { }
 
         @Override
@@ -191,6 +194,8 @@ final class ImmutableCollections {
     // ---------- Set Implementations ----------
 
     static final class Set0<E> extends AbstractSet<E> implements Serializable {
+        static final Set0<Object> EMPTY_SET = new Set0<Object>();
+
         Set0() { }
 
         @Override
@@ -409,6 +414,8 @@ final class ImmutableCollections {
     // ---------- Map Implementations ----------
 
     static final class Map0<K,V> extends AbstractMap<K,V> implements Serializable {
+        static final Map0<Object, Object> EMPTY_MAP = new Map0<Object, Object>();
+
         Map0() { }
 
         @Override
@@ -610,7 +617,7 @@ final class ImmutableCollections {
         Objects.requireNonNull(elements);
         switch (elements.length) {
             case 0:
-                return new ImmutableCollections.List0<E>();
+                return (List<E>) List0.EMPTY_LIST;
             case 1:
                 return new ImmutableCollections.List1<E>(elements[0]);
             case 2:
@@ -620,8 +627,9 @@ final class ImmutableCollections {
         }
     }
 
+    @SuppressWarnings("unchecked")
     static <E> Set<E> setOf() { // streamsupport added
-        return new ImmutableCollections.Set0<E>();
+        return (Set<E>) Set0.EMPTY_SET;
     }
 
     static <E> Set<E> setOf(E e1) { // streamsupport added
@@ -632,7 +640,7 @@ final class ImmutableCollections {
         Objects.requireNonNull(elements);
         switch (elements.length) {
             case 0:
-                return new ImmutableCollections.Set0<E>();
+                return setOf();
             case 1:
                 return new ImmutableCollections.Set1<E>(elements[0]);
             case 2:
@@ -691,7 +699,7 @@ final class CollSer implements Serializable {
                     return ImmutableCollections.setOf(array);
                 case IMM_MAP:
                     if (array.length == 0) {
-                        return new ImmutableCollections.Map0<Object, Object>();
+                        return ImmutableCollections.Map0.EMPTY_MAP;
                     } else if (array.length == 2) {
                         return new ImmutableCollections.Map1<Object, Object>(array[0], array[1]);
                     } else {
