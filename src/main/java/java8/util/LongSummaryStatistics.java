@@ -33,7 +33,7 @@ import java8.util.stream.Collector;
  * average.
  *
  * <p>This class is designed to work with (though does not require)
- * {@linkplain java.util.stream streams}. For example, you can compute
+ * {@linkplain java8.util.stream.Stream streams}. For example, you can compute
  * summary statistics on a stream of longs with:
  * <pre> {@code
  * LongSummaryStatistics stats = longStream.collect(LongSummaryStatistics::new,
