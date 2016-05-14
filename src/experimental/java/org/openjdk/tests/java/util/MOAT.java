@@ -20,7 +20,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package java8.util;
+package org.openjdk.tests.java.util;
 
 /*
  * @test
@@ -89,9 +89,12 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-
 import java.lang.reflect.Method;
 
+import java8.util.Lists;
+import java8.util.Maps;
+import java8.util.Objects;
+import java8.util.Sets;
 import java8.util.concurrent.ThreadLocalRandom;
 
 import org.testng.annotations.Test;

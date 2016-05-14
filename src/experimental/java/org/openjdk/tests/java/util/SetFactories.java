@@ -20,7 +20,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package java8.util;
+package org.openjdk.tests.java.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,6 +34,8 @@ import java.util.Iterator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java8.util.Iterators;
+import java8.util.Sets;
 
 import static org.testng.Assert.assertEquals;
 

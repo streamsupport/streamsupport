@@ -20,7 +20,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package java8.util;
+package org.openjdk.tests.java.util;
 
 /*
  * @test
@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java8.util.Maps;
 
 import org.testng.annotations.Test;
 

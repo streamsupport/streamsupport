@@ -20,7 +20,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package java8.util;
+package org.openjdk.tests.java.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java8.util.Iterators;
+import java8.util.Maps;
 import java8.util.stream.IntStreams;
 
 import org.testng.annotations.DataProvider;

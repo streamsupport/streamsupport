@@ -20,7 +20,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package java8.util;
+package org.openjdk.tests.java.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,12 +32,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java8.util.Iterators;
+import java8.util.Lists;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static java.util.Arrays.asList;
-
 import static org.testng.Assert.assertEquals;
 
 /*
