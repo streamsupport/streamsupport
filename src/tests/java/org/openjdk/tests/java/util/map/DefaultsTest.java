@@ -730,18 +730,18 @@ public class DefaultsTest {
     }
 
     private static Collection<Object[]> makeRWNoNullsMaps() {
-        if (IS_ANDROID_N) {
-            // temporary workaround for Android N (preview-2) issue 207090 
-            return Arrays.asList(
-                    // null key and value hostile
-                    new Object[]{"Hashtable", makeMap(Hashtable::new, false, false)},
-                    new Object[]{"ConcurrentHashMap", makeMap(ConcurrentHashMap::new, false, false)},
-                    new Object[]{"ConcurrentSkipListMap", makeMap(ConcurrentSkipListMap::new, false, false)},
-                    new Object[]{"Collections.synchronizedMap(ConcurrentHashMap)", Collections.synchronizedMap(makeMap(ConcurrentHashMap::new, false, false))},
-                    new Object[]{"Collections.checkedMap(ConcurrentHashMap)", Collections.checkedMap(makeMap(ConcurrentHashMap::new, false, false), IntegerEnum.class, String.class)},
-                    new Object[]{"ExtendsAbstractMap(ConcurrentHashMap)", makeMap(() -> {return new ExtendsAbstractMap(new ConcurrentHashMap());}, false, false)}
-                    );
-        }
+//        if (IS_ANDROID_N) {
+//            // temporary workaround for Android N (preview-2) issue 207090 
+//            return Arrays.asList(
+//                    // null key and value hostile
+//                    new Object[]{"Hashtable", makeMap(Hashtable::new, false, false)},
+//                    new Object[]{"ConcurrentHashMap", makeMap(ConcurrentHashMap::new, false, false)},
+//                    new Object[]{"ConcurrentSkipListMap", makeMap(ConcurrentSkipListMap::new, false, false)},
+//                    new Object[]{"Collections.synchronizedMap(ConcurrentHashMap)", Collections.synchronizedMap(makeMap(ConcurrentHashMap::new, false, false))},
+//                    new Object[]{"Collections.checkedMap(ConcurrentHashMap)", Collections.checkedMap(makeMap(ConcurrentHashMap::new, false, false), IntegerEnum.class, String.class)},
+//                    new Object[]{"ExtendsAbstractMap(ConcurrentHashMap)", makeMap(() -> {return new ExtendsAbstractMap(new ConcurrentHashMap());}, false, false)}
+//                    );
+//        }
         // general case
         return Arrays.asList(
             // null key and value hostile
