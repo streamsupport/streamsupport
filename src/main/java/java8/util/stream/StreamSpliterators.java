@@ -107,7 +107,7 @@ class StreamSpliterators {
         T_BUFFER buffer;
 
         /**
-         * True if full traversal has occurred (with possible cancelation).
+         * True if full traversal has occurred (with possible cancellation).
          * If doing a partial traversal, there may be still elements in buffer.
          */
         boolean finished;
