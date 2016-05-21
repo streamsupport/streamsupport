@@ -101,7 +101,7 @@ public class ThreadLocalRandom extends Random {
      * programs.
      *
      * Even though this class subclasses java.util.Random, it uses the
-     * same basic algorithm as java.util.SplittableRandom.  (See its
+     * same basic algorithm as java8.util.SplittableRandom.  (See its
      * internal documentation for explanations, which are not repeated
      * here.)  Because ThreadLocalRandoms are not splittable
      * though, we use only a single 64bit gamma.

@@ -273,7 +273,7 @@ public final class Objects {
      * @return {@code true} if the provided reference is {@code null} otherwise
      * {@code false}
      *
-     * @see java.util.function.Predicate
+     * @see java8.util.function.Predicate
      * @since 1.8
      */
     public static boolean isNull(Object obj) {
@@ -291,7 +291,7 @@ public final class Objects {
      * @return {@code true} if the provided reference is non-{@code null}
      * otherwise {@code false}
      *
-     * @see java.util.function.Predicate
+     * @see java8.util.function.Predicate
      * @since 1.8
      */
     public static boolean nonNull(Object obj) {

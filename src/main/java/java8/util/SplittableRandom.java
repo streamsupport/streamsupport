@@ -68,7 +68,7 @@ import java8.util.stream.DoubleStream;
  *
  * <li>Instances of SplittableRandom are <em>not</em> thread-safe.
  * They are designed to be split, not shared, across threads. For
- * example, a {@link java.util.concurrent.ForkJoinTask
+ * example, a {@link java8.util.concurrent.ForkJoinTask
  * fork/join-style} computation using random numbers might include a
  * construction of the form {@code new
  * Subtask(aSplittableRandom.split()).fork()}.
