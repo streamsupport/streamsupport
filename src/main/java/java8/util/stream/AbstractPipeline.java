@@ -675,7 +675,7 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     /**
      * Returns whether this operation is stateful or not.  If it is stateful,
      * then the method
-     * {@link #opEvaluateParallel(PipelineHelper, java8.util.Spliterator, java.util.function.IntFunction)}
+     * {@link #opEvaluateParallel(PipelineHelper, java8.util.Spliterator, java8.util.function.IntFunction)}
      * must be overridden.
      *
      * @return {@code true} if this operation is stateful

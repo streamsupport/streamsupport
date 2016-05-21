@@ -42,7 +42,7 @@ import java8.util.Spliterator;
  * {@link TerminalOp#evaluateParallel(PipelineHelper, java8.util.Spliterator)},
  * {@link TerminalOp#evaluateSequential(PipelineHelper, java8.util.Spliterator)},
  * and {@link AbstractPipeline#opEvaluateParallel(PipelineHelper, java8.util.Spliterator,
- * java.util.function.IntFunction)}, methods, which can use the
+ * java8.util.function.IntFunction)}, methods, which can use the
  * {@code PipelineHelper} to access information about the pipeline such as
  * head shape, stream flags, and size, and use the helper methods
  * such as {@link #wrapAndCopyInto(Sink, Spliterator)},
