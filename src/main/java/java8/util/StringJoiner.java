@@ -59,8 +59,8 @@ package java8.util;
  *     .collect(Collectors.joining(", "));
  * }</pre>
  *
- * @see java.util.stream.Collectors#joining(CharSequence)
- * @see java.util.stream.Collectors#joining(CharSequence, CharSequence, CharSequence)
+ * @see java8.util.stream.Collectors#joining(CharSequence)
+ * @see java8.util.stream.Collectors#joining(CharSequence, CharSequence, CharSequence)
  * @since  1.8
 */
 public final class StringJoiner {

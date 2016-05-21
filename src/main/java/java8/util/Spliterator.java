@@ -148,7 +148,7 @@ import java8.util.function.LongConsumer;
  * the source is structurally interfered with (elements added, replaced, or
  * removed) between the time that the Spliterator binds to its data source and
  * the end of traversal.  For example, such interference will produce arbitrary,
- * non-deterministic results when using the {@code java.util.stream} framework.
+ * non-deterministic results when using the {@code java8.util.stream} framework.
  *
  * <p>Structural interference of a source can be managed in the following ways
  * (in approximate order of decreasing desirability):
@@ -252,7 +252,7 @@ import java8.util.function.LongConsumer;
  * }}</pre>
  *
  * <p>As an example how a parallel computation framework, such as the
- * {@code java.util.stream} package, would use Spliterator in a parallel
+ * {@code java8.util.stream} package, would use Spliterator in a parallel
  * computation, here is one way to implement an associated parallel forEach,
  * that illustrates the primary usage idiom of splitting off subtasks until
  * the estimated amount of work is small enough to perform

@@ -152,7 +152,7 @@ import java8.util.Optional;
  * @see IntStream
  * @see LongStream
  * @see DoubleStream
- * @see <a href="package-summary.html">java.util.stream</a>
+ * @see <a href="package-summary.html">java8.util.stream</a>
  */
 public interface Stream<T> extends BaseStream<T, Stream<T>> {
 
