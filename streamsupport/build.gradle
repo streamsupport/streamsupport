@@ -3,7 +3,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
     }
 }
 
@@ -59,4 +60,27 @@ apply from: 'javadoc.gradle'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+apply plugin: 'jacoco'
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls needed
+        html.enabled = true
+    }
+}
+
+apply plugin: 'com.github.kt3k.coveralls'
+
+coveralls {
+    jacocoReportPath "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
+}
+
+tasks.jacocoTestReport {
+    dependsOn 'test'
+}
+
+tasks.coveralls {
+    dependsOn 'jacocoTestReport'
 }

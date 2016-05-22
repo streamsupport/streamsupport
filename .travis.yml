@@ -8,3 +8,5 @@ before_install:
     - export JAVA_HOME=$JAVA8_HOME
 script:
     - ./mvnw clean install
+after_success:
+    - ./gradlew coveralls
