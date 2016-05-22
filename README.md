@@ -1,10 +1,11 @@
 [![JitPack](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=JitPack)](https://jitpack.io/#streamsupport/streamsupport)
 [![Maven Central](https://img.shields.io/maven-central/v/net.sourceforge.streamsupport/streamsupport.svg)](http://mvnrepository.com/artifact/net.sourceforge.streamsupport/streamsupport)
 [![Build Status](https://travis-ci.org/streamsupport/streamsupport.svg)](https://travis-ci.org/streamsupport/streamsupport)
+[![Coverage Status](https://coveralls.io/repos/github/streamsupport/streamsupport/badge.svg)](https://coveralls.io/github/streamsupport/streamsupport)
+[![javadoc.io](https://javadocio-badges.herokuapp.com/net.sourceforge.streamsupport/streamsupport/badge.svg)](http://www.javadoc.io/doc/net.sourceforge.streamsupport/streamsupport/)
+[![javadoc](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=javadoc)](https://jitpack.io/com/github/streamsupport/streamsupport/-SNAPSHOT/javadoc/)
 <!--[![Download](https://api.bintray.com/packages/streamsupport/maven/streamsupport/images/download.svg) ](https://bintray.com/streamsupport/maven/streamsupport/_latestVersion)-->
-<!--[![javadoc](https://img.shields.io/github/tag/streamsupport/streamsupport.svg?label=javadoc)](https://jitpack.io/com/github/streamsupport/streamsupport//javadoc/)-->
 <!--[![Join the chat at https://gitter.im/streamsupport/streamsupport](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/streamsupport/streamsupport?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)-->
-<!--[![javadoc.io](https://javadocio-badges.herokuapp.com/com.infstory/streamsupport/badge.svg)](http://www.javadoc.io/doc/com.infstory/streamsupport/)-->
 
 ![](art/streamsupport.png)
 
