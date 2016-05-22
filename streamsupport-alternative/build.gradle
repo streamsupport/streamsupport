@@ -38,9 +38,9 @@ tasks.withType(Test) {
 //sourceCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
-    targetCompatibility = '1.8'
-    sourceCompatibility = '1.8'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
     //options.encoding = 'Cp1252'
 }
 
-apply plugin: 'maven'
+apply from: 'javadoc.gradle'
