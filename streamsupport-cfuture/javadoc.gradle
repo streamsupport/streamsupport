@@ -1,0 +1,26 @@
+apply plugin: 'maven'
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+javadoc {
+    options {
+        failOnError = false
+        encoding "UTF-8"
+        docEncoding "UTF-8"
+        charSet "UTF-8"
+        linkSource true
+    }
+}

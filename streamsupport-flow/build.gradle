@@ -37,3 +37,7 @@ tasks.withType(Test) {
 }
 
 apply from: 'javadoc.gradle'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

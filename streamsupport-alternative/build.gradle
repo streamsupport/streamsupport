@@ -34,13 +34,11 @@ tasks.withType(Test) {
   }
 }
 
-//targetCompatibility = '1.8'
-//sourceCompatibility = '1.8'
-
-tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-    //options.encoding = 'Cp1252'
-}
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 
 apply from: 'javadoc.gradle'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
