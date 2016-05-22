@@ -21,8 +21,6 @@ repositories {
     jcenter()
 }
 
-// encoding: Cp1252
-
 dependencies {
     compile project(':streamsupport')
     compile project(':streamsupport-cfuture')
@@ -39,5 +37,6 @@ tasks.withType(Test) {
 apply from: 'javadoc.gradle'
 
 tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+    //options.encoding = 'UTF-8'
+    options.encoding = 'Cp1252'
 }

@@ -20,8 +20,6 @@ repositories {
     jcenter()
 }
 
-// encoding: Cp1252
-
 dependencies {
     compile project(':streamsupport')
 }
@@ -40,5 +38,6 @@ targetCompatibility = JavaVersion.VERSION_1_8
 apply from: 'javadoc.gradle'
 
 tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+    //options.encoding = 'UTF-8'
+    options.encoding = 'Cp1252'
 }
