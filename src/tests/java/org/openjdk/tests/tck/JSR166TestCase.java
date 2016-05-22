@@ -176,7 +176,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.190
+// CVS rev. 1.192
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1772,5 +1772,13 @@ public class JSR166TestCase extends TestCase {
             shouldThrow();
         } catch (NoSuchElementException success) {}
         assertFalse(it.hasNext());
+    }
+
+    public <T> Callable<T> callableThrowing(final Exception ex) {
+        return new Callable<T>() { public T call() throws Exception { throw ex; }};
+    }
+
+    public Runnable runnableThrowing(final RuntimeException ex) {
+        return new Runnable() { public void run() { throw ex; }};
     }
 }
