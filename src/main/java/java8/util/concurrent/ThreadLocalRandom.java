@@ -82,7 +82,7 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  */
 public class ThreadLocalRandom extends Random {
-// CVS rev. 1.42
+// CVS rev. 1.45
     /*
      * This class implements the java.util.Random API (and subclasses
      * Random) using a single static instance that accesses random
@@ -98,7 +98,9 @@ public class ThreadLocalRandom extends Random {
      * ThreadLocalRandom sequence.  The dual use is a marriage of
      * convenience, but is a simple and efficient way of reducing
      * application-level overhead and footprint of most concurrent
-     * programs.
+     * programs. Even more opportunistically, we also define here
+     * other package-private utilities that access Thread class
+     * fields.
      *
      * Even though this class subclasses java.util.Random, it uses the
      * same basic algorithm as java8.util.SplittableRandom.  (See its
