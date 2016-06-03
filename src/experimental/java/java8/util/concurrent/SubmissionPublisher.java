@@ -134,7 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
-// CVS rev. 1.59
+// CVS rev. 1.60
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
