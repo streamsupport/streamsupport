@@ -2335,8 +2335,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         java.lang.RuntimePermission}{@code ("modifyThread")}
      * @since 9
      */
-// TODO: make this constructor public once this rev. has been published in Java 9 ea
-    private ForkJoinPool(int parallelism,
+    public ForkJoinPool(int parallelism,
                         ForkJoinWorkerThreadFactory factory,
                         UncaughtExceptionHandler handler,
                         boolean asyncMode,
