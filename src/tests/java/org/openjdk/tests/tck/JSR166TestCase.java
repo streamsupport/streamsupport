@@ -177,7 +177,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.194
+// CVS rev. 1.195
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -928,6 +928,15 @@ public class JSR166TestCase extends TestCase {
      * Uninteresting threads are filtered out.
      */
     static void dumpTestThreads() {
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            try {
+                System.setSecurityManager(null);
+            } catch (SecurityException giveUp) {
+                return;
+            }
+        }
+
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         System.err.println("------ stacktrace dump start ------");
         for (ThreadInfo info : threadMXBean.dumpAllThreads(true, true)) {
@@ -945,6 +954,8 @@ public class JSR166TestCase extends TestCase {
             System.err.print(info);
         }
         System.err.println("------ stacktrace dump end ------");
+
+        if (sm != null) System.setSecurityManager(sm);
     }
 
     /**
