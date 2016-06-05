@@ -934,12 +934,12 @@ public final class Spliterators {
             }
         }
 
-        // this doesn't count as a native specialization since AbstractList's
-        // 'modCount' field is a well-documented part of its API
-        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess
-                && c instanceof AbstractList) {
-            return RAAbstractListSpliterator.spliterator((AbstractList<T>) c);
-        }
+		// this doesn't count as a native specialization for AbstractList
+		// since its 'modCount' field is a well-documented part of its API
+		if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess
+				&& c instanceof AbstractList) {
+			return RASpliterator.spliterator((List<T>) c);
+		}
 
         // default from j.u.List
         return spliterator(c, Spliterator.ORDERED);

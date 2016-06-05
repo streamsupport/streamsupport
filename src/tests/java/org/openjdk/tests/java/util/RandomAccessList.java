@@ -3,6 +3,7 @@ package org.openjdk.tests.java.util;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.RandomAccess;
 
 final class RandomAccessList extends AbstractList<Integer> implements
@@ -38,5 +39,16 @@ final class RandomAccessList extends AbstractList<Integer> implements
     @Override
     public Integer set(int index, Integer element) {
         return list.set(index, element);
+    }
+
+    @Override
+    public List<Integer> subList(int fromIndex, int toIndex) {
+        return list.subList(fromIndex, toIndex);
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        ++modCount;
+        return list.remove(o);
     }
 }
