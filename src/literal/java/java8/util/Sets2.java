@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -27,13 +27,15 @@ package java8.util;
 import java.util.Set;
 
 /**
- * A place for static default implementations of the new Java 9
- * static interface methods in the {@link Set} interface. 
+ * A place for the new Java 9 <a href="http://openjdk.java.net/jeps/269">JEP
+ * 269</a> {@code "Immutable Set Static Factory Methods"} in the {@link Set}
+ * interface.
  *
  * <h2><a name="immutable">Immutable Set Static Factory Methods</a></h2>
- * <p>The {@link Sets#of(Object...) Sets.of()} static factory methods
- * provide a convenient way to create immutable sets. The {@code Set}
- * instances created by these methods have the following characteristics:
+ * <p>
+ * The {@link Sets2#of(Object...) Sets.of()} static factory methods provide a
+ * convenient way to create immutable sets. The {@code Set} instances created by
+ * these methods have the following characteristics:
  *
  * <ul>
  * <li>They are <em>structurally immutable</em>. Elements cannot be added or
@@ -45,17 +47,20 @@ import java.util.Set;
  * <li>They are serializable if all elements are serializable.
  * <li>They reject duplicate elements at creation time. Duplicate elements
  * passed to a static factory method result in {@code IllegalArgumentException}.
- * <li>The iteration order of set elements is unspecified and is subject to change.
- * <li>They are <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>.
- * Callers should make no assumptions about the identity of the returned instances.
+ * <li>The iteration order of set elements is unspecified and is subject to
+ * change.
+ * <li>They are <a
+ * href="package-summary.html#Value-based-Classes">value-based</a>. Callers
+ * should make no assumptions about the identity of the returned instances.
  * Factories are free to create new instances or reuse existing ones. Therefore,
- * identity-sensitive operations on these instances (reference equality ({@code ==}),
- * identity hash code, and synchronization) are unreliable and should be avoided.
+ * identity-sensitive operations on these instances (reference equality (
+ * {@code ==}), identity hash code, and synchronization) are unreliable and
+ * should be avoided.
  * </ul>
  *
  * @since 9
  */
-public final class Sets {
+public final class Sets2 {
     /**
      * Returns an immutable set containing zero elements.
      * See <a href="#immutable">Immutable Set Static Factory Methods</a> for details.
@@ -293,7 +298,7 @@ public final class Sets {
      *     Set<String[]> list = Sets.<String[]>of(array);
      * }</pre>
      *
-     * This will cause the {@link Sets#of(Object) Set.of(E)} method
+     * This will cause the {@link Sets2#of(Object) Set.of(E)} method
      * to be invoked instead.
      *
      * @param <E> the {@code Set}'s element type
@@ -308,6 +313,6 @@ public final class Sets {
         return ImmutableCollections.setOf(elements);
     }
 
-    private Sets() {
+    private Sets2() {
     }
 }

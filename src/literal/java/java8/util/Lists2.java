@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,129 +24,39 @@
  */
 package java8.util;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.ListIterator;
-
-import java8.util.function.UnaryOperator;
 
 /**
- * A place for static default implementations of the new Java 8 / Java 9
- * default interface methods and static interface methods in the
- * {@link List} interface.
+ * A place for the new Java 9 <a href="http://openjdk.java.net/jeps/269">JEP
+ * 269</a> {@code "Immutable List Static Factory Methods"} in the {@link List}
+ * interface.
  * 
  * <h2><a name="immutable">Immutable List Static Factory Methods</a></h2>
- * <p>The {@link Lists#of(Object...) Lists.of()} static factory methods
- * provide a convenient way to create immutable lists. The {@code List}
- * instances created by these methods have the following characteristics:
+ * <p>
+ * The {@link Lists2#of(Object...) Lists.of()} static factory methods provide a
+ * convenient way to create immutable lists. The {@code List} instances created
+ * by these methods have the following characteristics:
  *
  * <ul>
- * <li>They are <em>structurally immutable</em>. Elements cannot be added, removed,
- * or replaced. Attempts to do so result in {@code UnsupportedOperationException}.
- * However, if the contained elements are themselves mutable,
- * this may cause the List's contents to appear to change.
+ * <li>They are <em>structurally immutable</em>. Elements cannot be added,
+ * removed, or replaced. Attempts to do so result in
+ * {@code UnsupportedOperationException}. However, if the contained elements are
+ * themselves mutable, this may cause the List's contents to appear to change.
  * <li>They disallow {@code null} elements. Attempts to create them with
  * {@code null} elements result in {@code NullPointerException}.
  * <li>They are serializable if all elements are serializable.
  * <li>The order of elements in the list is the same as the order of the
  * provided arguments, or of the elements in the provided array.
- * <li>They are <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>.
- * Callers should make no assumptions about the identity of the returned instances.
+ * <li>They are <a
+ * href="package-summary.html#Value-based-Classes">value-based</a>. Callers
+ * should make no assumptions about the identity of the returned instances.
  * Factories are free to create new instances or reuse existing ones. Therefore,
- * identity-sensitive operations on these instances (reference equality ({@code ==}),
- * identity hash code, and synchronization) are unreliable and should be avoided.
+ * identity-sensitive operations on these instances (reference equality (
+ * {@code ==}), identity hash code, and synchronization) are unreliable and
+ * should be avoided.
  * </ul>
  */
-public final class Lists {
-    /**
-     * Sorts the passed list using the supplied {@code Comparator} to compare
-     * elements.
-     *
-     * <p><b>Implementation Requirements:</b><br>
-     * The default implementation is equivalent to, for the passed {@code list}:
-     * <pre>Collections.sort(list, c)</pre>
-     *
-     * @param <E> the type of the elements of the list to be sorted
-     * @param list the list that should be sorted
-     * @param c the {@code Comparator} used to compare list elements.
-     *          A {@code null} value indicates that the elements'
-     *          {@linkplain Comparable natural ordering} should be used
-     * @throws ClassCastException if the list contains elements that are not
-     *         <i>mutually comparable</i> using the specified comparator
-     * @throws UnsupportedOperationException if the list's list-iterator does
-     *         not support the {@code set} operation
-     * @throws IllegalArgumentException (optional)
-     *         if the comparator is found to violate the {@link Comparator}
-     *         contract
-     * @throws NullPointerException if the specified list is null
-     * @since 1.8
-     */
-    public static <E> void sort(List<E> list, Comparator<? super E> c) {
-        Collections.sort(list, c);
-    }
-
-    /**
-     * Replaces each element of the passed list with the result of applying the
-     * operator to that element.  Errors or runtime exceptions thrown by
-     * the operator are relayed to the caller.
-     *
-     * <p><b>Implementation Requirements:</b><br>
-     * The default implementation is equivalent to, for the passed {@code list}:
-     * <pre>{@code
-     *     final ListIterator<E> li = list.listIterator();
-     *     while (li.hasNext()) {
-     *         li.set(operator.apply(li.next()));
-     *     }
-     * }</pre>
-     *
-     * If the list's list-iterator does not support the {@code set} operation
-     * then an {@code UnsupportedOperationException} will be thrown when
-     * replacing the first element.
-     *
-     * @param <E> the type of the elements of the list to be replaced
-     * @param list the list whose elements should be replaced
-     * @param operator the operator to apply to each element
-     * @throws UnsupportedOperationException if the passed list is unmodifiable.
-     *         Implementations may throw this exception if an element
-     *         cannot be replaced or if, in general, modification is not
-     *         supported
-     * @throws NullPointerException if the specified list is null or the specified
-     *         operator is null or if the operator result is a null value and the
-     *         passed list does not permit null elements (optional)
-     * @since 1.8
-     */
-    public static <E> void replaceAll(List<E> list, UnaryOperator<E> operator) {
-        Objects.requireNonNull(list);
-        Objects.requireNonNull(operator);
-        ListIterator<E> li = list.listIterator();
-        while (li.hasNext()) {
-            li.set(operator.apply(li.next()));
-        }
-    }
-
-    /**
-     * Creates a {@link Spliterator} over the elements in the passed list.
-     *
-     * <p>The {@code Spliterator} reports at least {@link Spliterator#SIZED},
-     * {@link Spliterator#ORDERED} and {@link Spliterator#SUBSIZED}.
-     *
-     * <p><b>Implementation notes</b>:
-     * This implementation delegates to {@link Spliterators#spliterator(java.util.Collection)}
-     * so it is effectively the same as calling
-     * <pre>{@code
-     *     Spliterators.spliterator(list);
-     * }</pre> 
-     *
-     * @param <E> the type of the elements of the list to be splitted
-     * @param list the list to be splitted
-     * @return a {@code Spliterator} over the elements in the passed list
-     * @since 1.8
-     */
-    public static <E> Spliterator<E> spliterator(List<E> list) {
-        return Spliterators.spliterator(list);
-    }
-
+public final class Lists2 {
     /**
      * Returns an immutable list containing zero elements.
      *
@@ -387,7 +297,7 @@ public final class Lists {
      *     List<String[]> list = Lists.<String[]>of(array);
      * }</pre>
      *
-     * This will cause the {@link Lists#of(Object) Lists.of(E)} method
+     * This will cause the {@link Lists2#of(Object) Lists.of(E)} method
      * to be invoked instead.
      *
      * @param <E> the {@code List}'s element type
@@ -401,6 +311,6 @@ public final class Lists {
         return ImmutableCollections.listOf(elements);
     }
 
-    private Lists() {
+    private Lists2() {
     }
 }
