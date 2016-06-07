@@ -91,10 +91,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
-import java8.util.Lists;
-import java8.util.Maps;
+import java8.util.Lists2;
+import java8.util.Maps2;
 import java8.util.Objects;
-import java8.util.Sets;
+import java8.util.Sets2;
 import java8.util.concurrent.ThreadLocalRandom;
 
 import org.testng.annotations.Test;
@@ -120,39 +120,39 @@ public class MOAT {
     public static void realMain() {
 
         // Immutable List
-        testEmptyList(Lists.of());
+        testEmptyList(Lists2.of());
         for (List<Integer> list : Arrays.asList(
-                Lists.<Integer>of(),
-                Lists.of(1),
-                Lists.of(1, 2),
-                Lists.of(1, 2, 3),
-                Lists.of(1, 2, 3, 4),
-                Lists.of(1, 2, 3, 4, 5),
-                Lists.of(1, 2, 3, 4, 5, 6),
-                Lists.of(1, 2, 3, 4, 5, 6, 7),
-                Lists.of(1, 2, 3, 4, 5, 6, 7, 8),
-                Lists.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                Lists.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                Lists.of(integerArray))) {
+                Lists2.<Integer>of(),
+                Lists2.of(1),
+                Lists2.of(1, 2),
+                Lists2.of(1, 2, 3),
+                Lists2.of(1, 2, 3, 4),
+                Lists2.of(1, 2, 3, 4, 5),
+                Lists2.of(1, 2, 3, 4, 5, 6),
+                Lists2.of(1, 2, 3, 4, 5, 6, 7),
+                Lists2.of(1, 2, 3, 4, 5, 6, 7, 8),
+                Lists2.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                Lists2.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                Lists2.of(integerArray))) {
             testCollection(list);
             testImmutableList(list);
         }
 
         // Immutable Set
-        testEmptySet(Sets.of());
+        testEmptySet(Sets2.of());
         for (Set<Integer> set : Arrays.asList(
-                Sets.<Integer>of(),
-                Sets.of(1),
-                Sets.of(1, 2),
-                Sets.of(1, 2, 3),
-                Sets.of(1, 2, 3, 4),
-                Sets.of(1, 2, 3, 4, 5),
-                Sets.of(1, 2, 3, 4, 5, 6),
-                Sets.of(1, 2, 3, 4, 5, 6, 7),
-                Sets.of(1, 2, 3, 4, 5, 6, 7, 8),
-                Sets.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
-                Sets.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                Sets.of(integerArray))) {
+                Sets2.<Integer>of(),
+                Sets2.of(1),
+                Sets2.of(1, 2),
+                Sets2.of(1, 2, 3),
+                Sets2.of(1, 2, 3, 4),
+                Sets2.of(1, 2, 3, 4, 5),
+                Sets2.of(1, 2, 3, 4, 5, 6),
+                Sets2.of(1, 2, 3, 4, 5, 6, 7),
+                Sets2.of(1, 2, 3, 4, 5, 6, 7, 8),
+                Sets2.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                Sets2.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                Sets2.of(integerArray))) {
             testCollection(set);
             testImmutableSet(set);
         }
@@ -162,23 +162,23 @@ public class MOAT {
         @SuppressWarnings("unchecked")
         Map.Entry<Integer,Integer>[] ea = (Map.Entry<Integer,Integer>[])new Map.Entry<?,?>[20];
         for (int i = 0; i < ea.length; i++) {
-            ea[i] = Maps.entry(i+1, i+101);
+            ea[i] = Maps2.entry(i+1, i+101);
         }
 
-        testEmptyMap(Maps.of());
+        testEmptyMap(Maps2.of());
         for (Map<Integer,Integer> map : Arrays.asList(
-                Maps.<Integer,Integer>of(),
-                Maps.of(1, 101),
-                Maps.of(1, 101, 2, 202),
-                Maps.of(1, 101, 2, 202, 3, 303),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909),
-                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909, 10, 1010),
-                Maps.ofEntries(ea))) {
+                Maps2.<Integer,Integer>of(),
+                Maps2.of(1, 101),
+                Maps2.of(1, 101, 2, 202),
+                Maps2.of(1, 101, 2, 202, 3, 303),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909),
+                Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909, 10, 1010),
+                Maps2.ofEntries(ea))) {
             testMap(map);
             testImmutableMap(map);
         }

@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java8.util.Maps;
+import java8.util.Maps2;
 
 import org.testng.annotations.Test;
 
@@ -43,7 +43,7 @@ import static org.testng.Assert.assertEquals;
 public class EntrySetIterator {
     @Test
     public void main() {
-        Map<String, String> map = Maps.of("a", "1", "b", "2", "c", "3");
+        Map<String, String> map = Maps2.of("a", "1", "b", "2", "c", "3");
         Set<Map.Entry<String, String>> entrySet = map.entrySet();
         Iterator<Map.Entry<String, String>> iterator = entrySet.iterator();
 

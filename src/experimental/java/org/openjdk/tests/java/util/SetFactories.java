@@ -73,7 +73,7 @@ public class SetFactories {
     public Iterator<Object[]> empty() {
         return Collections.singletonList(
             // actual, expected
-            a(Sets.of(), Collections.emptySet())
+            a(Sets2.of(), Collections.emptySet())
         ).iterator();
     }
 
@@ -81,27 +81,27 @@ public class SetFactories {
     public Iterator<Object[]> nonempty() {
         return Arrays.asList(
             // actual, expected
-            a(   Sets.of("a"),
+            a(   Sets2.of("a"),
               hashSetOf("a")),
-            a(   Sets.of("a", "b"),
+            a(   Sets2.of("a", "b"),
               hashSetOf("a", "b")),
-            a(   Sets.of("a", "b", "c"),
+            a(   Sets2.of("a", "b", "c"),
               hashSetOf("a", "b", "c")),
-            a(   Sets.of("a", "b", "c", "d"),
+            a(   Sets2.of("a", "b", "c", "d"),
               hashSetOf("a", "b", "c", "d")),
-            a(   Sets.of("a", "b", "c", "d", "e"),
+            a(   Sets2.of("a", "b", "c", "d", "e"),
               hashSetOf("a", "b", "c", "d", "e")),
-            a(   Sets.of("a", "b", "c", "d", "e", "f"),
+            a(   Sets2.of("a", "b", "c", "d", "e", "f"),
               hashSetOf("a", "b", "c", "d", "e", "f")),
-            a(   Sets.of("a", "b", "c", "d", "e", "f", "g"),
+            a(   Sets2.of("a", "b", "c", "d", "e", "f", "g"),
               hashSetOf("a", "b", "c", "d", "e", "f", "g")),
-            a(   Sets.of("a", "b", "c", "d", "e", "f", "g", "h"),
+            a(   Sets2.of("a", "b", "c", "d", "e", "f", "g", "h"),
               hashSetOf("a", "b", "c", "d", "e", "f", "g", "h")),
-            a(   Sets.of("a", "b", "c", "d", "e", "f", "g", "h", "i"),
+            a(   Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "i"),
               hashSetOf("a", "b", "c", "d", "e", "f", "g", "h", "i")),
-            a(   Sets.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+            a(   Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
               hashSetOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
-            a(   Sets.of(stringArray),
+            a(   Sets2.of(stringArray),
               hashSetOf(stringArray))
         ).iterator();
     }
@@ -132,55 +132,55 @@ public class SetFactories {
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed2() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "a");
+        Set<String> set = Sets2.of("a", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed3() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "a");
+        Set<String> set = Sets2.of("a", "b", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed4() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed5() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "d", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "d", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed6() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "d", "e", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "d", "e", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed7() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "d", "e", "f", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "d", "e", "f", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed8() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "d", "e", "f", "g", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "d", "e", "f", "g", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed9() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "d", "e", "f", "g", "h", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
     public void dupsDisallowed10() {
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "a");
+        Set<String> set = Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "a");
     }
 
     @Test(expectedExceptions=IllegalArgumentException.class)
@@ -188,74 +188,74 @@ public class SetFactories {
         String[] array = stringArray.clone();
         array[0] = array[1];
         @SuppressWarnings("unused")
-        Set<String> set = Sets.of(array);
+        Set<String> set = Sets2.of(array);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed1() {
-        Sets.of((String) null); // force one-arg overload
+        Sets2.of((String) null); // force one-arg overload
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed2a() {
-        Sets.of("a", null);
+        Sets2.of("a", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed2b() {
-        Sets.of(null, "b");
+        Sets2.of(null, "b");
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed3() {
-        Sets.of("a", "b", null);
+        Sets2.of("a", "b", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed4() {
-        Sets.of("a", "b", "c", null);
+        Sets2.of("a", "b", "c", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed5() {
-        Sets.of("a", "b", "c", "d", null);
+        Sets2.of("a", "b", "c", "d", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed6() {
-        Sets.of("a", "b", "c", "d", "e", null);
+        Sets2.of("a", "b", "c", "d", "e", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed7() {
-        Sets.of("a", "b", "c", "d", "e", "f", null);
+        Sets2.of("a", "b", "c", "d", "e", "f", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed8() {
-        Sets.of("a", "b", "c", "d", "e", "f", "g", null);
+        Sets2.of("a", "b", "c", "d", "e", "f", "g", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed9() {
-        Sets.of("a", "b", "c", "d", "e", "f", "g", "h", null);
+        Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed10() {
-        Sets.of("a", "b", "c", "d", "e", "f", "g", "h", "i", null);
+        Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowedN() {
         String[] array = stringArray.clone();
         array[0] = null;
-        Sets.of(array);
+        Sets2.of(array);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullArrayDisallowed() {
-        Sets.of((Object[])null);
+        Sets2.of((Object[])null);
     }
 
     @Test(dataProvider="all")

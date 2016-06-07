@@ -33,7 +33,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java8.util.Iterators;
-import java8.util.Lists;
+import java8.util.Lists2;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -68,34 +68,34 @@ public class ListFactories {
     @DataProvider(name="empty")
     public Iterator<Object[]> empty() {
         return Collections.singletonList(
-            a(Lists.of(), Collections.emptyList())
+            a(Lists2.of(), Collections.emptyList())
         ).iterator();
     }
 
     @DataProvider(name="nonempty")
     public Iterator<Object[]> nonempty() {
         return asList(
-            a(Lists.of("a"),
+            a(Lists2.of("a"),
                asList("a")),
-            a(Lists.of("a", "b"),
+            a(Lists2.of("a", "b"),
                asList("a", "b")),
-            a(Lists.of("a", "b", "c"),
+            a(Lists2.of("a", "b", "c"),
                asList("a", "b", "c")),
-            a(Lists.of("a", "b", "c", "d"),
+            a(Lists2.of("a", "b", "c", "d"),
                asList("a", "b", "c", "d")),
-            a(Lists.of("a", "b", "c", "d", "e"),
+            a(Lists2.of("a", "b", "c", "d", "e"),
                asList("a", "b", "c", "d", "e")),
-            a(Lists.of("a", "b", "c", "d", "e", "f"),
+            a(Lists2.of("a", "b", "c", "d", "e", "f"),
                asList("a", "b", "c", "d", "e", "f")),
-            a(Lists.of("a", "b", "c", "d", "e", "f", "g"),
+            a(Lists2.of("a", "b", "c", "d", "e", "f", "g"),
                asList("a", "b", "c", "d", "e", "f", "g")),
-            a(Lists.of("a", "b", "c", "d", "e", "f", "g", "h"),
+            a(Lists2.of("a", "b", "c", "d", "e", "f", "g", "h"),
                asList("a", "b", "c", "d", "e", "f", "g", "h")),
-            a(Lists.of("a", "b", "c", "d", "e", "f", "g", "h", "i"),
+            a(Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", "i"),
                asList("a", "b", "c", "d", "e", "f", "g", "h", "i")),
-            a(Lists.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+            a(Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
                asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
-            a(Lists.of(stringArray),
+            a(Lists2.of(stringArray),
                asList(stringArray))
         ).iterator();
     }
@@ -135,75 +135,75 @@ public class ListFactories {
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed1() {
-        Lists.of((Object) null); // force one-arg overload
+        Lists2.of((Object) null); // force one-arg overload
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed2a() {
-        Lists.of("a", null);
+        Lists2.of("a", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed2b() {
-        Lists.of(null, "b");
+        Lists2.of(null, "b");
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed3() {
-        Lists.of("a", "b", null);
+        Lists2.of("a", "b", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed4() {
-        Lists.of("a", "b", "c", null);
+        Lists2.of("a", "b", "c", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed5() {
-        Lists.of("a", "b", "c", "d", null);
+        Lists2.of("a", "b", "c", "d", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed6() {
-        Lists.of("a", "b", "c", "d", "e", null);
+        Lists2.of("a", "b", "c", "d", "e", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed7() {
-        Lists.of("a", "b", "c", "d", "e", "f", null);
+        Lists2.of("a", "b", "c", "d", "e", "f", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed8() {
-        Lists.of("a", "b", "c", "d", "e", "f", "g", null);
+        Lists2.of("a", "b", "c", "d", "e", "f", "g", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed9() {
-        Lists.of("a", "b", "c", "d", "e", "f", "g", "h", null);
+        Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowed10() {
-        Lists.of("a", "b", "c", "d", "e", "f", "g", "h", "i", null);
+        Lists2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullDisallowedN() {
         String[] array = stringArray.clone();
         array[0] = null;
-        Lists.of(array);
+        Lists2.of(array);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void nullArrayDisallowed() {
-        Lists.of((Object[])null);
+        Lists2.of((Object[])null);
     }
 
     @Test
     public void ensureArrayCannotModifyList() {
         String[] array = stringArray.clone();
-        List<String> list = Lists.of(array);
+        List<String> list = Lists2.of(array);
         array[0] = "xyzzy";
         assertEquals(list, Arrays.asList(stringArray));
     }
