@@ -116,7 +116,7 @@ public final class Iterables {
      * Creates a {@link Spliterator} over the elements described by this
      * {@code Iterable}.
      *
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * If the passed {@code Iterable} is an instance of {@link Collection}
      * the implementation delegates to
      * {@link Spliterators#spliterator(java.util.Collection)} so it is
@@ -125,7 +125,7 @@ public final class Iterables {
      *     Spliterators.spliterator((Collection<T>) it);
      * }</pre>
      *
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * If the passed {@code Iterable} is <b>not</b> an instance of
      * {@link Collection} this implementation creates an
      * <em><a href="../util/Spliterator.html#binding">early-binding</a></em>
@@ -155,7 +155,7 @@ public final class Iterables {
      * Returns a sequential {@link Stream} with the passed {@code Iterable}
      * as its source.
      *
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * If the passed {@code Iterable} is an instance of {@link Collection}
      * the implementation delegates to
      * {@link StreamSupport#stream(java.util.Collection)} so it is
@@ -164,7 +164,7 @@ public final class Iterables {
      *     StreamSupport.stream((Collection<T>) it);
      * }</pre>
      * 
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * If the passed {@code Iterable} is <b>not</b> an instance of
      * {@link Collection} this implementation creates a stream
      * using a {@link Supplier} of the Iterable's spliterator obtained
@@ -202,7 +202,7 @@ public final class Iterables {
      * {@code Iterable} as its source.  It is allowable for this
      * method to return a sequential stream.
      *
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * If the passed {@code Iterable} is an instance of {@link Collection}
      * the implementation delegates to
      * {@link StreamSupport#parallelStream(java.util.Collection)} so it is
@@ -211,7 +211,7 @@ public final class Iterables {
      *     StreamSupport.parallelStream((Collection<T>) it);
      * }</pre>
      * 
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * If the passed {@code Iterable} is <b>not</b> an instance of
      * {@link Collection} this implementation creates a stream
      * using a {@link Supplier} of the Iterable's spliterator obtained
