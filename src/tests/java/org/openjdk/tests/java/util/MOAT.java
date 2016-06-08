@@ -777,7 +777,7 @@ public class MOAT {
 
     private static void testCollection1(Collection<Integer> c) {
 
-        System.out.println("\n==> " + c.getClass().getName());
+//        System.out.println("\n==> " + c.getClass().getName());
 
         checkFunctionalInvariants(c);
 
@@ -900,7 +900,7 @@ public class MOAT {
     }
 
     private static void testMap(Map<Integer,Integer> m) {
-        System.out.println("\n==> " + m.getClass().getName());
+//        System.out.println("\n==> " + m.getClass().getName());
 
         if (m instanceof ConcurrentMap)
             testConcurrentMap((ConcurrentMap<Integer,Integer>) m);
