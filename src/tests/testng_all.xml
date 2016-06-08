@@ -157,7 +157,16 @@
       <class name="org.openjdk.tests.tck.ThreadLocalRandom8Test"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandomTest"/>
 
-      <!-- block 14 (superseded or questionable tests) -->
+      <!-- Test dependencies block 14: streamsupport.jar + streamsupport-literal.jar -->
+
+      <!-- block 14 (streamsupport-literal tests) -->
+      <class name="org.openjdk.tests.java.util.EntrySetIterator"/>
+      <class name="org.openjdk.tests.java.util.MOAT"/>
+      <class name="org.openjdk.tests.java.util.ListFactories"/>
+      <class name="org.openjdk.tests.java.util.MapFactories"/>
+      <class name="org.openjdk.tests.java.util.SetFactories"/>
+
+      <!-- block 15 (superseded or questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
 
     </classes>

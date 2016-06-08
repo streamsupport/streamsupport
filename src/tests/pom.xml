@@ -25,6 +25,11 @@
 			<version>1.5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>net.sourceforge.streamsupport</groupId>
+			<artifactId>streamsupport-literal</artifactId>
+			<version>1.5-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>6.8.17</version>

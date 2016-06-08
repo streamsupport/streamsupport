@@ -35,7 +35,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java8.util.Iterators;
-import java8.util.Sets;
+import java8.util.Sets2;
 
 import static org.testng.Assert.assertEquals;
 
