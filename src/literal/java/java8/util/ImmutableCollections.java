@@ -33,6 +33,7 @@ import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +90,13 @@ final class ImmutableCollections {
             return null;                  // but the compiler doesn't know this
         }
 
+        @Override
+        public boolean addAll(int index, Collection<? extends E> c) {
+            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
+            rangeCheckForAdd(index, size());
+            return super.addAll(index, c);
+        }
+
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -115,6 +123,13 @@ final class ImmutableCollections {
             Objects.checkIndex(index, 1);
             // assert index == 0
             return e0;
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends E> c) {
+            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
+            rangeCheckForAdd(index, size());
+            return super.addAll(index, c);
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -150,6 +165,13 @@ final class ImmutableCollections {
             }
         }
 
+        @Override
+        public boolean addAll(int index, Collection<? extends E> c) {
+            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
+            rangeCheckForAdd(index, size());
+            return super.addAll(index, c);
+        }
+
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -181,6 +203,13 @@ final class ImmutableCollections {
         public E get(int index) {
             Objects.checkIndex(index, elements.length);
             return elements[index];
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends E> c) {
+            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
+            rangeCheckForAdd(index, size());
+            return super.addAll(index, c);
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -611,6 +640,13 @@ final class ImmutableCollections {
                 }
             }
             return new CollSer(CollSer.IMM_MAP, array);
+        }
+    }
+
+    static void rangeCheckForAdd(int index, int size) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: "
+                    + size);
         }
     }
 
