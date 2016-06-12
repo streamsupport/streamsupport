@@ -97,6 +97,7 @@ import java8.util.Objects;
 import java8.util.Sets2;
 import java8.util.concurrent.ThreadLocalRandom;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
@@ -182,6 +183,8 @@ public class MOAT {
             testMap(map);
             testImmutableMap(map);
         }
+
+        Assert.assertEquals(failed, 0, failed + " tests did fail!");
     }
 
     private static void checkContainsSelf(Collection<Integer> c) {
