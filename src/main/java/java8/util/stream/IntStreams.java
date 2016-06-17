@@ -183,7 +183,7 @@ public final class IntStreams {
      * {@code IntStreams.iterate} should produce the same sequence of elements
      * as produced by the corresponding for-loop:
      * <pre>{@code
-     *     for (int index=seed; predicate.test(index); index = f.apply(index)) { 
+     *     for (int index=seed; predicate.test(index); index = f.applyAsInt(index)) { 
      *         ... 
      *     }
      * }</pre>

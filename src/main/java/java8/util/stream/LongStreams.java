@@ -184,7 +184,7 @@ public final class LongStreams {
      * {@code LongStreams.iterate} should produce the same sequence of elements
      * as produced by the corresponding for-loop:
      * <pre>{@code
-     *     for (long index=seed; predicate.test(index); index = f.apply(index)) { 
+     *     for (long index=seed; predicate.test(index); index = f.applyAsLong(index)) { 
      *         ... 
      *     }
      * }</pre>

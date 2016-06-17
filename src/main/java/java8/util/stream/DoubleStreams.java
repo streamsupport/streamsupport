@@ -184,7 +184,7 @@ public final class DoubleStreams {
      * {@code DoubleStreams.iterate} should produce the same sequence of
      * elements as produced by the corresponding for-loop:
      * <pre>{@code
-     *     for (double index=seed; predicate.test(index); index = f.apply(index)) {
+     *     for (double index=seed; predicate.test(index); index = f.applyAsDouble(index)) {
      *         ... 
      *     }
      * }</pre>
