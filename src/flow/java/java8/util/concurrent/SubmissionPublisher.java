@@ -1,33 +1,4 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
- */
-
-/*
- * This file is available under and governed by the GNU General Public
- * License version 2 only, as published by the Free Software Foundation.
- * However, the following notice accompanied the original version of this
- * file:
- *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -163,6 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
+// CVS rev. 1.60
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -913,7 +885,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      */
     @SuppressWarnings("serial")
     static final class ConsumerTask<T> extends ForkJoinTask<Void>
-        implements Runnable {
+        implements Runnable, CompletableFuture.AsynchronousCompletionTask {
         final BufferedSubscription<T> consumer;
         ConsumerTask(BufferedSubscription<T> consumer) {
             this.consumer = consumer;
@@ -966,11 +938,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
      * Blocking control relies on the "waiter" field. Producers set
      * the field before trying to block, but must then recheck (via
      * offer) before parking. Signalling then just unparks and clears
-     * waiter field. If the producer and consumer are both in the same
-     * ForkJoinPool, or consumers are running in commonPool, the
-     * producer attempts to help run consumer tasks that it forked
-     * before blocking.  To avoid potential cycles, only one level of
-     * helping is currently supported.
+     * waiter field. If the producer and/or consumer are using a
+     * ForkJoinPool, the producer attempts to help run consumer tasks
+     * via ForkJoinPool.helpAsyncBlocker before blocking.
      *
      * This class uses @Contended and heuristic field declaration
      * ordering to reduce false-sharing-based memory contention among
@@ -989,7 +959,6 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         volatile long demand;              // # unfilled requests
         int maxCapacity;                   // reduced on OOME
         int putStat;                       // offer result for ManagedBlocker
-        int helpDepth;                     // nested helping depth (at most 1)
         volatile int ctl;                  // atomic run state flags
         volatile int head;                 // next position to take
         int tail;                          // next position to put
@@ -1142,62 +1111,22 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
          * initial offer return 0.
          */
         final int submit(T item) {
-            int stat; Executor e; ForkJoinWorkerThread w;
-            if ((stat = offer(item)) == 0 && helpDepth == 0 &&
-                ((e = executor) instanceof ForkJoinPool)) {
-                helpDepth = 1;
-                Thread thread = Thread.currentThread();
-                if ((thread instanceof ForkJoinWorkerThread) &&
-                    ((w = (ForkJoinWorkerThread) thread)).getPool() == e)
-                    stat = internalHelpConsume(w.workQueue, item);
-                else if (e == ForkJoinPool.commonPool())
-                    stat = externalHelpConsume
-                        (ForkJoinPool.commonSubmitterQueue(), item);
-                helpDepth = 0;
-            }
-            if (stat == 0 && (stat = offer(item)) == 0) {
+            int stat;
+            if ((stat = offer(item)) == 0) {
                 putItem = item;
                 timeout = 0L;
-                try {
-                    ForkJoinPool.managedBlock(this);
-                } catch (InterruptedException ie) {
-                    timeout = INTERRUPTED;
+                putStat = 0;
+                ForkJoinPool.helpAsyncBlocker(executor, this);
+                if ((stat = putStat) == 0) {
+                    try {
+                        ForkJoinPool.managedBlock(this);
+                    } catch (InterruptedException ie) {
+                        timeout = INTERRUPTED;
+                    }
+                    stat = putStat;
                 }
-                stat = putStat;
                 if (timeout < 0L)
                     Thread.currentThread().interrupt();
-            }
-            return stat;
-        }
-
-        /**
-         * Tries helping for FJ submitter.
-         */
-        private int internalHelpConsume(ForkJoinPool.WorkQueue w, T item) {
-            int stat = 0;
-            if (w != null) {
-                ForkJoinTask<?> t;
-                while ((t = w.peek()) != null && (t instanceof ConsumerTask)) {
-                    if ((stat = offer(item)) != 0 || !w.tryUnpush(t))
-                        break;
-                    ((ConsumerTask<?>) t).consumer.consume();
-                }
-            }
-            return stat;
-        }
-
-        /**
-         * Tries helping for non-FJ submitter.
-         */
-        private int externalHelpConsume(ForkJoinPool.WorkQueue w, T item) {
-            int stat = 0;
-            if (w != null) {
-                ForkJoinTask<?> t;
-                while ((t = w.peek()) != null && (t instanceof ConsumerTask)) {
-                    if ((stat = offer(item)) != 0 || !w.trySharedUnpush(t))
-                        break;
-                    ((ConsumerTask<?>) t).consumer.consume();
-                }
             }
             return stat;
         }
@@ -1206,36 +1135,19 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
          * Timeout version; similar to submit.
          */
         final int timedOffer(T item, long nanos) {
-            int stat; Executor e;
-            if ((stat = offer(item)) == 0 && helpDepth == 0 &&
-                ((e = executor) instanceof ForkJoinPool)) {
-                Thread thread = Thread.currentThread();
-                if (((thread instanceof ForkJoinWorkerThread) &&
-                     ((ForkJoinWorkerThread) thread).getPool() == e) ||
-                    e == ForkJoinPool.commonPool()) {
-                    helpDepth = 1;
-                    ForkJoinTask<?> t;
-                    long deadline = System.nanoTime() + nanos;
-                    while ((t = ForkJoinTask.peekNextLocalTask()) != null &&
-                           (t instanceof ConsumerTask)) {
-                        if ((stat = offer(item)) != 0 ||
-                            (nanos = deadline - System.nanoTime()) <= 0L ||
-                            !t.tryUnfork())
-                            break;
-                        ((ConsumerTask<?>) t).consumer.consume();
-                    }
-                    helpDepth = 0;
-                }
-            }
-            if (stat == 0 && (stat = offer(item)) == 0 &&
-                (timeout = nanos) > 0L) {
+            int stat;
+            if ((stat = offer(item)) == 0 && (timeout = nanos) > 0L) {
                 putItem = item;
-                try {
-                    ForkJoinPool.managedBlock(this);
-                } catch (InterruptedException ie) {
-                    timeout = INTERRUPTED;
+                putStat = 0;
+                ForkJoinPool.helpAsyncBlocker(executor, this);
+                if ((stat = putStat) == 0) {
+                    try {
+                        ForkJoinPool.managedBlock(this);
+                    } catch (InterruptedException ie) {
+                        timeout = INTERRUPTED;
+                    }
+                    stat = putStat;
                 }
-                stat = putStat;
                 if (timeout < 0L)
                     Thread.currentThread().interrupt();
             }
