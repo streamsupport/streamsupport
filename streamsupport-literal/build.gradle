@@ -1,0 +1,41 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+    }
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_6
+targetCompatibility = JavaVersion.VERSION_1_6
+
+sourceSets {
+  main {
+      java.srcDir '../src/literal'
+  }
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile project(':streamsupport')
+}
+
+tasks.withType(Test) {
+  testLogging {
+    exceptionFormat "full"
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+    showStandardStreams = true
+  }
+}
+
+apply from: 'javadoc.gradle'
+
+tasks.withType(JavaCompile) {
+    //options.encoding = 'UTF-8'
+    options.encoding = 'Cp1252'
+}
