@@ -72,10 +72,11 @@ build.gradle:
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.4.3'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.4.3'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.4.3'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.4.3'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5'
 }
 ```
 
@@ -91,6 +92,7 @@ dependencies {
     compile 'com.github.streamsupport.streamsupport:streamsupport-cfuture:-SNAPSHOT'
     compile 'com.github.streamsupport.streamsupport:streamsupport-atomic:-SNAPSHOT'
     compile 'com.github.streamsupport.streamsupport:streamsupport-flow:-SNAPSHOT'
+    compile 'com.github.streamsupport.streamsupport:streamsupport-literal:-SNAPSHOT'
 }
 ```
 
@@ -110,7 +112,7 @@ dependencies {
 
 ## RELEASE NOTES
 
- - "1.4.3-stable" is the current stable release
+ - "1.5-stable" is the current stable release
 
 
 ## GENERAL
@@ -162,12 +164,35 @@ dependencies {
  - As of 1.4.2, the deprecated "concurrent" methods in j8.u.Maps have been
    removed. Please use the equivalent methods in j8.u.c.ConcurrentMaps.
 
- - As of 1.4.3, the signature of the checkIndex() methods in j8.u.Objects
-   has changed. See https://bugs.openjdk.java.net/browse/JDK-8146458
+ - As of 1.5, the support for exception customization of the checkIndex()
+   methods in j8.u.Objects has been removed.
+   See https://bugs.openjdk.java.net/browse/JDK-8155794
 
+ - As of release 1.5, a new optional component "streamsupport-literal"
+   that contains the implementation for JEP 269 (Java 9) has been added.
+   See JEP 269: "Convenience Factory Methods for Collections"
+   http://openjdk.java.net/jeps/269
+
+   * streamsupport-literal (Java 9 JEP 269 Collections factory methods)
 
 
 ## VERSION HISTORY
+
+1.5-stable (2016-06-19)
+ - JDK-8154049: DualPivot sorting incorrect for nearly sorted arrays
+ - JDK-8155794: Remove Objects.checkIndex exception customization
+ - JDK-8157523: Various improvements to ForkJoin/SubmissionPublisher
+ - JDK-8157522: Performance improvements to CompletableFuture
+ - JDK-8154387: Parallel unordered Stream.limit() performance if limit < 128
+ - JDK-8158365: List.spliterator() should optimize for RandomAccess lists
+ - JDK-8153768: Misc. changes imported from jsr166 CVS 2016-05
+ - JDK-8048330: JEP 269 Convenience Factory Methods for Collections
+ - JDK-8139233: Add compact immutable collection implementation
+ - JDK-8130023: j.u.stream - explicitly specify guaranteed pipeline execution
+ - JDK-8157437: Typos in Stream JavaDoc
+ - JDK-8159821: PrimitiveStream's "iterateFinite" has incorrect code sample
+ - test release 1.5 on Android N developer preview-3 (#194)
+ - test release 1.5 on Android N developer preview-4 (#205)
 
 1.4.3-stable (2016-04-17)
  - JDK-8072727: add variation of Stream.iterate() that's finite
