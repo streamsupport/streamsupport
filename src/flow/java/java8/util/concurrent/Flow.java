@@ -308,7 +308,7 @@ public final class Flow {
      * Returns a default value for Publisher or Subscriber buffering,
      * that may be used in the absence of other constraints.
      *
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * The current value returned is 256.
      *
      * @return the buffer size value

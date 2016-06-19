@@ -86,16 +86,12 @@ public final class Comparators {
             }
         }
 
-        @Override
         public Comparator<T> thenComparing(Comparator<? super T> other) {
             Objects.requireNonNull(other);
-//            return new NullComparator<>(nullFirst, real == null ? other : real.thenComparing(other));
             return new NullComparator<T>(nullFirst, real == null ? other : Comparators.thenComparing(real, other));
         }
 
-        @Override
         public Comparator<T> reversed() {
-//            return new NullComparator<>(!nullFirst, real == null ? null : real.reversed());
             return new NullComparator<T>(!nullFirst, real == null ? null : Collections.reverseOrder(real));
         }
     }
@@ -148,7 +144,7 @@ public final class Comparators {
      * Person} objects by their last name ignoring case differences,
      *
      * <pre>{@code
-     *     Comparator<Person> cmp = Comparator.comparing(
+     *     Comparator<Person> cmp = Comparators.comparing(
      *             Person::getLastName,
      *             String.CASE_INSENSITIVE_ORDER);
      * }</pre>
@@ -186,7 +182,7 @@ public final class Comparators {
      * Person} objects by their last name,
      *
      * <pre>{@code
-     *     Comparator<Person> byLastName = Comparator.comparing(Person::getLastName);
+     *     Comparator<Person> byLastName = Comparators.comparing(Person::getLastName);
      * }</pre>
      *
      * @param  <T> the type of element to be compared
@@ -282,7 +278,7 @@ public final class Comparators {
      * composed using following code,
      *
      * <pre>{@code
-     *     Comparator<String> cmp = Comparators.thenComparing(Comparator.comparingInt(String::length),
+     *     Comparator<String> cmp = Comparators.thenComparing(Comparators.comparingInt(String::length),
      *                        String.CASE_INSENSITIVE_ORDER);
      * }</pre>
      *

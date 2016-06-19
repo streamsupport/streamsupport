@@ -24,7 +24,40 @@
  */
 
 /**
- * Provides classes for some of the new static methods that were added in Java 8. 
+ * Provides classes for some of the new static methods that were added in Java 8.
+ *
+ * <h2><a name="Value-based-Classes">Value-based Classes</a></h2>
+ * <p>
+ * Some classes, such as {@code java8.util.Optional}, are value-based. Instances
+ * of a value-based class:
+ *
+ * <ul>
+ * <li>are final and immutable (though may contain references to mutable objects);
+ * <li>have implementations of equals, hashCode, and toString which are  computed
+ * solely from the instance's state and not from its identity  or the state of
+ * any other object or variable;
+ * <li>make no use of identity-sensitive operations such as reference equality
+ * (==) between instances, identity hash code of instances, or synchronization
+ * on an instances's intrinsic lock;
+ * <li>are considered equal solely based on equals(), not based on reference
+ * equality (==);
+ * <li>do not have accessible constructors, but are instead instantiated through
+ * factory methods which make no committment as to the identity of returned
+ * instances;
+ * <li>are freely substitutable when equal, meaning that interchanging any two
+ * instances x and y that are equal according to equals() in any computation or
+ * method invocation should produce no visible change in behavior.
+ * </ul>
+ *
+ * A program may produce unpredictable results if it attempts to distinguish two
+ * references to equal values of a value-based class, whether directly via
+ * reference equality or indirectly via an appeal to synchronization, identity
+ * hashing, serialization, or any other identity-sensitive mechanism. Use of such
+ * identity-sensitive operations on instances of value-based classes may have
+ * unpredictable effects and should be avoided.
+ * <p>
+ * 
  * @since 1.8
  */
 package java8.lang;
+

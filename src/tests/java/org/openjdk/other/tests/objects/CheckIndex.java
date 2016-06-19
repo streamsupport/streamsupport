@@ -24,9 +24,10 @@ package org.openjdk.other.tests.objects;
 
 /**
  * @test
- * @summary IndexOutOfBoundsException check index tests
+ * @summary Objects.checkIndex/jdk.internal.util.Preconditions.checkIndex tests
  * @run testng CheckIndex
- * @bug 8135248 8142493
+ * @bug 8135248 8142493 8155794
+ * @modules java.base/jdk.internal.util
  */
 
 import org.testng.annotations.DataProvider;
@@ -39,39 +40,74 @@ import java.util.List;
 import java8.util.Objects;
 import java8.util.function.BiConsumer;
 import java8.util.function.BiFunction;
+import java8.util.function.Function;
 import java8.util.function.IntSupplier;
 import java8.util.stream.StreamSupport;
 import static org.testng.Assert.*;
 
 public class CheckIndex {
 
-    static class AssertingOutOfBoundsException extends RuntimeException {
-        public AssertingOutOfBoundsException(String message) {
-            super(message);
-        }
-    }
+//    @SuppressWarnings("serial")
+//    static class AssertingOutOfBoundsException extends RuntimeException {
+//        public AssertingOutOfBoundsException(String message) {
+//            super(message);
+//        }
+//    }
 
-    static BiFunction<String, List<Integer>, AssertingOutOfBoundsException> assertingOutOfBounds(
-            String message, String expCheckKind, Integer... expArgs) {
-        return (checkKind, args) -> {
-            assertEquals(checkKind, expCheckKind);
-            assertEquals(args, Arrays.asList(expArgs));
-            try {
-                args.clear();
-                fail("Out of bounds List<Integer> argument should be unmodifiable");
-            } catch (Exception e)  {
+//    static BiFunction<String, List<Integer>, AssertingOutOfBoundsException> assertingOutOfBounds(
+//            String message, String expCheckKind, Integer... expArgs) {
+//        return (checkKind, args) -> {
+//            assertEquals(checkKind, expCheckKind);
+//            assertEquals(args, Arrays.asList(expArgs));
+//            try {
+//                args.clear();
+//                fail("Out of bounds List<Integer> argument should be unmodifiable");
+//            } catch (Exception e)  {
+//            }
+//            return new AssertingOutOfBoundsException(message);
+//        };
+//    }
+
+//    static BiFunction<String, List<Integer>, AssertingOutOfBoundsException> assertingOutOfBoundsReturnNull(
+//            String expCheckKind, Integer... expArgs) {
+//        return (checkKind, args) -> {
+//            assertEquals(checkKind, expCheckKind);
+//            assertEquals(args, Arrays.asList(expArgs));
+//            return null;
+//        };
+//    }
+
+    private static final int CHECK_INDEX = 1;
+    private static final int CHECK_FROM_TO_INDEX = 2;
+    private static final int CHECK_FROM_INDEX_SIZE = 3;
+
+    static <EX extends RuntimeException>
+    BiFunction<Integer, List<Integer>, EX> outOfBoundsExceptionFormatter(Function<String, EX> f) {
+        return new BiFunction<Integer, List<Integer>, EX>() {
+            @Override
+            public EX apply(Integer checkKind, List<Integer> args) {
+                int arg0 = args.get(0);
+                int arg1 = args.get(1);
+                int arg2 = args.size() == 3 ? args.get(2) : -1; 
+                return f.apply(outOfBoundsMessage(checkKind, arg0, arg1, arg2));
             }
-            return new AssertingOutOfBoundsException(message);
         };
     }
 
-    static BiFunction<String, List<Integer>, AssertingOutOfBoundsException> assertingOutOfBoundsReturnNull(
-            String expCheckKind, Integer... expArgs) {
-        return (checkKind, args) -> {
-            assertEquals(checkKind, expCheckKind);
-            assertEquals(args, Arrays.asList(expArgs));
-            return null;
-        };
+    private static String outOfBoundsMessage(int checkKind, int arg0, int arg1, int arg2) {
+        if (checkKind == CHECK_INDEX) { // "checkIndex" (1)
+            return String.format("Index %d out-of-bounds for length %d",
+                    arg0, arg1);
+        }
+        if (checkKind == CHECK_FROM_TO_INDEX) { // "checkFromToIndex" (2)
+            return String.format("Range [%d, %d) out-of-bounds for length %d",
+                    arg0, arg1, arg2);
+        }
+        if (checkKind == CHECK_FROM_INDEX_SIZE) { // "checkFromIndexSize" (3)
+            return String.format("Range [%d, %<d + %d) out-of-bounds for length %d",
+                    arg0, arg1, arg2);
+        }
+        throw new IllegalStateException();
     }
 
     static final int[] VALUES = {0, 1, Integer.MAX_VALUE - 1, Integer.MAX_VALUE, -1, Integer.MIN_VALUE + 1, Integer.MIN_VALUE};
@@ -90,16 +126,16 @@ public class CheckIndex {
         return l.toArray(new Object[0][0]);
     }
 
-    interface X {
-        int apply(int a, int b, int c);
-    }
+//    interface X {
+//        int apply(int a, int b, int c);
+//    }
 
     @Test(dataProvider = "checkIndexProvider")
     public void testCheckIndex(int index, int length, boolean withinBounds) {
         String expectedMessage = withinBounds
                                  ? null
-                                 : Objects.outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
-                apply("checkIndex", Arrays.asList(index, length)).getMessage();
+                                 : outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
+                apply(CHECK_INDEX /*"checkIndex"*/, Arrays.asList(index, length)).getMessage();
 
         BiConsumer<Class<? extends RuntimeException>, IntSupplier> checker = (ec, s) -> {
             try {
@@ -119,22 +155,22 @@ public class CheckIndex {
             }
         };
 
-        checker.accept(AssertingOutOfBoundsException.class,
-                     () -> Objects.checkIndex(index, length,
-                                              assertingOutOfBounds(expectedMessage, "checkIndex", index, length)));
-        checker.accept(IndexOutOfBoundsException.class,
-                     () -> Objects.checkIndex(index, length,
-                                              assertingOutOfBoundsReturnNull("checkIndex", index, length)));
-        checker.accept(IndexOutOfBoundsException.class,
-                     () -> Objects.checkIndex(index, length, null));
+//        checker.accept(AssertingOutOfBoundsException.class,
+//                     () -> Preconditions.checkIndex(index, length,
+//                                              assertingOutOfBounds(expectedMessage, "checkIndex", index, length)));
+//        checker.accept(IndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkIndex(index, length,
+//                                              assertingOutOfBoundsReturnNull("checkIndex", index, length)));
+//        checker.accept(IndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkIndex(index, length, null));
         checker.accept(IndexOutOfBoundsException.class,
                      () -> Objects.checkIndex(index, length));
-        checker.accept(ArrayIndexOutOfBoundsException.class,
-                     () -> Objects.checkIndex(index, length,
-                                              Objects.outOfBoundsExceptionFormatter(ArrayIndexOutOfBoundsException::new)));
-        checker.accept(StringIndexOutOfBoundsException.class,
-                     () -> Objects.checkIndex(index, length,
-                                              Objects.outOfBoundsExceptionFormatter(StringIndexOutOfBoundsException::new)));
+//        checker.accept(ArrayIndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkIndex(index, length,
+//                                              Preconditions.outOfBoundsExceptionFormatter(ArrayIndexOutOfBoundsException::new)));
+//        checker.accept(StringIndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkIndex(index, length,
+//                                              Preconditions.outOfBoundsExceptionFormatter(StringIndexOutOfBoundsException::new)));
     }
 
 
@@ -160,15 +196,15 @@ public class CheckIndex {
     public void testCheckFromToIndex(int fromIndex, int toIndex, int length, boolean withinBounds) {
         String expectedMessage = withinBounds
                                  ? null
-                                 : Objects.outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
-                apply("checkFromToIndex", Arrays.asList(fromIndex, toIndex, length)).getMessage();
+                                 : outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
+                apply(CHECK_FROM_TO_INDEX /*"checkFromToIndex"*/, Arrays.asList(fromIndex, toIndex, length)).getMessage();
 
         BiConsumer<Class<? extends RuntimeException>, IntSupplier> check = (ec, s) -> {
             try {
                 int rIndex = s.getAsInt();
                 if (!withinBounds)
                     fail(String.format(
-                            "Range [%d, %d) is out of bounds of [0, %d), but was reported to be withing bounds", fromIndex, toIndex, length));
+                            "Range [%d, %d) is out of bounds of [0, %d), but was reported to be within bounds", fromIndex, toIndex, length));
                 assertEquals(rIndex, fromIndex);
             }
             catch (RuntimeException e) {
@@ -181,22 +217,22 @@ public class CheckIndex {
             }
         };
 
-        check.accept(AssertingOutOfBoundsException.class,
-                     () -> Objects.checkFromToIndex(fromIndex, toIndex, length,
-                                                    assertingOutOfBounds(expectedMessage, "checkFromToIndex", fromIndex, toIndex, length)));
-        check.accept(IndexOutOfBoundsException.class,
-                     () -> Objects.checkFromToIndex(fromIndex, toIndex, length,
-                                                    assertingOutOfBoundsReturnNull("checkFromToIndex", fromIndex, toIndex, length)));
-        check.accept(IndexOutOfBoundsException.class,
-                     () -> Objects.checkFromToIndex(fromIndex, toIndex, length, null));
+//        check.accept(AssertingOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromToIndex(fromIndex, toIndex, length,
+//                                                    assertingOutOfBounds(expectedMessage, "checkFromToIndex", fromIndex, toIndex, length)));
+//        check.accept(IndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromToIndex(fromIndex, toIndex, length,
+//                                                    assertingOutOfBoundsReturnNull("checkFromToIndex", fromIndex, toIndex, length)));
+//        check.accept(IndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromToIndex(fromIndex, toIndex, length, null));
         check.accept(IndexOutOfBoundsException.class,
                      () -> Objects.checkFromToIndex(fromIndex, toIndex, length));
-        check.accept(ArrayIndexOutOfBoundsException.class,
-                     () -> Objects.checkFromToIndex(fromIndex, toIndex, length,
-                                              Objects.outOfBoundsExceptionFormatter(ArrayIndexOutOfBoundsException::new)));
-        check.accept(StringIndexOutOfBoundsException.class,
-                     () -> Objects.checkFromToIndex(fromIndex, toIndex, length,
-                                              Objects.outOfBoundsExceptionFormatter(StringIndexOutOfBoundsException::new)));
+//        check.accept(ArrayIndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromToIndex(fromIndex, toIndex, length,
+//                                              Preconditions.outOfBoundsExceptionFormatter(ArrayIndexOutOfBoundsException::new)));
+//        check.accept(StringIndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromToIndex(fromIndex, toIndex, length,
+//                                              Preconditions.outOfBoundsExceptionFormatter(StringIndexOutOfBoundsException::new)));
     }
 
 
@@ -229,15 +265,15 @@ public class CheckIndex {
     public void testCheckFromIndexSize(int fromIndex, int size, int length, boolean withinBounds) {
         String expectedMessage = withinBounds
                                  ? null
-                                 : Objects.outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
-                apply("checkFromIndexSize", Arrays.asList(fromIndex, size, length)).getMessage();
+                                 : outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new).
+                apply(CHECK_FROM_INDEX_SIZE /*"checkFromIndexSize"*/, Arrays.asList(fromIndex, size, length)).getMessage();
 
         BiConsumer<Class<? extends RuntimeException>, IntSupplier> check = (ec, s) -> {
             try {
                 int rIndex = s.getAsInt();
                 if (!withinBounds)
                     fail(String.format(
-                            "Range [%d, %d + %d) is out of bounds of [0, %d), but was reported to be withing bounds", fromIndex, fromIndex, size, length));
+                            "Range [%d, %d + %d) is out of bounds of [0, %d), but was reported to be within bounds", fromIndex, fromIndex, size, length));
                 assertEquals(rIndex, fromIndex);
             }
             catch (RuntimeException e) {
@@ -250,48 +286,48 @@ public class CheckIndex {
             }
         };
 
-        check.accept(AssertingOutOfBoundsException.class,
-                     () -> Objects.checkFromIndexSize(fromIndex, size, length,
-                                                      assertingOutOfBounds(expectedMessage, "checkFromIndexSize", fromIndex, size, length)));
-        check.accept(IndexOutOfBoundsException.class,
-                     () -> Objects.checkFromIndexSize(fromIndex, size, length,
-                                                      assertingOutOfBoundsReturnNull("checkFromIndexSize", fromIndex, size, length)));
-        check.accept(IndexOutOfBoundsException.class,
-                     () -> Objects.checkFromIndexSize(fromIndex, size, length, null));
+//        check.accept(AssertingOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromIndexSize(fromIndex, size, length,
+//                                                      assertingOutOfBounds(expectedMessage, "checkFromIndexSize", fromIndex, size, length)));
+//        check.accept(IndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromIndexSize(fromIndex, size, length,
+//                                                      assertingOutOfBoundsReturnNull("checkFromIndexSize", fromIndex, size, length)));
+//        check.accept(IndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromIndexSize(fromIndex, size, length, null));
         check.accept(IndexOutOfBoundsException.class,
                      () -> Objects.checkFromIndexSize(fromIndex, size, length));
-        check.accept(ArrayIndexOutOfBoundsException.class,
-                     () -> Objects.checkFromIndexSize(fromIndex, size, length,
-                                                    Objects.outOfBoundsExceptionFormatter(ArrayIndexOutOfBoundsException::new)));
-        check.accept(StringIndexOutOfBoundsException.class,
-                     () -> Objects.checkFromIndexSize(fromIndex, size, length,
-                                                    Objects.outOfBoundsExceptionFormatter(StringIndexOutOfBoundsException::new)));
+//        check.accept(ArrayIndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromIndexSize(fromIndex, size, length,
+//                                                    Preconditions.outOfBoundsExceptionFormatter(ArrayIndexOutOfBoundsException::new)));
+//        check.accept(StringIndexOutOfBoundsException.class,
+//                     () -> Preconditions.checkFromIndexSize(fromIndex, size, length,
+//                                                    Preconditions.outOfBoundsExceptionFormatter(StringIndexOutOfBoundsException::new)));
     }
 
     @Test
     public void uniqueMessagesForCheckKinds() {
-        BiFunction<String, List<Integer>, IndexOutOfBoundsException> f =
-                Objects.outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new);
+        BiFunction<Integer, List<Integer>, IndexOutOfBoundsException> f =
+                outOfBoundsExceptionFormatter(IndexOutOfBoundsException::new);
 
         List<String> messages = new ArrayList<>();
         // Exact arguments
-        messages.add(f.apply("checkIndex", Arrays.asList(-1, 0)).getMessage());
-        messages.add(f.apply("checkFromToIndex", Arrays.asList(-1, 0, 0)).getMessage());
-        messages.add(f.apply("checkFromIndexSize", Arrays.asList(-1, 0, 0)).getMessage());
-        // Unknown check kind
-        messages.add(f.apply("checkUnknown", Arrays.asList(-1, 0, 0)).getMessage());
-        // Known check kind with more arguments
-        messages.add(f.apply("checkIndex", Arrays.asList(-1, 0, 0)).getMessage());
-        messages.add(f.apply("checkFromToIndex", Arrays.asList(-1, 0, 0, 0)).getMessage());
-        messages.add(f.apply("checkFromIndexSize", Arrays.asList(-1, 0, 0, 0)).getMessage());
-        // Known check kind with fewer arguments
-        messages.add(f.apply("checkIndex", Arrays.asList(-1)).getMessage());
-        messages.add(f.apply("checkFromToIndex", Arrays.asList(-1, 0)).getMessage());
-        messages.add(f.apply("checkFromIndexSize", Arrays.asList(-1, 0)).getMessage());
-        // Null arguments
-        messages.add(f.apply(null, null).getMessage());
-        messages.add(f.apply("checkNullArguments", null).getMessage());
-        messages.add(f.apply(null, Arrays.asList(-1)).getMessage());
+        messages.add(f.apply(CHECK_INDEX /*"checkIndex"*/, Arrays.asList(-1, 0)).getMessage());
+        messages.add(f.apply(CHECK_FROM_TO_INDEX /*"checkFromToIndex"*/, Arrays.asList(-1, 0, 0)).getMessage());
+        messages.add(f.apply(CHECK_FROM_INDEX_SIZE /*"checkFromIndexSize"*/, Arrays.asList(-1, 0, 0)).getMessage());
+//        // Unknown check kind
+//        messages.add(f.apply("checkUnknown", Arrays.asList(-1, 0, 0)).getMessage());
+//        // Known check kind with more arguments
+//        messages.add(f.apply("checkIndex", Arrays.asList(-1, 0, 0)).getMessage());
+//        messages.add(f.apply("checkFromToIndex", Arrays.asList(-1, 0, 0, 0)).getMessage());
+//        messages.add(f.apply("checkFromIndexSize", Arrays.asList(-1, 0, 0, 0)).getMessage());
+//        // Known check kind with fewer arguments
+//        messages.add(f.apply("checkIndex", Arrays.asList(-1)).getMessage());
+//        messages.add(f.apply("checkFromToIndex", Arrays.asList(-1, 0)).getMessage());
+//        messages.add(f.apply("checkFromIndexSize", Arrays.asList(-1, 0)).getMessage());
+//        // Null arguments
+//        messages.add(f.apply(null, null).getMessage());
+//        messages.add(f.apply("checkNullArguments", null).getMessage());
+//        messages.add(f.apply(null, Arrays.asList(-1)).getMessage());
 
         assertEquals(messages.size(), StreamSupport.stream(messages).distinct().count());
     }

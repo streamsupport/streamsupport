@@ -164,7 +164,7 @@ public final class Longs {
      * @param a the first operand
      * @param b the second operand
      * @return the sum of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static long sum(long a, long b) {
@@ -178,7 +178,7 @@ public final class Longs {
      * @param a the first operand
      * @param b the second operand
      * @return the greater of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static long max(long a, long b) {
@@ -192,7 +192,7 @@ public final class Longs {
      * @param a the first operand
      * @param b the second operand
      * @return the smaller of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static long min(long a, long b) {

@@ -180,7 +180,9 @@ public final class Maps {
                     v = entry.getValue();
                 } catch (IllegalStateException ise) {
                     // this usually means the entry is no longer in the map.
-                    throw new ConcurrentModificationException(ise);
+                    ConcurrentModificationException cme = new ConcurrentModificationException();
+                    cme.initCause(ise);
+                    throw cme;
                 }
                 action.accept(k, v);
             }

@@ -34,9 +34,8 @@ public final class Integers {
      * {@code Integer.hashCode()}.
      *
      * @param value the value to hash
-     * @since 1.8
-     *
      * @return a hash code value for a {@code int} value.
+     * @since 1.8
      */
     public static int hashCode(int value) {
         return value;
@@ -143,7 +142,7 @@ public final class Integers {
      * @param a the first operand
      * @param b the second operand
      * @return the sum of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static int sum(int a, int b) {
@@ -157,7 +156,7 @@ public final class Integers {
      * @param a the first operand
      * @param b the second operand
      * @return the greater of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static int max(int a, int b) {
@@ -171,7 +170,7 @@ public final class Integers {
      * @param a the first operand
      * @param b the second operand
      * @return the smaller of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static int min(int a, int b) {

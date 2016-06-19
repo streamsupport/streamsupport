@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -32,89 +32,93 @@ import java.util.List;
 import java8.util.function.Consumer;
 
 /**
- * Index-based split-by-two, lazily initialized Spliterator for AbstractLists
- * that implement RandomAccess.
+ * An index-based split-by-two, lazily initialized Spliterator covering
+ * a List that access elements via {@link List#get}.
+ *
+ * If access results in an IndexOutOfBoundsException then a
+ * ConcurrentModificationException is thrown instead (since the list has
+ * been structurally modified while traversing).
+ *
+ * If the List is an instance of AbstractList then concurrent modification
+ * checking is performed using the AbstractList's modCount field.
  */
-final class RAAbstractListSpliterator<E> implements Spliterator<E> {
-
+final class RASpliterator<E> implements Spliterator<E> {
     private final List<E> list;
     private int index; // current index, modified on advance/split
     private int fence; // -1 until used; then one past last index
+
+    // The following fields are valid if covering an AbstractList
+    private final AbstractList<E> alist;
     private int expectedModCount; // initialized when fence set
 
-    private RAAbstractListSpliterator(List<E> list, int origin, int fence,
+    /** Create new spliterator covering the given range */
+    private RASpliterator(List<E> list, int origin, int fence,
             int expectedModCount) {
         this.list = list;
         this.index = origin;
         this.fence = fence;
+
+        this.alist = list instanceof AbstractList ? (AbstractList<E>) list
+                : null;
         this.expectedModCount = expectedModCount;
     }
 
-    static <T> Spliterator<T> spliterator(AbstractList<T> list) {
-        return new RAAbstractListSpliterator<T>(list, 0, -1, 0);
+    static <T> Spliterator<T> spliterator(List<T> list) {
+        return new RASpliterator<T>(list, 0, -1, 0);
     }
 
     private int getFence() { // initialize fence to size on first use
-        int hi;
+        int hi; // (a specialized variant appears in method forEachRemaining)
+        List<E> lst = list;
         if ((hi = fence) < 0) {
-            expectedModCount = getModCount(list);
-            hi = fence = list.size();
+            if (alist != null) {
+                expectedModCount = getModCount(alist);
+            }
+            hi = fence = lst.size();
         }
         return hi;
     }
 
-    @Override
     public Spliterator<E> trySplit() {
         int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
         return (lo >= mid) ? null : // divide range in half unless too small
-                new RAAbstractListSpliterator<>(list, lo, index = mid,
+                new RASpliterator<E>(list, lo, index = mid,
                         expectedModCount);
     }
 
-    @Override
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         int hi = getFence(), i = index;
         if (i < hi) {
             index = i + 1;
             action.accept(list.get(i));
-            if (expectedModCount != getModCount(list)) {
-                throw new ConcurrentModificationException();
-            }
+            checkAbsListModCount(alist, expectedModCount);
             return true;
         }
         return false;
     }
 
-    @Override
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        int hi = getFence(), i = index;
         List<E> lst = list;
-        if (i < hi) {
-            if ((index = hi) > lst.size()) {
-                throw new ConcurrentModificationException();
+        int hi = getFence();
+        int i = index;
+        index = hi;
+        try {
+            for (; i < hi; ++i) {
+                action.accept(lst.get(i));
             }
-            try {
-                for (; i < hi; ++i) {
-                    action.accept(lst.get(i));
-                }
-            } catch (IndexOutOfBoundsException e) {
-                // action must have modified the list
-                throw new ConcurrentModificationException();
-            }
-            if (expectedModCount != getModCount(lst)) {
-                throw new ConcurrentModificationException();
-            }
+        } catch (IndexOutOfBoundsException e) {
+            // action must have modified the list
+            throw new ConcurrentModificationException();
         }
+        checkAbsListModCount(alist, expectedModCount);
     }
 
-    @Override
     public long estimateSize() {
         return (long) (getFence() - index);
     }
 
-    @Override
     public int characteristics() {
         return Spliterator.ORDERED | Spliterator.SIZED | Spliterator.SUBSIZED;
     }
@@ -132,6 +136,12 @@ final class RAAbstractListSpliterator<E> implements Spliterator<E> {
     @Override
     public Comparator<? super E> getComparator() {
         return Spliterators.getComparator(this);
+    }
+
+    private static void checkAbsListModCount(AbstractList<?> alist, int expectedModCount) {
+        if (alist != null && getModCount(alist) != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
     }
 
     private static <T> int getModCount(List<T> lst) {

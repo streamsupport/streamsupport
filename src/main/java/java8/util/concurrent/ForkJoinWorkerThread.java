@@ -52,6 +52,7 @@ import java.security.ProtectionDomain;
  * @author Doug Lea
  */
 public class ForkJoinWorkerThread extends Thread {
+// CVS rev. 1.70
     /*
      * ForkJoinWorkerThreads are managed by ForkJoinPools and perform
      * ForkJoinTasks. For explanation, see the internal documentation
@@ -65,8 +66,9 @@ public class ForkJoinWorkerThread extends Thread {
      * owning thread.
      *
      * Support for (non-public) subclass InnocuousForkJoinWorkerThread
-     * requires that we break quite a lot of encapsulation (via Unsafe)
-     * both here and in the subclass to access and set Thread fields.
+     * requires that we break quite a lot of encapsulation (via helper
+     * methods in ThreadLocalRandom) both here and in the subclass to
+     * access and set Thread fields.
      */
 
     // A placeholder name until a useful name can be set in registerWorker
@@ -95,8 +97,8 @@ public class ForkJoinWorkerThread extends Thread {
     ForkJoinWorkerThread(ForkJoinPool pool, ThreadGroup threadGroup,
                          AccessControlContext acc) {
         super(threadGroup, NAME_PLACEHOLDER);
-        U.putOrderedObject(this, INHERITEDACCESSCONTROLCONTEXT, acc);
-        eraseThreadLocals(); // clear before registering
+        TLRandom.setInheritedAccessControlContext(this, acc);
+        TLRandom.eraseThreadLocals(this); // clear before registering
         this.pool = pool;
         this.workQueue = pool.registerWorker(this);
     }
@@ -174,95 +176,13 @@ public class ForkJoinWorkerThread extends Thread {
         }
     }
 
-    // note that this will never get called on Android
-    /**
-     * Erases ThreadLocals by nulling out Thread maps
-     */
-    final void eraseThreadLocals() {
-        U.putObject(this, THREADLOCALS, null);
-        U.putObject(this, INHERITABLETHREADLOCALS, null);
-    }
-
     /**
      * Non-public hook method for InnocuousForkJoinWorkerThread.
      */
     void afterTopLevelExec() {
     }
 
-    /**
-     * Are we running on Android?
-     */
-    private static boolean isAndroid() {
-        if (isClassPresent("android.util.DisplayMetrics")) {
-            return true;
-        } else {
-            // RoboVM must be treated as Android but it doesn't
-            // have the android.util.DisplayMetrics class
-            return isClassPresent("org.robovm.rt.bro.Bro");
-        }
-    }
-
-    /**
-     * Are we running on a pre-Java8 IBM VM?
-     * @return
-     */
-    private static boolean isIBMPre8() {
-        if (isClassPresent("com.ibm.misc.JarVersion")) {
-            String ver = System.getProperty("java.class.version", "45");
-            if (ver != null && ver.length() >= 2) {
-                ver = ver.substring(0, 2);
-                if ("52".compareTo(ver) > 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private static boolean isClassPresent(String name) {
-        Class<?> clazz = null;
-        try {
-            // avoid <clinit> which triggers a lot of JNI code in the case
-            // of android.util.DisplayMetrics
-            clazz = Class.forName(name, false,
-                    ForkJoinWorkerThread.class.getClassLoader());
-        } catch (Throwable notPresent) {
-            // ignore
-        }
-        return clazz != null;
-    }
-
-    // Set up to allow setting thread fields in constructor
-    private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
-    static final boolean IS_PRE8_IBM;
-    private static final long THREADLOCALS;
-    private static final long INHERITABLETHREADLOCALS;
-    private static final long INHERITEDACCESSCONTROLCONTEXT;
-    static {
-        try {
-            IS_PRE8_IBM = isIBMPre8();
-            if (!isAndroid()) {
-                THREADLOCALS = U.objectFieldOffset(Thread.class
-                        .getDeclaredField("threadLocals"));
-                INHERITABLETHREADLOCALS = U.objectFieldOffset(Thread.class
-                        .getDeclaredField("inheritableThreadLocals"));
-                String accFieldName = IS_PRE8_IBM ? "accessControlContext"
-                        : "inheritedAccessControlContext";
-                INHERITEDACCESSCONTROLCONTEXT = U
-                        .objectFieldOffset(Thread.class
-                                .getDeclaredField(accFieldName));
-            } else {
-                // we don't need these offsets when on Android
-                THREADLOCALS = 0L;
-                INHERITABLETHREADLOCALS = 0L;
-                INHERITEDACCESSCONTROLCONTEXT = 0L;
-            }
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-    }
-
-    // note that this will never get called on Android
+    // note that this will never get called on Android!
     /**
      * A worker thread that has no permissions, is not a member of any
      * user-defined ThreadGroup, and erases all ThreadLocals after
@@ -271,7 +191,7 @@ public class ForkJoinWorkerThread extends Thread {
     static final class InnocuousForkJoinWorkerThread extends ForkJoinWorkerThread {
         /** The ThreadGroup for all InnocuousForkJoinWorkerThreads */
         private static final ThreadGroup innocuousThreadGroup =
-            createThreadGroup();
+            TLRandom.createThreadGroup("InnocuousForkJoinWorkerThreadGroup");
 
         /** An AccessControlContext supporting no privileges */
         private static final AccessControlContext INNOCUOUS_ACC =
@@ -286,7 +206,7 @@ public class ForkJoinWorkerThread extends Thread {
 
         @Override // to erase ThreadLocals
         void afterTopLevelExec() {
-            eraseThreadLocals();
+            TLRandom.eraseThreadLocals(this);
         }
 
         @Override // to always report system loader
@@ -300,36 +220,6 @@ public class ForkJoinWorkerThread extends Thread {
         @Override // paranoically
         public void setContextClassLoader(ClassLoader cl) {
             throw new SecurityException("setContextClassLoader");
-        }
-
-        /**
-         * Returns a new group with the system ThreadGroup (the
-         * topmost, parent-less group) as parent.  Uses Unsafe to
-         * traverse Thread.group and ThreadGroup.parent fields.
-         */
-        private static ThreadGroup createThreadGroup() {
-            try {
-                sun.misc.Unsafe u = UnsafeAccess.unsafe;
-                String groupFieldName = IS_PRE8_IBM ? "threadGroup" : "group";
-                long tg = u.objectFieldOffset(Thread.class
-                        .getDeclaredField(groupFieldName));
-                long gp = u.objectFieldOffset(ThreadGroup.class
-                        .getDeclaredField("parent"));
-                ThreadGroup group = (ThreadGroup)
-                    u.getObject(Thread.currentThread(), tg);
-                while (group != null) {
-                    ThreadGroup parent = (ThreadGroup) u.getObject(group, gp);
-                    if (parent == null) {
-                        return new ThreadGroup(group,
-                                               "InnocuousForkJoinWorkerThreadGroup");
-                    }
-                    group = parent;
-                }
-            } catch (Exception e) {
-                throw new Error(e);
-            }
-            // fall through if null as cannot-happen safeguard
-            throw new Error("Cannot create ThreadGroup");
         }
     }
 }

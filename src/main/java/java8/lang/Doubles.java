@@ -50,7 +50,7 @@ public final class Doubles {
      * @param a the first operand
      * @param b the second operand
      * @return the sum of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static double sum(double a, double b) {
@@ -64,7 +64,7 @@ public final class Doubles {
      * @param a the first operand
      * @param b the second operand
      * @return the greater of {@code a} and {@code b}
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static double max(double a, double b) {
@@ -78,7 +78,7 @@ public final class Doubles {
      * @param a the first operand
      * @param b the second operand
      * @return the smaller of {@code a} and {@code b}.
-     * @see java.util.function.BinaryOperator
+     * @see java8.util.function.BinaryOperator
      * @since 1.8
      */
     public static double min(double a, double b) {

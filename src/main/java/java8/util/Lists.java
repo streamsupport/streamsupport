@@ -109,7 +109,7 @@ public final class Lists {
      * <p>The {@code Spliterator} reports at least {@link Spliterator#SIZED},
      * {@link Spliterator#ORDERED} and {@link Spliterator#SUBSIZED}.
      *
-     * <p><b>Implementation notes</b>:
+     * <p><b>Implementation Note:</b>
      * This implementation delegates to {@link Spliterators#spliterator(java.util.Collection)}
      * so it is effectively the same as calling
      * <pre>{@code

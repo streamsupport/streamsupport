@@ -225,14 +225,13 @@ public class SpliteratorLateBindingFailFastTest {
 
         // Collections
 
-        db.addList(RandomAccessList::new);
-
         db.addList(ArrayList::new);
 
         db.addList(LinkedList::new);
 
-        db.addList(Vector::new);
+//        db.addList(Vector::new);
 
+        db.addList(RandomAccessList::new);
 
         db.addCollection(HashSet::new);
 

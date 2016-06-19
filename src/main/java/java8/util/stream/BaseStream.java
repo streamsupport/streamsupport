@@ -42,7 +42,7 @@ import java8.util.Spliterator;
  * }</pre>
  *
  * See the class documentation for {@link Stream} and the package documentation
- * for <a href="package-summary.html">java.util.stream</a> for additional
+ * for <a href="package-summary.html">java8.util.stream</a> for additional
  * specification of streams, stream operations, stream pipelines, and
  * parallelism, which governs the behavior of all stream types.
  *

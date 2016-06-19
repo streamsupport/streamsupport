@@ -38,7 +38,7 @@ package org.openjdk.tests.tck;
  * @test
  * @summary JSR-166 tck tests
  * @build *
- * @run junit/othervm/timeout=1000 -Djsr166.testImplementationDetails=true JSR166TestCase
+ * @run junit/othervm/timeout=1000 -Djava.util.concurrent.ForkJoinPool.common.parallelism=0 -Djsr166.testImplementationDetails=true JSR166TestCase
  */
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -87,6 +87,7 @@ import java8.util.concurrent.RecursiveTask;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeoutException;
@@ -176,7 +177,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.190
+// CVS rev. 1.195
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -927,6 +928,15 @@ public class JSR166TestCase extends TestCase {
      * Uninteresting threads are filtered out.
      */
     static void dumpTestThreads() {
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            try {
+                System.setSecurityManager(null);
+            } catch (SecurityException giveUp) {
+                return;
+            }
+        }
+
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         System.err.println("------ stacktrace dump start ------");
         for (ThreadInfo info : threadMXBean.dumpAllThreads(true, true)) {
@@ -944,6 +954,8 @@ public class JSR166TestCase extends TestCase {
             System.err.print(info);
         }
         System.err.println("------ stacktrace dump end ------");
+
+        if (sm != null) System.setSecurityManager(sm);
     }
 
     /**
@@ -1773,4 +1785,18 @@ public class JSR166TestCase extends TestCase {
         } catch (NoSuchElementException success) {}
         assertFalse(it.hasNext());
     }
+
+    public <T> Callable<T> callableThrowing(final Exception ex) {
+        return new Callable<T>() { public T call() throws Exception { throw ex; }};
+    }
+
+    public Runnable runnableThrowing(final RuntimeException ex) {
+        return new Runnable() { public void run() { throw ex; }};
+    }
+
+    /** A reusable thread pool to be shared by tests. */
+    static final ExecutorService cachedThreadPool =
+        new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                               1000L, MILLISECONDS,
+                               new SynchronousQueue<Runnable>());
 }

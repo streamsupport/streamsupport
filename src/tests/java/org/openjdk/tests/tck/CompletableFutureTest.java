@@ -81,7 +81,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.146
+// CVS rev. 1.147
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3671,12 +3671,25 @@ public class CompletableFutureTest extends JSR166TestCase {
     //--- tests of implementation details; not part of official tck ---
 
     Object resultOf(CompletableFuture<?> f) {
+        SecurityManager sm = System.getSecurityManager();
+        if (sm != null) {
+            try {
+                System.setSecurityManager(null);
+            } catch (SecurityException giveUp) {
+                return "Reflection not available";
+            }
+        }
+
         try {
             java.lang.reflect.Field resultField
                 = CompletableFuture.class.getDeclaredField("result");
             resultField.setAccessible(true);
             return resultField.get(f);
-        } catch (Throwable t) { throw new AssertionError(t); }
+        } catch (Throwable t) {
+            throw new AssertionError(t);
+        } finally {
+            if (sm != null) System.setSecurityManager(sm);
+        }
     }
 
     public void testExceptionPropagationReusesResultObject() {
