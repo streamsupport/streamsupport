@@ -1111,7 +1111,9 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         }
         final boolean isLive() {
             BiCompletion<?,?,?> c;
-            return (c = base) != null && c.dep != null;
+            return (c = base) != null
+                // && c.isLive()
+                && c.dep != null;
         }
     }
 
