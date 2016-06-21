@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport</artifactId>
-			<version>1.5</version>
+			<version>1.5.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 	<properties>
