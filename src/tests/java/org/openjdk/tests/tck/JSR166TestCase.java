@@ -177,7 +177,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.195
+// CVS rev. 1.197
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -891,7 +891,11 @@ public class JSR166TestCase extends TestCase {
         }
     }
 
-    /** Like Runnable, but with the freedom to throw anything */
+    /**
+     * Like Runnable, but with the freedom to throw anything.
+     * junit folks had the same idea:
+     * http://junit.org/junit5/docs/snapshot/api/org/junit/gen5/api/Executable.html
+     */
     protected interface Action { public void run() throws Throwable; }
 
     /**
