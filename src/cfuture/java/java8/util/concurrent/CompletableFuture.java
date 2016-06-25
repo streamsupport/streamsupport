@@ -123,7 +123,7 @@ import java8.util.function.Supplier;
  * and {@code get} methods
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.191
+// CVS rev. 1.199
     /*
      * Overview:
      *
@@ -178,10 +178,10 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      *   method with its held arguments, and on success cleans up.
      *   The mode argument allows tryFire to be called twice (SYNC,
      *   then ASYNC); the first to screen and trap exceptions while
-     *   arranging to execute, and the second when called from a
-     *   task. (A few classes are not used async so take slightly
-     *   different forms.)  The claim() callback suppresses function
-     *   invocation if already claimed by another thread.
+     *   arranging to execute, and the second when called from a task.
+     *   (A few classes are not used async so take slightly different
+     *   forms.)  The claim() callback suppresses function invocation
+     *   if already claimed by another thread.
      *
      * * CompletableFuture method xStage(...) is called from a public
      *   stage method of CompletableFuture x. It screens user
@@ -552,9 +552,9 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     /**
      * Pushes the given completion unless it completes while trying.
-     * Caller should have first checked that result is null.
+     * Caller should first check that result is null.
      */
-    final void unipush(UniCompletion<?,?> c) {
+    final void unipush(Completion c) {
         if (c != null) {
             while (!tryPushStack(c)) {
                 if (result != null) {
@@ -1117,17 +1117,22 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
         }
     }
 
-    /** Pushes completion to this and b unless both done. */
+    /**
+     * Pushes completion to this and b unless both done.
+     * Caller should first check that either result or b.result is null.
+     */
     final void bipush(CompletableFuture<?> b, BiCompletion<?,?,?> c) {
         if (c != null) {
-            Object r;
-            while ((r = result) == null && !tryPushStack(c))
-                lazySetNext(c, null); // clear on failure
-            if (b != null && b != this && b.result == null) {
-                Completion q = (r != null) ? c : new CoCompletion(c);
-                while (b.result == null && !b.tryPushStack(q))
-                    lazySetNext(q, null); // clear on failure
+            while (result == null) {
+                if (tryPushStack(c)) {
+                    if (b.result == null)
+                        b.unipush(new CoCompletion(c));
+                    else if (result != null)
+                        c.tryFire(SYNC);
+                    return;
+                }
             }
+            b.unipush(c);
         }
     }
 
@@ -1218,7 +1223,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
             else {
                 bipush(b, c);
-                c.tryFire(SYNC);
             }
         }
         return d;
@@ -1299,7 +1303,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
             else {
                 bipush(b, c);
-                c.tryFire(SYNC);
             }
         }
         return d;
@@ -1367,7 +1370,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
             else {
                 bipush(b, c);
-                c.tryFire(SYNC);
             }
         }
         return d;
@@ -1421,32 +1423,30 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 (b = (lo == hi ? a : (hi == mid+1) ? cfs[hi] :
                       andTree(cfs, mid+1, hi))) == null)
                 throw new NullPointerException();
-            if (!d.biRelay(a, b)) {
-                BiRelay<?,?> c = new BiRelay(d, a, b);
-                a.bipush(b, c);
-                c.tryFire(SYNC);
-            }
+            if (!d.biRelay(a, b))
+                a.bipush(b, new BiRelay(d, a, b));
         }
         return d;
     }
 
     /* ------------- Projected (Ored) BiCompletions -------------- */
 
-    /** Pushes completion to this and b unless either done. */
+    /**
+     * Pushes completion to this and b unless either done.
+     * Caller should first check that result and b.result are both null.
+     */
     final void orpush(CompletableFuture<?> b, BiCompletion<?,?,?> c) {
         if (c != null) {
-            while ((b == null || b.result == null) && result == null) {
-                if (tryPushStack(c)) {
-                    if (b != null && b != this && b.result == null) {
-                        Completion q = new CoCompletion(c);
-                        while (result == null && b.result == null &&
-                               !b.tryPushStack(q))
-                            lazySetNext(q, null); // clear on failure
-                    }
+            while (!tryPushStack(c)) {
+                if (result != null) {
+                    lazySetNext(c, null);
                     break;
                 }
-                lazySetNext(c, null); // clear on failure
             }
+            if (result != null)
+                c.tryFire(SYNC);
+            else
+                b.unipush(new CoCompletion(c));
         }
     }
 
@@ -1517,7 +1517,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
             else {
                 orpush(b, c);
-                c.tryFire(SYNC);
             }
         }
         return d;
@@ -1590,7 +1589,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
             else {
                 orpush(b, c);
-                c.tryFire(SYNC);
             }
         }
         return d;
@@ -1657,7 +1655,6 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             }
             else {
                 orpush(b, c);
-                c.tryFire(SYNC);
             }
         }
         return d;
@@ -1702,11 +1699,8 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
                 (b = (lo == hi ? a : (hi == mid+1) ? cfs[hi] :
                       orTree(cfs, mid+1, hi))) == null)
                 throw new NullPointerException();
-            if (!d.orRelay(a, b)) {
-                OrRelay<?,?> c = new OrRelay(d, a, b);
-                a.orpush(b, c);
-                c.tryFire(SYNC);
-            }
+            if (!d.orRelay(a, b))
+                a.orpush(b, new OrRelay(d, a, b));
         }
         return d;
     }
