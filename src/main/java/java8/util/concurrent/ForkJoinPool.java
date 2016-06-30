@@ -146,7 +146,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.318
+// CVS rev. 1.320
     /*
      * Implementation Overview
      *
@@ -551,15 +551,11 @@ public class ForkJoinPool extends AbstractExecutorService {
      * bounds- checks otherwise carried out implicitly by JVMs.  This
      * can be awkward and ugly, but also reflects the need to control
      * outcomes across the unusual cases that arise in very racy code
-     * with very few invariants. So these explicit checks would exist
-     * in some form anyway.  All fields are read into locals before
-     * use, and null-checked if they are references.  This is usually
-     * done in a "C"-like style of listing declarations at the heads
-     * of methods or blocks, and using inline assignments on first
-     * encounter.  Array bounds-checks are usually performed by
-     * masking with array.length-1, which relies on the invariant that
-     * these arrays are created with positive lengths, which is itself
-     * paranoically checked. Nearly all explicit checks lead to
+     * with very few invariants. All fields are read into locals
+     * before use, and null-checked if they are references.  This is
+     * usually done in a "C"-like style of listing declarations at the
+     * heads of methods or blocks, and using inline assignments on
+     * first encounter.  Nearly all explicit checks lead to
      * bypass/return, not exception throws, because they may
      * legitimately arise due to cancellation/revocation during
      * shutdown.
@@ -2196,7 +2192,9 @@ public class ForkJoinPool extends AbstractExecutorService {
     /**
      * Creates a {@code ForkJoinPool} with parallelism equal to {@link
      * java.lang.Runtime#availableProcessors}, using defaults for all
-     * other parameters.
+     * other parameters (see {@link #ForkJoinPool(int, ForkJoinWorkerThreadFactory,
+     * Thread.UncaughtExceptionHandler, boolean, int, int, int, Predicate, long,
+     * TimeUnit)}).
      *
      * @throws SecurityException if a security manager exists and
      *         the caller is not permitted to modify threads
@@ -2211,7 +2209,10 @@ public class ForkJoinPool extends AbstractExecutorService {
 
     /**
      * Creates a {@code ForkJoinPool} with the indicated parallelism
-     * level, using defaults for all other parameters.
+     * level, using defaults for all other parameters (see {@link
+     * #ForkJoinPool(int, ForkJoinWorkerThreadFactory,
+     * Thread.UncaughtExceptionHandler, boolean, int, int, int, Predicate,
+     * long, TimeUnit)}).
      *
      * @param parallelism the parallelism level
      * @throws IllegalArgumentException if parallelism less than or
@@ -2228,7 +2229,9 @@ public class ForkJoinPool extends AbstractExecutorService {
 
     /**
      * Creates a {@code ForkJoinPool} with the given parameters (using
-     * defaults for others).
+     * defaults for others -- see {@link #ForkJoinPool(int,
+     * ForkJoinWorkerThreadFactory, Thread.UncaughtExceptionHandler, boolean,
+     * int, int, int, Predicate, long, TimeUnit)}).
      *
      * @param parallelism the parallelism level. For default value,
      * use {@link java.lang.Runtime#availableProcessors}.
@@ -2292,10 +2295,12 @@ public class ForkJoinPool extends AbstractExecutorService {
      * different threads may overlap, and may be managed by the given
      * thread factory, this value may be transiently exceeded.)  To
      * arrange the same value as is used by default for the common
-     * pool, use {@code 256} plus the parallelism level. Using a value
-     * (for example {@code Integer.MAX_VALUE}) larger than the
-     * implementation's total thread limit has the same effect as
-     * using this limit (which is the default).
+     * pool, use {@code 256} plus the {@code parallelism} level. (By
+     * default, the common pool allows a maximum of 256 spare
+     * threads.)  Using a value (for example {@code
+     * Integer.MAX_VALUE}) larger than the implementation's total
+     * thread limit has the same effect as using this limit (which is
+     * the default).
      *
      * @param minimumRunnable the minimum allowed number of core
      * threads not blocked by a join or {@link ManagedBlocker}.  To
@@ -2335,8 +2340,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      *         java.lang.RuntimePermission}{@code ("modifyThread")}
      * @since 9
      */
-    // TODO make this public once the new impl has proven itself  
-    private ForkJoinPool(int parallelism,
+    public ForkJoinPool(int parallelism,
                         ForkJoinWorkerThreadFactory factory,
                         UncaughtExceptionHandler handler,
                         boolean asyncMode,

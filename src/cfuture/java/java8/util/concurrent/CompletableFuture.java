@@ -123,7 +123,7 @@ import java8.util.function.Supplier;
  * and {@code get} methods
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.201
+// CVS rev. 1.203
     /*
      * Overview:
      *
@@ -133,26 +133,29 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      * applies across normal vs exceptional outcomes, sync vs async
      * actions, binary triggers, and various forms of completions.
      *
-     * Non-nullness of field result (set via CAS) indicates done.  An
-     * AltResult is used to box null as a result, as well as to hold
-     * exceptions.  Using a single field makes completion simple to
-     * detect and trigger.  Encoding and decoding is straightforward
-     * but adds to the sprawl of trapping and associating exceptions
-     * with targets.  Minor simplifications rely on (static) NIL (to
-     * box null results) being the only AltResult with a null
-     * exception field, so we don't usually need explicit comparisons.
-     * Even though some of the generics casts are unchecked (see
-     * SuppressWarnings annotations), they are placed to be
-     * appropriate even if checked.
+     * Non-nullness of volatile field "result" indicates done.  It may
+     * be set directly if known to be thread-confined, else via CAS.
+     * An AltResult is used to box null as a result, as well as to
+     * hold exceptions.  Using a single field makes completion simple
+     * to detect and trigger.  Result encoding and decoding is
+     * straightforward but tedious and adds to the sprawl of trapping
+     * and associating exceptions with targets.  Minor simplifications
+     * rely on (static) NIL (to box null results) being the only
+     * AltResult with a null exception field, so we don't usually need
+     * explicit comparisons.  Even though some of the generics casts
+     * are unchecked (see SuppressWarnings annotations), they are
+     * placed to be appropriate even if checked.
      *
      * Dependent actions are represented by Completion objects linked
      * as Treiber stacks headed by field "stack". There are Completion
-     * classes for each kind of action, grouped into single-input
-     * (UniCompletion), two-input (BiCompletion), projected
-     * (BiCompletions using either (not both) of two inputs), shared
-     * (CoCompletion, used by the second of two sources), zero-input
-     * source actions, and Signallers that unblock waiters. Class
-     * Completion extends ForkJoinTask to enable async execution
+     * classes for each kind of action, grouped into:
+     * - single-input (UniCompletion),
+     * - two-input (BiCompletion),
+     * - projected (BiCompletions using exactly one of two inputs),
+     * - shared (CoCompletion, used by the second of two sources),
+     * - zero-input source actions,
+     * - Signallers that unblock waiters.
+     * Class Completion extends ForkJoinTask to enable async execution
      * (adding no space overhead because we exploit its "tag" methods
      * to maintain claims). It is also declared as Runnable to allow
      * usage with arbitrary executors.
@@ -168,7 +171,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      *   encounter layers of adapters in common usages.
      *
      * * Boolean CompletableFuture method x(...) (for example
-     *   uniApply) takes all of the arguments needed to check that an
+     *   biApply) takes all of the arguments needed to check that an
      *   action is triggerable, and then either runs the action or
      *   arranges its async execution by executing its Completion
      *   argument, if present. The method returns true if known to be
@@ -183,19 +186,24 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
      *   forms.)  The claim() callback suppresses function invocation
      *   if already claimed by another thread.
      *
+     * * Some classes (for example UniApply) have separate handling
+     *   code for when known to be thread-confined ("now" methods) and
+     *   for when shared (in tryFire), for efficiency.
+     *
      * * CompletableFuture method xStage(...) is called from a public
-     *   stage method of CompletableFuture x. It screens user
+     *   stage method of CompletableFuture f. It screens user
      *   arguments and invokes and/or creates the stage object.  If
-     *   not async and x is already complete, the action is run
-     *   immediately.  Otherwise a Completion c is created, pushed to
-     *   x's stack (unless done), and started or triggered via
-     *   c.tryFire.  This also covers races possible if x completes
-     *   while pushing.  Classes with two inputs (for example BiApply)
-     *   deal with races across both while pushing actions.  The
-     *   second completion is a CoCompletion pointing to the first,
-     *   shared so that at most one performs the action.  The
-     *   multiple-arity methods allOf and anyOf do this pairwise to
-     *   form trees of completions.
+     *   not async and already triggerable, the action is run
+     *   immediately.  Otherwise a Completion c is created, and
+     *   submitted to the executor if triggerable, or pushed onto f's
+     *   stack if not.  Completion actions are started via c.tryFire.
+     *   We recheck after pushing to a source future's stack to cover
+     *   possible races if the source completes while pushing.
+     *   Classes with two inputs (for example BiApply) deal with races
+     *   across both while pushing actions.  The second completion is
+     *   a CoCompletion pointing to the first, shared so that at most
+     *   one performs the action.  The multiple-arity methods allOf
+     *   and anyOf do this pairwise to form trees of completions.
      *
      * Note that the generic type parameters of methods vary according
      * to whether "this" is a source, dependent, or completion.
@@ -842,9 +850,9 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
             } catch (Throwable ex) {
                 if (x == null) {
                     x = ex;
-                } else if (x != ex) {
+                }// else if (x != ex) {
 //                    x.addSuppressed(ex); // XXX
-                }
+//                }
             }
             completeThrowable(x, r);
         }
@@ -1321,8 +1329,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     static final class BiRun<T,U> extends BiCompletion<T,U,Void> {
         Runnable fn;
         BiRun(Executor executor, CompletableFuture<Void> dep,
-              CompletableFuture<T> src,
-              CompletableFuture<U> snd,
+              CompletableFuture<T> src, CompletableFuture<U> snd,
               Runnable fn) {
             super(executor, dep, src, snd); this.fn = fn;
         }
@@ -1385,8 +1392,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     @SuppressWarnings("serial")
     static final class BiRelay<T,U> extends BiCompletion<T,U,Void> { // for And
         BiRelay(CompletableFuture<Void> dep,
-                CompletableFuture<T> src,
-                CompletableFuture<U> snd) {
+                CompletableFuture<T> src, CompletableFuture<U> snd) {
             super(null, dep, src, snd);
         }
         final CompletableFuture<Void> tryFire(int mode) {
@@ -1464,8 +1470,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     static final class OrApply<T,U extends T,V> extends BiCompletion<T,U,V> {
         Function<? super T,? extends V> fn;
         OrApply(Executor executor, CompletableFuture<V> dep,
-                CompletableFuture<T> src,
-                CompletableFuture<U> snd,
+                CompletableFuture<T> src, CompletableFuture<U> snd,
                 Function<? super T,? extends V> fn) {
             super(executor, dep, src, snd); this.fn = fn;
         }
@@ -1520,8 +1525,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     static final class OrAccept<T,U extends T> extends BiCompletion<T,U,Void> {
         Consumer<? super T> fn;
         OrAccept(Executor executor, CompletableFuture<Void> dep,
-                 CompletableFuture<T> src,
-                 CompletableFuture<U> snd,
+                 CompletableFuture<T> src, CompletableFuture<U> snd,
                  Consumer<? super T> fn) {
             super(executor, dep, src, snd); this.fn = fn;
         }
@@ -1577,8 +1581,7 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
     static final class OrRun<T,U> extends BiCompletion<T,U,Void> {
         Runnable fn;
         OrRun(Executor executor, CompletableFuture<Void> dep,
-              CompletableFuture<T> src,
-              CompletableFuture<U> snd,
+              CompletableFuture<T> src, CompletableFuture<U> snd,
               Runnable fn) {
             super(executor, dep, src, snd); this.fn = fn;
         }
@@ -1629,8 +1632,8 @@ public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
 
     @SuppressWarnings("serial")
     static final class OrRelay<T,U> extends BiCompletion<T,U,Object> { // for Or
-        OrRelay(CompletableFuture<Object> dep, CompletableFuture<T> src,
-                CompletableFuture<U> snd) {
+        OrRelay(CompletableFuture<Object> dep,
+            CompletableFuture<T> src, CompletableFuture<U> snd) {
             super(null, dep, src, snd);
         }
         final CompletableFuture<Object> tryFire(int mode) {
