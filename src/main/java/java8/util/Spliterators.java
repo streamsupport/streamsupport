@@ -85,7 +85,7 @@ public final class Spliterators {
     // is this Android? (defaults to false)
     static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
     // is this an Apache Harmony-based Android? (defaults to false)
-    static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("java.util.stream.BaseStream");
+    static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("android.opengl.GLES32$DebugProc");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
