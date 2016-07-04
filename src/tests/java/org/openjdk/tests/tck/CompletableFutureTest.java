@@ -82,7 +82,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.161
+// CVS rev. 1.166
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -2738,6 +2738,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         for (ExecutionMode m : ExecutionMode.values())
         for (Integer v1 : new Integer[] { 1, null })
         for (Integer v2 : new Integer[] { 2, null })
+        for (boolean pushNop : new boolean[] { true, false })
     {
         final CompletableFuture<Integer> f = new CompletableFuture<>();
         final CompletableFuture<Integer> g = new CompletableFuture<>();
@@ -2750,6 +2751,10 @@ public class CompletableFutureTest extends JSR166TestCase {
         checkIncomplete(h1);
         rs[0].assertNotInvoked();
         rs[1].assertNotInvoked();
+        if (pushNop) {          // ad hoc test of intra-completion interference
+            m.thenRun(f, () -> {});
+            m.thenRun(g, () -> {});
+        }
         f.complete(v1);
         checkCompletedNormally(h0, null);
         checkCompletedNormally(h1, null);
@@ -3889,19 +3894,23 @@ public class CompletableFutureTest extends JSR166TestCase {
         final CompletableFuture<Integer> v42 = CompletableFuture.completedFuture(42);
         final CompletableFuture<Integer> incomplete = new CompletableFuture<>();
 
+        final Runnable noopRunnable = new Noop(m);
+        final Consumer<Integer> noopConsumer = new NoopConsumer(m);
+        final Function<Integer, Integer> incFunction = new IncFunction(m);
+
         List<Function<CompletableFuture<Integer>, CompletableFuture<?>>> funs
             = new ArrayList<>();
 
-        funs.add((y) -> m.thenRun(y, new Noop(m)));
-        funs.add((y) -> m.thenAccept(y, new NoopConsumer(m)));
-        funs.add((y) -> m.thenApply(y, new IncFunction(m)));
+        funs.add((y) -> m.thenRun(y, noopRunnable));
+        funs.add((y) -> m.thenAccept(y, noopConsumer));
+        funs.add((y) -> m.thenApply(y, incFunction));
 
-        funs.add((y) -> m.runAfterEither(y, incomplete, new Noop(m)));
-        funs.add((y) -> m.acceptEither(y, incomplete, new NoopConsumer(m)));
-        funs.add((y) -> m.applyToEither(y, incomplete, new IncFunction(m)));
+        funs.add((y) -> m.runAfterEither(y, incomplete, noopRunnable));
+        funs.add((y) -> m.acceptEither(y, incomplete, noopConsumer));
+        funs.add((y) -> m.applyToEither(y, incomplete, incFunction));
 
-        funs.add((y) -> m.runAfterBoth(y, v42, new Noop(m)));
-        funs.add((y) -> m.runAfterBoth(v42, y, new Noop(m)));
+        funs.add((y) -> m.runAfterBoth(y, v42, noopRunnable));
+        funs.add((y) -> m.runAfterBoth(v42, y, noopRunnable));
         funs.add((y) -> m.thenAcceptBoth(y, v42, new SubtractAction(m)));
         funs.add((y) -> m.thenAcceptBoth(v42, y, new SubtractAction(m)));
         funs.add((y) -> m.thenCombine(y, v42, new SubtractFunction(m)));
@@ -3911,18 +3920,18 @@ public class CompletableFutureTest extends JSR166TestCase {
 
         funs.add((y) -> m.thenCompose(y, new CompletableFutureInc(m)));
 
-        funs.add((y) -> CompletableFuture.allOf(new CompletableFuture<?>[] {y}));
-        funs.add((y) -> CompletableFuture.allOf(new CompletableFuture<?>[] {y, v42}));
-        funs.add((y) -> CompletableFuture.allOf(new CompletableFuture<?>[] {v42, y}));
-        funs.add((y) -> CompletableFuture.anyOf(new CompletableFuture<?>[] {y}));
-        funs.add((y) -> CompletableFuture.anyOf(new CompletableFuture<?>[] {y, incomplete}));
-        funs.add((y) -> CompletableFuture.anyOf(new CompletableFuture<?>[] {incomplete, y}));
+        funs.add((y) -> CompletableFuture.allOf(y));
+        funs.add((y) -> CompletableFuture.allOf(y, v42));
+        funs.add((y) -> CompletableFuture.allOf(v42, y));
+        funs.add((y) -> CompletableFuture.anyOf(y));
+        funs.add((y) -> CompletableFuture.anyOf(y, incomplete));
+        funs.add((y) -> CompletableFuture.anyOf(incomplete, y));
 
         for (Function<CompletableFuture<Integer>, CompletableFuture<?>>
                  fun : funs) {
             CompletableFuture<Integer> f = new CompletableFuture<>();
             f.completeExceptionally(ex);
-            CompletableFuture<Integer> src = m.thenApply(f, new IncFunction(m));
+            CompletableFuture<Integer> src = m.thenApply(f, incFunction);
             checkCompletedWithWrappedException(src, ex);
             CompletableFuture<?> dep = fun.apply(src);
             checkCompletedWithWrappedException(dep, ex);
@@ -3932,7 +3941,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         for (Function<CompletableFuture<Integer>, CompletableFuture<?>>
                  fun : funs) {
             CompletableFuture<Integer> f = new CompletableFuture<>();
-            CompletableFuture<Integer> src = m.thenApply(f, new IncFunction(m));
+            CompletableFuture<Integer> src = m.thenApply(f, incFunction);
             CompletableFuture<?> dep = fun.apply(src);
             f.completeExceptionally(ex);
             checkCompletedWithWrappedException(src, ex);
@@ -3946,7 +3955,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             CompletableFuture<Integer> f = new CompletableFuture<>();
             f.cancel(mayInterruptIfRunning);
             checkCancelled(f);
-            CompletableFuture<Integer> src = m.thenApply(f, new IncFunction(m));
+            CompletableFuture<Integer> src = m.thenApply(f, incFunction);
             checkCompletedWithWrappedCancellationException(src);
             CompletableFuture<?> dep = fun.apply(src);
             checkCompletedWithWrappedCancellationException(dep);
@@ -3957,7 +3966,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         for (Function<CompletableFuture<Integer>, CompletableFuture<?>>
                  fun : funs) {
             CompletableFuture<Integer> f = new CompletableFuture<>();
-            CompletableFuture<Integer> src = m.thenApply(f, new IncFunction(m));
+            CompletableFuture<Integer> src = m.thenApply(f, incFunction);
             CompletableFuture<?> dep = fun.apply(src);
             f.cancel(mayInterruptIfRunning);
             checkCancelled(f);
@@ -3968,7 +3977,7 @@ public class CompletableFutureTest extends JSR166TestCase {
     }}
 
     /**
-     * Minimal completion stages throw UOE for all non-CompletionStage methods
+     * Minimal completion stages throw UOE for most non-CompletionStage methods
      */
     public void testMinimalCompletionStage_minimality() {
         if (!testImplementationDetails) return;
@@ -3997,8 +4006,10 @@ public class CompletableFutureTest extends JSR166TestCase {
             .filter((method) -> !permittedMethodSignatures.contains(toSignature.apply(method)))
             .collect(Collectors.toList());
 
-        CompletionStage<Integer> minimalStage =
-            new CompletableFuture<Integer>().minimalCompletionStage();
+        List<CompletionStage<Integer>> stages = new ArrayList<CompletionStage<Integer>>();
+        stages.add(new CompletableFuture<Integer>().minimalCompletionStage());
+        stages.add(CompletableFuture.completedStage(1));
+        stages.add(CompletableFuture.failedStage(new CFException()));
 
         List<Method> bugs = new ArrayList<>();
         for (Method method : allMethods) {
@@ -4014,20 +4025,22 @@ public class CompletableFutureTest extends JSR166TestCase {
                 else if (type == long.class)
                     args[i] = 0L;
             }
-            try {
-                method.invoke(minimalStage, args);
-                bugs.add(method);
-            }
-            catch (java.lang.reflect.InvocationTargetException expected) {
-                if (! (expected.getCause() instanceof UnsupportedOperationException)) {
+            for (CompletionStage<Integer> stage : stages) {
+                try {
+                    method.invoke(stage, args);
                     bugs.add(method);
-                    // expected.getCause().printStackTrace();
                 }
+                catch (java.lang.reflect.InvocationTargetException expected) {
+                    if (! (expected.getCause() instanceof UnsupportedOperationException)) {
+                        bugs.add(method);
+                        // expected.getCause().printStackTrace();
+                    }
+                }
+                catch (Exception bad) { throw new Error(bad); }
             }
-            catch (Exception bad) { throw new Error(bad); }
         }
         if (!bugs.isEmpty())
-            throw new Error("Methods did not throw UOE: " + bugs.toString());
+            throw new Error("Methods did not throw UOE: " + bugs);
     }
 
     static class Monad {
@@ -4176,6 +4189,27 @@ public class CompletableFutureTest extends JSR166TestCase {
         Monad.assertFutureEquals(Monad.unit(5L),
                                  Monad.plus(godot, Monad.unit(5L)));
     }
+
+    /** Test long recursive chains of CompletableFutures with cascading completions */
+    public void testRecursiveChains() throws Throwable {
+        for (ExecutionMode m : ExecutionMode.values())
+        for (boolean addDeadEnds : new boolean[] { true, false })
+    {
+        final int val = 42;
+        final int n = expensiveTests ? 1_000 : 2;
+        CompletableFuture<Integer> head = new CompletableFuture<>();
+        CompletableFuture<Integer> tail = head;
+        for (int i = 0; i < n; i++) {
+            if (addDeadEnds) m.thenApply(tail, v -> v + 1);
+            tail = m.thenApply(tail, v -> v + 1);
+            if (addDeadEnds) m.applyToEither(tail, tail, v -> v + 1);
+            tail = m.applyToEither(tail, tail, v -> v + 1);
+            if (addDeadEnds) m.thenCombine(tail, tail, (v, w) -> v + 1);
+            tail = m.thenCombine(tail, tail, (v, w) -> v + 1);
+        }
+        head.complete(val);
+        assertEquals(val + 3 * n, (int) tail.join());
+    }}
 
     /**
      * A single CompletableFuture with many dependents.
