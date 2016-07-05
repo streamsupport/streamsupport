@@ -1,33 +1,4 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
- */
-
-/*
- * This file is available under and governed by the GNU General Public
- * License version 2 only, as published by the Free Software Foundation.
- * However, the following notice accompanied the original version of this
- * file:
- *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -212,7 +183,7 @@ import java8.util.Objects;
  * @author Doug Lea
  */
 public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
-// CVS rev. 1.110
+// CVS rev. 1.113
 
     /*
      * See the internal documentation of class ForkJoinPool for a
@@ -411,22 +382,22 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     // Exception table support
 
     /**
-     * Table of exceptions thrown by tasks, to enable reporting by
-     * callers. Because exceptions are rare, we don't directly keep
+     * Hash table of exceptions thrown by tasks, to enable reporting
+     * by callers. Because exceptions are rare, we don't directly keep
      * them with task objects, but instead use a weak ref table.  Note
      * that cancellation exceptions don't appear in the table, but are
      * instead recorded as status values.
      *
-     * Note: These statics are initialized below in static block.
+     * The exception table has a fixed capacity.
      */
-    private static final ExceptionNode[] exceptionTable;
-    private static final ReentrantLock exceptionTableLock;
-    private static final ReferenceQueue<Object> exceptionTableRefQueue;
-
-    /**
-     * Fixed capacity for exceptionTable.
-     */
-    private static final int EXCEPTION_MAP_CAPACITY = 32;
+    private static final ExceptionNode[] exceptionTable
+        = new ExceptionNode[32];
+    /** Lock protecting access to exceptionTable. */
+    private static final ReentrantLock exceptionTableLock
+        = new ReentrantLock();
+    /** Reference queue of stale exceptionally completed tasks. */
+    private static final ReferenceQueue<ForkJoinTask<?>> exceptionTableRefQueue
+        = new ReferenceQueue<ForkJoinTask<?>>();
 
     /**
      * Key-value nodes for exception table.  The chained hash table
@@ -446,7 +417,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
         final long thrower;  // use id not ref to avoid weak cycles
         final int hashCode;  // store task hashCode before weak ref disappears
         ExceptionNode(ForkJoinTask<?> task, Throwable ex, ExceptionNode next,
-                ReferenceQueue<Object> exceptionTableRefQueue) {
+                ReferenceQueue<ForkJoinTask<?>> exceptionTableRefQueue) {
             super(task, exceptionTableRefQueue);
             this.ex = ex;
             this.next = next;
@@ -610,9 +581,8 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     private static void expungeStaleExceptions() {
         for (Object x; (x = exceptionTableRefQueue.poll()) != null;) {
             if (x instanceof ExceptionNode) {
-                int hashCode = ((ExceptionNode)x).hashCode;
                 ExceptionNode[] t = exceptionTable;
-                int i = hashCode & (t.length - 1);
+                int i = ((ExceptionNode)x).hashCode & (t.length - 1);
                 ExceptionNode e = t[i];
                 ExceptionNode pred = null;
                 while (e != null) {
@@ -1522,9 +1492,6 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     private static final long STATUS;
 
     static {
-        exceptionTableLock = new ReentrantLock();
-        exceptionTableRefQueue = new ReferenceQueue<Object>();
-        exceptionTable = new ExceptionNode[EXCEPTION_MAP_CAPACITY];
         try {
             STATUS = U.objectFieldOffset(ForkJoinTask.class
                     .getDeclaredField("status"));
