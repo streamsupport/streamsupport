@@ -3239,17 +3239,14 @@ public final class Spliterators {
     }
 
     /**
-     * Are we running on a Java 6 JRE?
+     * Are we running on a Java 6 JRE (i.e., is "java.class.version" < "51.0")?
+     * Note: Here, we rely on the fact that you couldn't run streamsupport on
+     * 49.0 or lower anyways given that it is compiled for 50.0.
+     * 
      * @return {@code true} if yes, otherwise {@code false}.
      */
     private static boolean isJava6() {
-        String classVersion = System.getProperty("java.class.version");
-        if (classVersion != null && classVersion.length() >= 2) {
-            if (classVersion.startsWith("50")) {
-                return true;
-            }
-        }
-        return false;
+        return isVersionBelow("java.class.version", 51.0);
     }
 
     /**
@@ -3258,12 +3255,8 @@ public final class Spliterators {
      */
     private static boolean isStreamEnabledJRE() {
         // a) must have at least major version number 52 (Java 8)
-        String ver = System.getProperty("java.class.version", "45");
-        if (ver != null && ver.length() >= 2) {
-            ver = ver.substring(0, 2);
-            if ("52".compareTo(ver) > 0) {
-                return false;
-            }
+        if (isVersionBelow("java.class.version", 52.0)) {
+            return false;
         }
         // b) j.u.f.Consumer & j.u.Spliterator must exist
         Class<?> c = null;
@@ -3286,5 +3279,32 @@ public final class Spliterators {
             }
         }
         return m != null;
+    }
+
+    /**
+     * Used to parse double-valued system properties that are version numbers.
+     * Assumes that the passed system property is present and can be parsed as a
+     * double.
+     * 
+     * @param prop
+     *            name of the system property
+     * @param maxVer
+     *            upper bound on the version number
+     * @return {@code true} if the version number is strictly below
+     *         {@code maxVer}, otherwise {@code false}.
+     */
+    private static boolean isVersionBelow(String prop, double maxVer) {
+        try {
+            String v = System.getProperty(prop);
+            if (v != null) {
+                double d = Double.parseDouble(v);
+                if (d < maxVer) {
+                    return true;
+                }
+            }
+        } catch (Exception ignore) {
+            // ignore
+        }
+        return false;
     }
 }
