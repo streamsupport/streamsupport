@@ -82,7 +82,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.166
+// CVS rev. 1.170
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -4285,12 +4285,11 @@ public class CompletableFutureTest extends JSR166TestCase {
         }
     }
 
-    /*
-     * Tests below currently fail in stress mode due to memory retention.
-     * ant -Dvmoptions=-Xmx8m -Djsr166.expensiveTests=true -Djsr166.tckTestClass=CompletableFutureTest tck
+    /**
+     * Reproduction recipe for:
+     * 8160402: Garbage retention with CompletableFuture.anyOf
+     * cvs update -D '2016-05-01' ./src/main/java/util/concurrent/CompletableFuture.java && ant -Dvmoptions=-Xmx8m -Djsr166.expensiveTests=true -Djsr166.tckTestClass=CompletableFutureTest -Djsr166.methodFilter=testAnyOfGarbageRetention tck; cvs update -A
      */
-
-    /** Checks for garbage retention with anyOf. */
     public void testAnyOfGarbageRetention() throws Throwable {
         for (Integer v : new Integer[] { 1, null })
     {
@@ -4304,7 +4303,12 @@ public class CompletableFutureTest extends JSR166TestCase {
             checkCompletedNormally(CompletableFuture.anyOf(fs), v);
     }}
 
-    /** Checks for garbage retention with allOf. */
+    /**
+     * Checks for garbage retention with allOf.
+     *
+     * As of 2016-07, fails with OOME:
+     * ant -Dvmoptions=-Xmx8m -Djsr166.expensiveTests=true -Djsr166.tckTestClass=CompletableFutureTest -Djsr166.methodFilter=testCancelledAllOfGarbageRetention tck
+     */
     public void testCancelledAllOfGarbageRetention() throws Throwable {
         final int n = expensiveTests ? 100_000 : 10;
         CompletableFuture<Integer>[] fs
@@ -4313,6 +4317,21 @@ public class CompletableFutureTest extends JSR166TestCase {
             fs[i] = new CompletableFuture<>();
         for (int i = 0; i < n; i++)
             assertTrue(CompletableFuture.allOf(fs).cancel(false));
+    }
+
+    /**
+     * Checks for garbage retention when a dependent future is
+     * cancelled and garbage-collected.
+     * 8161600: Garbage retention when source CompletableFutures are never completed
+     *
+     * As of 2016-07, fails with OOME:
+     * ant -Dvmoptions=-Xmx8m -Djsr166.expensiveTests=true -Djsr166.tckTestClass=CompletableFutureTest -Djsr166.methodFilter=testCancelledGarbageRetention tck
+     */
+    public void testCancelledGarbageRetention() throws Throwable {
+        final int n = expensiveTests ? 100_000 : 10;
+        CompletableFuture<Integer> neverCompleted = new CompletableFuture<>();
+        for (int i = 0; i < n; i++)
+            assertTrue(neverCompleted.thenRun(() -> {}).cancel(true));
     }
 
 //     static <U> U join(CompletionStage<U> stage) {
