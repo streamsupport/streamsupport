@@ -37,7 +37,16 @@ import static org.testng.Assert.*;
 @Test
 public class CountLargeTest {
 
-    static final long EXPECTED_LARGE_COUNT = 1L + Integer.MAX_VALUE;
+    // is this Android? (defaults to false)
+    private static final boolean IS_ANDROID = isAndroid();
+
+    private static final long EXPECTED_LARGE_COUNT = 1L + Integer.MAX_VALUE;
+
+    // streamsupport #211: "ART performance regression in CountLargeTest"
+    // Use a smaller count for unknown sized streams on Android (this
+    // test has become a real performance hog on recent ART!).
+    // See https://sourceforge.net/p/streamsupport/tickets/211/
+    private static final long UNKNOWN_SIZED_EXPECTED_LARGE_COUNT = !IS_ANDROID ? EXPECTED_LARGE_COUNT : 131072;  
 
     public void testRefLarge() {
         // Test known sized stream
@@ -48,9 +57,9 @@ public class CountLargeTest {
         }
         // Test unknown sized stream
         {
-            long count = LongStreams.range(0, EXPECTED_LARGE_COUNT)
+            long count = LongStreams.range(0, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT)
                     .mapToObj(e -> null).filter(e -> true).count();
-            assertEquals(count, EXPECTED_LARGE_COUNT);
+            assertEquals(count, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT);
         }
     }
 
@@ -63,9 +72,9 @@ public class CountLargeTest {
         }
         // Test unknown sized stream
         {
-            long count = LongStreams.range(0, EXPECTED_LARGE_COUNT)
+            long count = LongStreams.range(0, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT)
                     .mapToInt(e -> 0).filter(e -> true).count();
-            assertEquals(count, EXPECTED_LARGE_COUNT);
+            assertEquals(count, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT);
         }
     }
 
@@ -78,9 +87,9 @@ public class CountLargeTest {
         }
         // Test unknown sized stream
         {
-            long count = LongStreams.range(0, EXPECTED_LARGE_COUNT)
+            long count = LongStreams.range(0, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT)
                     .filter(e -> true).count();
-            assertEquals(count, EXPECTED_LARGE_COUNT);
+            assertEquals(count, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT);
         }
     }
 
@@ -93,9 +102,24 @@ public class CountLargeTest {
         }
         // Test unknown sized stream
         {
-            long count = LongStreams.range(0, EXPECTED_LARGE_COUNT)
+            long count = LongStreams.range(0, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT)
                     .mapToDouble(e -> 0.0).filter(e -> true).count();
-            assertEquals(count, EXPECTED_LARGE_COUNT);
+            assertEquals(count, UNKNOWN_SIZED_EXPECTED_LARGE_COUNT);
         }
+    }
+
+    /**
+     * Are we running on Android?
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    private static boolean isAndroid() {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("android.util.DisplayMetrics", false,
+                    CountLargeTest.class.getClassLoader());
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
     }
 }
