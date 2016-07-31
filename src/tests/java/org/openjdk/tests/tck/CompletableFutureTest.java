@@ -517,7 +517,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             throw ex;
         }
     }
-    
+
     class FailingBiConsumer extends CheckedIntegerAction
         implements BiConsumer<Integer, Integer>
     {
@@ -529,7 +529,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             throw ex;
         }
     }
-    
+
     class FailingFunction extends CheckedIntegerAction
         implements Function<Integer, Integer>
     {
@@ -541,7 +541,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             throw ex;
         }
     }
-    
+
     class FailingBiFunction extends CheckedIntegerAction
         implements BiFunction<Integer, Integer, Integer>
     {
@@ -553,7 +553,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             throw ex;
         }
     }
-    
+
     class FailingRunnable extends CheckedAction implements Runnable {
         final CFException ex;
         FailingRunnable(ExecutionMode m) { super(m); ex = new CFException(); }
