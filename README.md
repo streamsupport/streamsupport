@@ -72,11 +72,11 @@ build.gradle:
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5'
-    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.1'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.1'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.1'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.1'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.1'
 }
 ```
 
@@ -112,7 +112,7 @@ dependencies {
 
 ## RELEASE NOTES
 
- - "1.5-stable" is the current stable release
+ - "1.5.1-stable" is the current stable release
 
 
 ## GENERAL
@@ -176,7 +176,17 @@ dependencies {
    * streamsupport-literal (Java 9 JEP 269 Collections factory methods)
 
 
+
 ## VERSION HISTORY
+
+1.5.1-stable (2016-07-30)
+ - fixed: Android Harmony detection fails on JavaFXPorts (#210)
+ - completed the great JSR 166 jdk9 integration "waves 7 & 8" (#209)
+ - JDK-8160402: Garbage retention with CompletableFuture.anyOf
+ - updated CompletableFuture to Java 9 JSR 166 CVS rev 1.207 (#207)
+ - updated CompletableFutureTest to Java 9 JSR 166 CVS rev 1.170 (#207)
+ - ART performance regression in CountLargeTest (#211)
+ - test release 1.5.1 on Android N developer preview-5 (#215)
 
 1.5-stable (2016-06-19)
  - JDK-8154049: DualPivot sorting incorrect for nearly sorted arrays
