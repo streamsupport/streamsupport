@@ -938,7 +938,7 @@ public final class Spliterators {
 
             if (!(c instanceof AbstractList) && isFromJdk(name)) {
                 // have to use an IteratorSpliterator in this special
-                // case otherwise some tests would fail
+                // case otherwise some tests would fail (ticket #217)
                 return spliterator(c, Spliterator.ORDERED);
             }
 
@@ -3334,6 +3334,7 @@ public final class Spliterators {
      *         otherwise {@code false}
      */
     private static boolean isFromJdk(String name) {
+        // see https://sourceforge.net/p/streamsupport/tickets/217/
         if (name.startsWith("java.util.Collections$", 0)
                 && name.endsWith("RandomAccessList")) {
             // Collections.SynchronizedRandomAccessList
