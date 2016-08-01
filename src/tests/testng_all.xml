@@ -133,8 +133,9 @@
       <!-- block 12 (j8.u.c.atomic package - streamsupport-atomic) -->
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
       <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
-      <!-- Not an j8.u.c.atomic test, but a test with a dependency on LongAdder (streamsupport-atomic)-->
+      <!-- Not really j8.u.c.atomic tests, but tests that have a dependency on LongAdder (streamsupport-atomic)-->
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
+      <class name="org.openjdk.other.tests.threadLocalRandom.ThreadLocalRandomTest"/>
 
       <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
 
