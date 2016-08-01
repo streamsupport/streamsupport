@@ -892,19 +892,19 @@ public final class Spliterators {
             return jreDelegatingSpliterator(c);
         }
 
-        String className = c.getClass().getName();
+        String name = c.getClass().getName();
 
         if (c instanceof List) {
-            return listSpliterator((List<T>) c, className);
+            return listSpliterator((List<T>) c, name);
         }
         if (c instanceof Set) {
-            return setSpliterator((Set<T>) c, className);
+            return setSpliterator((Set<T>) c, name);
         }
         if (c instanceof Queue) {
             return queueSpliterator((Queue<T>) c);
         }
 
-        if ((!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
+        if ((!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(name)) {
             return HMSpliterators.getValuesSpliterator((Collection<T>) c);
         }
 
@@ -912,13 +912,13 @@ public final class Spliterators {
         return spliterator(c, 0);
     }
 
-    private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String className) {
+    private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String name) {
         if (NATIVE_SPECIALIZATION || IS_ANDROID) {
             if (c instanceof ArrayList) {
                 return ArrayListSpliterator.spliterator((ArrayList<T>) c);
             }
 
-            if ("java.util.Arrays$ArrayList".equals(className)) {
+            if ("java.util.Arrays$ArrayList".equals(name)) {
                 return ArraysArrayListSpliterator.spliterator((List<T>) c);
             }
 
@@ -934,10 +934,16 @@ public final class Spliterators {
             }
         }
 
-        // this doesn't count as a native specialization for AbstractList
-        // since its 'modCount' field is a well-documented part of its API
-        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess
-                && c instanceof AbstractList) {
+        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess) {
+
+            if (!(c instanceof AbstractList) && isFromJdk(name)) {
+                // have to use an IteratorSpliterator in this special
+                // case otherwise some tests would fail
+                return spliterator(c, Spliterator.ORDERED);
+            }
+
+            // this doesn't count as a native specialization for AbstractList
+            // since its 'modCount' field is a well-documented part of its API
             return RASpliterator.spliterator((List<T>) c);
         }
 
@@ -945,13 +951,13 @@ public final class Spliterators {
         return spliterator(c, Spliterator.ORDERED);
     }
 
-    private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
+    private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String name) {
         if (!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) {
-            if ("java.util.HashMap$EntrySet".equals(className)) {
+            if ("java.util.HashMap$EntrySet".equals(name)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
             }
-            if ("java.util.HashMap$KeySet".equals(className)) {
+            if ("java.util.HashMap$KeySet".equals(name)) {
                 return HMSpliterators.getKeySetSpliterator((Set<T>) c);
             }
         }
@@ -3304,6 +3310,36 @@ public final class Spliterators {
             }
         } catch (Exception ignore) {
             // ignore
+        }
+        return false;
+    }
+
+    /**
+     * Test for three JDK special cases where a List is RandomAccess but doesn't
+     * inherit from AbstractList. Namely:
+     * <p>
+     * <ul>
+     * <li>java.util.Collections.SynchronizedRandomAccessList</li>
+     * <li>java.util.Collections.UnmodifiableRandomAccessList</li>
+     * <li>java.util.Collections.CheckedRandomAccessList</li>
+     * </ul>
+     * <p>
+     * These three require a special treatment as they are used in our
+     * fail-fastness and late-binding tests and wouldn't pass if
+     * {@code RASpliterator} is used to split them.
+     * 
+     * @param name
+     *            the class name
+     * @return {@code true} if an {@code IteratorSpliterator} must be used,
+     *         otherwise {@code false}
+     */
+    private static boolean isFromJdk(String name) {
+        if (name.startsWith("java.util.Collections$", 0)
+                && name.endsWith("RandomAccessList")) {
+            // Collections.SynchronizedRandomAccessList
+            // Collections.UnmodifiableRandomAccessList
+            // Collections.CheckedRandomAccessList
+            return true;
         }
         return false;
     }
