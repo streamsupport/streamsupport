@@ -40,6 +40,7 @@ import java.security.ProtectionDomain;
 import java.security.SecurityPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -53,13 +54,12 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-
-import java8.util.concurrent.ForkJoinPool;
-
 import java.util.concurrent.Future;
 
+import java8.util.concurrent.ForkJoinPool;
 import java8.util.concurrent.RecursiveAction;
 import java8.util.concurrent.RecursiveTask;
+import java8.util.concurrent.ThreadLocalRandom;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.Semaphore;
@@ -153,7 +153,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.199
+// CVS rev. 1.200
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1781,4 +1781,8 @@ public class JSR166TestCase extends TestCase {
         new ThreadPoolExecutor(0, Integer.MAX_VALUE,
                                1000L, MILLISECONDS,
                                new SynchronousQueue<Runnable>());
+
+    static <T> void shuffle(T[] array) {
+        Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
+    }
 }
