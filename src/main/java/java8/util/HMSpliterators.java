@@ -368,6 +368,21 @@ final class HMSpliterators {
             return U.getObject(node, NODE_NXT_OFF);
         }
 
+        static Class<?> nodeClass() throws ClassNotFoundException {
+            String nodeName = new StringBuilder("java.util.HashMap$")
+                    .append((Spliterators.IS_ANDROID || Spliterators.JRE_HAS_STREAMS) ? "Node"
+                            : "Entry").toString();
+            try {
+                return Class.forName(nodeName);
+            } catch (ClassNotFoundException e) {
+                // might run on an Android N developer preview
+                if (Spliterators.IS_ANDROID) {
+                    return Class.forName("java.util.HashMap$HashMapEntry");
+                }
+                throw e;
+            }
+        }
+
         // Unsafe mechanics
         private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
         private static final long TABLE_OFF;
@@ -381,10 +396,7 @@ final class HMSpliterators {
                         .getDeclaredField("table"));
                 MODCOUNT_OFF = U.objectFieldOffset(HashMap.class
                         .getDeclaredField("modCount"));
-                String nodeName = Spliterators.IS_ANDROID ? "HashMapEntry"
-                        : Spliterators.JRE_HAS_STREAMS ? "Node" : "Entry";
-                nodeName = "java.util.HashMap$" + nodeName;
-                Class<?> nc = Class.forName(nodeName);
+                Class<?> nc = nodeClass();
                 NODE_KEY_OFF = U.objectFieldOffset(nc
                         .getDeclaredField("key"));
                 NODE_VAL_OFF = U.objectFieldOffset(nc
