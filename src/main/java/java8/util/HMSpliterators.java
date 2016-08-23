@@ -375,7 +375,8 @@ final class HMSpliterators {
             try {
                 return Class.forName(nodeName);
             } catch (ClassNotFoundException e) {
-                // might run on an Android N developer preview
+                // we might be running on the first Nougat release
+                // (or even on one of the Android N developer previews)
                 if (Spliterators.IS_ANDROID) {
                     return Class.forName("java.util.HashMap$HashMapEntry");
                 }
