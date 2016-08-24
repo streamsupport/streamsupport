@@ -146,7 +146,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.322
+// CVS rev. 1.324
     /*
      * Implementation Overview
      *
@@ -3322,7 +3322,7 @@ public class ForkJoinPool extends AbstractExecutorService {
          * An ACC to restrict permissions for the factory itself.
          * The constructed workers have no permissions set.
          */
-        private static final AccessControlContext innocuousAcc;
+        private static final AccessControlContext INNOCUOUS_ACC;
         static {
             Permissions innocuousPerms = new Permissions();
             innocuousPerms.add(modifyThreadPermission);
@@ -3330,7 +3330,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                                    "enableContextClassLoaderOverride"));
             innocuousPerms.add(new RuntimePermission(
                                    "modifyThreadGroup"));
-            innocuousAcc = new AccessControlContext(new ProtectionDomain[] {
+            INNOCUOUS_ACC = new AccessControlContext(new ProtectionDomain[] {
                     new ProtectionDomain(null, innocuousPerms)
                 });
         }
@@ -3341,7 +3341,7 @@ public class ForkJoinPool extends AbstractExecutorService {
                     public ForkJoinWorkerThread run() {
                         return new ForkJoinWorkerThread.
                             InnocuousForkJoinWorkerThread(pool);
-                    }}, innocuousAcc);
+                    }}, INNOCUOUS_ACC);
         }
     }
 
