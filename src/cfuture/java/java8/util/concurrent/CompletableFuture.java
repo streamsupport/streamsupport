@@ -118,12 +118,12 @@ import java8.util.function.Supplier;
  * }}</pre>
  *
  * @author Doug Lea
- * @since 1.8
  * @param <T> The result type returned by this future's {@code join}
  * and {@code get} methods
+ * @since 1.8
  */
 public class CompletableFuture<T> implements Future<T>, CompletionStage<T> {
-// CVS rev. 1.207
+// CVS rev. 1.208
     /*
      * Overview:
      *
