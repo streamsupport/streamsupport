@@ -52,6 +52,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
+// CVS rev. 1.14
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
