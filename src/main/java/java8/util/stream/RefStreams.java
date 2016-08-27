@@ -326,16 +326,16 @@ public final class RefStreams {
      * @param <S> the type of the operand, predicate input and seed, a subtype of T
      * @param <T> the type of stream elements
      * @param seed the initial element
-     * @param predicate a predicate to apply to elements to determine when the 
-     *          stream must terminate.
-     * @param f a function to be applied to the previous element to produce
-     *          a new element
+     * @param hasNext a predicate to apply to elements to determine when the 
+     *                stream must terminate
+     * @param next a function to be applied to the previous element to produce
+     *             a new element
      * @return a new sequential {@code Stream}
      * @since 9
      */
-    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<S> predicate, UnaryOperator<S> f) {
-        Objects.requireNonNull(f);
-        Objects.requireNonNull(predicate);
+    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<S> hasNext, UnaryOperator<S> next) {
+        Objects.requireNonNull(next);
+        Objects.requireNonNull(hasNext);
         Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, 
                Spliterator.ORDERED | Spliterator.IMMUTABLE) {
             S prev;
@@ -349,12 +349,12 @@ public final class RefStreams {
                 }
                 S s;
                 if (started) {
-                    s = f.apply(prev);
+                    s = next.apply(prev);
                 } else {
                     s = seed;
                     started = true;
                 }
-                if (!predicate.test(s)) {
+                if (!hasNext.test(s)) {
                     prev = null;
                     finished = true;
                     return false;
@@ -370,11 +370,11 @@ public final class RefStreams {
                     return;
                 }
                 finished = true;
-                S s = started ? f.apply(prev) : seed;
+                S s = started ? next.apply(prev) : seed;
                 prev = null;
-                while (predicate.test(s)) {
+                while (hasNext.test(s)) {
                     action.accept(s);
-                    s = f.apply(s);
+                    s = next.apply(s);
                 }
             }
         };

@@ -197,16 +197,16 @@ public final class LongStreams {
      * indicates that the stream should terminate.
      *
      * @param seed the initial element
-     * @param predicate a predicate to apply to elements to determine when the 
-     *          stream must terminate.
-     * @param f a function to be applied to the previous element to produce
-     *          a new element
+     * @param hasNext a predicate to apply to elements to determine when the 
+     *                stream must terminate
+     * @param next a function to be applied to the previous element to produce
+     *             a new element
      * @return a new sequential {@code LongStream}
      * @since 9
      */
-    public static LongStream iterate(long seed, LongPredicate predicate, LongUnaryOperator f) {
-        Objects.requireNonNull(f);
-        Objects.requireNonNull(predicate);
+    public static LongStream iterate(long seed, LongPredicate hasNext, LongUnaryOperator next) {
+        Objects.requireNonNull(next);
+        Objects.requireNonNull(hasNext);
         Spliterator.OfLong spliterator = new Spliterators.AbstractLongSpliterator(Long.MAX_VALUE, 
                Spliterator.ORDERED | Spliterator.IMMUTABLE | Spliterator.NONNULL) {
             long prev;
@@ -220,12 +220,12 @@ public final class LongStreams {
                 }
                 long t;
                 if (started) {
-                    t = f.applyAsLong(prev);
+                    t = next.applyAsLong(prev);
                 } else {
                     t = seed;
                     started = true;
                 }
-                if (!predicate.test(t)) {
+                if (!hasNext.test(t)) {
                     finished = true;
                     return false;
                 }
@@ -240,10 +240,10 @@ public final class LongStreams {
                     return;
                 }
                 finished = true;
-                long t = started ? f.applyAsLong(prev) : seed;
-                while (predicate.test(t)) {
+                long t = started ? next.applyAsLong(prev) : seed;
+                while (hasNext.test(t)) {
                     action.accept(t);
-                    t = f.applyAsLong(t);
+                    t = next.applyAsLong(t);
                 }
             }
         };

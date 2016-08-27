@@ -197,16 +197,16 @@ public final class DoubleStreams {
      * indicates that the stream should terminate.
      *
      * @param seed the initial element
-     * @param predicate a predicate to apply to elements to determine when the 
-     *          stream must terminate.
-     * @param f a function to be applied to the previous element to produce
-     *          a new element
+     * @param hasNext a predicate to apply to elements to determine when the 
+     *                stream must terminate
+     * @param next a function to be applied to the previous element to produce
+     *             a new element
      * @return a new sequential {@code DoubleStream}
      * @since 9
      */
-    public static DoubleStream iterate(double seed, DoublePredicate predicate, DoubleUnaryOperator f) {
-        Objects.requireNonNull(f);
-        Objects.requireNonNull(predicate);
+    public static DoubleStream iterate(double seed, DoublePredicate hasNext, DoubleUnaryOperator next) {
+        Objects.requireNonNull(next);
+        Objects.requireNonNull(hasNext);
         Spliterator.OfDouble spliterator = new Spliterators.AbstractDoubleSpliterator(Long.MAX_VALUE, 
                Spliterator.ORDERED | Spliterator.IMMUTABLE | Spliterator.NONNULL) {
             double prev;
@@ -220,12 +220,12 @@ public final class DoubleStreams {
                 }
                 double t;
                 if (started) {
-                    t = f.applyAsDouble(prev);
+                    t = next.applyAsDouble(prev);
                 } else {
                     t = seed;
                     started = true;
                 }
-                if (!predicate.test(t)) {
+                if (!hasNext.test(t)) {
                     finished = true;
                     return false;
                 }
@@ -240,10 +240,10 @@ public final class DoubleStreams {
                     return;
                 }
                 finished = true;
-                double t = started ? f.applyAsDouble(prev) : seed;
-                while (predicate.test(t)) {
+                double t = started ? next.applyAsDouble(prev) : seed;
+                while (hasNext.test(t)) {
                     action.accept(t);
-                    t = f.applyAsDouble(t);
+                    t = next.applyAsDouble(t);
                 }
             }
         };

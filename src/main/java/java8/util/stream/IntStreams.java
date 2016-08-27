@@ -196,16 +196,16 @@ public final class IntStreams {
      * indicates that the stream should terminate.
      *
      * @param seed the initial element
-     * @param predicate a predicate to apply to elements to determine when the 
-     *          stream must terminate.
-     * @param f a function to be applied to the previous element to produce
-     *          a new element
+     * @param hasNext a predicate to apply to elements to determine when the 
+     *                stream must terminate
+     * @param next a function to be applied to the previous element to produce
+     *             a new element
      * @return a new sequential {@code IntStream}
      * @since 9
      */
-    public static IntStream iterate(int seed, IntPredicate predicate, IntUnaryOperator f) {
-        Objects.requireNonNull(f);
-        Objects.requireNonNull(predicate);
+    public static IntStream iterate(int seed, IntPredicate hasNext, IntUnaryOperator next) {
+        Objects.requireNonNull(next);
+        Objects.requireNonNull(hasNext);
         Spliterator.OfInt spliterator = new Spliterators.AbstractIntSpliterator(Long.MAX_VALUE, 
                Spliterator.ORDERED | Spliterator.IMMUTABLE | Spliterator.NONNULL) {
             int prev;
@@ -219,12 +219,12 @@ public final class IntStreams {
                 }
                 int t;
                 if (started) {
-                    t = f.applyAsInt(prev);
+                    t = next.applyAsInt(prev);
                 } else {
                     t = seed;
                     started = true;
                 }
-                if (!predicate.test(t)) {
+                if (!hasNext.test(t)) {
                     finished = true;
                     return false;
                 }
@@ -239,10 +239,10 @@ public final class IntStreams {
                     return;
                 }
                 finished = true;
-                int t = started ? f.applyAsInt(prev) : seed;
-                while (predicate.test(t)) {
+                int t = started ? next.applyAsInt(prev) : seed;
+                while (hasNext.test(t)) {
                     action.accept(t);
-                    t = f.applyAsInt(t);
+                    t = next.applyAsInt(t);
                 }
             }
         };
