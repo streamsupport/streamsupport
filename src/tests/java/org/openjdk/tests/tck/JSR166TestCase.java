@@ -153,7 +153,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.200
+// CVS rev. 1.201
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1171,7 +1171,7 @@ public class JSR166TestCase extends TestCase {
      * Sleeps until the given time has elapsed.
      * Throws AssertionFailedError if interrupted.
      */
-    void sleep(long millis) {
+    static void sleep(long millis) {
         try {
             delay(millis);
         } catch (InterruptedException fail) {
