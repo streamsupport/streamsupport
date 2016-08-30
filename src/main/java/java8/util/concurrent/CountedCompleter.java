@@ -137,17 +137,16 @@ package java8.util.concurrent;
  * pending count look "off by one".
  *
  * <pre> {@code
- *     public void compute() {
- *       if (hi - lo >= 2) {
- *         int mid = (lo + hi) >>> 1;
- *         setPendingCount(1); // not off by one !
- *         new Task(this, mid, hi).fork(); // right child
- *         new Task(this, lo, mid).compute(); // direct invoke
- *       } else {
- *         if (hi > lo)
- *           action.accept(array[lo]);
- *         tryComplete();
- *       }
+ *   public void compute() {
+ *     if (hi - lo >= 2) {
+ *       int mid = (lo + hi) >>> 1;
+ *       setPendingCount(1); // not off by one !
+ *       new Task(this, mid, hi).fork(); // right child
+ *       new Task(this, lo, mid).compute(); // direct invoke
+ *     } else {
+ *       if (hi > lo)
+ *         action.accept(array[lo]);
+ *       tryComplete();
  *     }
  *   }}</pre>
  *
@@ -158,16 +157,15 @@ package java8.util.concurrent;
  * {@code tryComplete} can be replaced with {@link #propagateCompletion}.
  *
  * <pre> {@code
- *     public void compute() {
- *       int n = hi - lo;
- *       for (; n >= 2; n /= 2) {
- *         addToPendingCount(1);
- *         new Task(this, lo + n/2, lo + n).fork();
- *       }
- *       if (n > 0)
- *         action.accept(array[lo]);
- *       propagateCompletion();
+ *   public void compute() {
+ *     int n = hi - lo;
+ *     for (; n >= 2; n /= 2) {
+ *       addToPendingCount(1);
+ *       new Task(this, lo + n/2, lo + n).fork();
  *     }
+ *     if (n > 0)
+ *       action.accept(array[lo]);
+ *     propagateCompletion();
  *   }}</pre>
  *
  * When pending counts can be precomputed, they can be established in
@@ -394,7 +392,7 @@ package java8.util.concurrent;
  * @author Doug Lea
  */
 public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
-// CVS rev. 1.60
+// CVS rev. 1.61
 
     private static final long serialVersionUID = 5232453752276485070L;
 
