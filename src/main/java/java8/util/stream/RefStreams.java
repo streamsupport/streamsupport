@@ -270,6 +270,12 @@ public final class RefStreams {
      * {@code n}, will be the result of applying the function {@code f} to the
      * element at position {@code n - 1}.
      *
+     * <p>The action of applying {@code f} for one element
+     * <a href="../concurrent/package-summary.html#MemoryVisibility"><i>happens-before</i></a>
+     * the action of applying {@code f} for subsequent elements.  For any given
+     * element the action may be performed in whatever thread the library
+     * chooses.
+     *
      * @param <S> the type of the operand and seed, a subtype of T
      * @param <T> the type of stream elements
      * @param seed the initial element

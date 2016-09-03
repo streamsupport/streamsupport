@@ -545,19 +545,23 @@ public interface IntStream extends BaseStream<Integer, IntStream> {
      * <p>This is a <a href="package-summary.html#StreamOps">terminal
      * operation</a>.
      *
-     * @param <R> type of the result
-     * @param supplier a function that creates a new result container. For a
-     *                 parallel execution, this function may be called
-     *                 multiple times and must return a fresh value each time.
+     * @param <R> the type of the mutable result container
+     * @param supplier a function that creates a new mutable result container.
+     *                 For a parallel execution, this function may be called
+     *                 multiple times and must return a fresh value each time
      * @param accumulator an <a href="package-summary.html#Associativity">associative</a>,
      *                    <a href="package-summary.html#NonInterference">non-interfering</a>,
      *                    <a href="package-summary.html#Statelessness">stateless</a>
-     *                    function for incorporating an additional element into a result
+     *                    function that must fold an element into a result
+     *                    container
      * @param combiner an <a href="package-summary.html#Associativity">associative</a>,
      *                    <a href="package-summary.html#NonInterference">non-interfering</a>,
      *                    <a href="package-summary.html#Statelessness">stateless</a>
-     *                    function for combining two values, which must be
-     *                    compatible with the accumulator function
+     *                    function that accepts two partial result containers
+     *                    and merges them, which must be compatible with the
+     *                    accumulator function.  The combiner function must fold
+     *                    the elements from the second result container into the
+     *                    first result container
      * @return the result of the reduction
      * @see Stream#collect(Supplier, BiConsumer, BiConsumer)
      */
