@@ -303,25 +303,32 @@ public final class RefStreams {
 
     /**
      * Returns a sequential ordered {@code Stream} produced by iterative
-     * application of a function to an initial element, conditioned on 
-     * satisfying the supplied predicate.  The stream terminates as soon as
-     * the predicate function returns false.
+     * application of the given {@code next} function to an initial element,
+     * conditioned on satisfying the given {@code hasNext} predicate.  The
+     * stream terminates as soon as the {@code hasNext} predicate returns false.
      *
-     * <p>
-     * {@code RefStreams.iterate} should produce the same sequence of elements as
+     * <p>{@code RefStreams.iterate} should produce the same sequence of elements as
      * produced by the corresponding for-loop:
      * <pre>{@code
-     *     for (T index=seed; predicate.test(index); index = f.apply(index)) { 
+     *     for (T index=seed; hasNext.test(index); index = next.apply(index)) { 
      *         ... 
      *     }
      * }</pre>
      *
-     * <p>
-     * The resulting sequence may be empty if the predicate does not hold on 
-     * the seed value.  Otherwise the first element will be the supplied seed
-     * value, the next element (if present) will be the result of applying the
-     * function f to the seed value, and so on iteratively until the predicate
-     * indicates that the stream should terminate.
+     * <p>The resulting sequence may be empty if the {@code hasNext} predicate
+     * does not hold on the seed value.  Otherwise the first element will be the
+     * supplied {@code seed} value, the next element (if present) will be the
+     * result of applying the {@code next} function to the {@code seed} value,
+     * and so on iteratively until the {@code hasNext} predicate indicates that
+     * the stream should terminate.
+     *
+     * <p>The action of applying the {@code hasNext} predicate to an element
+     * <a href="../concurrent/package-summary.html#MemoryVisibility"><i>happens-before</i></a>
+     * the action of applying the {@code next} function to that element.  The
+     * action of applying the {@code next} function for one element
+     * <i>happens-before</i> the action of applying the {@code hasNext}
+     * predicate for subsequent elements.  For any given element an action may
+     * be performed in whatever thread the library chooses.
      *
      * @param <S> the type of the operand, predicate input and seed, a subtype of T
      * @param <T> the type of stream elements
