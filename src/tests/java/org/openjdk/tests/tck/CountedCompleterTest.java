@@ -1939,7 +1939,7 @@ public class CountedCompleterTest extends JSR166TestCase {
     }
 
     /** CountedCompleter class javadoc code sample, version 1. */
-    public static <E> void forEach1(E[] array, Consumer<E> action) {
+    private static <E> void forEach1(E[] array, Consumer<E> action) {
         @SuppressWarnings("serial")
         class Task extends CountedCompleter<Void> {
             final int lo, hi;
@@ -1964,7 +1964,7 @@ public class CountedCompleterTest extends JSR166TestCase {
     }
 
     /** CountedCompleter class javadoc code sample, version 2. */
-    public static <E> void forEach2(E[] array, Consumer<E> action) {
+    private static <E> void forEach2(E[] array, Consumer<E> action) {
         @SuppressWarnings("serial")
         class Task extends CountedCompleter<Void> {
             final int lo, hi;
@@ -1989,7 +1989,7 @@ public class CountedCompleterTest extends JSR166TestCase {
     }
 
     /** CountedCompleter class javadoc code sample, version 3. */
-    public static <E> void forEach3(E[] array, Consumer<E> action) {
+    private static <E> void forEach3(E[] array, Consumer<E> action) {
         @SuppressWarnings("serial")
         class Task extends CountedCompleter<Void> {
             final int lo, hi;
@@ -2012,7 +2012,7 @@ public class CountedCompleterTest extends JSR166TestCase {
     }
 
     /** CountedCompleter class javadoc code sample, version 4. */
-    public static <E> void forEach4(E[] array, Consumer<E> action) {
+    private static <E> void forEach4(E[] array, Consumer<E> action) {
         @SuppressWarnings("serial")
         class Task extends CountedCompleter<Void> {
             final int lo, hi;
