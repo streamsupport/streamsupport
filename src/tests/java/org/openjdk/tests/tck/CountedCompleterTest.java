@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleterTest extends JSR166TestCase {
-// CVS rev. 1.28
+// CVS rev. 1.29
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -1975,7 +1975,7 @@ public class CountedCompleterTest extends JSR166TestCase {
             public void compute() {
                 if (hi - lo >= 2) {
                     int mid = (lo + hi) >>> 1;
-                    setPendingCount(1); // not off by one !
+                    setPendingCount(1); // looks off by one, but correct!
                     new Task(this, mid, hi).fork(); // right child
                     new Task(this, lo, mid).compute(); // direct invoke
                 } else {

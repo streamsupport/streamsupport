@@ -140,7 +140,7 @@ package java8.util.concurrent;
  *   public void compute() {
  *     if (hi - lo >= 2) {
  *       int mid = (lo + hi) >>> 1;
- *       setPendingCount(1); // not off by one !
+ *       setPendingCount(1); // looks off by one, but correct!
  *       new Task(this, mid, hi).fork(); // right child
  *       new Task(this, lo, mid).compute(); // direct invoke
  *     } else {
@@ -392,7 +392,7 @@ package java8.util.concurrent;
  * @author Doug Lea
  */
 public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
-// CVS rev. 1.62
+// CVS rev. 1.63
 
     private static final long serialVersionUID = 5232453752276485070L;
 
