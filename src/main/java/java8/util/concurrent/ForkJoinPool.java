@@ -146,7 +146,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.325
+// CVS rev. 1.326
     /*
      * Implementation Overview
      *
@@ -1220,7 +1220,7 @@ public class ForkJoinPool extends AbstractExecutorService {
      * Default idle timeout value (in milliseconds) for the thread
      * triggering quiescence to park waiting for new work
      */
-    private static final long DEFAULT_KEEPALIVE = 60000L;
+    private static final long DEFAULT_KEEPALIVE = 60_000L;
 
     /**
      * Undershoot tolerance for idle timeouts
