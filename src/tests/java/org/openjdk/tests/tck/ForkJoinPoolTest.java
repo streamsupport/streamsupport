@@ -56,6 +56,7 @@ import java8.util.concurrent.RecursiveTask;
 
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 import junit.framework.AssertionFailedError;
@@ -64,6 +65,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPoolTest extends JSR166TestCase {
+// CVS rev. 1.71
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -91,13 +93,6 @@ public class ForkJoinPoolTest extends JSR166TestCase {
 
     // Some classes to test extension and factory methods
 
-    static class MyHandler implements Thread.UncaughtExceptionHandler {
-        volatile int catches = 0;
-        public void uncaughtException(Thread t, Throwable e) {
-            ++catches;
-        }
-    }
-
     @SuppressWarnings("serial")
     static class MyError extends Error {}
 
@@ -109,9 +104,9 @@ public class ForkJoinPoolTest extends JSR166TestCase {
 
     static class FailingThreadFactory
             implements ForkJoinPool.ForkJoinWorkerThreadFactory {
-        volatile int calls = 0;
+    	final AtomicInteger calls = new AtomicInteger(0);
         public ForkJoinWorkerThread newThread(ForkJoinPool p) {
-            if (++calls > 1) return null;
+        	if (calls.incrementAndGet() > 1) return null;
             return new FailingFJWSubclass(p);
         }
     }
