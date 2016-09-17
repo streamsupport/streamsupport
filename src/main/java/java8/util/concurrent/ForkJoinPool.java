@@ -146,7 +146,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.326
+// CVS rev. 1.328
     /*
      * Implementation Overview
      *
@@ -2357,7 +2357,6 @@ public class ForkJoinPool extends AbstractExecutorService {
         Objects.requireNonNull(factory);
         long ms = Math.max(unit.toMillis(keepAliveTime), TIMEOUT_SLOP);
 
-        String prefix = "ForkJoinPool-" + nextPoolId() + "-worker-";
         int corep = Math.min(Math.max(corePoolSize, parallelism), MAX_CAP);
         long c = ((((long)(-corep)       << TC_SHIFT) & TC_MASK) |
                   (((long)(-parallelism) << RC_SHIFT) & RC_MASK));
@@ -2369,8 +2368,8 @@ public class ForkJoinPool extends AbstractExecutorService {
         n |= n >>> 1; n |= n >>> 2; n |= n >>> 4; n |= n >>> 8; n |= n >>> 16;
         n = (n + 1) << 1; // power of two, including space for submission queues
 
+        this.workerNamePrefix = "ForkJoinPool-" + nextPoolId() + "-worker-";
         this.workQueues = new WorkQueue[n];
-        this.workerNamePrefix = prefix;
         this.factory = factory;
         this.ueh = handler;
         this.saturate = saturate;
@@ -2379,6 +2378,15 @@ public class ForkJoinPool extends AbstractExecutorService {
         this.mode = m;
         this.ctl = c;
         checkPermission();
+    }
+
+    private Object newInstanceFromSystemProperty(String property)
+        throws Exception {
+        String className = System.getProperty(property);
+        return (className == null)
+            ? null
+            : ClassLoader.getSystemClassLoader().loadClass(className)
+            .getConstructor().newInstance();
     }
 
     /**
@@ -2392,18 +2400,12 @@ public class ForkJoinPool extends AbstractExecutorService {
         try {  // ignore exceptions in accessing/parsing properties
             String pp = System.getProperty
                 ("java.util.concurrent.ForkJoinPool.common.parallelism");
-            String fp = System.getProperty
-                ("java.util.concurrent.ForkJoinPool.common.threadFactory");
-            String hp = System.getProperty
-                ("java.util.concurrent.ForkJoinPool.common.exceptionHandler");
             if (pp != null)
                 parallelism = Integer.parseInt(pp);
-            if (fp != null)
-                fac = ((ForkJoinWorkerThreadFactory)ClassLoader.
-                           getSystemClassLoader().loadClass(fp).newInstance());
-            if (hp != null)
-                handler = ((UncaughtExceptionHandler)ClassLoader.
-                           getSystemClassLoader().loadClass(hp).newInstance());
+            fac = (ForkJoinWorkerThreadFactory) newInstanceFromSystemProperty(
+                "java.util.concurrent.ForkJoinPool.common.threadFactory");
+            handler = (UncaughtExceptionHandler) newInstanceFromSystemProperty(
+                "java.util.concurrent.ForkJoinPool.common.exceptionHandler");
         } catch (Exception ignore) {
         }
 
@@ -2428,8 +2430,8 @@ public class ForkJoinPool extends AbstractExecutorService {
         n |= n >>> 1; n |= n >>> 2; n |= n >>> 4; n |= n >>> 8; n |= n >>> 16;
         n = (n + 1) << 1;
 
-        this.workQueues = new WorkQueue[n];
         this.workerNamePrefix = "ForkJoinPool.commonPool-worker-";
+        this.workQueues = new WorkQueue[n];
         this.factory = fac;
         this.ueh = handler;
         this.saturate = null;
