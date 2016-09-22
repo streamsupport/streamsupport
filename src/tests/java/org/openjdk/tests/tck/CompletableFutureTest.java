@@ -82,7 +82,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.173
+// CVS rev. 1.178
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3620,29 +3620,53 @@ public class CompletableFutureTest extends JSR166TestCase {
      * copy returns a CompletableFuture that is completed normally,
      * with the same value, when source is.
      */
-    public void testCopy() {
+    public void testCopy_normalCompletion() {
+        for (boolean createIncomplete : new boolean[] { true, false })
+        for (Integer v1 : new Integer[] { 1, null })
+    {
         CompletableFuture<Integer> f = new CompletableFuture<>();
+        if (!createIncomplete) assertTrue(f.complete(v1));
         CompletableFuture<Integer> g = f.copy();
-        checkIncomplete(f);
-        checkIncomplete(g);
-        f.complete(1);
-        checkCompletedNormally(f, 1);
-        checkCompletedNormally(g, 1);
-    }
+        if (createIncomplete) {
+            checkIncomplete(f);
+            checkIncomplete(g);
+            assertTrue(f.complete(v1));
+        }
+        checkCompletedNormally(f, v1);
+        checkCompletedNormally(g, v1);
+    }}
 
     /**
      * copy returns a CompletableFuture that is completed exceptionally
      * when source is.
      */
-    public void testCopy2() {
-        CompletableFuture<Integer> f = new CompletableFuture<>();
-        CompletableFuture<Integer> g = f.copy();
-        checkIncomplete(f);
-        checkIncomplete(g);
+    public void testCopy_exceptionalCompletion() {
+        for (boolean createIncomplete : new boolean[] { true, false })
+    {
         CFException ex = new CFException();
-        f.completeExceptionally(ex);
+        CompletableFuture<Integer> f = new CompletableFuture<>();
+        if (!createIncomplete) f.completeExceptionally(ex);
+        CompletableFuture<Integer> g = f.copy();
+        if (createIncomplete) {
+            checkIncomplete(f);
+            checkIncomplete(g);
+            f.completeExceptionally(ex);
+        }
         checkCompletedExceptionally(f, ex);
         checkCompletedWithWrappedException(g, ex);
+    }}
+
+    /**
+     * Completion of a copy does not complete its source.
+     */
+    public void testCopy_oneWayPropagation() {
+        CompletableFuture<Integer> f = new CompletableFuture<>();
+        assertTrue(f.copy().complete(1));
+        assertTrue(f.copy().complete(null));
+        assertTrue(f.copy().cancel(true));
+        assertTrue(f.copy().cancel(false));
+        assertTrue(f.copy().completeExceptionally(new CFException()));
+        checkIncomplete(f);
     }
 
     /**
@@ -4047,6 +4071,48 @@ public class CompletableFutureTest extends JSR166TestCase {
     }
 
     /**
+     * minimalStage.toCompletableFuture() returns a CompletableFuture that
+     * is completed normally, with the same value, when source is.
+     */
+    public void testMinimalCompletionStage_toCompletableFuture_normalCompletion() {
+        for (boolean createIncomplete : new boolean[] { true, false })
+        for (Integer v1 : new Integer[] { 1, null })
+    {
+        CompletableFuture<Integer> f = new CompletableFuture<>();
+        CompletionStage<Integer> minimal = f.minimalCompletionStage();
+        if (!createIncomplete) assertTrue(f.complete(v1));
+        CompletableFuture<Integer> g = minimal.toCompletableFuture();
+        if (createIncomplete) {
+            checkIncomplete(f);
+            checkIncomplete(g);
+            assertTrue(f.complete(v1));
+        }
+        checkCompletedNormally(f, v1);
+        checkCompletedNormally(g, v1);
+    }}
+
+    /**
+     * minimalStage.toCompletableFuture() returns a CompletableFuture that
+     * is completed exceptionally when source is.
+     */
+    public void testMinimalCompletionStage_toCompletableFuture_exceptionalCompletion() {
+        for (boolean createIncomplete : new boolean[] { true, false })
+    {
+        CFException ex = new CFException();
+        CompletableFuture<Integer> f = new CompletableFuture<>();
+        CompletionStage<Integer> minimal = f.minimalCompletionStage();
+        if (!createIncomplete) f.completeExceptionally(ex);
+        CompletableFuture<Integer> g = minimal.toCompletableFuture();
+        if (createIncomplete) {
+            checkIncomplete(f);
+            checkIncomplete(g);
+            f.completeExceptionally(ex);
+        }
+        checkCompletedExceptionally(f, ex);
+        checkCompletedWithWrappedException(g, ex);
+    }}
+
+    /**
      * minimalStage.toCompletableFuture() gives mutable CompletableFuture
      */
     public void testMinimalCompletionStage_toCompletableFuture_mutable() {
@@ -4055,7 +4121,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         CompletableFuture<Integer> f = new CompletableFuture<>();
         CompletionStage<Integer> minimal = f.minimalCompletionStage();
         CompletableFuture<Integer> g = minimal.toCompletableFuture();
-        g.complete(v1);
+        assertTrue(g.complete(v1));
         checkCompletedNormally(g, v1);
         checkIncomplete(f);
         checkIncomplete(minimal.toCompletableFuture());
@@ -4076,6 +4142,23 @@ public class CompletableFutureTest extends JSR166TestCase {
         assertEquals(v1, minimal.toCompletableFuture().get());
         checkCompletedNormally(minimal.toCompletableFuture(), v1);
     }}
+
+    /**
+     * Completion of a toCompletableFuture copy of a minimal stage
+     * does not complete its source.
+     */
+    public void testMinimalCompletionStage_toCompletableFuture_oneWayPropagation() {
+        CompletableFuture<Integer> f = new CompletableFuture<>();
+        CompletionStage<Integer> g = f.minimalCompletionStage();
+        assertTrue(g.toCompletableFuture().complete(1));
+        assertTrue(g.toCompletableFuture().complete(null));
+        assertTrue(g.toCompletableFuture().cancel(true));
+        assertTrue(g.toCompletableFuture().cancel(false));
+        assertTrue(g.toCompletableFuture().completeExceptionally(new CFException()));
+        checkIncomplete(g.toCompletableFuture());
+        f.complete(1);
+        checkCompletedNormally(g.toCompletableFuture(), 1);
+    }
 
     /** Demo utility method for external reliable toCompletableFuture */
     static <T> CompletableFuture<T> toCompletableFuture(CompletionStage<T> stage) {
