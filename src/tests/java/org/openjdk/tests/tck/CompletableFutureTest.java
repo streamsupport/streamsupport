@@ -82,7 +82,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.178
+// CVS rev. 1.179
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -4484,6 +4484,22 @@ public class CompletableFutureTest extends JSR166TestCase {
         CompletableFuture<Integer> neverCompleted = new CompletableFuture<>();
         for (int i = 0; i < n; i++)
             assertTrue(neverCompleted.thenRun(() -> {}).cancel(true));
+    }
+
+    /**
+     * Checks for garbage retention when MinimalStage.toCompletableFuture()
+     * is invoked many times.
+     * 8161600: Garbage retention when source CompletableFutures are never completed
+     *
+     * As of 2016-07, fails with OOME:
+     * ant -Dvmoptions=-Xmx8m -Djsr166.expensiveTests=true -Djsr166.tckTestClass=CompletableFutureTest -Djsr166.methodFilter=testToCompletableFutureGarbageRetention tck
+     */
+    public void testToCompletableFutureGarbageRetention() throws Throwable {
+        final int n = expensiveTests ? 900_000 : 10;
+        CompletableFuture<Integer> neverCompleted = new CompletableFuture<>();
+        CompletionStage minimal = neverCompleted.minimalCompletionStage();
+        for (int i = 0; i < n; i++)
+            assertTrue(minimal.toCompletableFuture().cancel(true));
     }
 
 //     static <U> U join(CompletionStage<U> stage) {
