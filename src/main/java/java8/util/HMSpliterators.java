@@ -64,7 +64,7 @@ final class HMSpliterators {
     private static final class KeySpliterator<K, V> extends
             HashMapSpliterator<K, V> implements Spliterator<K> {
 
-        private KeySpliterator(HashMap<K, V> m, int origin, int fence, int est,
+        KeySpliterator(HashMap<K, V> m, int origin, int fence, int est,
                 int expectedModCount) {
             super(m, origin, fence, est, expectedModCount);
         }
@@ -145,7 +145,7 @@ final class HMSpliterators {
     private static final class ValueSpliterator<K, V> extends
             HashMapSpliterator<K, V> implements Spliterator<V> {
 
-        private ValueSpliterator(HashMap<K, V> m, int origin, int fence,
+        ValueSpliterator(HashMap<K, V> m, int origin, int fence,
                 int est, int expectedModCount) {
             super(m, origin, fence, est, expectedModCount);
         }
@@ -225,7 +225,7 @@ final class HMSpliterators {
     private static final class EntrySpliterator<K, V> extends
             HashMapSpliterator<K, V> implements Spliterator<Map.Entry<K, V>> {
 
-        private EntrySpliterator(HashMap<K, V> m, int origin, int fence,
+        EntrySpliterator(HashMap<K, V> m, int origin, int fence,
                 int est, int expectedModCount) {
             super(m, origin, fence, est, expectedModCount);
         }

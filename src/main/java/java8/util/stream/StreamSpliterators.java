@@ -992,8 +992,7 @@ class StreamSpliterators {
                 this(s, sliceOrigin, sliceFence, 0, Math.min(s.estimateSize(), sliceFence));
             }
 
-            private OfPrimitive(T_SPLITR s,
-                                long sliceOrigin, long sliceFence, long origin, long fence) {
+            OfPrimitive(T_SPLITR s, long sliceOrigin, long sliceFence, long origin, long fence) {
                 super(s, sliceOrigin, sliceFence, origin, fence);
             }
 
