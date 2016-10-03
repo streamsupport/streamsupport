@@ -846,6 +846,27 @@ public final class Spliterators {
      * value equal to {@code 0}).
      *
      * <p>
+     * Particularly, if the given collection is a {@link java.util.List}, the
+     * implementation creates a
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>
+     * spliterator as follows:
+     * <ul>
+     * <li>If the list is an instance of {@link java.util.RandomAccess} then
+     *     the default implementation creates a spliterator that traverses
+     *     elements by invoking the method {@link java.util.List#get}.  If
+     *     such invocation results or would result in an
+     *     {@code IndexOutOfBoundsException} then the spliterator will
+     *     <em>fail-fast</em> and throw a {@code ConcurrentModificationException}.
+     *     If the list is also an instance of {@link java.util.AbstractList}
+     *     then the spliterator will use the list's
+     *     {@link java.util.AbstractList#modCount modCount} field to provide
+     *     additional <em>fail-fast</em> behavior.
+     * <li>Otherwise, the default implementation creates a spliterator from
+     *     the list's {@code Iterator}.  The spliterator inherits the
+     *     <em>fail-fast</em> of the list's iterator.
+     * </ul>
+     *
+     * <p>
      * Currently, the collections that have specializations available are the
      * following:
      *
@@ -872,7 +893,7 @@ public final class Spliterators {
      * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
      * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
      * collection when the Spliterator was created, otherwise the spliterator is
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the collection's iterator, and
      * implements {@code trySplit} to permit limited parallelism.
      *
@@ -1032,7 +1053,7 @@ public final class Spliterators {
      * reporting its {@link java.util.Collection#size()} as its initial size.
      *
      * <p>The spliterator is
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the collection's iterator, and
      * implements {@code trySplit} to permit limited parallelism.
      *
@@ -1055,7 +1076,7 @@ public final class Spliterators {
      * as the source of elements, and with a given initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1086,7 +1107,7 @@ public final class Spliterators {
      * as the source of elements, with no initial size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1113,7 +1134,7 @@ public final class Spliterators {
      * initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1144,7 +1165,7 @@ public final class Spliterators {
      * size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1170,7 +1191,7 @@ public final class Spliterators {
      * given initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1201,7 +1222,7 @@ public final class Spliterators {
      * initial size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1227,7 +1248,7 @@ public final class Spliterators {
      * given initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1258,7 +1279,7 @@ public final class Spliterators {
      * initial size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
