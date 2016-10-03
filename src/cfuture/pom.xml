@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-cfuture</artifactId>
-	<version>1.5.2-SNAPSHOT</version>
+	<version>1.5.2</version>
 	<name>net.sourceforge.streamsupport:streamsupport-cfuture</name>
 	<description>streamsupport-cfuture is a backport of the Java 8 CompletableFuture API with the current
  Java 9 (JEP 266) enhancements for Java 6 to 8 and Android developers</description>
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport</artifactId>
-			<version>1.5.2-SNAPSHOT</version>
+			<version>1.5.2</version>
 		</dependency>
 	</dependencies>
 	<properties>
