@@ -80,7 +80,7 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
 
         private final Consumer<T> delegate;
 
-        private ConsumerDelegate(Consumer<T> delegate) {
+        ConsumerDelegate(Consumer<T> delegate) {
             Objects.requireNonNull(delegate);
             this.delegate = delegate;
         }

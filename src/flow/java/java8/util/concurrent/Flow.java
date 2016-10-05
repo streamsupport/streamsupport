@@ -70,7 +70,7 @@ import java.util.concurrent.Executor;
  *   private boolean subscribed; // true after first subscribe
  *   public synchronized void subscribe(Subscriber<? super Boolean> subscriber) {
  *     if (subscribed)
- *        subscriber.onError(new IllegalStateException()); // only one allowed
+ *       subscriber.onError(new IllegalStateException()); // only one allowed
  *     else {
  *       subscribed = true;
  *       subscriber.onSubscribe(new OneShotSubscription(subscriber, executor));
@@ -166,7 +166,7 @@ import java.util.concurrent.Executor;
  * @since 9
  */
 public final class Flow {
-
+// CVS rev. 1.30
     private Flow() {} // uninstantiable
 
     /**

@@ -107,7 +107,7 @@ public final class OptionalLong {
      *
      * @param value the long value to describe
      */
-    private OptionalLong(long value) {
+    OptionalLong(long value) {
         this.isPresent = true;
         this.value = value;
     }

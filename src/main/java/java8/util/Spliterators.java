@@ -846,6 +846,27 @@ public final class Spliterators {
      * value equal to {@code 0}).
      *
      * <p>
+     * Particularly, if the given collection is a {@link java.util.List}, the
+     * implementation creates a
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>
+     * spliterator as follows:
+     * <ul>
+     * <li>If the list is an instance of {@link java.util.RandomAccess} then
+     *     the default implementation creates a spliterator that traverses
+     *     elements by invoking the method {@link java.util.List#get}.  If
+     *     such invocation results or would result in an
+     *     {@code IndexOutOfBoundsException} then the spliterator will
+     *     <em>fail-fast</em> and throw a {@code ConcurrentModificationException}.
+     *     If the list is also an instance of {@link java.util.AbstractList}
+     *     then the spliterator will use the list's
+     *     {@link java.util.AbstractList#modCount modCount} field to provide
+     *     additional <em>fail-fast</em> behavior.
+     * <li>Otherwise, the default implementation creates a spliterator from
+     *     the list's {@code Iterator}.  The spliterator inherits the
+     *     <em>fail-fast</em> of the list's iterator.
+     * </ul>
+     *
+     * <p>
      * Currently, the collections that have specializations available are the
      * following:
      *
@@ -872,7 +893,7 @@ public final class Spliterators {
      * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
      * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
      * collection when the Spliterator was created, otherwise the spliterator is
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the collection's iterator, and
      * implements {@code trySplit} to permit limited parallelism.
      *
@@ -892,19 +913,19 @@ public final class Spliterators {
             return jreDelegatingSpliterator(c);
         }
 
-        String className = c.getClass().getName();
+        String name = c.getClass().getName();
 
         if (c instanceof List) {
-            return listSpliterator((List<T>) c, className);
+            return listSpliterator((List<T>) c, name);
         }
         if (c instanceof Set) {
-            return setSpliterator((Set<T>) c, className);
+            return setSpliterator((Set<T>) c, name);
         }
         if (c instanceof Queue) {
             return queueSpliterator((Queue<T>) c);
         }
 
-        if ((!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(className)) {
+        if ((!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) && "java.util.HashMap$Values".equals(name)) {
             return HMSpliterators.getValuesSpliterator((Collection<T>) c);
         }
 
@@ -912,13 +933,13 @@ public final class Spliterators {
         return spliterator(c, 0);
     }
 
-    private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String className) {
+    private static <T> Spliterator<T> listSpliterator(List<? extends T> c, String name) {
         if (NATIVE_SPECIALIZATION || IS_ANDROID) {
             if (c instanceof ArrayList) {
                 return ArrayListSpliterator.spliterator((ArrayList<T>) c);
             }
 
-            if ("java.util.Arrays$ArrayList".equals(className)) {
+            if ("java.util.Arrays$ArrayList".equals(name)) {
                 return ArraysArrayListSpliterator.spliterator((List<T>) c);
             }
 
@@ -934,10 +955,16 @@ public final class Spliterators {
             }
         }
 
-        // this doesn't count as a native specialization for AbstractList
-        // since its 'modCount' field is a well-documented part of its API
-        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess
-                && c instanceof AbstractList) {
+        if (ALLOW_RNDACC_SPLITER_OPT && c instanceof RandomAccess) {
+
+            if (!(c instanceof AbstractList) && isFromJdk(name)) {
+                // have to use an IteratorSpliterator in this special
+                // case otherwise some tests would fail (ticket #217)
+                return spliterator(c, Spliterator.ORDERED);
+            }
+
+            // this doesn't count as a native specialization for AbstractList
+            // since its 'modCount' field is a well-documented part of its API
             return RASpliterator.spliterator((List<T>) c);
         }
 
@@ -945,13 +972,13 @@ public final class Spliterators {
         return spliterator(c, Spliterator.ORDERED);
     }
 
-    private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String className) {
+    private static <T> Spliterator<T> setSpliterator(Set<? extends T> c, String name) {
         if (!IS_HARMONY_ANDROID && NATIVE_SPECIALIZATION) {
-            if ("java.util.HashMap$EntrySet".equals(className)) {
+            if ("java.util.HashMap$EntrySet".equals(name)) {
                 return (Spliterator<T>) HMSpliterators
                         .<Object, Object> getEntrySetSpliterator((Set<Map.Entry<Object, Object>>) c);
             }
-            if ("java.util.HashMap$KeySet".equals(className)) {
+            if ("java.util.HashMap$KeySet".equals(name)) {
                 return HMSpliterators.getKeySetSpliterator((Set<T>) c);
             }
         }
@@ -1026,7 +1053,7 @@ public final class Spliterators {
      * reporting its {@link java.util.Collection#size()} as its initial size.
      *
      * <p>The spliterator is
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the collection's iterator, and
      * implements {@code trySplit} to permit limited parallelism.
      *
@@ -1049,7 +1076,7 @@ public final class Spliterators {
      * as the source of elements, and with a given initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1080,7 +1107,7 @@ public final class Spliterators {
      * as the source of elements, with no initial size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1107,7 +1134,7 @@ public final class Spliterators {
      * initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1138,7 +1165,7 @@ public final class Spliterators {
      * size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1164,7 +1191,7 @@ public final class Spliterators {
      * given initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1195,7 +1222,7 @@ public final class Spliterators {
      * initial size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1221,7 +1248,7 @@ public final class Spliterators {
      * given initially reported size.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -1252,7 +1279,7 @@ public final class Spliterators {
      * initial size estimate.
      *
      * <p>The spliterator is not
-     * <em><a href="../Spliterator.html#binding">late-binding</a></em>, inherits
+     * <em><a href="Spliterator.html#binding">late-binding</a></em>, inherits
      * the <em>fail-fast</em> properties of the iterator, and implements
      * {@code trySplit} to permit limited parallelism.
      *
@@ -3304,6 +3331,37 @@ public final class Spliterators {
             }
         } catch (Exception ignore) {
             // ignore
+        }
+        return false;
+    }
+
+    /**
+     * Test for three JDK special cases where a List is RandomAccess but doesn't
+     * inherit from AbstractList. Namely:
+     * <p>
+     * <ul>
+     * <li>java.util.Collections.SynchronizedRandomAccessList</li>
+     * <li>java.util.Collections.UnmodifiableRandomAccessList</li>
+     * <li>java.util.Collections.CheckedRandomAccessList</li>
+     * </ul>
+     * <p>
+     * These three require a special treatment as they are used in our
+     * fail-fastness and late-binding tests and wouldn't pass if
+     * {@code RASpliterator} is used to split them.
+     * 
+     * @param name
+     *            the class name
+     * @return {@code true} if an {@code IteratorSpliterator} must be used,
+     *         otherwise {@code false}
+     */
+    private static boolean isFromJdk(String name) {
+        // see https://sourceforge.net/p/streamsupport/tickets/217/
+        if (name.startsWith("java.util.Collections$", 0)
+                && name.endsWith("RandomAccessList")) {
+            // Collections.SynchronizedRandomAccessList
+            // Collections.UnmodifiableRandomAccessList
+            // Collections.CheckedRandomAccessList
+            return true;
         }
         return false;
     }

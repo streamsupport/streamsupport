@@ -40,6 +40,7 @@ import java.security.ProtectionDomain;
 import java.security.SecurityPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -53,13 +54,12 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-
-import java8.util.concurrent.ForkJoinPool;
-
 import java.util.concurrent.Future;
 
+import java8.util.concurrent.ForkJoinPool;
 import java8.util.concurrent.RecursiveAction;
 import java8.util.concurrent.RecursiveTask;
+import java8.util.concurrent.ThreadLocalRandom;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.Semaphore;
@@ -153,7 +153,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.198
+// CVS rev. 1.203
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -920,14 +920,17 @@ public class JSR166TestCase extends TestCase {
         ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
         System.err.println("------ stacktrace dump start ------");
         for (ThreadInfo info : threadMXBean.dumpAllThreads(true, true)) {
-            String name = info.getThreadName();
+            final String name = info.getThreadName();
+            String lockName;
             if ("Signal Dispatcher".equals(name))
                 continue;
             if ("Reference Handler".equals(name)
-                && info.getLockName().startsWith("java.lang.ref.Reference$Lock"))
+                && (lockName = info.getLockName()) != null
+                && lockName.startsWith("java.lang.ref.Reference$Lock"))
                 continue;
             if ("Finalizer".equals(name)
-                && info.getLockName().startsWith("java.lang.ref.ReferenceQueue$Lock"))
+                && (lockName = info.getLockName()) != null
+                && lockName.startsWith("java.lang.ref.ReferenceQueue$Lock"))
                 continue;
             if ("checkForWedgedTest".equals(name))
                 continue;
@@ -1171,7 +1174,7 @@ public class JSR166TestCase extends TestCase {
      * Sleeps until the given time has elapsed.
      * Throws AssertionFailedError if interrupted.
      */
-    void sleep(long millis) {
+    static void sleep(long millis) {
         try {
             delay(millis);
         } catch (InterruptedException fail) {
@@ -1187,7 +1190,7 @@ public class JSR166TestCase extends TestCase {
      * thread to enter a wait state: BLOCKED, WAITING, or TIMED_WAITING.
      */
     protected void waitForThreadToEnterWaitState(Thread thread, long timeoutMillis) {
-        long startTime = System.nanoTime();
+        long startTime = 0L;
         for (;;) {
             Thread.State s = thread.getState();
             if (s == Thread.State.BLOCKED ||
@@ -1196,6 +1199,8 @@ public class JSR166TestCase extends TestCase {
                 return;
             else if (s == Thread.State.TERMINATED)
                 fail("Unexpected thread termination");
+            else if (startTime == 0L)
+                startTime = System.nanoTime();
             else if (millisElapsedSince(startTime) > timeoutMillis) {
                 threadAssertTrue(thread.isAlive());
                 return;
@@ -1659,7 +1664,7 @@ public class JSR166TestCase extends TestCase {
      * A CyclicBarrier that uses timed await and fails with
      * AssertionFailedErrors instead of throwing checked exceptions.
      */
-    public class CheckedBarrier extends CyclicBarrier {
+    public static class CheckedBarrier extends CyclicBarrier {
         public CheckedBarrier(int parties) { super(parties); }
 
         public int await() {
@@ -1779,4 +1784,8 @@ public class JSR166TestCase extends TestCase {
         new ThreadPoolExecutor(0, Integer.MAX_VALUE,
                                1000L, MILLISECONDS,
                                new SynchronousQueue<Runnable>());
+
+    static <T> void shuffle(T[] array) {
+        Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
+    }
 }

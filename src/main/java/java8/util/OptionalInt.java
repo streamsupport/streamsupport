@@ -106,7 +106,7 @@ public final class OptionalInt {
      *
      * @param value the int value to describe
      */
-    private OptionalInt(int value) {
+    OptionalInt(int value) {
         this.isPresent = true;
         this.value = value;
     }

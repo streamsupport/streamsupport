@@ -270,6 +270,12 @@ public final class RefStreams {
      * {@code n}, will be the result of applying the function {@code f} to the
      * element at position {@code n - 1}.
      *
+     * <p>The action of applying {@code f} for one element
+     * <a href="../concurrent/package-summary.html#MemoryVisibility"><i>happens-before</i></a>
+     * the action of applying {@code f} for subsequent elements.  For any given
+     * element the action may be performed in whatever thread the library
+     * chooses.
+     *
      * @param <S> the type of the operand and seed, a subtype of T
      * @param <T> the type of stream elements
      * @param seed the initial element
@@ -303,39 +309,46 @@ public final class RefStreams {
 
     /**
      * Returns a sequential ordered {@code Stream} produced by iterative
-     * application of a function to an initial element, conditioned on 
-     * satisfying the supplied predicate.  The stream terminates as soon as
-     * the predicate function returns false.
+     * application of the given {@code next} function to an initial element,
+     * conditioned on satisfying the given {@code hasNext} predicate.  The
+     * stream terminates as soon as the {@code hasNext} predicate returns false.
      *
-     * <p>
-     * {@code RefStreams.iterate} should produce the same sequence of elements as
+     * <p>{@code RefStreams.iterate} should produce the same sequence of elements as
      * produced by the corresponding for-loop:
      * <pre>{@code
-     *     for (T index=seed; predicate.test(index); index = f.apply(index)) { 
+     *     for (T index=seed; hasNext.test(index); index = next.apply(index)) { 
      *         ... 
      *     }
      * }</pre>
      *
-     * <p>
-     * The resulting sequence may be empty if the predicate does not hold on 
-     * the seed value.  Otherwise the first element will be the supplied seed
-     * value, the next element (if present) will be the result of applying the
-     * function f to the seed value, and so on iteratively until the predicate
-     * indicates that the stream should terminate.
+     * <p>The resulting sequence may be empty if the {@code hasNext} predicate
+     * does not hold on the seed value.  Otherwise the first element will be the
+     * supplied {@code seed} value, the next element (if present) will be the
+     * result of applying the {@code next} function to the {@code seed} value,
+     * and so on iteratively until the {@code hasNext} predicate indicates that
+     * the stream should terminate.
+     *
+     * <p>The action of applying the {@code hasNext} predicate to an element
+     * <a href="../concurrent/package-summary.html#MemoryVisibility"><i>happens-before</i></a>
+     * the action of applying the {@code next} function to that element.  The
+     * action of applying the {@code next} function for one element
+     * <i>happens-before</i> the action of applying the {@code hasNext}
+     * predicate for subsequent elements.  For any given element an action may
+     * be performed in whatever thread the library chooses.
      *
      * @param <S> the type of the operand, predicate input and seed, a subtype of T
      * @param <T> the type of stream elements
      * @param seed the initial element
-     * @param predicate a predicate to apply to elements to determine when the 
-     *          stream must terminate.
-     * @param f a function to be applied to the previous element to produce
-     *          a new element
+     * @param hasNext a predicate to apply to elements to determine when the 
+     *                stream must terminate
+     * @param next a function to be applied to the previous element to produce
+     *             a new element
      * @return a new sequential {@code Stream}
      * @since 9
      */
-    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<S> predicate, UnaryOperator<S> f) {
-        Objects.requireNonNull(f);
-        Objects.requireNonNull(predicate);
+    public static <T, S extends T> Stream<T> iterate(S seed, Predicate<S> hasNext, UnaryOperator<S> next) {
+        Objects.requireNonNull(next);
+        Objects.requireNonNull(hasNext);
         Spliterator<T> spliterator = new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, 
                Spliterator.ORDERED | Spliterator.IMMUTABLE) {
             S prev;
@@ -349,12 +362,12 @@ public final class RefStreams {
                 }
                 S s;
                 if (started) {
-                    s = f.apply(prev);
+                    s = next.apply(prev);
                 } else {
                     s = seed;
                     started = true;
                 }
-                if (!predicate.test(s)) {
+                if (!hasNext.test(s)) {
                     prev = null;
                     finished = true;
                     return false;
@@ -370,11 +383,11 @@ public final class RefStreams {
                     return;
                 }
                 finished = true;
-                S s = started ? f.apply(prev) : seed;
+                S s = started ? next.apply(prev) : seed;
                 prev = null;
-                while (predicate.test(s)) {
+                while (hasNext.test(s)) {
                     action.accept(s);
-                    s = f.apply(s);
+                    s = next.apply(s);
                 }
             }
         };

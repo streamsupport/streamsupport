@@ -74,6 +74,27 @@ public final class StreamSupport {
      * </ul>
      *
      * <p>
+     * Otherwise, if the given collection is a {@link java.util.List}, the
+     * implementation creates a
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>
+     * spliterator as follows:
+     * <ul>
+     * <li>If the list is an instance of {@link java.util.RandomAccess} then
+     *     the default implementation creates a spliterator that traverses
+     *     elements by invoking the method {@link java.util.List#get}.  If
+     *     such invocation results or would result in an
+     *     {@code IndexOutOfBoundsException} then the spliterator will
+     *     <em>fail-fast</em> and throw a {@code ConcurrentModificationException}.
+     *     If the list is also an instance of {@link java.util.AbstractList}
+     *     then the spliterator will use the list's
+     *     {@link java.util.AbstractList#modCount modCount} field to provide
+     *     additional <em>fail-fast</em> behavior.
+     * <li>Otherwise, the default implementation creates a spliterator from
+     *     the list's {@code Iterator}.  The spliterator inherits the
+     *     <em>fail-fast</em> of the list's iterator.
+     * </ul>
+     *
+     * <p>
      * The {@code Spliterator}s for {@code CopyOnWriteArrayList} and
      * {@code CopyOnWriteArraySet} provide a snapshot of the state of the
      * collection when the {@code Stream} was created, otherwise the created
@@ -125,6 +146,27 @@ public final class StreamSupport {
      * <li>java.util.concurrent.CopyOnWriteArraySet</li>
      * <li>The collections returned from the java.util.HashMap methods
      * #keySet(), #entrySet() and #values()</li>
+     * </ul>
+     *
+     * <p>
+     * Otherwise, if the given collection is a {@link java.util.List}, the
+     * implementation creates a
+     * <em><a href="../Spliterator.html#binding">late-binding</a></em>
+     * spliterator as follows:
+     * <ul>
+     * <li>If the list is an instance of {@link java.util.RandomAccess} then
+     *     the default implementation creates a spliterator that traverses
+     *     elements by invoking the method {@link java.util.List#get}.  If
+     *     such invocation results or would result in an
+     *     {@code IndexOutOfBoundsException} then the spliterator will
+     *     <em>fail-fast</em> and throw a {@code ConcurrentModificationException}.
+     *     If the list is also an instance of {@link java.util.AbstractList}
+     *     then the spliterator will use the list's
+     *     {@link java.util.AbstractList#modCount modCount} field to provide
+     *     additional <em>fail-fast</em> behavior.
+     * <li>Otherwise, the default implementation creates a spliterator from
+     *     the list's {@code Iterator}.  The spliterator inherits the
+     *     <em>fail-fast</em> of the list's iterator.
      * </ul>
      *
      * <p>

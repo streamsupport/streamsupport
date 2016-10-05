@@ -72,9 +72,23 @@ final class ImmutableCollections {
      */
     static final double EXPAND_FACTOR = 2.0;
 
+    static UnsupportedOperationException uoe() { return new UnsupportedOperationException(); }
+
     // ---------- List Implementations ----------
 
-    static final class List0<E> extends AbstractList<E> implements RandomAccess, Serializable {
+    abstract static class AbstractImmutableList<E> extends AbstractList<E>
+                                                implements RandomAccess, Serializable {
+        @Override public boolean add(E e) { throw uoe(); }
+        @Override public boolean addAll(Collection<? extends E> c) { throw uoe(); }
+        // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
+        @Override public boolean addAll(int index, Collection<? extends E> c) { rangeCheckForAdd(index, size()); throw uoe(); }
+        @Override public void    clear() { throw uoe(); }
+        @Override public boolean remove(Object o) { throw uoe(); }
+        @Override public boolean removeAll(Collection<?> c) { throw uoe(); }
+        @Override public boolean retainAll(Collection<?> c) { throw uoe(); }
+    }
+
+    static final class List0<E> extends AbstractImmutableList<E> {
         static final List0<Object> EMPTY_LIST = new List0<Object>();
 
         List0() { }
@@ -90,13 +104,6 @@ final class ImmutableCollections {
             return null;                  // but the compiler doesn't know this
         }
 
-        @Override
-        public boolean addAll(int index, Collection<? extends E> c) {
-            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
-            rangeCheckForAdd(index, size());
-            return super.addAll(index, c);
-        }
-
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -106,7 +113,7 @@ final class ImmutableCollections {
         }
     }
 
-    static final class List1<E> extends AbstractList<E> implements RandomAccess, Serializable {
+    static final class List1<E> extends AbstractImmutableList<E> {
         private final E e0;
 
         List1(E e0) {
@@ -125,13 +132,6 @@ final class ImmutableCollections {
             return e0;
         }
 
-        @Override
-        public boolean addAll(int index, Collection<? extends E> c) {
-            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
-            rangeCheckForAdd(index, size());
-            return super.addAll(index, c);
-        }
-
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -141,7 +141,7 @@ final class ImmutableCollections {
         }
     }
 
-    static final class List2<E> extends AbstractList<E> implements RandomAccess, Serializable {
+    static final class List2<E> extends AbstractImmutableList<E> {
         private final E e0;
         private final E e1;
 
@@ -165,13 +165,6 @@ final class ImmutableCollections {
             }
         }
 
-        @Override
-        public boolean addAll(int index, Collection<? extends E> c) {
-            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
-            rangeCheckForAdd(index, size());
-            return super.addAll(index, c);
-        }
-
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -181,7 +174,7 @@ final class ImmutableCollections {
         }
     }
 
-    static final class ListN<E> extends AbstractList<E> implements RandomAccess, Serializable {
+    static final class ListN<E> extends AbstractImmutableList<E> {
         private final E[] elements;
 
         ListN(E... input) {
@@ -205,13 +198,6 @@ final class ImmutableCollections {
             return elements[index];
         }
 
-        @Override
-        public boolean addAll(int index, Collection<? extends E> c) {
-            // Fix for JDK-4802633 on Java 6 and Apache Harmony-based Android
-            rangeCheckForAdd(index, size());
-            return super.addAll(index, c);
-        }
-
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
             throw new InvalidObjectException("not serial proxy");
         }
@@ -223,7 +209,16 @@ final class ImmutableCollections {
 
     // ---------- Set Implementations ----------
 
-    static final class Set0<E> extends AbstractSet<E> implements Serializable {
+    abstract static class AbstractImmutableSet<E> extends AbstractSet<E> implements Serializable {
+        @Override public boolean add(E e) { throw uoe(); }
+        @Override public boolean addAll(Collection<? extends E> c) { throw uoe(); }
+        @Override public void    clear() { throw uoe(); }
+        @Override public boolean remove(Object o) { throw uoe(); }
+        @Override public boolean removeAll(Collection<?> c) { throw uoe(); }
+        @Override public boolean retainAll(Collection<?> c) { throw uoe(); }
+    }
+
+    static final class Set0<E> extends AbstractImmutableSet<E> {
         static final Set0<Object> EMPTY_SET = new Set0<Object>();
 
         Set0() { }
@@ -252,7 +247,7 @@ final class ImmutableCollections {
         }
     }
 
-    static final class Set1<E> extends AbstractSet<E> implements Serializable {
+    static final class Set1<E> extends AbstractImmutableSet<E> {
         private final E e0;
 
         Set1(E e0) {
@@ -283,7 +278,7 @@ final class ImmutableCollections {
         }
     }
 
-    static final class Set2<E> extends AbstractSet<E> implements Serializable {
+    static final class Set2<E> extends AbstractImmutableSet<E> {
         final E e0;
         final E e1;
 
@@ -354,7 +349,7 @@ final class ImmutableCollections {
      * least one null is always present.
      * @param <E> the element type
      */
-    static final class SetN<E> extends AbstractSet<E> implements Serializable {
+    static final class SetN<E> extends AbstractImmutableSet<E> {
         final E[] elements;
         private final int size;
 
@@ -443,7 +438,14 @@ final class ImmutableCollections {
 
     // ---------- Map Implementations ----------
 
-    static final class Map0<K,V> extends AbstractMap<K,V> implements Serializable {
+    abstract static class AbstractImmutableMap<K,V> extends AbstractMap<K,V> implements Serializable {
+        @Override public void clear() { throw uoe(); }
+        @Override public V put(K key, V value) { throw uoe(); }
+        @Override public void putAll(Map<? extends K,? extends V> m) { throw uoe(); }
+        @Override public V remove(Object key) { throw uoe(); }
+    }
+
+    static final class Map0<K,V> extends AbstractImmutableMap<K,V> {
         static final Map0<Object, Object> EMPTY_MAP = new Map0<Object, Object>();
 
         Map0() { }
@@ -472,7 +474,7 @@ final class ImmutableCollections {
         }
     }
 
-    static final class Map1<K,V> extends AbstractMap<K,V> implements Serializable {
+    static final class Map1<K,V> extends AbstractImmutableMap<K,V> {
         private final K k0;
         private final V v0;
 
@@ -514,7 +516,7 @@ final class ImmutableCollections {
      * @param <K> the key type
      * @param <V> the value type
      */
-    static final class MapN<K,V> extends AbstractMap<K,V> implements Serializable {
+    static final class MapN<K,V> extends AbstractImmutableMap<K,V> {
         final Object[] table; // pairs of key, value
         final int size; // number of pairs
 

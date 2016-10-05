@@ -134,7 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
-// CVS rev. 1.60
+// CVS rev. 1.65
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -170,6 +170,8 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /** Fallback if ForkJoinPool.commonPool() cannot support parallelism */
     private static final class ThreadPerTaskExecutor implements Executor {
+        // avoid creation of synthetic class and bridge constructor
+        ThreadPerTaskExecutor() {}
         public void execute(Runnable r) { new Thread(r).start(); }
     }
 
@@ -527,8 +529,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                 while (r != null) {
                     BufferedSubscription<T> nextRetry = r.nextRetry;
                     r.nextRetry = null;
-                    int stat = (nanos > 0L) ? r.timedOffer(item, nanos) :
-                        r.offer(item);
+                    int stat = (nanos > 0L)
+                        ? r.timedOffer(item, nanos)
+                        : r.offer(item);
                     if (stat == 0 && onDrop != null &&
                         onDrop.test(r.subscriber, item))
                         stat = r.offer(item);
