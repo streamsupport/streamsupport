@@ -72,11 +72,11 @@ build.gradle:
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5.1'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.1'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.1'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.1'
-    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.1'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.2'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.2'
 }
 ```
 
@@ -112,7 +112,7 @@ dependencies {
 
 ## RELEASE NOTES
 
- - "1.5.1-stable" is the current stable release
+ - "1.5.2-stable" is the current stable release
 
 
 ## GENERAL
@@ -178,6 +178,23 @@ dependencies {
 
 
 ## VERSION HISTORY
+
+1.5.2-stable (2016-10-03)
+ - JDK-8164189: Collectors.toSet() parallel performance improvement
+ - JDK-8164691: Stream specification clarifications for iterate and collect
+ - JDK-8166465: minimalCompletionStage.toCompletableFuture should be non-minimal
+ - JDK-8162627: Misc. changes imported from jsr166 CVS 2016-08
+ - JDK-8164169: Misc. changes imported from jsr166 CVS 2016-09
+ - JDK-8165919: Misc. changes imported from jsr166 CVS 2016-09-21
+ - JDK-8159404: Immutable collections should throw UOE unconditionally
+ - JDK-8164983: CountedCompleter code samples and corresponding tests
+ - JDK-8166059: JSR166TestCase can fail with NPE
+ - JDK-8163210: Update JSR166TestCase to latest CVS revision
+ - enable JDK-8158365 RandomAccess optimization (#217)
+ - update ForkJoinTask(8)Tests to latest JSR 166 CVS revision (#220)
+ - replace synthetic bridge constructors by package-private constructors (#235)
+ - adapt HMSpliterators to latest Android 7.x changes (#222)
+ - test on Android 7.0 final (#223)
 
 1.5.1-stable (2016-07-30)
  - fixed: Android Harmony detection fails on JavaFXPorts (#210)
