@@ -253,29 +253,29 @@ public final class Optional<T> {
      * If a value is present, returns the result of applying the given
      * {@code Optional}-bearing mapping function to the value, otherwise returns
      * an empty {@code Optional}.
-     * 
+     *
      * <p>This method is similar to {@link #map(Function)}, but the mapping
      * function is one whose result is already an {@code Optional}, and if
      * invoked, {@code flatMap} does not wrap it within an additional
      * {@code Optional}.
      *
-     * @param <V> The type of value of the {@code Optional} returned by
-     * {@code flatMap}, a supertype of U
      * @param <U> The type of value of the {@code Optional} returned by the
-     * {@code mapper} function, a subtype of V  
+     *            mapping function
      * @param mapper the mapping function to apply to a value, if present
      * @return the result of applying an {@code Optional}-bearing mapping
-     * function to the value of this {@code Optional}, if a value is present,
-     * otherwise an empty {@code Optional}
+     *         function to the value of this {@code Optional}, if a value is
+     *         present, otherwise an empty {@code Optional}
      * @throws NullPointerException if the mapping function is {@code null} or
-     * returns a {@code null} result
+     *         returns a {@code null} result
      */
-    public <V, U extends V> Optional<V> flatMap(Function<? super T, Optional<U>> mapper) {
+    public <U> Optional<U> flatMap(Function<? super T, ? extends Optional<? extends U>> mapper) {
         Objects.requireNonNull(mapper);
         if (!isPresent()) {
             return empty();
         } else {
-            return (Optional<V>) Objects.requireNonNull(mapper.apply(value));
+            @SuppressWarnings("unchecked")
+            Optional<U> r = (Optional<U>) mapper.apply(value);
+            return Objects.requireNonNull(r);
         }
     }
 
@@ -283,8 +283,6 @@ public final class Optional<T> {
      * If a value is present, returns an {@code Optional} describing the value,
      * otherwise returns an {@code Optional} produced by the supplying function.
      *
-     * @param <S> the type of the Optional's value produced by the supplying
-     *        function, a subtype of T
      * @param supplier the supplying function that produces an {@code Optional}
      *        to be returned
      * @return returns an {@code Optional} describing the value of this
@@ -294,12 +292,14 @@ public final class Optional<T> {
      *         produces a {@code null} result
      * @since 9
      */
-    public <S extends T> Optional<T> or(Supplier<Optional<S>> supplier) {
+    public Optional<T> or(Supplier<? extends Optional<? extends T>> supplier) {
         Objects.requireNonNull(supplier);
         if (isPresent()) {
             return this;
         } else {
-            return (Optional<T>) Objects.requireNonNull(supplier.get());
+            @SuppressWarnings("unchecked")
+            Optional<T> r = (Optional<T>) supplier.get();
+            return Objects.requireNonNull(r);
         }
     }
 
