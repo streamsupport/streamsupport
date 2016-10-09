@@ -169,6 +169,7 @@
 
       <!-- block 15 (superseded or questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
+      <!--class name="org.openjdk.other.tests.forkjoin.MergeDemo"/-->
 
     </classes>
   </test>
