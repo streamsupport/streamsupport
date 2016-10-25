@@ -71,25 +71,27 @@ import java8.util.function.LongConsumer;
 public final class Spliterators {
 
     private static final String NATIVE_OPT_ENABLED_P = Spliterators.class.getName() + ".assume.oracle.collections.impl";
-    private static final String JRE_DELEGATION_ENABLED_P = Spliterators.class.getName() + ".jre.delegation.enabled";
+    private static final String DELEGATION_ENABLED_P = Spliterators.class.getName() + ".jre.delegation.enabled";
     private static final String RNDACC_SPLITER_ENABLED_P = Spliterators.class.getName() + ".randomaccess.spliterator.enabled";
 
     // defaults to true
     static final boolean NATIVE_SPECIALIZATION = getBooleanPropVal(NATIVE_OPT_ENABLED_P, true);
     // defaults to true
-    static final boolean JRE_DELEGATION_ENABLED = getBooleanPropVal(JRE_DELEGATION_ENABLED_P, true);
+    static final boolean DELEGATION_ENABLED = getBooleanPropVal(DELEGATION_ENABLED_P, true);
+
     // introduced in 1.4.3 - just in case something gets wrong (defaults to true)
     private static final boolean ALLOW_RNDACC_SPLITER_OPT = getBooleanPropVal(RNDACC_SPLITER_ENABLED_P, true);
     // is this RoboVM? (defaults to false)
-    private static final boolean IS_ROBOVM = isClassPresent("org.robovm.rt.bro.Bro");
+    private static final boolean IS_ROBOVM = isRoboVm();
+
     // is this Android? (defaults to false)
-    static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
+    static final boolean IS_ANDROID = isAndroid();
     // is this an Apache Harmony-based Android? (defaults to false)
     static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("android.opengl.GLES32$DebugProc");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
-    static final boolean JRE_HAS_STREAMS = isStreamEnabledJRE();
+    static final boolean HAS_STREAMS = isStreamEnabled();
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -909,8 +911,8 @@ public final class Spliterators {
     public static <T> Spliterator<T> spliterator(Collection<? extends T> c) {
         Objects.requireNonNull(c);
 
-        if (JRE_HAS_STREAMS && JRE_DELEGATION_ENABLED) {
-            return jreDelegatingSpliterator(c);
+        if (HAS_STREAMS && DELEGATION_ENABLED) {
+            return delegatingSpliterator(c);
         }
 
         String name = c.getClass().getName();
@@ -1041,7 +1043,7 @@ public final class Spliterators {
         return spliterator(c, 0);
     }
 
-    private static <T> Spliterator<T> jreDelegatingSpliterator(Collection<? extends T> c) {
+    private static <T> Spliterator<T> delegatingSpliterator(Collection<? extends T> c) {
         return new DelegatingSpliterator<T>(((Collection<T>) c).spliterator());
     }
 
@@ -3276,13 +3278,23 @@ public final class Spliterators {
         return isVersionBelow("java.class.version", 51.0);
     }
 
+    private static boolean isRoboVm() {
+        return isClassPresent("org.robovm.rt.bro.Bro");
+    }
+
+    private static boolean isAndroid() {
+        return isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
+    }
+
     /**
-     * Does the current JRE have the JSR 335 libraries?
+     * Does the current platform have the JSR 335 APIs?
      * @return {@code true} if yes, otherwise {@code false}.
      */
-    private static boolean isStreamEnabledJRE() {
+    private static boolean isStreamEnabled() {
         // a) must have at least major version number 52 (Java 8)
-        if (isVersionBelow("java.class.version", 52.0)) {
+        // or, alternatively, be an Android version that supports
+        // streams (check for that below)
+        if (!isAndroid() && isVersionBelow("java.class.version", 52.0)) {
             return false;
         }
         // b) j.u.f.Consumer & j.u.Spliterator must exist
