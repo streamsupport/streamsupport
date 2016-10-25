@@ -370,7 +370,7 @@ final class HMSpliterators {
 
         static Class<?> nodeClass() throws ClassNotFoundException {
             String nodeName = new StringBuilder("java.util.HashMap$")
-                    .append((Spliterators.IS_ANDROID || Spliterators.JRE_HAS_STREAMS) ? "Node"
+                    .append((Spliterators.IS_ANDROID || Spliterators.HAS_STREAMS) ? "Node"
                             : "Entry").toString();
             try {
                 return Class.forName(nodeName);
