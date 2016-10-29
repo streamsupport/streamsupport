@@ -400,12 +400,7 @@ public class SpliteratorCollisions {
         }
         assertEquals(dest.size(), exp.size());
 
-        if (isOrdered) {
-            assertEquals(dest, exp);
-        }
-        else {
-            assertContentsUnordered(dest, exp);
-        }
+        assertContents(dest, exp, isOrdered);
     }
 
     private static <T, S extends Spliterator<T>> void testSplitAfterFullTraversal(
