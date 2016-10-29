@@ -25,13 +25,40 @@ final class JDK8148748SublistBugIndicator {
             ver = ver.substring(0, 2);
             if ("52".equals(ver)) {
                 // b) Spliterator delegation must not be disabled
-                String s = System.getProperty(Spliterators.class.getName()
-                        + ".jre.delegation.enabled", Boolean.TRUE.toString());
-                return (s == null)
-                        || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
+                return isSpliteratorDelegationEnabled();
             }
         }
-        return false;
+        return isOpenJDKAndroid() && isSpliteratorDelegationEnabled();
+    }
+
+    private static boolean isSpliteratorDelegationEnabled() {
+        String s = System.getProperty(Spliterators.class.getName()
+                + ".jre.delegation.enabled", Boolean.TRUE.toString());
+        return (s == null)
+                || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
+    }
+
+    /**
+     * Are we running on Android 7+ ?
+     * 
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    private static boolean isOpenJDKAndroid() {
+        return isClassPresent("android.util.DisplayMetrics")
+                && isClassPresent("android.opengl.GLES32$DebugProc");
+    }
+
+    private static boolean isClassPresent(String name) {
+        Class<?> clazz = null;
+        try {
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false,
+                    JDK8148748SublistBugIndicator.class.getClassLoader());
+        } catch (Throwable notPresent) {
+            // ignore
+        }
+        return clazz != null;
     }
 
     private JDK8148748SublistBugIndicator() {
