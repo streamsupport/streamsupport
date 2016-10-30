@@ -69,8 +69,17 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
         return spliter.getComparator();
     }
 
+    // This method is only used from the test suite (for a
+    // testing workaround for an Android 7.0 bug in the
+    // collection view Spliterators of java.util.LinkedHashMap
+    // see https://sourceforge.net/p/streamsupport/tickets/240/)
     String getDelegateeImplementationName() {
         return spliter.getClass().getName();
+    }
+
+    // TODO: use this one as a substitute for getDelegateeImplementationName()
+    java.util.Spliterator<?> getDelegatee() {
+        return spliter;
     }
 
     /**
