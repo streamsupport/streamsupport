@@ -345,7 +345,7 @@ public class SpliteratorCollisions {
         }
         assertEquals(fromForEach.size(), exp.size());
 
-        assertContents(fromForEach, exp, isOrdered);
+        assertContents(fromForEach, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testTryAdvance(
@@ -372,7 +372,7 @@ public class SpliteratorCollisions {
         }
         assertEquals(fromTryAdvance.size(), exp.size());
 
-        assertContents(fromTryAdvance, exp, isOrdered);
+        assertContents(fromTryAdvance, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testMixedTryAdvanceForEach(
@@ -400,7 +400,7 @@ public class SpliteratorCollisions {
         }
         assertEquals(dest.size(), exp.size());
 
-        assertContents(dest, exp, isOrdered);
+        assertContents(dest, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testSplitAfterFullTraversal(
@@ -452,7 +452,7 @@ public class SpliteratorCollisions {
             if (s1Size >= 0 && s2Size >= 0)
                 assertEquals(sizeIfKnown, s1Size + s2Size);
         }
-        assertContents(fromSplit, exp, isOrdered);
+        assertContents(fromSplit, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testSplitSixDeep(
@@ -470,13 +470,13 @@ public class SpliteratorCollisions {
 
             // verify splitting with forEach
             visit(depth, 0, dest, spliterator, boxingAdapter, spliterator.characteristics(), false);
-            assertContents(dest, exp, isOrdered);
+            assertContents(dest, exp, isOrdered, spliterator);
 
             // verify splitting with tryAdvance
             dest.clear();
             spliterator = supplier.get();
             visit(depth, 0, dest, spliterator, boxingAdapter, spliterator.characteristics(), true);
-            assertContents(dest, exp, isOrdered);
+            assertContents(dest, exp, isOrdered, spliterator);
         }
     }
 
@@ -547,7 +547,7 @@ public class SpliteratorCollisions {
         Consumer<T> c = boxingAdapter.apply(splits::add);
 
         testSplitUntilNull(new SplitNode<T>(c, s));
-        assertContents(splits, exp, isOrdered);
+        assertContents(splits, exp, isOrdered, s);
     }
 
     private static class SplitNode<T> {
@@ -657,8 +657,9 @@ public class SpliteratorCollisions {
         }
     }
 
-    private static<T> void assertContents(Collection<T> actual, Collection<T> expected, boolean isOrdered) {
-        if (isOrdered) {
+    private static <T> void assertContents(Collection<T> actual, Collection<T> expected, boolean isOrdered, Spliterator<?> spliterator) {
+        // hasAndroidAPI24LHMBug() => workaround for Android 7.0 LinkedHashMap bug
+        if (isOrdered && !DelegationActive.hasAndroidAPI24LHMBug(spliterator)) {
             assertEquals(actual, expected);
         }
         else {
@@ -666,7 +667,7 @@ public class SpliteratorCollisions {
         }
     }
 
-    private static<T> void assertContentsUnordered(Iterable<T> actual, Iterable<T> expected) {
+    private static <T> void assertContentsUnordered(Iterable<T> actual, Iterable<T> expected) {
         assertEquals(toBoxedMultiset(actual), toBoxedMultiset(expected));
     }
 
@@ -698,5 +699,4 @@ public class SpliteratorCollisions {
                    String.format("Exception thrown %s not an instance of %s",
                                  caught.getClass().getName(), expected.getName()));
     }
-
 }

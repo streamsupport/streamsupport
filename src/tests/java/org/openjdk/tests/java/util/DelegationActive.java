@@ -20,7 +20,7 @@ final class DelegationActive {
     // views (entrySet(), keySet() and values()) report Spliterator.ORDERED (as
     // they should) but actually they are not ORDERED.
     // see https://sourceforge.net/p/streamsupport/tickets/240/
-    static boolean hasAndroidAPI24Bug(Spliterator<?> spliterator) {
+    static boolean hasAndroidAPI24LHMBug(Spliterator<?> spliterator) {
         if (Android7PlusDetector.IS_ANDROID_API24
                 && IS_SPLITERATOR_DELEGATION_ENABLED && spliterator != null) {
             if (spliterator.hasCharacteristics(Spliterator.ORDERED)) {
