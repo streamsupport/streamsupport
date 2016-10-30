@@ -30,6 +30,16 @@ final class DelegationActive {
                         || "java.util.HashMap$EntrySpliterator".equals(impl)) {
                     return true;
                 }
+                if ("java.util.Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntrySetSpliterator"
+                        .equals(impl)) {
+                    // This again might delegate to one of HashMap's collection
+                    // view Spliterators. We could check this by accessing
+                    // its "s" member by reflection but this is left for
+                    // another day. For now, we (incorrectly) purport that this
+                    // is always true and, as a consequence, simply don't check
+                    // for the encounter order.
+                    return true;
+                }
             }
         }
         return false;
