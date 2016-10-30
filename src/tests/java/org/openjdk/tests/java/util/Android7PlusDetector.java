@@ -1,8 +1,11 @@
 package org.openjdk.tests.java.util;
 
+import java.lang.reflect.Field;
+
 final class Android7PlusDetector {
 
     static final boolean IS_OPENJDK_ANDROID = isOpenJDKAndroid();
+    static final boolean IS_ANDROID_API24 = isAndroidAPI24(); 
 
     /**
      * Are we running on Android 7+ ?
@@ -12,6 +15,29 @@ final class Android7PlusDetector {
     static boolean isOpenJDKAndroid() {
         return isClassPresent("android.util.DisplayMetrics")
                 && isClassPresent("android.opengl.GLES32$DebugProc");
+    }
+
+    /**
+     * Are we running on Android API level 24 ?
+     * 
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    static boolean isAndroidAPI24() {
+        if (IS_OPENJDK_ANDROID) {
+            Field field = null;
+            try {
+                Class<?> clazz = Class.forName("android.util.DisplayMetrics");
+                // DENSITY_340 has been added in API level 25
+                try {
+                    field = clazz.getDeclaredField("DENSITY_340");
+                } catch (NoSuchFieldException e) {
+                    return true;
+                }
+            } catch (Throwable ignore) {
+            }
+            return field == null;
+        }
+        return false;
     }
 
     private static boolean isClassPresent(String name) {
