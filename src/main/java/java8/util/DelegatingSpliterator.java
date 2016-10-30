@@ -69,6 +69,10 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
         return spliter.getComparator();
     }
 
+    String getDelegateeImplementationName() {
+        return spliter.getClass().getName();
+    }
+
     /**
      * A j.u.f.Consumer implementation that delegates to a j8.u.f.Consumer.
      *
@@ -90,7 +94,6 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
             delegate.accept(t);
         }
 
-        // TODO: this can be spared in all likelihood !!?
         @Override
         public java.util.function.Consumer<T> andThen(
                 java.util.function.Consumer<? super T> after) {
