@@ -71,7 +71,7 @@ final class DelegationActive {
             getImplName = clazz
                     .getDeclaredMethod("getDelegateeImplementationName");
             getImplName.setAccessible(true);
-        } catch (Exception e) {
+        } catch (Throwable ignore) {
         }
         return getImplName;
     }
