@@ -48,6 +48,7 @@ final class DelegationActive {
     static String getDelegateeImplementationName(Spliterator<?> spliterator) {
         try {
             if (spliterator == null
+                    || GET_IMPL_NAME == null
                     || !"java8.util.DelegatingSpliterator".equals(spliterator
                             .getClass().getName())) {
                 return null;
@@ -61,16 +62,17 @@ final class DelegationActive {
     private DelegationActive() {
     }
 
-    private static final Method GET_IMPL_NAME;
-    static {
+    private static final Method GET_IMPL_NAME = getDelegateeAccessMethod();
+
+    static Method getDelegateeAccessMethod() {
+        Method getImplName = null;
         try {
             Class<?> clazz = Class.forName("java8.util.DelegatingSpliterator");
-            Method getImplName = clazz
+            getImplName = clazz
                     .getDeclaredMethod("getDelegateeImplementationName");
             getImplName.setAccessible(true);
-            GET_IMPL_NAME = getImplName;
         } catch (Exception e) {
-            throw new Error(e);
         }
+        return getImplName;
     }
 }
