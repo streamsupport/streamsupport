@@ -5,7 +5,9 @@ import java.lang.reflect.Field;
 final class Android7PlusDetector {
 
     static final boolean IS_OPENJDK_ANDROID = isOpenJDKAndroid();
-    static final boolean IS_ANDROID_API24 = isAndroidAPI24(); 
+    static final boolean IS_ANDROID_API24 = isAndroidAPI24();
+
+    private static final String DISPLAY_METRICS = "android.util.DisplayMetrics";
 
     /**
      * Are we running on Android 7+ ?
@@ -13,7 +15,7 @@ final class Android7PlusDetector {
      * @return {@code true} if yes, otherwise {@code false}.
      */
     static boolean isOpenJDKAndroid() {
-        return isClassPresent("android.util.DisplayMetrics")
+        return isClassPresent(DISPLAY_METRICS)
                 && isClassPresent("android.opengl.GLES32$DebugProc");
     }
 
@@ -26,7 +28,7 @@ final class Android7PlusDetector {
         if (IS_OPENJDK_ANDROID) {
             Field field = null;
             try {
-                Class<?> clazz = Class.forName("android.util.DisplayMetrics");
+                Class<?> clazz = Class.forName(DISPLAY_METRICS);
                 // DENSITY_340 has been added in API level 25
                 try {
                     field = clazz.getDeclaredField("DENSITY_340");
