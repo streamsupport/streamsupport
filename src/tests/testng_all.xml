@@ -142,6 +142,7 @@
       <!-- block 13 (JSR 166 TCK tests) -->
       <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
+      <class name="org.openjdk.tests.tck.CountedCompleter8Test"/>
       <class name="org.openjdk.tests.tck.DoubleAccumulatorTest"/>
       <class name="org.openjdk.tests.tck.DoubleAdderTest"/>
       <class name="org.openjdk.tests.tck.ForkJoinPool8Test"/>
