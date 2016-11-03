@@ -46,7 +46,8 @@ import java8.util.function.Predicate;
  * tasks are submitted to the pool from external clients.  Especially
  * when setting <em>asyncMode</em> to true in constructors, {@code
  * ForkJoinPool}s may also be appropriate for use with event-style
- * tasks that are never joined.
+ * tasks that are never joined. All worker threads are initialized
+ * with {@link Thread#isDaemon} set {@code true}.
  *
  * <p>A static {@link #commonPool()} is available and appropriate for
  * most applications. The common pool is used by any ForkJoinTask that
@@ -148,7 +149,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.329
+// CVS rev. 1.330
     /*
      * Implementation Overview
      *
