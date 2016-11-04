@@ -41,8 +41,6 @@ import java.util.NoSuchElementException;
 import java.util.RandomAccess;
 import java.util.Set;
 
-import java8.util.concurrent.ThreadLocalRandom;
-
 /**
  * Container class for immutable collections. Not part of the public API.
  * Mainly for namespace management and shared infrastructure.
@@ -60,7 +58,8 @@ final class ImmutableCollections {
      */
     static final int SALT;
     static {
-        SALT = ThreadLocalRandom.current().nextInt();
+        long nt = System.nanoTime();
+        SALT = (int) ((nt >>> 32) ^ nt);
     }
 
     /** No instances. */
@@ -70,7 +69,7 @@ final class ImmutableCollections {
      * The reciprocal of load factor. Given a number of elements
      * to store, multiply by this factor to get the table size.
      */
-    static final double EXPAND_FACTOR = 2.0;
+    static final int EXPAND_FACTOR = 2;
 
     static UnsupportedOperationException uoe() { return new UnsupportedOperationException(); }
 
@@ -357,7 +356,7 @@ final class ImmutableCollections {
         SetN(E... input) {
             size = input.length; // implicit nullcheck of input
 
-            elements = (E[]) new Object[(int) Math.ceil(EXPAND_FACTOR * input.length)];
+            elements = (E[]) new Object[EXPAND_FACTOR * input.length];
             for (int i = 0; i < input.length; i++) {
                 E e = Objects.requireNonNull(input[i]);
                 int idx = probe(e);
@@ -527,7 +526,7 @@ final class ImmutableCollections {
             }
             size = input.length >> 1;
 
-            int len = (int) Math.ceil(EXPAND_FACTOR * input.length);
+            int len = EXPAND_FACTOR * input.length;
             len = (len + 1) & ~1; // ensure table is even length
             table = new Object[len];
 
