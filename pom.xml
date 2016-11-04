@@ -54,7 +54,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<java8home>F:/Java/jdk1.8.0_102-64bit/</java8home>
+					<java8home>F:/Java/jdk1.8.0_112-64bit/</java8home>
 					<target>1.6</target>
 				</configuration>
 			</plugin>
