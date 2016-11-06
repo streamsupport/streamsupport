@@ -159,7 +159,7 @@
       <class name="org.openjdk.tests.tck.ThreadLocalRandom8Test"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandomTest"/>
 
-      <!-- Test dependencies block 14: streamsupport.jar + streamsupport-literal.jar -->
+      <!-- Test dependencies block 14: streamsupport-literal.jar (nothing else) -->
 
       <!-- block 14 (streamsupport-literal tests) -->
       <class name="org.openjdk.tests.java.util.EntrySetIterator"/>
