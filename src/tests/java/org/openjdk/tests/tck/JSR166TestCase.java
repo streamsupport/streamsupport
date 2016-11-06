@@ -40,6 +40,7 @@ import java.security.ProtectionDomain;
 import java.security.SecurityPermission;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -153,7 +154,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.207
+// CVS rev. 1.209
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1728,18 +1729,48 @@ public class JSR166TestCase extends TestCase {
         }
     }
 
+    void assertImmutable(Object o) {
+        if (o instanceof Collection) {
+            assertThrows(
+                UnsupportedOperationException.class,
+                new Runnable() { public void run() {
+                        ((Collection<?>) o).add(null);}});
+        }
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> T serialClone(T o) {
         try {
             ObjectInputStream ois = new ObjectInputStream
                 (new ByteArrayInputStream(serialBytes(o)));
             T clone = (T) ois.readObject();
+            if (o == clone) assertImmutable(o);
             assertSame(o.getClass(), clone.getClass());
             return clone;
         } catch (Throwable fail) {
             threadUnexpectedException(fail);
             return null;
         }
+    }
+
+    /**
+     * If o implements Cloneable and has a public clone method,
+     * returns a clone of o, else null.
+     */
+    @SuppressWarnings("unchecked")
+    <T> T cloneableClone(T o) {
+        if (!(o instanceof Cloneable)) return null;
+        final T clone;
+        try {
+            clone = (T) o.getClass().getMethod("clone").invoke(o);
+        } catch (NoSuchMethodException ok) {
+            return null;
+        } catch (Exception unexpected) {
+            throw new Error(unexpected);
+        }
+        assertNotSame(o, clone); // not 100% guaranteed by spec
+        assertSame(o.getClass(), clone.getClass());
+        return clone;
     }
 
     public void assertThrows(Class<? extends Throwable> expectedExceptionClass,
