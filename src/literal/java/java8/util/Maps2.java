@@ -27,8 +27,6 @@ package java8.util;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import java8.util.Objects;
-
 /**
  * A place for the new Java 9 <a href="http://openjdk.java.net/jeps/269">JEP
  * 269</a> {@code "Immutable Map Static Factory Methods"} in the {@link Map}
@@ -73,9 +71,8 @@ public final class Maps2 {
      *
      * @since 9
      */
-    @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> of() {
-        return (Map<K, V>) ImmutableCollections.Map0.EMPTY_MAP;
+        return ImmutableCollections.Map0.instance();
     }
 
     /**
@@ -389,11 +386,10 @@ public final class Maps2 {
      * @see Maps2#entry Maps.entry()
      * @since 9
      */
-    @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> ofEntries(Map.Entry<? extends K, ? extends V>... entries) {
-        Objects.requireNonNull(entries);
+        J9Collections.requireNonNull(entries);
         if (entries.length == 0) {
-            return (Map<K, V>) ImmutableCollections.Map0.EMPTY_MAP;
+            return ImmutableCollections.Map0.instance();
         } else if (entries.length == 1) {
             return new ImmutableCollections.Map1<K, V>(entries[0].getKey(),
                                                        entries[0].getValue());

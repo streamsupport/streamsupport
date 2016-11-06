@@ -68,9 +68,8 @@ public final class Lists2 {
      *
      * @since 9
      */
-    @SuppressWarnings("unchecked")
     public static <E> List<E> of() {
-        return (List<E>) ImmutableCollections.List0.EMPTY_LIST;
+        return ImmutableCollections.List0.instance();
     }
 
     /**

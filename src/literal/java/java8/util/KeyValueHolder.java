@@ -53,8 +53,8 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
     final V value;
 
     KeyValueHolder(K k, V v) {
-        key = Objects.requireNonNull(k);
-        value = Objects.requireNonNull(v);
+        key = J9Collections.requireNonNull(k);
+        value = J9Collections.requireNonNull(v);
     }
 
     /**

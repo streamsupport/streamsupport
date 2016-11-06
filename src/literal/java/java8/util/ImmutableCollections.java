@@ -88,9 +88,14 @@ final class ImmutableCollections {
     }
 
     static final class List0<E> extends AbstractImmutableList<E> {
-        static final List0<Object> EMPTY_LIST = new List0<Object>();
+        private static final List0<Object> INSTANCE = new List0<Object>();
 
-        List0() { }
+        @SuppressWarnings("unchecked")
+        static final <T> List0<T> instance() {
+            return (List0<T>) INSTANCE;
+        }
+
+        private List0() { }
 
         @Override
         public int size() {
@@ -99,8 +104,8 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            Objects.checkIndex(index, 0); // always throws IndexOutOfBoundsException
-            return null;                  // but the compiler doesn't know this
+            J9Collections.checkIndex(index, 0); // always throws IndexOutOfBoundsException
+            return null;                        // but the compiler doesn't know this
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -116,7 +121,7 @@ final class ImmutableCollections {
         private final E e0;
 
         List1(E e0) {
-            this.e0 = Objects.requireNonNull(e0);
+            this.e0 = J9Collections.requireNonNull(e0);
         }
 
         @Override
@@ -126,7 +131,7 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            Objects.checkIndex(index, 1);
+            J9Collections.checkIndex(index, 1);
             // assert index == 0
             return e0;
         }
@@ -145,8 +150,8 @@ final class ImmutableCollections {
         private final E e1;
 
         List2(E e0, E e1) {
-            this.e0 = Objects.requireNonNull(e0);
-            this.e1 = Objects.requireNonNull(e1);
+            this.e0 = J9Collections.requireNonNull(e0);
+            this.e1 = J9Collections.requireNonNull(e1);
         }
 
         @Override
@@ -156,7 +161,7 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            Objects.checkIndex(index, 2);
+            J9Collections.checkIndex(index, 2);
             if (index == 0) {
                 return e0;
             } else { // index == 1
@@ -181,7 +186,7 @@ final class ImmutableCollections {
             @SuppressWarnings("unchecked")
             E[] tmp = (E[]) new Object[input.length]; // implicit nullcheck of input
             for (int i = 0; i < input.length; i++) {
-                tmp[i] = Objects.requireNonNull(input[i]);
+                tmp[i] = J9Collections.requireNonNull(input[i]);
             }
             this.elements = tmp;
         }
@@ -193,7 +198,7 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            Objects.checkIndex(index, elements.length);
+            J9Collections.checkIndex(index, elements.length);
             return elements[index];
         }
 
@@ -218,9 +223,14 @@ final class ImmutableCollections {
     }
 
     static final class Set0<E> extends AbstractImmutableSet<E> {
-        static final Set0<Object> EMPTY_SET = new Set0<Object>();
+        private static final Set0<Object> INSTANCE = new Set0<Object>();
 
-        Set0() { }
+        @SuppressWarnings("unchecked")
+        static final <T> Set0<T> instance() {
+            return (Set0<T>) INSTANCE;
+        }
+
+        private Set0() { }
 
         @Override
         public int size() {
@@ -229,12 +239,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return super.contains(Objects.requireNonNull(o));
+            return super.contains(J9Collections.requireNonNull(o));
         }
 
         @Override
         public Iterator<E> iterator() {
-            return J8Collections.emptyIterator();
+            return J9Collections.emptyIterator();
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -250,7 +260,7 @@ final class ImmutableCollections {
         private final E e0;
 
         Set1(E e0) {
-            this.e0 = Objects.requireNonNull(e0);
+            this.e0 = J9Collections.requireNonNull(e0);
         }
 
         @Override
@@ -260,12 +270,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return super.contains(Objects.requireNonNull(o));
+            return super.contains(J9Collections.requireNonNull(o));
         }
 
         @Override
         public Iterator<E> iterator() {
-            return J8Collections.singletonIterator(e0);
+            return J9Collections.singletonIterator(e0);
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -282,8 +292,8 @@ final class ImmutableCollections {
         final E e1;
 
         Set2(E e0, E e1) {
-            Objects.requireNonNull(e0);
-            Objects.requireNonNull(e1);
+            J9Collections.requireNonNull(e0);
+            J9Collections.requireNonNull(e1);
 
             if (e0.equals(e1)) {
                 throw new IllegalArgumentException("duplicate element: " + e0);
@@ -305,12 +315,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return super.contains(Objects.requireNonNull(o));
+            return super.contains(J9Collections.requireNonNull(o));
         }
 
         @Override
         public Iterator<E> iterator() {
-            return new J8Collections.ImmutableIt<E>() {
+            return new J9Collections.ImmutableIt<E>() {
                 private int idx = 0;
 
                 @Override
@@ -358,7 +368,7 @@ final class ImmutableCollections {
 
             elements = (E[]) new Object[EXPAND_FACTOR * input.length];
             for (int i = 0; i < input.length; i++) {
-                E e = Objects.requireNonNull(input[i]);
+                E e = J9Collections.requireNonNull(input[i]);
                 int idx = probe(e);
                 if (idx >= 0) {
                     throw new IllegalArgumentException("duplicate element: " + e);
@@ -375,12 +385,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return probe(Objects.requireNonNull(o)) >= 0;
+            return probe(J9Collections.requireNonNull(o)) >= 0;
         }
 
         @Override
         public Iterator<E> iterator() {
-            return new J8Collections.ImmutableIt<E>() {
+            return new J9Collections.ImmutableIt<E>() {
                 private int idx = 0;
 
                 @Override
@@ -445,23 +455,28 @@ final class ImmutableCollections {
     }
 
     static final class Map0<K,V> extends AbstractImmutableMap<K,V> {
-        static final Map0<Object, Object> EMPTY_MAP = new Map0<Object, Object>();
+        private static final Map0<Object, Object> INSTANCE = new Map0<Object, Object>();
 
-        Map0() { }
+        @SuppressWarnings("unchecked")
+        static final <K, V> Map0<K, V> instance() {
+            return (Map0<K, V>) INSTANCE;
+        }
+
+        private Map0() { }
 
         @Override
         public Set<Map.Entry<K,V>> entrySet() {
-            return setOf();
+            return ImmutableCollections.Set0.instance();
         }
 
         @Override
         public boolean containsKey(Object o) {
-            return super.containsKey(Objects.requireNonNull(o));
+            return super.containsKey(J9Collections.requireNonNull(o));
         }
 
         @Override
         public boolean containsValue(Object o) {
-            return super.containsValue(Objects.requireNonNull(o));
+            return super.containsValue(J9Collections.requireNonNull(o));
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -478,8 +493,8 @@ final class ImmutableCollections {
         private final V v0;
 
         Map1(K k0, V v0) {
-            this.k0 = Objects.requireNonNull(k0);
-            this.v0 = Objects.requireNonNull(v0);
+            this.k0 = J9Collections.requireNonNull(k0);
+            this.v0 = J9Collections.requireNonNull(v0);
         }
 
         @Override
@@ -489,12 +504,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean containsKey(Object o) {
-            return super.containsKey(Objects.requireNonNull(o));
+            return super.containsKey(J9Collections.requireNonNull(o));
         }
 
         @Override
         public boolean containsValue(Object o) {
-            return super.containsValue(Objects.requireNonNull(o));
+            return super.containsValue(J9Collections.requireNonNull(o));
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -520,7 +535,7 @@ final class ImmutableCollections {
         final int size; // number of pairs
 
         MapN(Object... input) {
-            Objects.requireNonNull(input);
+            J9Collections.requireNonNull(input);
             if ((input.length & 1) != 0) {
                 throw new AssertionError("length is odd");
             }
@@ -531,8 +546,8 @@ final class ImmutableCollections {
             table = new Object[len];
 
             for (int i = 0; i < input.length; i += 2) {
-                Object k = Objects.requireNonNull(input[i]);
-                Object v = Objects.requireNonNull(input[i + 1]);
+                Object k = J9Collections.requireNonNull(input[i]);
+                Object v = J9Collections.requireNonNull(input[i + 1]);
                 int idx = probe(k);
                 if (idx >= 0) {
                     throw new IllegalArgumentException("duplicate key: " + k);
@@ -546,12 +561,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean containsKey(Object o) {
-            return probe(Objects.requireNonNull(o)) >= 0;
+            return probe(J9Collections.requireNonNull(o)) >= 0;
         }
 
         @Override
         public boolean containsValue(Object o) {
-            return super.containsValue(Objects.requireNonNull(o));
+            return super.containsValue(J9Collections.requireNonNull(o));
         }
 
         @Override
@@ -580,7 +595,7 @@ final class ImmutableCollections {
 
                 @Override
                 public Iterator<Map.Entry<K,V>> iterator() {
-                    return new J8Collections.ImmutableIt<Map.Entry<K,V>>() {
+                    return new J9Collections.ImmutableIt<Map.Entry<K,V>>() {
                         int idx = 0;
 
                         @Override
@@ -652,10 +667,10 @@ final class ImmutableCollections {
     }
 
     static <E> List<E> listOf(E[] elements) { // streamsupport added
-        Objects.requireNonNull(elements);
+        J9Collections.requireNonNull(elements);
         switch (elements.length) {
             case 0:
-                return (List<E>) List0.EMPTY_LIST;
+                return List0.instance();
             case 1:
                 return new ImmutableCollections.List1<E>(elements[0]);
             case 2:
@@ -665,20 +680,15 @@ final class ImmutableCollections {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    static <E> Set<E> setOf() { // streamsupport added
-        return (Set<E>) Set0.EMPTY_SET;
-    }
-
     static <E> Set<E> setOf(E e1) { // streamsupport added
         return new ImmutableCollections.Set1<E>(e1);
     }
 
     static <E> Set<E> setOf(E[] elements) { // streamsupport added
-        Objects.requireNonNull(elements);
+        J9Collections.requireNonNull(elements);
         switch (elements.length) {
             case 0:
-                return setOf();
+                return ImmutableCollections.Set0.instance();
             case 1:
                 return new ImmutableCollections.Set1<E>(elements[0]);
             case 2:
@@ -840,7 +850,7 @@ final class CollSer implements Serializable {
                     return ImmutableCollections.setOf(array);
                 case IMM_MAP:
                     if (array.length == 0) {
-                        return ImmutableCollections.Map0.EMPTY_MAP;
+                        return ImmutableCollections.Map0.instance();
                     } else if (array.length == 2) {
                         return new ImmutableCollections.Map1<Object, Object>(array[0], array[1]);
                     } else {

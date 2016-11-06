@@ -72,7 +72,7 @@ public final class Sets2 {
      * @since 9
      */
     public static <E> Set<E> of() {
-        return ImmutableCollections.setOf();
+        return ImmutableCollections.Set0.instance();
     }
 
     /**

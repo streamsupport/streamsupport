@@ -29,11 +29,6 @@
 	</scm>
 
 	<dependencies>
-		<dependency>
-			<groupId>net.sourceforge.streamsupport</groupId>
-			<artifactId>streamsupport</artifactId>
-			<version>1.5.3-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 	<properties>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
