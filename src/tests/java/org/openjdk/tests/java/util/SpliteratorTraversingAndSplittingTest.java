@@ -59,7 +59,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
-//import java.util.WeakHashMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -582,18 +582,22 @@ public class SpliteratorTraversingAndSplittingTest {
 
 //            db.addMap(IdentityHashMap::new);
 
-            // Android's WeakHashMap fails in 24 tests
-//            db.addMap(WeakHashMap::new);
+            // Apache Harmony Android's WeakHashMap fails in 24 tests
+            if (!Android7PlusDetector.IS_HARMONY_ANDROID) {
+                db.addMap(WeakHashMap::new);
+            }
 
-            // Android's WeakHashMap fails in 24 tests
-//            db.addMap(m -> {
-//                // Create a Map ensuring that for large sizes
-//                // buckets will be consist of 2 or more entries
-//                WeakHashMap<Integer, Integer> cm = new WeakHashMap<>(1, m.size() + 1);
-//                for (Map.Entry<Integer, Integer> e : m.entrySet())
-//                    cm.put(e.getKey(), e.getValue());
-//                return cm;
-//            }, "new java.util.WeakHashMap(1, size + 1)");
+            // Apache Harmony Android's WeakHashMap fails in 24 tests
+            if (!Android7PlusDetector.IS_HARMONY_ANDROID) {
+                db.addMap(m -> {
+                    // Create a Map ensuring that for large sizes
+                    // buckets will be consist of 2 or more entries
+                    WeakHashMap<Integer, Integer> cm = new WeakHashMap<>(1, m.size() + 1);
+                    for (Map.Entry<Integer, Integer> e : m.entrySet())
+                        cm.put(e.getKey(), e.getValue());
+                    return cm;
+                }, "new java.util.WeakHashMap(1, size + 1)");
+            }
 
             // @@@  Descending maps etc
             db.addMap(TreeMap::new);
