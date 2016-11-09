@@ -52,7 +52,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.14
+// CVS rev. 1.15
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -971,7 +971,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         AtomicInteger sum = new AtomicInteger();
         SubmissionPublisher<Integer> p = basicPublisher();
         CompletableFuture<Void> f =
-            p.consume((Integer x) -> { sum.getAndAdd(x.intValue()); });
+            p.consume((Integer x) -> sum.getAndAdd(x.intValue()));
         int n = 20;
         for (int i = 1; i <= n; ++i)
             p.submit(i);
