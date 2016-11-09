@@ -154,7 +154,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.209
+// CVS rev. 1.210
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1729,7 +1729,7 @@ public class JSR166TestCase extends TestCase {
         }
     }
 
-    void assertImmutable(Object o) {
+    void assertImmutable(final Object o) {
         if (o instanceof Collection) {
             assertThrows(
                 UnsupportedOperationException.class,
