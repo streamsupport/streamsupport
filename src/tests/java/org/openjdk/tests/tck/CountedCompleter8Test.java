@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleter8Test extends JSR166TestCase {
-// CVS rev. 1.1
+// CVS rev. 1.2
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -127,7 +127,7 @@ public class CountedCompleter8Test extends JSR166TestCase {
         Integer[] a = new Integer[n];
         for (int i = 0; i < n; i++) a[i] = i + 1;
         AtomicInteger ai = new AtomicInteger(0);
-        action.accept(a, (x) -> ai.addAndGet(x));
+        action.accept(a, x -> ai.addAndGet(x));
         assertEquals(n * (n + 1) / 2, ai.get());
     }
 
