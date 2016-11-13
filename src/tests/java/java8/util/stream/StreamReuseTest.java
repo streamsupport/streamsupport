@@ -53,13 +53,15 @@ public class StreamReuseTest {
         catch (Throwable e) {
             if (exception.isAssignableFrom(e.getClass())) {
                 // Expected
-            }
-            else if (e instanceof Error)
+            } else if (e instanceof Error) {
                 throw (Error) e;
-            else if (e instanceof RuntimeException)
+            } else if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
-            else
-                throw new AssertionError("Unexpected exception " + e.getClass(), e);
+            } else {
+                AssertionError ae = new AssertionError("Unexpected exception " + e.getClass());
+                ae.initCause(e);
+                throw ae;
+            }
         }
 
         stream = data.parallelStream();
@@ -72,13 +74,15 @@ public class StreamReuseTest {
         catch (Throwable e) {
             if (exception.isAssignableFrom(e.getClass())) {
                 // Expected
-            }
-            else if (e instanceof Error)
+            } else if (e instanceof Error) {
                 throw (Error) e;
-            else if (e instanceof RuntimeException)
+            } else if (e instanceof RuntimeException) {
                 throw (RuntimeException) e;
-            else
-                throw new AssertionError("Unexpected exception " + e.getClass(), e);
+            } else {
+                AssertionError ae = new AssertionError("Unexpected exception " + e.getClass());
+                ae.initCause(e);
+                throw ae;
+            }
         }
     }
 

@@ -303,8 +303,10 @@ public class ParallelPrefix {
         try {
             assertEquals(actual, expected, "");
         } catch (AssertionError x) {
-            throw new AssertionError(String.format("Expected:%s, actual:%s",
-                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+            AssertionError ae = new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)));
+            ae.initCause(x);
+            throw ae;
         }
     }
 
@@ -312,8 +314,10 @@ public class ParallelPrefix {
         try {
             assertEquals(actual, expected, "");
         } catch (AssertionError x) {
-            throw new AssertionError(String.format("Expected:%s, actual:%s",
-                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+            AssertionError ae = new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)));
+            ae.initCause(x);
+            throw ae;
         }
     }
 
@@ -321,8 +325,10 @@ public class ParallelPrefix {
         try {
             assertEquals(actual, expected, "");
         } catch (AssertionError x) {
-            throw new AssertionError(String.format("Expected:%s, actual:%s",
-                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+            AssertionError ae = new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)));
+            ae.initCause(x);
+            throw ae;
         }
     }
 
@@ -330,8 +336,10 @@ public class ParallelPrefix {
         try {
             assertEquals(actual, expected, "");
         } catch (AssertionError x) {
-            throw new AssertionError(String.format("Expected:%s, actual:%s",
-                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)), x);
+            AssertionError ae = new AssertionError(String.format("Expected:%s, actual:%s",
+                    java.util.Arrays.toString(expected), java.util.Arrays.toString(actual)));
+            ae.initCause(x);
+            throw ae;
         }
     }
 }
