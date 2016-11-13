@@ -42,6 +42,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ThreadLocalRandomTest extends JSR166TestCase {
+// CVS rev. 1.22
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
