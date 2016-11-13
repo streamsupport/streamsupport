@@ -6,10 +6,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * TODO ...
+ * A {@link RetentionPolicy#CLASS} annotation for build time detection of
+ * accidental use of APIs not compatible with Java 6. Should <b>NOT</b> be
+ * included in the binary distribution!
+ * 
  * @since 1.5.3
- */ 
+ */
 @Retention(RetentionPolicy.CLASS)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface IgnoreJava8API {
 }
