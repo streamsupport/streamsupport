@@ -7,7 +7,7 @@ package java8.util;
 
 import java.util.Comparator;
 
-import annotation.IgnoreJava8API;
+import build.IgnoreJava8API;
 
 import java8.util.function.Consumer;
 import java8.util.function.Consumers;

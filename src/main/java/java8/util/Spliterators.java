@@ -53,7 +53,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
-import annotation.IgnoreJava8API;
+import build.IgnoreJava8API;
 
 import java8.util.Objects;
 import java8.util.function.Consumer;
