@@ -66,6 +66,8 @@
 					<excludes>
 						<!-- exclude j.u.Random compilation stub -->
 						<exclude>java/**</exclude>
+						<!-- exclude annotation.IgnoreJava8API annotation -->
+						<exclude>annotation/**</exclude>
 					</excludes>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
@@ -109,6 +111,25 @@ unction;java8.util.stream</Export-Package>
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<!-- check for Java API calls that aren't compatible with Java 6 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<version>1.15</version>
+				<configuration>
+					<signature>
+						<groupId>org.codehaus.mojo.signature</groupId>
+						<artifactId>java16</artifactId>
+						<version>1.1</version>
+					</signature>
+					<annotations>
+					   <annotation>annotation.IgnoreJava8API</annotation>
+					</annotations>
+					<ignores>
+						<ignore>sun.misc.Unsafe</ignore>
+					</ignores>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

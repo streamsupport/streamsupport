@@ -53,6 +53,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import annotation.IgnoreJava8API;
+
 import java8.util.Objects;
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
@@ -1043,6 +1045,7 @@ public final class Spliterators {
         return spliterator(c, 0);
     }
 
+    @IgnoreJava8API
     private static <T> Spliterator<T> delegatingSpliterator(Collection<? extends T> c) {
         return new DelegatingSpliterator<T>(((Collection<T>) c).spliterator());
     }

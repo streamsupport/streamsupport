@@ -7,6 +7,8 @@ package java8.util;
 
 import java.util.Comparator;
 
+import annotation.IgnoreJava8API;
+
 import java8.util.function.Consumer;
 import java8.util.function.Consumers;
 
@@ -16,6 +18,7 @@ import java8.util.function.Consumers;
  * @param <T>
  *            the type of the input to the operation
  */
+@IgnoreJava8API
 final class DelegatingSpliterator<T> implements Spliterator<T> {
 
     private final java.util.Spliterator<T> spliter;
@@ -97,6 +100,7 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
         }
 
         @Override
+        @IgnoreJava8API
         public java.util.function.Consumer<T> andThen(
                 java.util.function.Consumer<? super T> after) {
 
