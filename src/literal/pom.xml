@@ -85,6 +85,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- check for Java API calls that aren't compatible with Java 6 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<version>1.15</version>
+				<configuration>
+					<signature>
+						<groupId>org.codehaus.mojo.signature</groupId>
+						<artifactId>java16</artifactId>
+						<version>1.1</version>
+					</signature>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>
