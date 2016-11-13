@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * A {@link RetentionPolicy#CLASS} annotation for build time detection of
- * accidental use of APIs not compatible with Java 6. Should <b>NOT</b> be
- * included in the binary distribution!
+ * accidental use of APIs not compatible with Java 6 - should <b>NOT</b>
+ * be included in the binary distribution!
  * 
  * @since 1.5.3
  */
