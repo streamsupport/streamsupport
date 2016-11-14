@@ -12,7 +12,7 @@ import java8.util.stream.IntStream;
 import java8.util.stream.LongStream;
 
 /**
- * A compilation stub only - must <b>NOT</b> be included in the
+ * A compilation stub only - <b>must not</b> be included in the
  * binary distribution!
  */
 @SuppressWarnings("serial")
