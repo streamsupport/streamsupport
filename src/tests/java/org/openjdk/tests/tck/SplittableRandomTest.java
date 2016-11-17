@@ -42,7 +42,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class SplittableRandomTest extends JSR166TestCase {
-// CVS rev. 1.20
+// CVS rev. 1.21
 
 //    public static void main(String[] args) {
 //        main(suite(), args);

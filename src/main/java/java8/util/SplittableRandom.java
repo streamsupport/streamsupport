@@ -91,7 +91,7 @@ import java8.util.stream.DoubleStream;
  * @since   1.8
  */
 public final class SplittableRandom {
-// CVS rev. 1.36
+// CVS rev. 1.37
 
     /*
      * Implementation Overview.
