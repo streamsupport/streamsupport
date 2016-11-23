@@ -30,10 +30,12 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java8.util.function.Consumer;
 import java8.util.Spliterator;
 
-// Spliterator for java.util.concurrent.PriorityBlockingQueue
-// Avoids commitment to toArray() until needed
+/*
+ * Spliterator for java.util.concurrent.PriorityBlockingQueue.
+ * Immutable snapshot spliterator that binds to elements "late".
+ */
 final class PBQueueSpliterator<E> implements Spliterator<E> {
-
+// CVS rev. 1.117
     private final PriorityBlockingQueue<E> queue;
     private Object[] array;
     private int index;
