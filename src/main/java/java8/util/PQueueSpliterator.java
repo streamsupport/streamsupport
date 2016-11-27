@@ -33,6 +33,7 @@ import java8.util.function.Consumer;
 
 // Spliterator for java.util.PriorityQueue
 final class PQueueSpliterator<E> implements Spliterator<E> {
+// CVS rev. 1.108
     /*
      * This is very similar to ArrayList Spliterator, except for
      * extra null checks.
@@ -42,7 +43,7 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
     private int fence;            // -1 until first use
     private int expectedModCount; // initialized when fence set
 
-    /** Creates new spliterator covering the given range */
+    /** Creates new spliterator covering the given range. */
     private PQueueSpliterator(PriorityQueue<E> pq, int origin, int fence,
                          int expectedModCount) {
         this.pq = pq;
