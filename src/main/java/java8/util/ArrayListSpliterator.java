@@ -70,7 +70,6 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
      */
 
     private final ArrayList<E> list;
-//    private final Object[] elementData;
     private int index; // current index, modified on advance/split
     private int fence; // -1 until used; then one past last index
     private int expectedModCount; // initialized when fence set
@@ -79,7 +78,6 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     private ArrayListSpliterator(ArrayList<E> list, int origin, int fence,
                          int expectedModCount) {
         this.list = list; // OK if null unless traversed
-//        this.elementData = (this.list != null) ? getData(this.list) : null;
         this.index = origin;
         this.fence = fence;
         this.expectedModCount = expectedModCount;
@@ -117,7 +115,6 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
         int hi = getFence(), i = index;
         if (i < hi) {
             index = i + 1;
-//            @SuppressWarnings("unchecked") E e = (E) elementData[i];
             @SuppressWarnings("unchecked") E e = (E) getData(list)[i];
             action.accept(e);
             if (expectedModCount != getModCount(list)) {
