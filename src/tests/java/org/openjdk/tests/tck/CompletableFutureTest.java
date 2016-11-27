@@ -82,7 +82,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.180
+// CVS rev. 1.181
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -3736,7 +3736,7 @@ public class CompletableFutureTest extends JSR166TestCase {
     public void testCompleteAsync2() {
         CompletableFuture<Integer> f = new CompletableFuture<>();
         CFException ex = new CFException();
-        f.completeAsync(() -> {if (true) throw ex; return 1;});
+        f.completeAsync(() -> { throw ex; });
         try {
             f.join();
             shouldThrow();
@@ -3766,7 +3766,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         CompletableFuture<Integer> f = new CompletableFuture<>();
         CFException ex = new CFException();
         ThreadExecutor executor = new ThreadExecutor();
-        f.completeAsync(() -> {if (true) throw ex; return 1;}, executor);
+        f.completeAsync(() -> { throw ex; }, executor);
         try {
             f.join();
             shouldThrow();
