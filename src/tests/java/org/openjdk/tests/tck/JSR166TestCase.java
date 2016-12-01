@@ -1754,6 +1754,26 @@ public class JSR166TestCase extends TestCase {
     }
 
     /**
+     * A version of serialClone that leaves error handling (for
+     * e.g. NotSerializableException) up to the caller.
+     */
+    @SuppressWarnings("unchecked")
+    <T> T serialClonePossiblyFailing(T o)
+        throws Exception {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        oos.writeObject(o);
+        oos.flush();
+        oos.close();
+        ObjectInputStream ois = new ObjectInputStream
+            (new ByteArrayInputStream(bos.toByteArray()));
+        T clone = (T) ois.readObject();
+        if (o == clone) assertImmutable(o);
+        assertSame(o.getClass(), clone.getClass());
+        return clone;
+    }
+
+    /**
      * If o implements Cloneable and has a public clone method,
      * returns a clone of o, else null.
      */
