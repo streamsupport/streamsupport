@@ -85,7 +85,7 @@ import java8.util.concurrent.ConcurrentMaps;
  *
  *     // Compute sum of salaries of employee
  *     int total = employees.stream()
- *                          .collect(Collectors.summingInt(Employee::getSalary)));
+ *                          .collect(Collectors.summingInt(Employee::getSalary));
  *
  *     // Group employees by department
  *     Map<Department, List<Employee>> byDept
@@ -1442,7 +1442,7 @@ public final class Collectors {
      * <pre>{@code
      *     Map<String, Student> studentIdToStudent
      *         students.stream().collect(toMap(Student::getId,
-     *                                         Functions.identity());
+     *                                         Functions.identity()));
      * }</pre>
      *
      * <p><b>Implementation Note:</b><br>
@@ -1617,7 +1617,7 @@ public final class Collectors {
      * <pre>{@code
      *     Map<String, Student> studentIdToStudent
      *         students.stream().collect(toConcurrentMap(Student::getId,
-     *                                                   Functions.identity());
+     *                                                   Functions.identity()));
      * }</pre>
      *
      * <p>This is a {@link Collector.Characteristics#CONCURRENT concurrent} and
