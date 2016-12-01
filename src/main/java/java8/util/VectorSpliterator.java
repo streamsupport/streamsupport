@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -34,7 +34,7 @@ import java8.util.function.Consumer;
 
 /** Similar to ArrayListSpliterator */
 final class VectorSpliterator<E> implements Spliterator<E> {
-
+// CVS rev. 1.37
     private final Vector<E> list;
     private Object[] array;
     private int index; // current index, modified on advance/split
@@ -96,25 +96,23 @@ final class VectorSpliterator<E> implements Spliterator<E> {
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         int i, hi; // hoist accesses and checks from loop
-        Vector<E> lst;
+        Vector<E> lst = list;
         Object[] a;
-        if ((lst = list) != null) {
-            if ((hi = fence) < 0) {
-                synchronized (lst) {
-                    expectedModCount = getModCount(lst);
-                    a = array = getData(lst);
-                    hi = fence = getSize(lst);
-                }
-            } else {
-                a = array;
+        if ((hi = fence) < 0) {
+            synchronized (lst) {
+                expectedModCount = getModCount(lst);
+                a = array = getData(lst);
+                hi = fence = getSize(lst);
             }
-            if (a != null && (i = index) >= 0 && (index = hi) <= a.length) {
-                while (i < hi) {
-                    action.accept((E) a[i++]);
-                }
-                if (expectedModCount == getModCount(lst)) {
-                    return;
-                }
+        } else {
+            a = array;
+        }
+        if (a != null && (i = index) >= 0 && (index = hi) <= a.length) {
+            while (i < hi) {
+                action.accept((E) a[i++]);
+            }
+            if (expectedModCount == getModCount(lst)) {
+                return;
             }
         }
         throw new ConcurrentModificationException();
