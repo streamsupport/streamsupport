@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -1433,14 +1433,14 @@ public final class Collectors {
      * For example, the following produces a {@code Map} mapping
      * students to their grade point average:
      * <pre>{@code
-     *     Map<Student, Double> studentToGPA
+     *     Map<Student, Double> studentToGPA =
      *         students.stream().collect(toMap(Functions.identity(),
      *                                         student -> computeGPA(student)));
      * }</pre>
      * And the following produces a {@code Map} mapping a unique identifier to
      * students:
      * <pre>{@code
-     *     Map<String, Student> studentIdToStudent
+     *     Map<String, Student> studentIdToStudent =
      *         students.stream().collect(toMap(Student::getId,
      *                                         Functions.identity()));
      * }</pre>
@@ -1498,7 +1498,7 @@ public final class Collectors {
      * do as follows to gracefully deals with these collisions, and produce a
      * {@code Map} mapping names to a concatenated list of addresses:
      * <pre>{@code
-     *     Map<String, String> phoneBook
+     *     Map<String, String> phoneBook =
      *         people.stream().collect(toMap(Person::getName,
      *                                       Person::getAddress,
      *                                       (s, a) -> s + ", " + a));
@@ -1605,17 +1605,17 @@ public final class Collectors {
      * It is common for either the key or the value to be the input elements.
      * In this case, the utility method
      * {@link java8.util.function.Functions#identity()} may be helpful.
-     * For example, the following produces a {@code Map} mapping
+     * For example, the following produces a {@code ConcurrentMap} mapping
      * students to their grade point average:
      * <pre>{@code
-     *     Map<Student, Double> studentToGPA
-     *         students.stream().collect(toMap(Functions.identity(),
-     *                                         student -> computeGPA(student)));
+     *     ConcurrentMap<Student, Double> studentToGPA =
+     *         students.stream().collect(toConcurrentMap(Functions.identity(),
+     *                                                   student -> computeGPA(student)));
      * }</pre>
-     * And the following produces a {@code Map} mapping a unique identifier to
-     * students:
+     * And the following produces a {@code ConcurrentMap} mapping a
+     * unique identifier to students:
      * <pre>{@code
-     *     Map<String, Student> studentIdToStudent
+     *     ConcurrentMap<String, Student> studentIdToStudent =
      *         students.stream().collect(toConcurrentMap(Student::getId,
      *                                                   Functions.identity()));
      * }</pre>
@@ -1668,7 +1668,7 @@ public final class Collectors {
      * do as follows to gracefully deals with these collisions, and produce a
      * {@code Map} mapping names to a concatenated list of addresses:
      * <pre>{@code
-     *     Map<String, String> phoneBook
+     *     ConcurrentMap<String, String> phoneBook =
      *         people.stream().collect(toConcurrentMap(Person::getName,
      *                                                 Person::getAddress,
      *                                                 (s, a) -> s + ", " + a));
