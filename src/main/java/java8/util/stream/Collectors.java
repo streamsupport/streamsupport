@@ -1233,7 +1233,7 @@ public final class Collectors {
      * <p>The classification function maps elements to some key type {@code K}.
      * The downstream collector operates on elements of type {@code T} and
      * produces a result of type {@code D}. The resulting collector produces a
-     * {@code Map<K, D>}.
+     * {@code ConcurrentMap<K, D>}.
      * 
      * <p>There are no guarantees on the type, mutability, or serializability
      * of the {@code ConcurrentMap} returned.
@@ -1278,7 +1278,7 @@ public final class Collectors {
      * <p>The classification function maps elements to some key type {@code K}.
      * The downstream collector operates on elements of type {@code T} and
      * produces a result of type {@code D}. The resulting collector produces a
-     * {@code Map<K, D>}.
+     * {@code ConcurrentMap<K, D>}.
      *
      * <p>For example, to compute the set of last names of people in each city,
      * where the city names are sorted:
@@ -1417,7 +1417,7 @@ public final class Collectors {
      * {@code Map} whose keys and values are the result of applying the provided
      * mapping functions to the input elements.
      *
-     * <p>If the mapped keys contains duplicates (according to
+     * <p>If the mapped keys contain duplicates (according to
      * {@link Object#equals(Object)}), an {@code IllegalStateException} is
      * thrown when the collection operation is performed.  If the mapped keys
      * may have duplicates, use {@link #toMap(Function, Function, BinaryOperator)}
@@ -1480,10 +1480,9 @@ public final class Collectors {
      * {@code Map} whose keys and values are the result of applying the provided
      * mapping functions to the input elements.
      *
-     * <p>If the mapped
-     * keys contains duplicates (according to {@link Object#equals(Object)}),
-     * the value mapping function is applied to each equal element, and the
-     * results are merged using the provided merging function.
+     * <p>If the mapped keys contain duplicates (according to
+     * {@link Object#equals(Object)}), the value mapping function is applied to
+     * each equal element, and the results are merged using the provided merging function.
      * 
      * <p>There are no guarantees on the type, mutability, serializability,
      * or thread-safety of the {@code Map} returned.
@@ -1542,11 +1541,10 @@ public final class Collectors {
      * {@code Map} whose keys and values are the result of applying the provided
      * mapping functions to the input elements.
      *
-     * <p>If the mapped
-     * keys contains duplicates (according to {@link Object#equals(Object)}),
-     * the value mapping function is applied to each equal element, and the
-     * results are merged using the provided merging function.  The {@code Map}
-     * is created by a provided supplier function.
+     * <p>If the mapped keys contain duplicates (according to
+     * {@link Object#equals(Object)}), the value mapping function is applied to
+     * each equal element, and the* results are merged using the provided merging
+     * function.  The {@code Map} is created by a provided supplier function.
      *
      * <p><b>Implementation Note:</b><br>
      * The returned {@code Collector} is not concurrent.  For parallel stream
@@ -1592,7 +1590,7 @@ public final class Collectors {
      * {@code ConcurrentMap} whose keys and values are the result of applying
      * the provided mapping functions to the input elements.
      *
-     * <p>If the mapped keys contains duplicates (according to
+     * <p>If the mapped keys contain duplicates (according to
      * {@link Object#equals(Object)}), an {@code IllegalStateException} is
      * thrown when the collection operation is performed.  If the mapped keys
      * may have duplicates, use
@@ -1651,7 +1649,7 @@ public final class Collectors {
      * {@code ConcurrentMap} whose keys and values are the result of applying
      * the provided mapping functions to the input elements.
      *
-     * <p>If the mapped keys contains duplicates (according to {@link Object#equals(Object)}),
+     * <p>If the mapped keys contain duplicates (according to {@link Object#equals(Object)}),
      * the value mapping function is applied to each equal element, and the
      * results are merged using the provided merging function.
      * 
@@ -1708,7 +1706,7 @@ public final class Collectors {
      * {@code ConcurrentMap} whose keys and values are the result of applying
      * the provided mapping functions to the input elements.
      *
-     * <p>If the mapped keys contains duplicates (according to {@link Object#equals(Object)}),
+     * <p>If the mapped keys contain duplicates (according to {@link Object#equals(Object)}),
      * the value mapping function is applied to each equal element, and the
      * results are merged using the provided merging function.  The
      * {@code ConcurrentMap} is created by a provided supplier function.
@@ -1725,8 +1723,8 @@ public final class Collectors {
      * @param mergeFunction a merge function, used to resolve collisions between
      *                      values associated with the same key, as supplied
      *                      to {@link ConcurrentMaps#merge(ConcurrentMap, Object, Object, BiFunction)}
-     * @param mapSupplier a function which returns a new, empty {@code Map} into
-     *                    which the results will be inserted
+     * @param mapSupplier a function which returns a new, empty {@code ConcurrentMap}
+     *                    into which the results will be inserted
      * @return a concurrent, unordered {@code Collector} which collects elements into a
      * {@code ConcurrentMap} whose keys are the result of applying a key mapping
      * function to the input elements, and whose values are the result of
