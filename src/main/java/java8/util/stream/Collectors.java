@@ -1284,8 +1284,8 @@ public final class Collectors {
      * where the city names are sorted:
      * <pre>{@code
      *     ConcurrentMap<City, Set<String>> namesByCity
-     *         = people.stream().collect(groupingBy(Person::getCity, ConcurrentSkipListMap::new,
-     *                                              mapping(Person::getLastName, toSet())));
+     *         = people.stream().collect(groupingByConcurrent(Person::getCity, ConcurrentSkipListMap::new,
+     *                                                        mapping(Person::getLastName, toSet())));
      * }</pre>
      *
      *
@@ -1494,7 +1494,7 @@ public final class Collectors {
      * more flexible merge policies.  For example, if you have a stream
      * of {@code Person}, and you want to produce a "phone book" mapping name to
      * address, but it is possible that two persons have the same name, you can
-     * do as follows to gracefully deals with these collisions, and produce a
+     * do as follows to gracefully deal with these collisions, and produce a
      * {@code Map} mapping names to a concatenated list of addresses:
      * <pre>{@code
      *     Map<String, String> phoneBook =
@@ -1577,9 +1577,9 @@ public final class Collectors {
      */
     public static <T, K, U, M extends Map<K, U>>
     Collector<T, ?, M> toMap(final Function<? super T, ? extends K> keyMapper,
-                                final Function<? super T, ? extends U> valueMapper,
-                                final BinaryOperator<U> mergeFunction,
-                                Supplier<M> mapSupplier) {
+                             final Function<? super T, ? extends U> valueMapper,
+                             final BinaryOperator<U> mergeFunction,
+                             Supplier<M> mapSupplier) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> Maps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
         return new CollectorImpl<>(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
@@ -1663,8 +1663,8 @@ public final class Collectors {
      * more flexible merge policies.  For example, if you have a stream
      * of {@code Person}, and you want to produce a "phone book" mapping name to
      * address, but it is possible that two persons have the same name, you can
-     * do as follows to gracefully deals with these collisions, and produce a
-     * {@code Map} mapping names to a concatenated list of addresses:
+     * do as follows to gracefully deal with these collisions, and produce a
+     * {@code ConcurrentMap} mapping names to a concatenated list of addresses:
      * <pre>{@code
      *     ConcurrentMap<String, String> phoneBook =
      *         people.stream().collect(toConcurrentMap(Person::getName,
