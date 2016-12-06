@@ -34,7 +34,7 @@ import java8.util.function.Consumer;
 
 /** Similar to ArrayListSpliterator */
 final class VectorSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.37
+// CVS rev. 1.38
     private final Vector<E> list;
     private Object[] array;
     private int index; // current index, modified on advance/split
@@ -95,27 +95,15 @@ final class VectorSpliterator<E> implements Spliterator<E> {
     @SuppressWarnings("unchecked")
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        int i, hi; // hoist accesses and checks from loop
-        Vector<E> lst = list;
-        Object[] a;
-        if ((hi = fence) < 0) {
-            synchronized (lst) {
-                expectedModCount = getModCount(lst);
-                a = array = getData(lst);
-                hi = fence = getSize(lst);
-            }
-        } else {
-            a = array;
+        int hi = getFence();
+        Object[] a = array;
+        int i;
+        for (i = index, index = hi; i < hi; i++) {
+            action.accept((E) a[i]);
         }
-        if (a != null && (i = index) >= 0 && (index = hi) <= a.length) {
-            while (i < hi) {
-                action.accept((E) a[i++]);
-            }
-            if (expectedModCount == getModCount(lst)) {
-                return;
-            }
+        if (getModCount(list) != expectedModCount) {
+            throw new ConcurrentModificationException();
         }
-        throw new ConcurrentModificationException();
     }
 
     @Override
