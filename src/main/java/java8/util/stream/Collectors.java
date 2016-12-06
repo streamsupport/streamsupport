@@ -332,8 +332,8 @@ public final class Collectors {
      *
      * @param <T> the type of the input elements
      * @param <C> the type of the resulting {@code Collection}
-     * @param collectionFactory a {@code Supplier} which returns a new, empty
-     * {@code Collection} of the appropriate type
+     * @param collectionFactory a supplier providing a new empty {@code Collection}
+     *                          into which the results will be inserted
      * @return a {@code Collector} which collects all the input elements into a
      * {@code Collection}, in encounter order
      */
@@ -596,7 +596,7 @@ public final class Collectors {
      */
     public static <T, A, R>
     Collector<T, ?, R> filtering(Predicate<? super T> predicate,
-                               Collector<? super T, A, R> downstream) {
+                                 Collector<? super T, A, R> downstream) {
         BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         return new CollectorImpl<>(downstream.supplier(),
                                    (r, t) -> {
@@ -1142,8 +1142,8 @@ public final class Collectors {
      * @param <M> the type of the resulting {@code Map}
      * @param classifier a classifier function mapping input elements to keys
      * @param downstream a {@code Collector} implementing the downstream reduction
-     * @param mapFactory a function which, when called, produces a new empty
-     *                   {@code Map} of the desired type
+     * @param mapFactory a supplier providing a new empty {@code Map}
+     *                   into which the results will be inserted
      * @return a {@code Collector} implementing the cascaded group-by operation
      *
      * @see #groupingBy(Function, Collector)
@@ -1296,8 +1296,8 @@ public final class Collectors {
      * @param <M> the type of the resulting {@code ConcurrentMap}
      * @param classifier a classifier function mapping input elements to keys
      * @param downstream a {@code Collector} implementing the downstream reduction
-     * @param mapFactory a function which, when called, produces a new empty
-     *                   {@code ConcurrentMap} of the desired type
+     * @param mapFactory a supplier providing a new empty {@code ConcurrentMap}
+     *                   into which the results will be inserted
      * @return a concurrent, unordered {@code Collector} implementing the cascaded group-by operation
      *
      * @see #groupingByConcurrent(Function)
@@ -1563,8 +1563,8 @@ public final class Collectors {
      * @param mergeFunction a merge function, used to resolve collisions between
      *                      values associated with the same key, as supplied
      *                      to {@link Maps#merge(Map, Object, Object, BiFunction)}
-     * @param mapSupplier a function which returns a new, empty {@code Map} into
-     *                    which the results will be inserted
+     * @param mapFactory a supplier providing a new empty {@code Map}
+     *                   into which the results will be inserted
      * @return a {@code Collector} which collects elements into a {@code Map}
      * whose keys are the result of applying a key mapping function to the input
      * elements, and whose values are the result of applying a value mapping
@@ -1579,10 +1579,10 @@ public final class Collectors {
     Collector<T, ?, M> toMap(final Function<? super T, ? extends K> keyMapper,
                              final Function<? super T, ? extends U> valueMapper,
                              final BinaryOperator<U> mergeFunction,
-                             Supplier<M> mapSupplier) {
+                             Supplier<M> mapFactory) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> Maps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
-        return new CollectorImpl<>(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
+        return new CollectorImpl<>(mapFactory, accumulator, mapMerger(mergeFunction), CH_ID);
     }
 
     /**
@@ -1723,8 +1723,8 @@ public final class Collectors {
      * @param mergeFunction a merge function, used to resolve collisions between
      *                      values associated with the same key, as supplied
      *                      to {@link ConcurrentMaps#merge(ConcurrentMap, Object, Object, BiFunction)}
-     * @param mapSupplier a function which returns a new, empty {@code ConcurrentMap}
-     *                    into which the results will be inserted
+     * @param mapFactory a supplier providing a new empty {@code ConcurrentMap}
+     *                   into which the results will be inserted
      * @return a concurrent, unordered {@code Collector} which collects elements into a
      * {@code ConcurrentMap} whose keys are the result of applying a key mapping
      * function to the input elements, and whose values are the result of
@@ -1739,10 +1739,10 @@ public final class Collectors {
     Collector<T, ?, M> toConcurrentMap(final Function<? super T, ? extends K> keyMapper,
                                        final Function<? super T, ? extends U> valueMapper,
                                        final BinaryOperator<U> mergeFunction,
-                                       Supplier<M> mapSupplier) {
+                                       Supplier<M> mapFactory) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> ConcurrentMaps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
-        return new CollectorImpl<>(mapSupplier, accumulator, mapMergerConcurrent(mergeFunction), CH_CONCURRENT_ID);
+        return new CollectorImpl<>(mapFactory, accumulator, mapMergerConcurrent(mergeFunction), CH_CONCURRENT_ID);
     }
 
     /**
