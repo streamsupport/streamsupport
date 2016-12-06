@@ -1033,7 +1033,7 @@ public final class Collectors {
      * <p><b>Implementation Requirements:</b><br>
      * This produces a result similar to:
      * <pre>{@code
-     *     groupingBy(classifier, toList());
+     *     groupingBy(classifier, toList())
      * }</pre>
      *
      * <p><b>Implementation Note:</b><br>
@@ -1202,7 +1202,7 @@ public final class Collectors {
      * <p><b>Implementation Requirements:</b><br>
      * This produces a result similar to:
      * <pre>{@code
-     *     groupingByConcurrent(classifier, toList());
+     *     groupingByConcurrent(classifier, toList())
      * }</pre>
      *
      * @param <T> the type of the input elements
