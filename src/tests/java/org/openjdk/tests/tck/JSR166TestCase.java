@@ -9,12 +9,30 @@ package org.openjdk.tests.tck;
 
 /*
  * @test
- * @summary JSR-166 tck tests
- * @modules java.management
+ * @summary JSR-166 tck tests (conformance testing mode)
  * @build *
- * @run junit/othervm/timeout=1000 -Djsr166.testImplementationDetails=true JSR166TestCase
- * @run junit/othervm/timeout=1000 -Djava.util.concurrent.ForkJoinPool.common.parallelism=0 -Djsr166.testImplementationDetails=true JSR166TestCase
- * @run junit/othervm/timeout=1000 -Djava.util.concurrent.ForkJoinPool.common.parallelism=1 -Djava.util.secureRandomSeed=true JSR166TestCase
+ * @modules java.management
+ * @run junit/othervm/timeout=1000 JSR166TestCase
+ */
+
+/*
+ * @test
+ * @summary JSR-166 tck tests (whitebox tests allowed)
+ * @build *
+ * @modules java.base/java.util.concurrent:open
+ *          java.management
+ * @run junit/othervm/timeout=1000
+ *      -Djsr166.testImplementationDetails=true
+ *      JSR166TestCase
+ * @run junit/othervm/timeout=1000
+ *      -Djsr166.testImplementationDetails=true
+ *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=0
+ *      JSR166TestCase
+ * @run junit/othervm/timeout=1000
+ *      -Djsr166.testImplementationDetails=true
+ *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=1
+ *      -Djava.util.secureRandomSeed=true
+ *      JSR166TestCase
  */
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -154,7 +172,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.211
+// CVS rev. 1.214
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
