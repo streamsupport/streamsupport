@@ -160,6 +160,8 @@
       <class name="org.openjdk.tests.tck.SubmissionPublisherTest"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandom8Test"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandomTest"/>
+      <class name="org.openjdk.tests.tck.LinkedBlockingQueue8Test"/>
+      <class name="org.openjdk.tests.tck.LinkedBlockingDeque8Test"/>
 
       <!-- Test dependencies block 14: streamsupport-literal.jar (nothing else) -->
 
