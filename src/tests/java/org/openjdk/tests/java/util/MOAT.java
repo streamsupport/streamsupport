@@ -30,6 +30,7 @@ package org.openjdk.tests.java.util;
  *          4802647 7123424 8024709
  * @summary Run many tests on many Collection and Map implementations
  * @author  Martin Buchholz
+ * @modules java.base/java.util:open
  * @run main MOAT
  * @key randomness
  */
