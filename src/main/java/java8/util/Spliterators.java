@@ -94,6 +94,8 @@ public final class Spliterators {
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
     static final boolean HAS_STREAMS = isStreamEnabled();
+    // defaults to false
+    static final boolean IS_JAVA9 = isClassPresent("java.lang.StackWalker$Option");
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -1027,7 +1029,7 @@ public final class Spliterators {
             if (c instanceof LinkedBlockingQueue) {
                 return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
             }
-            if (c instanceof ArrayDeque) {
+            if (c instanceof ArrayDeque && !IS_JAVA9) {
                 return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
             }
             if (c instanceof LinkedBlockingDeque) {
