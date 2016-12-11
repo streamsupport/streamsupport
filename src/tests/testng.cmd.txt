@@ -17,6 +17,10 @@ SET PAR_GC=-XX:+UseParallelGC
 
 SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
+SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
+
+SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
+
 
 
 %JAVA6% %JIT_BUG% -cp .;./* %ARGS%
@@ -27,7 +31,7 @@ SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 %JAVA8% %NO_DELEG% -cp .;./* %ARGS%
 
-%JAVA9% %PAR_GC% -cp .;./* %ARGS%
+%JAVA9% %DBG_MOD_ACCESS% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
-%JAVA9% %NO_DELEG% %PAR_GC% -cp .;./* %ARGS%
+%JAVA9% %DBG_MOD_ACCESS% %NO_DELEG% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
