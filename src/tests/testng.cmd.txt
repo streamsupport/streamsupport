@@ -31,7 +31,13 @@ SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 %JAVA8% %NO_DELEG% -cp .;./* %ARGS%
 
-%JAVA9% %DBG_MOD_ACCESS% %PAR_GC% %OPENS% -cp .;./* %ARGS%
+%JAVA9% %PAR_GC% -cp .;./* %ARGS%
 
-%JAVA9% %DBG_MOD_ACCESS% %NO_DELEG% %PAR_GC% %OPENS% -cp .;./* %ARGS%
+%JAVA9% %NO_DELEG% %PAR_GC% -cp .;./* %ARGS%
+
+
+
+REM %JAVA9% %DBG_MOD_ACCESS% %PAR_GC% %OPENS% -cp .;./* %ARGS%
+
+REM %JAVA9% %DBG_MOD_ACCESS% %NO_DELEG% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 

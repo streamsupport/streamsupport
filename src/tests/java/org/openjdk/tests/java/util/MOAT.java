@@ -868,6 +868,14 @@ public class MOAT {
                 equal(size, l.size());
             }
             catch (UnsupportedOperationException ignored) {/* OK */}
+            catch (Exception ex) {
+                // jdk9 module system may deny access
+                if (ex.getClass().getSimpleName()
+                        .equals("InaccessibleObjectException")) {
+                    return; /* OK */
+                }
+                unexpected(ex);
+            }
             catch (Throwable t) { unexpected(t); }
         }
     }
