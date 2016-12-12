@@ -14,6 +14,7 @@ import java8.util.function.Consumer;
 /**
  * A customized variant of Spliterators.IteratorSpliterator for
  * LinkedBlockingDeques.
+ * Keep this class in sync with (very similar) LBQSpliterator.
  * <p>
  * The returned spliterator is <i>weakly consistent</i>.
  * <p>
@@ -27,7 +28,7 @@ import java8.util.function.Consumer;
  *            the type of elements held in the LinkedBlockingDeque
  */
 final class LBDSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.65
+// CVS rev. 1.66
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingDeque<E> queue;
     private final ReentrantLock queueLock;
@@ -46,6 +47,10 @@ final class LBDSpliterator<E> implements Spliterator<E> {
         return new LBDSpliterator<T>(queue);
     }
 
+    private Object succ(Object p) {
+        return (p == (p = getNextNode(p))) ? getQueueFirst(queue) : p;
+    }
+
     @Override
     public int characteristics() {
         return (Spliterator.ORDERED |
@@ -61,27 +66,28 @@ final class LBDSpliterator<E> implements Spliterator<E> {
     @Override
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        if (exhausted)
-            return;
-        exhausted = true;
-        LinkedBlockingDeque<E> q = queue;
-        ReentrantLock lock = queueLock;
-        Object p = current;
-        current = null;
-        do {
-            E e = null;
-            lock.lock();
-            try {
-                if ((p != null && p != getNextNode(p)) || (p = getQueueFirst(q)) != null) {
-                    e = getNodeItem(p);
-                    p = getNextNode(p);
+        if (!exhausted) {
+            exhausted = true;
+            ReentrantLock lock = queueLock;
+            Object p = current;
+            current = null;
+            do {
+                E e = null;
+                lock.lock();
+                try {
+                    if (p != null || (p = getQueueFirst(queue)) != null)
+                        do {
+                            e = getNodeItem(p);
+                            p = succ(p);
+                        } while (e == null && p != null);
+                } finally {
+                    // checkInvariants();
+                    lock.unlock();
                 }
-            } finally {
-                lock.unlock();
-            }
-            if (e != null)
-                action.accept(e);
-        } while (p != null);
+                if (e != null)
+                    action.accept(e);
+            } while (p != null);
+        }
     }
 
     @Override
@@ -102,26 +108,28 @@ final class LBDSpliterator<E> implements Spliterator<E> {
     @Override
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        if (exhausted)
-            return false;
-        LinkedBlockingDeque<E> q = queue;
-        ReentrantLock lock = queueLock;
-        Object p = current;
-        E e = null;
-        lock.lock();
-        try {
-            if ((p != null && p != getNextNode(p)) || (p = getQueueFirst(q)) != null) {
-                e = getNodeItem(p);
-                p = getNextNode(p);
+        if (!exhausted) {
+            ReentrantLock lock = queueLock;
+            Object p = current;
+            E e = null;
+            lock.lock();
+            try {
+                if (p != null || (p = getQueueFirst(queue)) != null)
+                    do {
+                        e = getNodeItem(p);
+                        p = succ(p);
+                    } while (e == null && p != null);
+            } finally {
+                // checkInvariants();
+                lock.unlock();
             }
-        } finally {
-            lock.unlock();
+            exhausted = ((current = p) == null);
+            if (e != null) {
+                action.accept(e);
+                return true;
+            }
         }
-        exhausted = ((current = p) == null);
-        if (e == null)
-            return false;
-        action.accept(e);
-        return true;
+        return false;
     }
 
     @Override
@@ -131,8 +139,7 @@ final class LBDSpliterator<E> implements Spliterator<E> {
         int b = batch;
         int n = (b <= 0) ? 1 : (b >= MAX_BATCH) ? MAX_BATCH : b + 1;
         if (!exhausted &&
-            (((h = current) != null && h != getNextNode(h))
-             || (h = getQueueFirst(q)) != null)
+            ((h = current) != null || (h = getQueueFirst(q)) != null)
             && getNextNode(h) != null) {
             Object[] a = new Object[n];
             ReentrantLock lock = queueLock;
@@ -140,11 +147,12 @@ final class LBDSpliterator<E> implements Spliterator<E> {
             Object p = current;
             lock.lock();
             try {
-                if (((p != null && p != getNextNode(p)) || (p = getQueueFirst(q)) != null)
-                    && getNodeItem(p) != null)
-                    for (; p != null && i < n; p = getNextNode(p))
-                        a[i++] = getNodeItem(p);
+                if (p != null || (p = getQueueFirst(q)) != null)
+                    for (; p != null && i < n; p = succ(p))
+                        if ((a[i] = getNodeItem(p)) != null)
+                            i++;
             } finally {
+                // checkInvariants();
                 lock.unlock();
             }
             if ((current = p) == null) {
