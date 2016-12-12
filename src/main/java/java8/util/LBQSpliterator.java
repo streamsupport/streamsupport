@@ -1,26 +1,7 @@
 /*
- * Copyright (c) 2012, 2014, Oracle and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
+ * Written by Doug Lea with assistance from members of JCP JSR-166
+ * Expert Group and released to the public domain, as explained at
+ * http://creativecommons.org/publicdomain/zero/1.0/
  */
 package java8.util;
 
@@ -33,6 +14,7 @@ import java8.util.function.Consumer;
 /**
  * A customized variant of Spliterators.IteratorSpliterator for
  * LinkedBlockingQueues.
+ * Keep this class in sync with (very similar) LBDSpliterator.
  * <p>
  * The returned spliterator is <i>weakly consistent</i>.
  * <p>
@@ -45,7 +27,7 @@ import java8.util.function.Consumer;
  * @param <E> the type of elements held in the LinkedBlockingQueue
  */
 final class LBQSpliterator<E> implements Spliterator<E> {
-
+// CVS rev. 1.100
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingQueue<E> queue;
     private final ReentrantLock putLock;
@@ -66,10 +48,15 @@ final class LBQSpliterator<E> implements Spliterator<E> {
         return new LBQSpliterator<T>(queue);
     }
 
+    private Object succ(Object p) {
+        return (p == (p = getNextNode(p))) ? getHeadNext(queue) : p;
+    }
+
     @Override
     public int characteristics() {
-        return Spliterator.ORDERED | Spliterator.NONNULL
-                | Spliterator.CONCURRENT;
+        return (Spliterator.ORDERED |
+                Spliterator.NONNULL |
+                Spliterator.CONCURRENT);
     }
 
     @Override
@@ -80,30 +67,24 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     @Override
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        LinkedBlockingQueue<E> q = this.queue;
         if (!exhausted) {
             exhausted = true;
             Object p = current;
+            current = null;
             do {
                 E e = null;
                 fullyLock();
                 try {
-                    if (p == null) {
-                        p = getHeadNext(q);
-                    }
-                    while (p != null) {
-                        e = getNodeItem(p);
-                        p = getNextNode(p);
-                        if (e != null) {
-                            break;
-                        }
-                    }
+                    if (p != null || (p = getHeadNext(queue)) != null)
+                        do {
+                            e = getNodeItem(p);
+                            p = succ(p);
+                        } while (e == null && p != null);
                 } finally {
                     fullyUnlock();
                 }
-                if (e != null) {
+                if (e != null)
                     action.accept(e);
-                }
             } while (p != null);
         }
     }
@@ -126,27 +107,20 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     @Override
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        LinkedBlockingQueue<E> q = this.queue;
         if (!exhausted) {
+            Object p = current;
             E e = null;
             fullyLock();
             try {
-                if (current == null) {
-                    current = getHeadNext(q);
-                }
-                while (current != null) {
-                    e = getNodeItem(current);
-                    current = getNextNode(current);
-                    if (e != null) {
-                        break;
-                    }
-                }
+                if (p != null || (p = getHeadNext(queue)) != null)
+                    do {
+                        e = getNodeItem(p);
+                        p = succ(p);
+                    } while (e == null && p != null);
             } finally {
                 fullyUnlock();
             }
-            if (current == null) {
-                exhausted = true;
-            }
+            exhausted = ((current = p) == null);
             if (e != null) {
                 action.accept(e);
                 return true;
@@ -158,37 +132,36 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     @Override
     public Spliterator<E> trySplit() {
         Object h;
-        final LinkedBlockingQueue<E> q = this.queue;
+        LinkedBlockingQueue<E> q = queue;
         int b = batch;
         int n = (b <= 0) ? 1 : (b >= MAX_BATCH) ? MAX_BATCH : b + 1;
-        if (!exhausted
-                && ((h = current) != null || (h = getHeadNext(q)) != null)
-                && getNextNode(h) != null) {
+        if (!exhausted &&
+            ((h = current) != null || (h = getHeadNext(q)) != null)
+            && getNextNode(h) != null) {
             Object[] a = new Object[n];
             int i = 0;
             Object p = current;
             fullyLock();
             try {
-                if (p != null || (p = getHeadNext(q)) != null) {
-                    do {
-                        if ((a[i] = getNodeItem(p)) != null) {
-                            ++i;
-                        }
-                    } while ((p = getNextNode(p)) != null && i < n);
-                }
+                if (p != null || (p = getHeadNext(q)) != null)
+                    for (; p != null && i < n; p = succ(p))
+                        if ((a[i] = getNodeItem(p)) != null)
+                            i++;
             } finally {
                 fullyUnlock();
             }
             if ((current = p) == null) {
                 est = 0L;
                 exhausted = true;
-            } else if ((est -= i) < 0L) {
-                est = 0L;
             }
+            else if ((est -= i) < 0L)
+                est = 0L;
             if (i > 0) {
                 batch = i;
-                return Spliterators.spliterator(a, 0, i, Spliterator.ORDERED
-                        | Spliterator.NONNULL | Spliterator.CONCURRENT);
+                return Spliterators.spliterator
+                    (a, 0, i, (Spliterator.ORDERED |
+                               Spliterator.NONNULL |
+                               Spliterator.CONCURRENT));
             }
         }
         return null;
