@@ -27,7 +27,7 @@ import java8.util.function.Consumer;
  * @param <E> the type of elements held in the LinkedBlockingQueue
  */
 final class LBQSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.100
+// CVS rev. 1.101
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingQueue<E> queue;
     private final ReentrantLock putLock;
@@ -48,7 +48,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
         return new LBQSpliterator<T>(queue);
     }
 
-    private Object succ(Object p) {
+    Object succ(Object p) {
         return (p == (p = getNextNode(p))) ? getHeadNext(queue) : p;
     }
 
@@ -71,21 +71,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
             exhausted = true;
             Object p = current;
             current = null;
-            do {
-                E e = null;
-                fullyLock();
-                try {
-                    if (p != null || (p = getHeadNext(queue)) != null)
-                        do {
-                            e = getNodeItem(p);
-                            p = succ(p);
-                        } while (e == null && p != null);
-                } finally {
-                    fullyUnlock();
-                }
-                if (e != null)
-                    action.accept(e);
-            } while (p != null);
+            forEachFrom(action, p);
         }
     }
 
@@ -165,6 +151,39 @@ final class LBQSpliterator<E> implements Spliterator<E> {
             }
         }
         return null;
+    }
+
+    /**
+     * Runs action on each element found during a traversal starting at p.
+     * If p is null, traversal starts at head.
+     */
+    void forEachFrom(Consumer<? super E> action, Object p) {
+        // Extract batches of elements while holding the lock; then
+        // run the action on the elements while not
+        final int batchSize = 32;       // max number of elements per batch
+        Object[] es = null;             // container for batch of elements
+        int n, len = 0;
+        do {
+            fullyLock();
+            try {
+                if (es == null) {
+                    if (p == null) p = getHeadNext(queue);
+                    for (Object q = p; q != null; q = succ(q))
+                        if (getNodeItem(q) != null && ++len == batchSize)
+                            break;
+                    es = new Object[len];
+                }
+                for (n = 0; p != null && n < len; p = succ(p))
+                    if ((es[n] = getNodeItem(p)) != null)
+                        n++;
+            } finally {
+                fullyUnlock();
+            }
+            for (int i = 0; i < n; i++) {
+                @SuppressWarnings("unchecked") E e = (E) es[i];
+                action.accept(e);
+            }
+        } while (n > 0 && p != null);
     }
 
     /**
