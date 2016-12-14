@@ -28,7 +28,7 @@ import java8.util.function.Consumer;
  *            the type of elements held in the LinkedBlockingDeque
  */
 final class LBDSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.66
+// CVS rev. 1.67
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingDeque<E> queue;
     private final ReentrantLock queueLock;
@@ -47,7 +47,7 @@ final class LBDSpliterator<E> implements Spliterator<E> {
         return new LBDSpliterator<T>(queue);
     }
 
-    private Object succ(Object p) {
+    Object succ(Object p) {
         return (p == (p = getNextNode(p))) ? getQueueFirst(queue) : p;
     }
 
@@ -68,25 +68,9 @@ final class LBDSpliterator<E> implements Spliterator<E> {
         Objects.requireNonNull(action);
         if (!exhausted) {
             exhausted = true;
-            ReentrantLock lock = queueLock;
             Object p = current;
             current = null;
-            do {
-                E e = null;
-                lock.lock();
-                try {
-                    if (p != null || (p = getQueueFirst(queue)) != null)
-                        do {
-                            e = getNodeItem(p);
-                            p = succ(p);
-                        } while (e == null && p != null);
-                } finally {
-                    // checkInvariants();
-                    lock.unlock();
-                }
-                if (e != null)
-                    action.accept(e);
-            } while (p != null);
+            forEachFrom(action, p);
         }
     }
 
@@ -170,6 +154,41 @@ final class LBDSpliterator<E> implements Spliterator<E> {
             }
         }
         return null;
+    }
+
+    /**
+     * Runs action on each element found during a traversal starting at p.
+     * If p is null, traversal starts at head.
+     */
+    void forEachFrom(Consumer<? super E> action, Object p) {
+        // Extract batches of elements while holding the lock; then
+        // run the action on the elements while not
+        ReentrantLock lock = queueLock;
+        final int batchSize = 32;       // max number of elements per batch
+        Object[] es = null;             // container for batch of elements
+        int n, len = 0;
+        do {
+            lock.lock();
+            try {
+                if (es == null) {
+                    if (p == null) p = getQueueFirst(queue);
+                    for (Object q = p; q != null; q = succ(q))
+                        if (getNodeItem(q) != null && ++len == batchSize)
+                            break;
+                    es = new Object[len];
+                }
+                for (n = 0; p != null && n < len; p = succ(p))
+                    if ((es[n] = getNodeItem(p)) != null)
+                        n++;
+            } finally {
+                // checkInvariants();
+                lock.unlock();
+            }
+            for (int i = 0; i < n; i++) {
+                @SuppressWarnings("unchecked") E e = (E) es[i];
+                action.accept(e);
+            }
+        } while (n > 0 && p != null);
     }
 
     private static ReentrantLock getQueueLock(LinkedBlockingDeque<?> queue) {
