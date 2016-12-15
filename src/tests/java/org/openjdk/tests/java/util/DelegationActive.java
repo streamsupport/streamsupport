@@ -6,13 +6,13 @@ import java8.util.Spliterator;
 import java8.util.Spliterators;
 
 /**
- * Really ugly hack to relax the Spliterator tests for Android 7.0 LinkedHashMap
+ * Really ugly hack to relax the Spliterator tests for Android 7.x LinkedHashMap
  * a little.
  * <p>
- * In Android 7.0, the Spliterators returned from LinkedHashMap's collection
+ * In Android 7.x, the Spliterators returned from LinkedHashMap's collection
  * views (entrySet(), keySet() and values()) report Spliterator.ORDERED (as they
  * should) but actually they are not ORDERED. If
- * {@link #hasAndroidAPI24LHMBug(Spliterator)} returns {@code true} we only test
+ * {@link #hasAndroid7xLHMBug(Spliterator)} returns {@code true} we only test
  * for unordered equality of the Spliterator contents against the expected
  * contents.
  * <p>
@@ -58,12 +58,12 @@ final class DelegationActive {
                 || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
     }
 
-    // In Android 7.0, the Spliterators returned from LinkedHashMap's collection
+    // In Android 7.x, the Spliterators returned from LinkedHashMap's collection
     // views (entrySet(), keySet() and values()) report Spliterator.ORDERED (as
     // they should) but actually they are not ORDERED.
     // see https://sourceforge.net/p/streamsupport/tickets/240/
-    static boolean hasAndroidAPI24LHMBug(Spliterator<?> spliterator) {
-        if (Android7PlusDetector.IS_ANDROID_API24
+    static boolean hasAndroid7xLHMBug(Spliterator<?> spliterator) {
+        if (Android7PlusDetector.IS_OPENJDK_ANDROID
                 && IS_SPLITERATOR_DELEGATION_ENABLED && spliterator != null) {
             if (spliterator.hasCharacteristics(Spliterator.ORDERED)) {
                 String implName = null;

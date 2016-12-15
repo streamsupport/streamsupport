@@ -658,8 +658,8 @@ public class SpliteratorCollisions {
     }
 
     private static <T> void assertContents(Collection<T> actual, Collection<T> expected, boolean isOrdered, Spliterator<?> spliterator) {
-        // hasAndroidAPI24LHMBug() => workaround for Android 7.0 LinkedHashMap bug
-        if (isOrdered && !DelegationActive.hasAndroidAPI24LHMBug(spliterator)) {
+        // hasAndroid7xLHMBug() => workaround for Android 7.x LinkedHashMap bug
+        if (isOrdered && !DelegationActive.hasAndroid7xLHMBug(spliterator)) {
             assertEquals(actual, expected);
         }
         else {
