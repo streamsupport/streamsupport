@@ -34,7 +34,7 @@ import java8.util.function.Consumer;
 
 /** Similar to ArrayListSpliterator */
 final class VectorSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.38
+// CVS rev. 1.41
     private final Vector<E> list;
     private Object[] array;
     private int index; // current index, modified on advance/split
@@ -108,7 +108,7 @@ final class VectorSpliterator<E> implements Spliterator<E> {
 
     @Override
     public long estimateSize() {
-        return (long) (getFence() - index);
+        return getFence() - index;
     }
 
     @Override

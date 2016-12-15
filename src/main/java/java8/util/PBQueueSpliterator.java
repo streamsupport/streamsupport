@@ -16,7 +16,7 @@ import java8.util.Spliterator;
  * Immutable snapshot spliterator that binds to elements "late".
  */
 final class PBQueueSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.117
+// CVS rev. 1.120
     private final PriorityBlockingQueue<E> queue;
     private Object[] array;
     private int index;
@@ -45,8 +45,8 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     @Override
     public PBQueueSpliterator<E> trySplit() {
         int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
-        return (lo >= mid) ? null : new PBQueueSpliterator<E>(
-                queue, array, lo, index = mid);
+        return (lo >= mid) ? null :
+            new PBQueueSpliterator<E>(queue, array, lo, index = mid);
     }
 
     @Override
@@ -58,10 +58,9 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
         if ((a = array) == null) {
             fence = (a = queue.toArray()).length;
         }
-        if ((hi = fence) <= a.length && (i = index) >= 0 && i < (index = hi)) {
-            do {
-                action.accept((E) a[i]);
-            } while (++i < hi);
+        if ((hi = fence) <= a.length &&
+            (i = index) >= 0 && i < (index = hi)) {
+            do { action.accept((E) a[i]); } while (++i < hi);
         }
     }
 
@@ -69,8 +68,7 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         if (getFence() > index && index >= 0) {
-            @SuppressWarnings("unchecked")
-            E e = (E) array[index++];
+            @SuppressWarnings("unchecked") E e = (E) array[index++];
             action.accept(e);
             return true;
         }
@@ -78,9 +76,7 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     }
 
     @Override
-    public long estimateSize() {
-        return (long) (getFence() - index);
-    }
+    public long estimateSize() { return getFence() - index; }
 
     @Override
     public int characteristics() {
