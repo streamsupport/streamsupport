@@ -170,8 +170,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /** Fallback if ForkJoinPool.commonPool() cannot support parallelism */
     private static final class ThreadPerTaskExecutor implements Executor {
-        // prevent creating a synthetic constructor
-        ThreadPerTaskExecutor() {}
+        ThreadPerTaskExecutor() {} // prevents bridge class creation
         public void execute(Runnable r) { new Thread(r).start(); }
     }
 
