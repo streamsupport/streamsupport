@@ -3383,44 +3383,44 @@ public final class Spliterators {
         return false;
     }
 
-	/**
-	 * As of 2016-12-15 all Android 7.0, 7.1 and 7.1.1 releases (at least up to
-	 * and including tag 7.1.1_r6) have a bug in LinkedHashMap's collection
-	 * views' spliterators which correctly report that they are ORDERED but
-	 * actually aren't ORDERED (instead the unordered HashMap spliterators are
-	 * used). A fix for this bug has been merged into AOSP master on 2016-08-17
-	 * but still hasn't been rolled out yet.
-	 * <p>
-	 * We'd want to avoid delegation to these flawed spliterators whenever
-	 * possible and use the reflective implementation instead.
-	 * <p>
-	 * This check isn't 100% fool-proof as the LinkedHashMap (or its collection
-	 * view) could be wrapped, for example in a j.u.Collections$UnmodifiableMap
-	 * (whose UnmodifiableEntrySetSpliterator delegates back to the defective
-	 * HashMap$EntrySpliterator). Since we can't know the wrapper beforehand
-	 * this is as good as it can get.
-	 * <p>
-	 * Note that delegation will start to work automatically on Android 7.x
-	 * releases that contain the above mentioned fix from AOSP master (this
-	 * method will return {@code false} then).
-	 * 
-	 * @param c
-	 *            the collection to check for the Android 7.x LinkedHashMap bug
-	 * @return {@code true} if the argument is a Android 7.x LinkedHashMap
-	 *         collection view that exhibits the unordered spliterator bug
-	 */
+    /**
+     * As of 2016-12-15 all Android 7.0, 7.1 and 7.1.1 releases (at least up to
+     * and including tag 7.1.1_r6) have a bug in LinkedHashMap's collection
+     * views' spliterators which correctly report that they are ORDERED but
+     * actually aren't ORDERED (instead the unordered HashMap spliterators are
+     * used). A fix for this bug has been merged into AOSP master on 2016-08-17
+     * but still hasn't been rolled out yet.
+     * <p>
+     * We'd want to avoid delegation to these flawed spliterators whenever
+     * possible and use the reflective implementation instead.
+     * <p>
+     * This check isn't 100% fool-proof as the LinkedHashMap (or its collection
+     * view) could be wrapped, for example in a j.u.Collections$UnmodifiableMap
+     * (whose UnmodifiableEntrySetSpliterator delegates back to the defective
+     * HashMap$EntrySpliterator). Since we can't know the wrapper beforehand
+     * this is as good as it can get.
+     * <p>
+     * Note that delegation will start to work automatically on Android 7.x
+     * releases that contain the above mentioned fix from AOSP master (this
+     * method will return {@code false} then).
+     * 
+     * @param c
+     *            the collection to check for the Android 7.x LinkedHashMap bug
+     * @return {@code true} if the argument is a Android 7.x LinkedHashMap
+     *         collection view that exhibits the unordered spliterator bug
+     */
     @IgnoreJava8API
-	private static boolean hasAndroid7LHMBug(Collection<?> c) {
-    	// is this Android 7.0 or above?
-		if (IS_ANDROID && !IS_HARMONY_ANDROID) {
-			String name = c.getClass().getName();
-			if (name.startsWith("java.util.HashMap$")) {
-				// Since it is a Collection this must be one of KeySet, Values
-				// or EnrySet. It is a bug (most likely a collection view from
-				// LinkedHashMap) if its Spliterator reports ORDERED!
-				return c.spliterator().hasCharacteristics(Spliterator.ORDERED);
-			}
-		}
-		return false;
-	}
+    private static boolean hasAndroid7LHMBug(Collection<?> c) {
+        // is this Android 7.0 or above?
+        if (IS_ANDROID && !IS_HARMONY_ANDROID) {
+            String name = c.getClass().getName();
+            if (name.startsWith("java.util.HashMap$")) {
+                // Since it is a Collection this must be one of KeySet, Values
+                // or EnrySet. It is a bug (most likely a collection view from
+                // LinkedHashMap) if its Spliterator reports ORDERED!
+                return c.spliterator().hasCharacteristics(Spliterator.ORDERED);
+            }
+        }
+        return false;
+    }
 }
