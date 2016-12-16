@@ -109,6 +109,12 @@ unction;java8.util.stream</Export-Package>
 						<goals>
 							<goal>jar</goal>
 						</goals>
+						<configuration>
+							<sourceFileExcludes>
+								<sourceFileExclude>java/util/Random.java</sourceFileExclude>
+								<sourceFileExclude>build/IgnoreJava8API.java</sourceFileExclude>
+							</sourceFileExcludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
