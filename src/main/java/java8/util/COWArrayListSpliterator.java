@@ -45,12 +45,21 @@ final class COWArrayListSpliterator {
     private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long ARRAY_OFF;
     static {
+        ARRAY_OFF = fieldOffset(Spliterators.IS_ANDROID ? "elements" : "array",
+                true);
+    }
+
+    static long fieldOffset(String arrayFieldName, boolean recursive) {
         try {
-            String arrayFieldName = Spliterators.IS_ANDROID ? "elements"
-                    : "array";
-            ARRAY_OFF = U.objectFieldOffset(CopyOnWriteArrayList.class
+            return U.objectFieldOffset(CopyOnWriteArrayList.class
                     .getDeclaredField(arrayFieldName));
         } catch (Exception e) {
+            if (recursive
+                    && e instanceof NoSuchFieldException
+                    && (Spliterators.IS_ANDROID && !Spliterators.IS_HARMONY_ANDROID)) {
+                // https://android.googlesource.com/platform/libcore/+/29957558cf0db700bfaae360a80c42dc3871d0e5
+                return fieldOffset("array", false);
+            }
             throw new Error(e);
         }
     }
