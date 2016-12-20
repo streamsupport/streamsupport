@@ -7,7 +7,7 @@ SET JAVA8=F:/Java/jdk1.8.0_112-64bit/bin/java
 
 SET JAVA9=F:/Java/jdk9_ea_b149-64bit/bin/java
 
-SET TEST_JAR=streamsupport-all-tests-1.5.3.jar
+SET TEST_JAR=streamsupport-all-tests-1.5.4-SNAPSHOT.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 

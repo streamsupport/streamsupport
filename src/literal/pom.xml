@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-literal</artifactId>
-	<version>1.5.3</version>
+	<version>1.5.4-SNAPSHOT</version>
 	<name>net.sourceforge.streamsupport:streamsupport-literal</name>
 	<description>streamsupport-literal is a backport of the new Java 9 (JEP 269)
  "Convenience Factory Methods for Collections" API for Java 6 to 8 and Android developers</description>
