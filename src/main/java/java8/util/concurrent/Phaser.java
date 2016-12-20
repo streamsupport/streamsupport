@@ -149,7 +149,7 @@ import java.util.concurrent.locks.LockSupport;
  * void startTasks(List<Runnable> tasks, int iterations) {
  *   Phaser phaser = new Phaser() {
  *     protected boolean onAdvance(int phase, int registeredParties) {
- *       return phase >= iterations || registeredParties == 0;
+ *       return phase >= iterations - 1 || registeredParties == 0;
  *     }
  *   };
  *   phaser.register();
@@ -226,7 +226,7 @@ import java.util.concurrent.locks.LockSupport;
  * @author Doug Lea
  */
 public class Phaser {
-// CVS rev. 1.91
+// CVS rev. 1.92
     /*
      * This class implements an extension of X10 "clocks".  Thanks to
      * Vijay Saraswat for the idea, and to Vivek Sarkar for
