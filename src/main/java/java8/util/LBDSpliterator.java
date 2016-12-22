@@ -28,7 +28,7 @@ import java8.util.function.Consumer;
  *            the type of elements held in the LinkedBlockingDeque
  */
 final class LBDSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.67
+// CVS rev. 1.71
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingDeque<E> queue;
     private final ReentrantLock queueLock;
@@ -93,21 +93,21 @@ final class LBDSpliterator<E> implements Spliterator<E> {
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         if (!exhausted) {
-            ReentrantLock lock = queueLock;
-            Object p = current;
             E e = null;
+            ReentrantLock lock = queueLock;
             lock.lock();
             try {
-                if (p != null || (p = getQueueFirst(queue)) != null)
+                Object p;
+                if ((p = current) != null || (p = getQueueFirst(queue)) != null)
                     do {
                         e = getNodeItem(p);
                         p = succ(p);
                     } while (e == null && p != null);
+                exhausted = ((current = p) == null);
             } finally {
                 // checkInvariants();
                 lock.unlock();
             }
-            exhausted = ((current = p) == null);
             if (e != null) {
                 action.accept(e);
                 return true;

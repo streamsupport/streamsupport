@@ -27,7 +27,7 @@ import java8.util.function.Consumer;
  * @param <E> the type of elements held in the LinkedBlockingQueue
  */
 final class LBQSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.101
+// CVS rev. 1.102
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingQueue<E> queue;
     private final ReentrantLock putLock;
@@ -94,19 +94,19 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         if (!exhausted) {
-            Object p = current;
             E e = null;
             fullyLock();
             try {
-                if (p != null || (p = getHeadNext(queue)) != null)
+                Object p;
+                if ((p = current) != null || (p = getHeadNext(queue)) != null)
                     do {
                         e = getNodeItem(p);
                         p = succ(p);
                     } while (e == null && p != null);
+                exhausted = ((current = p) == null);
             } finally {
                 fullyUnlock();
             }
-            exhausted = ((current = p) == null);
             if (e != null) {
                 action.accept(e);
                 return true;
