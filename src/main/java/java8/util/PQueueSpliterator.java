@@ -33,7 +33,7 @@ import java8.util.function.Consumer;
 
 // Spliterator for java.util.PriorityQueue
 final class PQueueSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.117
+// CVS rev. 1.118
     private final PriorityQueue<E> pq;
     private int index;            // current index, modified on advance/split
     private int fence;            // -1 until first use
