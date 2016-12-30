@@ -28,7 +28,7 @@ import java8.util.function.Consumer;
  *            the type of elements held in the LinkedBlockingDeque
  */
 final class LBDSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.71
+// CVS rev. 1.77
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingDeque<E> queue;
     private final ReentrantLock queueLock;
@@ -103,7 +103,8 @@ final class LBDSpliterator<E> implements Spliterator<E> {
                         e = getNodeItem(p);
                         p = succ(p);
                     } while (e == null && p != null);
-                exhausted = ((current = p) == null);
+                if ((current = p) == null)
+                    exhausted = true;
             } finally {
                 // checkInvariants();
                 lock.unlock();
@@ -120,11 +121,10 @@ final class LBDSpliterator<E> implements Spliterator<E> {
     public Spliterator<E> trySplit() {
         Object h;
         LinkedBlockingDeque<E> q = queue;
-        int b = batch;
-        int n = (b <= 0) ? 1 : (b >= MAX_BATCH) ? MAX_BATCH : b + 1;
         if (!exhausted &&
             ((h = current) != null || (h = getQueueFirst(q)) != null)
             && getNextNode(h) != null) {
+            int n = batch = Math.min(batch + 1, MAX_BATCH);
             Object[] a = new Object[n];
             ReentrantLock lock = queueLock;
             int i = 0;
@@ -145,13 +145,11 @@ final class LBDSpliterator<E> implements Spliterator<E> {
             }
             else if ((est -= i) < 0L)
                 est = 0L;
-            if (i > 0) {
-                batch = i;
+            if (i > 0)
                 return Spliterators.spliterator
                     (a, 0, i, (Spliterator.ORDERED |
                                Spliterator.NONNULL |
                                Spliterator.CONCURRENT));
-            }
         }
         return null;
     }
