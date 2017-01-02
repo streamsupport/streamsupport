@@ -27,7 +27,7 @@ import java8.util.function.Consumer;
  * @param <E> the type of elements held in the LinkedBlockingQueue
  */
 final class LBQSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.109
+// CVS rev. 1.110
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingQueue<E> queue;
     private final ReentrantLock putLock;
@@ -158,7 +158,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     void forEachFrom(Consumer<? super E> action, Object p) {
         // Extract batches of elements while holding the lock; then
         // run the action on the elements while not
-        final int batchSize = 32;       // max number of elements per batch
+        final int batchSize = 64;       // max number of elements per batch
         Object[] es = null;             // container for batch of elements
         int n, len = 0;
         do {

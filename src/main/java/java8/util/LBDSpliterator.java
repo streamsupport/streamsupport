@@ -28,7 +28,7 @@ import java8.util.function.Consumer;
  *            the type of elements held in the LinkedBlockingDeque
  */
 final class LBDSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.77
+// CVS rev. 1.78
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingDeque<E> queue;
     private final ReentrantLock queueLock;
@@ -162,7 +162,7 @@ final class LBDSpliterator<E> implements Spliterator<E> {
         // Extract batches of elements while holding the lock; then
         // run the action on the elements while not
         ReentrantLock lock = queueLock;
-        final int batchSize = 32;       // max number of elements per batch
+        final int batchSize = 64;       // max number of elements per batch
         Object[] es = null;             // container for batch of elements
         int n, len = 0;
         do {
