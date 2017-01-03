@@ -72,11 +72,11 @@ build.gradle:
 
 ```gradle
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.2'
-    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.2'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.3'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.3'
 }
 ```
 
