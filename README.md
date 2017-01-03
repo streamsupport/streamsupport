@@ -112,7 +112,7 @@ dependencies {
 
 ## RELEASE NOTES
 
- - "1.5.2-stable" is the current stable release
+ - "1.5.3-stable" is the current stable release
 
 
 ## GENERAL
@@ -175,9 +175,42 @@ dependencies {
 
    * streamsupport-literal (Java 9 JEP 269 Collections factory methods)
 
+   From release 1.5.3 onwards streamsupport-literal can be used without
+   any dependencies.
+
+ - As of release 1.5.3 streamsupport detects when it is running on a
+   stream enabled Android 7+ device and automatically delegates to the
+   Android Spliterators (contributed by Tobias Thierer, ticket#240).
+
+   This feature can be disabled by setting the system property
+   "java8.util.Spliterators.jre.delegation.enabled" to false.
+
 
 
 ## VERSION HISTORY
+
+1.5.3-stable (2016-12-17)
+ - JDK-8166646: Misc. changes imported from jsr166 CVS 2016-11
+ - JDK-8171051: LinkedBlockingQueue spliterator support node self-linking
+ - JDK-8169739: LinkedBlockingDeque spliterator support node self-linking
+ - JDK-8169222: Minor immutable collections optimizations
+ - JDK-8156079: Make empty immutable collections instances singletons
+ - JDK-8152617: Add wildcards to Optional or() and flatMap()
+ - JDK-8170943: Collectors.partitioningBy spec change
+ - JDK-8170560: Improve Collectors javadoc code samples
+ - JDK-8168745: Iterator.forEachRemaining vs. Iterator.remove
+ - JDK-8168841: Correct Collectors collectingAndThen() Javadoc
+ - JDK-8164934: Optional.map() javadoc code example
+ - JDK-8170573: Typo in Collectors javadoc examples
+ - JDK-8170566: Incorrect phrase usage in javadocs
+ - use delegating Spliterators on Android 7+ (#240)
+ - remove dependency on streamsupport from literal component (#243)
+ - VectorSpliterator: cleaner and faster forEachRemaining() (#259)
+ - PQueueSpliterator: slightly faster implementation (#260)
+ - enable Spliterator tests for PriorityQueue/WeakHashMap on Nougat (#244)
+ - detect accidental use of API not present in Java 6 (#250)
+ - fix usage of AssertionError(String, Throwable) constructor in tests (#249)
+ - test on Android 7.1.1 (#265)
 
 1.5.2-stable (2016-10-03)
  - JDK-8164189: Collectors.toSet() parallel performance improvement
