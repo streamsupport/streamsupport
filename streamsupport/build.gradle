@@ -91,7 +91,9 @@ coveralls {
     //sourceDirs = sourceSets.main.allSource.srcDirs
     //sourceDirs = files(sourceSets.main.allSource.srcDirs)
     //sourceDirs = fileTree(sourceSets.main.allSource.srcDirs)
-    sourceDirs = files(sourceSets.main.allSource.srcDirs).files.absolutePath
+    //sourceDirs = files(sourceSets.main.allSource.srcDirs).files.absolutePath
+    //sourceDirs += ['../src/main/java', '../src/atomic/java', '../src/cfuture/java', '../src/flow/java', '../src/literal/java']
+    sourceDirs += ['src/main/java', 'src/atomic/java', 'src/cfuture/java', 'src/flow/java', 'src/literal/java']
     jacocoReportPath "$buildDir/reports/jacoco/test/jacocoTestReport.xml"
 }
 
