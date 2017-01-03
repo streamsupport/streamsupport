@@ -54,6 +54,7 @@ dependencies {
     testCompile project(':streamsupport-atomic')
     testCompile project(':streamsupport-cfuture')
     testCompile project(':streamsupport-flow')
+    testCompile project(':streamsupport-literal')
 }
 
 tasks.withType(Test) {
