@@ -132,10 +132,10 @@ public class CompletableFutureTest extends JSR166TestCase {
      * Returns the "raw" internal exceptional completion of f,
      * without any additional wrapping with CompletionException.
      */
-    <U> Throwable exceptionalCompletion(CompletableFuture<U> f) {
-        // handle (and whenComplete) can distinguish between "direct"
-        // and "wrapped" exceptional completion
-        return f.handle((U u, Throwable t) -> t).join();
+    Throwable exceptionalCompletion(CompletableFuture<?> f) {
+        // handle (and whenComplete and exceptionally) can distinguish
+        // between "direct" and "wrapped" exceptional completion
+        return f.handle((u, t) -> t).join();
     }
 
     void checkCompletedExceptionally(CompletableFuture<?> f,
