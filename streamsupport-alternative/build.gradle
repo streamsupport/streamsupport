@@ -50,5 +50,9 @@ tasks.withType(JavaCompile) {
 
 animalsnifferMain {
     exclude('sun.misc.Unsafe')
+}
+
+animalsniffer {
+    ignoreFailures = true
     annotation = 'build.IgnoreJava8API'
 }
