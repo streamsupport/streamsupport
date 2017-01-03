@@ -3,17 +3,22 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.2.0'
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'ru.vyarus.animalsniffer'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 targetCompatibility = JavaVersion.VERSION_1_6
 
 sourceSets {
   main {
-      java.srcDir '../src/flow'
+      java {
+          srcDir '../src/flow'
+          exclude '../src/main/java/build/**'
+      }
   }
 }
 
@@ -24,6 +29,7 @@ repositories {
 dependencies {
     compile project(':streamsupport')
     compile project(':streamsupport-cfuture')
+    signature 'org.codehaus.mojo.signature:java16:1.1@signature'
 }
 
 tasks.withType(Test) {
@@ -39,4 +45,9 @@ apply from: 'javadoc.gradle'
 tasks.withType(JavaCompile) {
     //options.encoding = 'UTF-8'
     options.encoding = 'Cp1252'
+}
+
+animalsnifferMain {
+    exclude('sun.misc.Unsafe')
+    annotation = 'build.IgnoreJava8API'
 }

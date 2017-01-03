@@ -5,10 +5,12 @@ buildscript {
     dependencies {
         classpath 'me.tatarka:gradle-retrolambda:3.2.5'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+        classpath 'ru.vyarus:gradle-animalsniffer-plugin:1.2.0'
     }
 }
 
 apply plugin: 'java'
+apply plugin: 'ru.vyarus.animalsniffer'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -29,10 +31,15 @@ sourceSets {
       java {
           srcDir '../src/main'
 //          exclude 'java/java/**'
+//          exclude '../src/main/java/java/**'
+          exclude '../src/main/java/build/**'
       }
   }
   test {
-      java.srcDir '../src/tests'
+      java {
+          srcDir '../src/tests'
+          exclude '../src/main/java/build/**'
+     }
   }
 }
 
@@ -41,6 +48,7 @@ repositories {
 }
 
 dependencies {
+    signature 'org.codehaus.mojo.signature:java16:1.1@signature'
     testCompile 'junit:junit:3.8.2'
     testCompile 'org.testng:testng:6.8.17'
     testCompile project(':streamsupport-atomic')
@@ -92,4 +100,9 @@ tasks.jacocoTestReport {
 
 tasks.coveralls {
     dependsOn 'jacocoTestReport'
+}
+
+animalsnifferMain {
+    exclude('sun.misc.Unsafe')
+    annotation = 'build.IgnoreJava8API'
 }

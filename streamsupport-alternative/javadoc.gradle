@@ -23,4 +23,5 @@ javadoc {
         //failOnError = false
         //linkSource true
     }
+    exclude '../src/main/java/java/util/Random.java', '../src/main/java/build/IgnoreJava8API.java'
 }
