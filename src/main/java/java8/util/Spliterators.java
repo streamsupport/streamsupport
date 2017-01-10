@@ -53,6 +53,8 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import build.IgnoreJava8API;
+
 import java8.util.Objects;
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
@@ -71,25 +73,29 @@ import java8.util.function.LongConsumer;
 public final class Spliterators {
 
     private static final String NATIVE_OPT_ENABLED_P = Spliterators.class.getName() + ".assume.oracle.collections.impl";
-    private static final String JRE_DELEGATION_ENABLED_P = Spliterators.class.getName() + ".jre.delegation.enabled";
+    private static final String DELEGATION_ENABLED_P = Spliterators.class.getName() + ".jre.delegation.enabled";
     private static final String RNDACC_SPLITER_ENABLED_P = Spliterators.class.getName() + ".randomaccess.spliterator.enabled";
 
     // defaults to true
     static final boolean NATIVE_SPECIALIZATION = getBooleanPropVal(NATIVE_OPT_ENABLED_P, true);
     // defaults to true
-    static final boolean JRE_DELEGATION_ENABLED = getBooleanPropVal(JRE_DELEGATION_ENABLED_P, true);
+    static final boolean DELEGATION_ENABLED = getBooleanPropVal(DELEGATION_ENABLED_P, true);
+
     // introduced in 1.4.3 - just in case something gets wrong (defaults to true)
     private static final boolean ALLOW_RNDACC_SPLITER_OPT = getBooleanPropVal(RNDACC_SPLITER_ENABLED_P, true);
     // is this RoboVM? (defaults to false)
-    private static final boolean IS_ROBOVM = isClassPresent("org.robovm.rt.bro.Bro");
+    private static final boolean IS_ROBOVM = isRoboVm();
+
     // is this Android? (defaults to false)
-    static final boolean IS_ANDROID = isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
+    static final boolean IS_ANDROID = isAndroid();
     // is this an Apache Harmony-based Android? (defaults to false)
     static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("android.opengl.GLES32$DebugProc");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
-    static final boolean JRE_HAS_STREAMS = isStreamEnabledJRE();
+    static final boolean HAS_STREAMS = isStreamEnabled();
+    // defaults to false
+    static final boolean IS_JAVA9 = isClassPresent("java.lang.StackWalker$Option");
 
     // Suppresses default constructor, ensuring non-instantiability.
     private Spliterators() {}
@@ -909,8 +915,8 @@ public final class Spliterators {
     public static <T> Spliterator<T> spliterator(Collection<? extends T> c) {
         Objects.requireNonNull(c);
 
-        if (JRE_HAS_STREAMS && JRE_DELEGATION_ENABLED) {
-            return jreDelegatingSpliterator(c);
+        if (HAS_STREAMS && DELEGATION_ENABLED && !hasAndroid7LHMBug(c)) {
+            return delegatingSpliterator(c);
         }
 
         String name = c.getClass().getName();
@@ -1023,7 +1029,7 @@ public final class Spliterators {
             if (c instanceof LinkedBlockingQueue) {
                 return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
             }
-            if (c instanceof ArrayDeque) {
+            if (c instanceof ArrayDeque && !IS_JAVA9) {
                 return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
             }
             if (c instanceof LinkedBlockingDeque) {
@@ -1041,7 +1047,8 @@ public final class Spliterators {
         return spliterator(c, 0);
     }
 
-    private static <T> Spliterator<T> jreDelegatingSpliterator(Collection<? extends T> c) {
+    @IgnoreJava8API
+    private static <T> Spliterator<T> delegatingSpliterator(Collection<? extends T> c) {
         return new DelegatingSpliterator<T>(((Collection<T>) c).spliterator());
     }
 
@@ -3276,13 +3283,23 @@ public final class Spliterators {
         return isVersionBelow("java.class.version", 51.0);
     }
 
+    private static boolean isRoboVm() {
+        return isClassPresent("org.robovm.rt.bro.Bro");
+    }
+
+    private static boolean isAndroid() {
+        return isClassPresent("android.util.DisplayMetrics") || IS_ROBOVM;
+    }
+
     /**
-     * Does the current JRE have the JSR 335 libraries?
+     * Does the current platform have the JSR 335 APIs?
      * @return {@code true} if yes, otherwise {@code false}.
      */
-    private static boolean isStreamEnabledJRE() {
+    private static boolean isStreamEnabled() {
         // a) must have at least major version number 52 (Java 8)
-        if (isVersionBelow("java.class.version", 52.0)) {
+        // or, alternatively, be an Android version that supports
+        // streams (check for that below)
+        if (!isAndroid() && isVersionBelow("java.class.version", 52.0)) {
             return false;
         }
         // b) j.u.f.Consumer & j.u.Spliterator must exist
@@ -3362,6 +3379,47 @@ public final class Spliterators {
             // Collections.UnmodifiableRandomAccessList
             // Collections.CheckedRandomAccessList
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * As of 2016-12-15 all Android 7.0, 7.1 and 7.1.1 releases (at least up to
+     * and including tag 7.1.1_r6) have a bug in LinkedHashMap's collection
+     * views' spliterators which correctly report that they are ORDERED but
+     * actually aren't ORDERED (instead the unordered HashMap spliterators are
+     * used). A fix for this bug has been merged into AOSP master on 2016-08-17
+     * but still hasn't been rolled out yet.
+     * <p>
+     * We'd want to avoid delegation to these flawed spliterators whenever
+     * possible and use the reflective implementation instead.
+     * <p>
+     * This check isn't 100% fool-proof as the LinkedHashMap (or its collection
+     * view) could be wrapped, for example in a j.u.Collections$UnmodifiableMap
+     * (whose UnmodifiableEntrySetSpliterator delegates back to the defective
+     * HashMap$EntrySpliterator). Since we can't know the wrapper beforehand
+     * this is as good as it can get.
+     * <p>
+     * Note that delegation will start to work automatically on Android 7.x
+     * releases that contain the above mentioned fix from AOSP master (this
+     * method will return {@code false} then).
+     * 
+     * @param c
+     *            the collection to check for the Android 7.x LinkedHashMap bug
+     * @return {@code true} if the argument is a Android 7.x LinkedHashMap
+     *         collection view that exhibits the unordered spliterator bug
+     */
+    @IgnoreJava8API
+    private static boolean hasAndroid7LHMBug(Collection<?> c) {
+        // is this Android 7.0 or above?
+        if (IS_ANDROID && !IS_HARMONY_ANDROID) {
+            String name = c.getClass().getName();
+            if (name.startsWith("java.util.HashMap$")) {
+                // Since it is a Collection this must be one of KeySet, Values
+                // or EnrySet. It is a bug (most likely a collection view from
+                // LinkedHashMap) if its Spliterator reports ORDERED!
+                return c.spliterator().hasCharacteristics(Spliterator.ORDERED);
+            }
         }
         return false;
     }

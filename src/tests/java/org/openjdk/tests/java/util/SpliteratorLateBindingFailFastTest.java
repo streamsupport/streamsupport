@@ -242,8 +242,10 @@ public class SpliteratorLateBindingFailFastTest {
 
         db.addCollection(c -> { Stack<Integer> s = new Stack<>(); s.addAll(c); return s;});
 
-        // Android's PriorityQueue fails in 5 tests
-//        db.addCollection(PriorityQueue::new);
+        // Harmony-based Android's PriorityQueue fails in 5 tests
+        if (!Android7PlusDetector.IS_HARMONY_ANDROID) {
+            db.addCollection(PriorityQueue::new);
+        }
 
         // ArrayDeque fails some tests since its fail-fast support is weaker
         // than other collections and limited to detecting most, but not all,

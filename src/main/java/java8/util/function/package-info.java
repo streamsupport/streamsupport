@@ -74,7 +74,7 @@
  *     {@link java8.util.function.Function} (unary function from {@code T} to {@code R}),
  *     {@link java8.util.function.Consumer} (unary function from {@code T} to {@code void}),
  *     {@link java8.util.function.Predicate} (unary function from {@code T} to {@code boolean}),
- *     and {@link java8.util.function.Supplier} (nilary function to {@code R}).
+ *     and {@link java8.util.function.Supplier} (nullary function to {@code R}).
  *     </li>
  *
  *     <li>Function shapes have a natural arity based on how they are most

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -37,6 +37,7 @@ import java8.util.function.Consumer;
  * Index-based split-by-two, lazily initialized Spliterator for ArrayLists.
  */
 final class ArrayListSpliterator<E> implements Spliterator<E> {
+// CVS rev. 1.48
     /*
      * If ArrayLists were immutable, or structurally immutable (no
      * adds, removes, etc), we could implement their spliterators
@@ -70,7 +71,6 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
      */
 
     private final ArrayList<E> list;
-//    private final Object[] elementData;
     private int index; // current index, modified on advance/split
     private int fence; // -1 until used; then one past last index
     private int expectedModCount; // initialized when fence set
@@ -79,7 +79,6 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     private ArrayListSpliterator(ArrayList<E> list, int origin, int fence,
                          int expectedModCount) {
         this.list = list; // OK if null unless traversed
-//        this.elementData = (this.list != null) ? getData(this.list) : null;
         this.index = origin;
         this.fence = fence;
         this.expectedModCount = expectedModCount;
@@ -91,14 +90,10 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 
     private int getFence() { // initialize fence to size on first use
         int hi; // (a specialized variant appears in method forEach)
-        ArrayList<E> lst;
         if ((hi = fence) < 0) {
-            if ((lst = list) == null) {
-                hi = fence = 0;
-            } else {
-                expectedModCount = getModCount(lst);
-                hi = fence = getSize(lst);
-            }
+            ArrayList<E> lst = list;
+            expectedModCount = getModCount(lst);
+            hi = fence = getSize(lst);
         }
         return hi;
     }
@@ -117,7 +112,6 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
         int hi = getFence(), i = index;
         if (i < hi) {
             index = i + 1;
-//            @SuppressWarnings("unchecked") E e = (E) elementData[i];
             @SuppressWarnings("unchecked") E e = (E) getData(list)[i];
             action.accept(e);
             if (expectedModCount != getModCount(list)) {
@@ -132,9 +126,9 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         int i, hi, mc; // hoist accesses and checks from loop
-        ArrayList<E> lst;
         Object[] a;
-        if ((lst = list) != null && (a = getData(lst)) != null) {
+        ArrayList<E> lst = list;
+        if ((a = getData(lst)) != null) {
             if ((hi = fence) < 0) {
                 mc = getModCount(lst);
                 hi = getSize(lst);
@@ -157,7 +151,7 @@ final class ArrayListSpliterator<E> implements Spliterator<E> {
 
     @Override
     public long estimateSize() {
-        return (long) (getFence() - index);
+        return getFence() - index;
     }
 
     @Override

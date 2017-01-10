@@ -59,7 +59,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
-//import java.util.WeakHashMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -582,18 +582,22 @@ public class SpliteratorTraversingAndSplittingTest {
 
 //            db.addMap(IdentityHashMap::new);
 
-            // Android's WeakHashMap fails in 24 tests
-//            db.addMap(WeakHashMap::new);
+            // Apache Harmony Android's WeakHashMap fails in 24 tests
+            if (!Android7PlusDetector.IS_HARMONY_ANDROID) {
+                db.addMap(WeakHashMap::new);
+            }
 
-            // Android's WeakHashMap fails in 24 tests
-//            db.addMap(m -> {
-//                // Create a Map ensuring that for large sizes
-//                // buckets will be consist of 2 or more entries
-//                WeakHashMap<Integer, Integer> cm = new WeakHashMap<>(1, m.size() + 1);
-//                for (Map.Entry<Integer, Integer> e : m.entrySet())
-//                    cm.put(e.getKey(), e.getValue());
-//                return cm;
-//            }, "new java.util.WeakHashMap(1, size + 1)");
+            // Apache Harmony Android's WeakHashMap fails in 24 tests
+            if (!Android7PlusDetector.IS_HARMONY_ANDROID) {
+                db.addMap(m -> {
+                    // Create a Map ensuring that for large sizes
+                    // buckets will be consist of 2 or more entries
+                    WeakHashMap<Integer, Integer> cm = new WeakHashMap<>(1, m.size() + 1);
+                    for (Map.Entry<Integer, Integer> e : m.entrySet())
+                        cm.put(e.getKey(), e.getValue());
+                    return cm;
+                }, "new java.util.WeakHashMap(1, size + 1)");
+            }
 
             // @@@  Descending maps etc
             db.addMap(TreeMap::new);
@@ -1168,7 +1172,7 @@ public class SpliteratorTraversingAndSplittingTest {
         }
         assertEquals(fromForEach.size(), exp.size());
 
-        assertContents(fromForEach, exp, isOrdered);
+        assertContents(fromForEach, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testTryAdvance(
@@ -1195,7 +1199,7 @@ public class SpliteratorTraversingAndSplittingTest {
         }
         assertEquals(fromTryAdvance.size(), exp.size());
 
-        assertContents(fromTryAdvance, exp, isOrdered);
+        assertContents(fromTryAdvance, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testMixedTryAdvanceForEach(
@@ -1223,12 +1227,7 @@ public class SpliteratorTraversingAndSplittingTest {
         }
         assertEquals(dest.size(), exp.size());
 
-        if (isOrdered) {
-            assertEquals(dest, exp);
-        }
-        else {
-            assertContentsUnordered(dest, exp);
-        }
+        assertContents(dest, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testSplitAfterFullTraversal(
@@ -1279,7 +1278,7 @@ public class SpliteratorTraversingAndSplittingTest {
             if (s1Size >= 0 && s2Size >= 0)
                 assertEquals(sizeIfKnown, s1Size + s2Size);
         }
-        assertContents(fromSplit, exp, isOrdered);
+        assertContents(fromSplit, exp, isOrdered, spliterator);
     }
 
     private static <T, S extends Spliterator<T>> void testSplitSixDeep(
@@ -1297,13 +1296,13 @@ public class SpliteratorTraversingAndSplittingTest {
 
             // verify splitting with forEach
             visit(depth, 0, dest, spliterator, boxingAdapter, spliterator.characteristics(), false);
-            assertContents(dest, exp, isOrdered);
+            assertContents(dest, exp, isOrdered, spliterator);
 
             // verify splitting with tryAdvance
             dest.clear();
             spliterator = supplier.get();
             visit(depth, 0, dest, spliterator, boxingAdapter, spliterator.characteristics(), true);
-            assertContents(dest, exp, isOrdered);
+            assertContents(dest, exp, isOrdered, spliterator);
         }
     }
 
@@ -1374,7 +1373,7 @@ public class SpliteratorTraversingAndSplittingTest {
         Consumer<T> c = boxingAdapter.apply(splits::add);
 
         testSplitUntilNull(new SplitNode<T>(c, s));
-        assertContents(splits, exp, isOrdered);
+        assertContents(splits, exp, isOrdered, s);
     }
 
     private static class SplitNode<T> {
@@ -1491,8 +1490,9 @@ public class SpliteratorTraversingAndSplittingTest {
         }
     }
 
-    private static<T> void assertContents(Collection<T> actual, Collection<T> expected, boolean isOrdered) {
-        if (isOrdered) {
+    private static<T> void assertContents(Collection<T> actual, Collection<T> expected, boolean isOrdered, Spliterator<?> spliterator) {
+        // hasAndroid7xLHMBug() => workaround for Android 7.x LinkedHashMap bug
+        if (isOrdered && !DelegationActive.hasAndroid7xLHMBug(spliterator)) {
             assertEquals(actual, expected);
         }
         else {

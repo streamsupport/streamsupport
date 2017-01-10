@@ -27,7 +27,55 @@ package java8.util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-final class J8Collections {
+final class J9Collections {
+
+    /**
+     * Checks that the specified object reference is not {@code null}. This
+     * method is designed primarily for doing parameter validation in methods
+     * and constructors, as demonstrated below:
+     * <blockquote><pre>
+     * public Foo(Bar bar) {
+     *     this.bar = J9Collections.requireNonNull(bar);
+     * }
+     * </pre></blockquote>
+     *
+     * @param obj the object reference to check for nullity
+     * @param <T> the type of the reference
+     * @return {@code obj} if not {@code null}
+     * @throws NullPointerException if {@code obj} is {@code null}
+     */
+    static <T> T requireNonNull(T obj) {
+        if (obj == null) {
+            throw new NullPointerException();
+        }
+        return obj;
+    }
+
+    /**
+     * Checks if the {@code index} is within the bounds of the range from
+     * {@code 0} (inclusive) to {@code length} (exclusive).
+     *
+     * <p>The {@code index} is defined to be out-of-bounds if any of the
+     * following inequalities is true:
+     * <ul>
+     *  <li>{@code index < 0}</li>
+     *  <li>{@code index >= length}</li>
+     *  <li>{@code length < 0}, which is implied from the former inequalities</li>
+     * </ul>
+     *
+     * @param index the index
+     * @param length the upper-bound (exclusive) of the range
+     * @return {@code index} if it is within bounds of the range
+     * @throws IndexOutOfBoundsException if the {@code index} is out-of-bounds
+     * @since 9
+     */
+    static int checkIndex(int index, int length) {
+        if (index < 0 || index >= length) {
+            throw new IndexOutOfBoundsException(String.format(
+                    "Index %d out-of-bounds for length %d", index, length));
+        }
+        return index;
+    }
 
     /**
      * Returns an iterator that has no elements. More precisely,
@@ -89,6 +137,6 @@ final class J8Collections {
         }
     }
 
-    private J8Collections() {
+    private J9Collections() {
     }
 }

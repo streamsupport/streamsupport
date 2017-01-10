@@ -134,7 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
-// CVS rev. 1.65
+// CVS rev. 1.68
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -170,8 +170,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /** Fallback if ForkJoinPool.commonPool() cannot support parallelism */
     private static final class ThreadPerTaskExecutor implements Executor {
-        // avoid creation of synthetic class and bridge constructor
-        ThreadPerTaskExecutor() {}
+        ThreadPerTaskExecutor() {} // prevents bridge class creation
         public void execute(Runnable r) { new Thread(r).start(); }
     }
 
@@ -1445,7 +1444,17 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
          */
         private boolean checkControl(Flow.Subscriber<? super T> s, int c) {
             boolean stat = true;
-            if ((c & ERROR) != 0) {
+            if ((c & SUBSCRIBE) != 0) {
+                if (U.compareAndSwapInt(this, CTL, c, c & ~SUBSCRIBE)) {
+                    try {
+                        if (s != null)
+                            s.onSubscribe(this);
+                    } catch (Throwable ex) {
+                        onError(ex);
+                    }
+                }
+            }
+            else if ((c & ERROR) != 0) {
                 Throwable ex = pendingError;
                 ctl = DISABLED;           // no need for CAS
                 if (ex != null) {         // null if errorless cancel
@@ -1453,16 +1462,6 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                         if (s != null)
                             s.onError(ex);
                     } catch (Throwable ignore) {
-                    }
-                }
-            }
-            else if ((c & SUBSCRIBE) != 0) {
-                if (U.compareAndSwapInt(this, CTL, c, c & ~SUBSCRIBE)) {
-                    try {
-                        if (s != null)
-                            s.onSubscribe(this);
-                    } catch (Throwable ex) {
-                        onError(ex);
                     }
                 }
             }

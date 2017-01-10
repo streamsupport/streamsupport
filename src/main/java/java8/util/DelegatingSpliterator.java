@@ -7,6 +7,8 @@ package java8.util;
 
 import java.util.Comparator;
 
+import build.IgnoreJava8API;
+
 import java8.util.function.Consumer;
 import java8.util.function.Consumers;
 
@@ -16,6 +18,7 @@ import java8.util.function.Consumers;
  * @param <T>
  *            the type of the input to the operation
  */
+@IgnoreJava8API
 final class DelegatingSpliterator<T> implements Spliterator<T> {
 
     private final java.util.Spliterator<T> spliter;
@@ -69,6 +72,12 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
         return spliter.getComparator();
     }
 
+    // This method is only used from the test suite
+    // see https://sourceforge.net/p/streamsupport/tickets/240/
+    Object getDelegatee() {
+        return spliter;
+    }
+
     /**
      * A j.u.f.Consumer implementation that delegates to a j8.u.f.Consumer.
      *
@@ -90,8 +99,8 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
             delegate.accept(t);
         }
 
-        // TODO: this can be spared in all likelihood !!?
         @Override
+        @IgnoreJava8API
         public java.util.function.Consumer<T> andThen(
                 java.util.function.Consumer<? super T> after) {
 

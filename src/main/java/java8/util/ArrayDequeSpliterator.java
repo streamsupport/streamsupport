@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,15 +33,14 @@ import java8.util.Spliterators;
 import java8.util.function.Consumer;
 
 final class ArrayDequeSpliterator<E> implements Spliterator<E> {
-//  private final Object[] elements;
+// CVS rev. 1.74
     private final ArrayDeque<E> deq;
     private int fence;  // -1 until first use
     private int index;  // current index, modified on traverse/split
 
-    /** Creates new spliterator covering the given array and range */
+    /** Constructs a new spliterator covering the given array and range. */
     private ArrayDequeSpliterator(ArrayDeque<E> deq, int origin, int fence) {
         this.deq = deq;
-//        this.elements = getData(this.deq);
         this.index = origin;
         this.fence = fence;
     }
@@ -50,6 +49,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
         return new ArrayDequeSpliterator<T>(deque, -1, -1);
     }
 
+    /** Ensures late-binding initialization; then returns fence. */
     private int getFence() { // force initialization
         int t;
         if ((t = fence) < 0) {
@@ -72,8 +72,8 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
     }
 
     @Override
-    public void forEachRemaining(Consumer<? super E> consumer) {
-        Objects.requireNonNull(consumer);
+    public void forEachRemaining(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
         Object[] a = getData(deq);
         int m = a.length - 1, f = getFence(), i = index;
         index = f;
@@ -83,13 +83,13 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
             if (e == null) {
                 throw new ConcurrentModificationException();
             }
-            consumer.accept(e);
+            action.accept(e);
         }
     }
 
     @Override
-    public boolean tryAdvance(Consumer<? super E> consumer) {
-        Objects.requireNonNull(consumer);
+    public boolean tryAdvance(Consumer<? super E> action) {
+        Objects.requireNonNull(action);
         Object[] a = getData(deq);
         int m = a.length - 1, f = getFence(), i = index;
         if (i != fence) {
@@ -98,7 +98,7 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
             if (e == null) {
                 throw new ConcurrentModificationException();
             }
-            consumer.accept(e);
+            action.accept(e);
             return true;
         }
         return false;
@@ -110,13 +110,15 @@ final class ArrayDequeSpliterator<E> implements Spliterator<E> {
         if (n < 0) {
             n += getData(deq).length;
         }
-        return (long) n;
+        return n;
     }
 
     @Override
     public int characteristics() {
-        return Spliterator.ORDERED | Spliterator.SIZED |
-            Spliterator.NONNULL | Spliterator.SUBSIZED;
+        return Spliterator.NONNULL
+            | Spliterator.ORDERED
+            | Spliterator.SIZED
+            | Spliterator.SUBSIZED;
     }
 
     @Override

@@ -44,6 +44,14 @@ public final class Iterators {
      * performed in the order of iteration.
      * Exceptions thrown by the action are relayed to the caller.
      *
+     * <p>
+     * The behavior of an iterator is unspecified if the action modifies the underlying
+     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+     * method), unless an overriding class has specified a concurrent modification policy.
+     * <p>
+     * Subsequent behavior of an iterator is unspecified if the action throws an
+     * exception.
+     *
      * <p>The implementation behaves as if:
      * <pre>{@code
      *     while (it.hasNext())
@@ -71,6 +79,14 @@ public final class Iterators {
      * performed in the order of iteration.
      * Exceptions thrown by the action are relayed to the caller.
      *
+     * <p>
+     * The behavior of an iterator is unspecified if the action modifies the underlying
+     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+     * method), unless an overriding class has specified a concurrent modification policy.
+     * <p>
+     * Subsequent behavior of an iterator is unspecified if the action throws an
+     * exception.
+     *
      * <p>The implementation behaves as if:
      * <pre>{@code
      *     while (it.hasNext())
@@ -97,6 +113,14 @@ public final class Iterators {
      * performed in the order of iteration.
      * Exceptions thrown by the action are relayed to the caller.
      *
+     * <p>
+     * The behavior of an iterator is unspecified if the action modifies the underlying
+     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+     * method), unless an overriding class has specified a concurrent modification policy.
+     * <p>
+     * Subsequent behavior of an iterator is unspecified if the action throws an
+     * exception.
+     *
      * <p>The implementation behaves as if:
      * <pre>{@code
      *     while (it.hasNext())
@@ -122,6 +146,14 @@ public final class Iterators {
      * have been processed or the action throws an exception.  Actions are
      * performed in the order of iteration.
      * Exceptions thrown by the action are relayed to the caller.
+     *
+     * <p>
+     * The behavior of an iterator is unspecified if the action modifies the underlying
+     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+     * method), unless an overriding class has specified a concurrent modification policy.
+     * <p>
+     * Subsequent behavior of an iterator is unspecified if the action throws an
+     * exception.
      *
      * <p>The implementation behaves as if:
      * <pre>{@code

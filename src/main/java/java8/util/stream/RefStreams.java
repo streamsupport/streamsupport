@@ -406,7 +406,7 @@ public final class RefStreams {
      */
     public static <T> Stream<T> generate(Supplier<? extends T> s) {
         Objects.requireNonNull(s);
-        return (Stream<T>) StreamSupport.stream(
+        return StreamSupport.stream(
                 new StreamSpliterators.InfiniteSupplyingSpliterator.OfRef<>(Long.MAX_VALUE, s), false);
     }
 

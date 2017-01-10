@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,16 +33,13 @@ import java8.util.function.Consumer;
 
 // Spliterator for java.util.PriorityQueue
 final class PQueueSpliterator<E> implements Spliterator<E> {
-    /*
-     * This is very similar to ArrayList Spliterator, except for
-     * extra null checks.
-     */
+// CVS rev. 1.115
     private final PriorityQueue<E> pq;
     private int index;            // current index, modified on advance/split
     private int fence;            // -1 until first use
     private int expectedModCount; // initialized when fence set
 
-    /** Creates new spliterator covering the given range */
+    /** Creates new spliterator covering the given range. */
     private PQueueSpliterator(PriorityQueue<E> pq, int origin, int fence,
                          int expectedModCount) {
         this.pq = pq;
@@ -76,48 +73,36 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
     @SuppressWarnings("unchecked")
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        int i, hi, mc; // hoist accesses and checks from loop
-        PriorityQueue<E> q;
-        Object[] a;
-        if ((q = pq) != null && (a = getQueue(q)) != null) {
-            if ((hi = fence) < 0) {
-                mc = getModCount(q);
-                hi = getSize(q);
-            } else {
-                mc = expectedModCount;
+        PriorityQueue<E> q = pq;
+        if (fence < 0) { fence = getSize(q); expectedModCount = getModCount(q); }
+        Object[] a = getQueue(q);
+        int i, hi; E e;
+        for (i = index, index = hi = fence; i < hi; i++) {
+            if ((e = (E) a[i]) == null) {
+                break;      // must be CME
             }
-            if ((i = index) >= 0 && (index = hi) <= a.length) {
-                for (E e;; ++i) {
-                    if (i < hi) {
-                        if ((e = (E) a[i]) == null) { // must be CME
-                            break;
-                        }
-                        action.accept(e);
-                    } else if (mc != getModCount(q)) {
-                        break;
-                    } else {
-                        return;
-                    }
-                }
-            }
+            action.accept(e);
         }
-        throw new ConcurrentModificationException();
+        if (getModCount(q) != expectedModCount) {
+            throw new ConcurrentModificationException();
+        }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        int hi = getFence(), lo = index;
-        if (lo >= 0 && lo < hi) {
-            index = lo + 1;
-            @SuppressWarnings("unchecked") E e = (E) getQueue(pq)[lo];
-            if (e == null) {
+        PriorityQueue<E> q = pq;
+        if (fence < 0) { fence = getSize(q); expectedModCount = getModCount(q); }
+        int i;
+        if ((i = index) < fence) {
+            index = i + 1;
+            E e;
+            if ((e = (E) getQueue(q)[i]) == null
+                || getModCount(q) != expectedModCount) {
                 throw new ConcurrentModificationException();
             }
             action.accept(e);
-            if (expectedModCount != getModCount(pq)) {
-                throw new ConcurrentModificationException();
-            }
             return true;
         }
         return false;
@@ -125,7 +110,7 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
 
     @Override
     public long estimateSize() {
-        return (long) (getFence() - index);
+        return getFence() - index;
     }
 
     @Override

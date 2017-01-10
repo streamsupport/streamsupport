@@ -1,26 +1,7 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.  Oracle designates this
- * particular file as subject to the "Classpath" exception as provided
- * by Oracle in the LICENSE file that accompanied this code.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
+ * Written by Doug Lea with assistance from members of JCP JSR-166
+ * Expert Group and released to the public domain, as explained at
+ * http://creativecommons.org/publicdomain/zero/1.0/
  */
 package java8.util;
 
@@ -30,10 +11,12 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java8.util.function.Consumer;
 import java8.util.Spliterator;
 
-// Spliterator for java.util.concurrent.PriorityBlockingQueue
-// Avoids commitment to toArray() until needed
+/*
+ * Spliterator for java.util.concurrent.PriorityBlockingQueue.
+ * Immutable snapshot spliterator that binds to elements "late".
+ */
 final class PBQueueSpliterator<E> implements Spliterator<E> {
-
+// CVS rev. 1.120
     private final PriorityBlockingQueue<E> queue;
     private Object[] array;
     private int index;
@@ -60,10 +43,10 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     }
 
     @Override
-    public Spliterator<E> trySplit() {
+    public PBQueueSpliterator<E> trySplit() {
         int hi = getFence(), lo = index, mid = (lo + hi) >>> 1;
-        return (lo >= mid) ? null : new PBQueueSpliterator<E>(
-                queue, array, lo, index = mid);
+        return (lo >= mid) ? null :
+            new PBQueueSpliterator<E>(queue, array, lo, index = mid);
     }
 
     @Override
@@ -75,10 +58,9 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
         if ((a = array) == null) {
             fence = (a = queue.toArray()).length;
         }
-        if ((hi = fence) <= a.length && (i = index) >= 0 && i < (index = hi)) {
-            do {
-                action.accept((E) a[i]);
-            } while (++i < hi);
+        if ((hi = fence) <= a.length &&
+            (i = index) >= 0 && i < (index = hi)) {
+            do { action.accept((E) a[i]); } while (++i < hi);
         }
     }
 
@@ -86,8 +68,7 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         if (getFence() > index && index >= 0) {
-            @SuppressWarnings("unchecked")
-            E e = (E) array[index++];
+            @SuppressWarnings("unchecked") E e = (E) array[index++];
             action.accept(e);
             return true;
         }
@@ -95,9 +76,7 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     }
 
     @Override
-    public long estimateSize() {
-        return (long) (getFence() - index);
-    }
+    public long estimateSize() { return getFence() - index; }
 
     @Override
     public int characteristics() {

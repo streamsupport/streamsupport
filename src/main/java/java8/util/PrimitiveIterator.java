@@ -70,6 +70,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
      * or the action throws an exception.  Errors or runtime exceptions
      * thrown by the action are relayed to the caller.
      *
+     * <p>
+     * The behavior of an iterator is unspecified if the action modifies the underlying
+     * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+     * method), unless an overriding class has specified a concurrent modification policy.
+     * <p>
+     * Subsequent behavior of an iterator is unspecified if the action throws an
+     * exception.
+     *
      * @param action The action to be performed for each element
      * @throws NullPointerException if the specified action is null
      */
@@ -94,6 +102,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * have been processed or the action throws an exception.  Actions are
          * performed in the order of iteration, if that order is specified.
          * Exceptions thrown by the action are relayed to the caller.
+         *
+         * <p>
+         * The behavior of an iterator is unspecified if the action modifies the underlying
+         * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+         * method), unless an overriding class has specified a concurrent modification policy.
+         * <p>
+         * Subsequent behavior of an iterator is unspecified if the action throws an
+         * exception.
          *
          * <p><b>Implementation Requirements:</b><br>
          * <p>The default implementation behaves as if:
@@ -149,6 +165,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * performed in the order of iteration, if that order is specified.
          * Exceptions thrown by the action are relayed to the caller.
          *
+         * <p>
+         * The behavior of an iterator is unspecified if the action modifies the underlying
+         * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+         * method), unless an overriding class has specified a concurrent modification policy.
+         * <p>
+         * Subsequent behavior of an iterator is unspecified if the action throws an
+         * exception.
+         *
          * <p><b>Implementation Requirements:</b><br>
          * <p>The default implementation behaves as if:
          * <pre>{@code
@@ -202,6 +226,14 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          * have been processed or the action throws an exception.  Actions are
          * performed in the order of iteration, if that order is specified.
          * Exceptions thrown by the action are relayed to the caller.
+         *
+         * <p>
+         * The behavior of an iterator is unspecified if the action modifies the underlying
+         * source of elements in any way (even by calling the {@link Iterator#remove() remove}
+         * method), unless an overriding class has specified a concurrent modification policy.
+         * <p>
+         * Subsequent behavior of an iterator is unspecified if the action throws an
+         * exception.
          *
          * <p><b>Implementation Requirements:</b><br>
          * <p>The default implementation behaves as if:

@@ -113,6 +113,8 @@
       <class name="org.openjdk.tests.java.util.SpliteratorCollisions"/>
       <class name="org.openjdk.tests.java.util.SpliteratorLateBindingFailFastTest"/>
       <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorFailFastTest"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorLateBindingTest"/>
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
 
       <!-- block 10 (Java9: Stream takeWhile / dropWhile) -->
@@ -142,6 +144,7 @@
       <!-- block 13 (JSR 166 TCK tests) -->
       <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
+      <class name="org.openjdk.tests.tck.CountedCompleter8Test"/>
       <class name="org.openjdk.tests.tck.DoubleAccumulatorTest"/>
       <class name="org.openjdk.tests.tck.DoubleAdderTest"/>
       <class name="org.openjdk.tests.tck.ForkJoinPool8Test"/>
@@ -157,8 +160,10 @@
       <class name="org.openjdk.tests.tck.SubmissionPublisherTest"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandom8Test"/>
       <class name="org.openjdk.tests.tck.ThreadLocalRandomTest"/>
+      <class name="org.openjdk.tests.tck.LinkedBlockingQueue8Test"/>
+      <class name="org.openjdk.tests.tck.LinkedBlockingDeque8Test"/>
 
-      <!-- Test dependencies block 14: streamsupport.jar + streamsupport-literal.jar -->
+      <!-- Test dependencies block 14: streamsupport-literal.jar (nothing else) -->
 
       <!-- block 14 (streamsupport-literal tests) -->
       <class name="org.openjdk.tests.java.util.EntrySetIterator"/>
@@ -169,6 +174,7 @@
 
       <!-- block 15 (superseded or questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
+      <!--class name="org.openjdk.other.tests.forkjoin.MergeDemo"/-->
 
     </classes>
   </test>

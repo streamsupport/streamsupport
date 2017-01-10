@@ -6,8 +6,10 @@
 package java8.util.concurrent;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.security.AccessController;
 import java.security.AccessControlContext;
 import java.security.Permissions;
+import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +46,8 @@ import java8.util.function.Predicate;
  * tasks are submitted to the pool from external clients.  Especially
  * when setting <em>asyncMode</em> to true in constructors, {@code
  * ForkJoinPool}s may also be appropriate for use with event-style
- * tasks that are never joined.
+ * tasks that are never joined. All worker threads are initialized
+ * with {@link Thread#isDaemon} set {@code true}.
  *
  * <p>A static {@link #commonPool()} is available and appropriate for
  * most applications. The common pool is used by any ForkJoinTask that
@@ -146,7 +149,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.328
+// CVS rev. 1.330
     /*
      * Implementation Overview
      *
@@ -3294,8 +3297,7 @@ public class ForkJoinPool extends AbstractExecutorService {
             new DefaultForkJoinWorkerThreadFactory();
         modifyThreadPermission = new RuntimePermission("modifyThread");
 
-        common = java.security.AccessController.doPrivileged
-            (new java.security.PrivilegedAction<ForkJoinPool>() {
+        common = AccessController.doPrivileged(new PrivilegedAction<ForkJoinPool>() {
                     public ForkJoinPool run() {
                         return new ForkJoinPool((byte)0); }});
 
@@ -3338,8 +3340,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         }
 
         public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
-            return java.security.AccessController.doPrivileged(
-                new java.security.PrivilegedAction<ForkJoinWorkerThread>() {
+            return AccessController.doPrivileged(new PrivilegedAction<ForkJoinWorkerThread>() {
                     public ForkJoinWorkerThread run() {
                         return new ForkJoinWorkerThread.
                             InnocuousForkJoinWorkerThread(pool);
