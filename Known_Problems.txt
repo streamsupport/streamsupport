@@ -1,0 +1,26 @@
+
+KNOWN PROBLEMS
+-------------- 
+
+ - Note that as of 2016-12-15 all Android 7.0, 7.1 and 7.1.1 releases (at least
+   up to and including tag 7.1.1_r6) have a bug in LinkedHashMap's collection views'
+   spliterators which correctly report that they are ORDERED but actually aren't
+   ORDERED (instead the unordered HashMap spliterators are used). A fix for this
+   bug has been merged into AOSP master on 2016-08-17 but still hasn't been rolled
+   out yet.
+
+   Since streamsupport 1.5.3 will by default delegate to the Android 7.x spliterators
+   you'd be affected by this unordered behavior on Android 7.x unless the bug gets
+   fixed or you disable spliterator delegation altogether.
+
+   To mitigate the risk streamsupport 1.5.3 exercises a check whether the spliterator
+   for a HashMap collection view reports ORDERED (a bug) and excepts these cases
+   from the delegation mechanism (using the reflective implementation instead).
+
+   But note that this check isn't 100% fool-proof as the LinkedHashMap (or its
+   collection view) could be wrapped, for example in a j.u.Collections$UnmodifiableMap
+   (whose UnmodifiableEntrySetSpliterator delegates back to the defective
+   HashMap$EntrySpliterator).
+
+   Since we can't know an arbitrary wrapper beforehand there is nothing streamsupport
+   can do about this - you have been warned.
