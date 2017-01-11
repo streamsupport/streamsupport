@@ -16,9 +16,9 @@ import java8.util.Spliterator;
  * Immutable snapshot spliterator that binds to elements "late".
  */
 final class PBQueueSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.124
+// CVS rev. 1.127
     private final PriorityBlockingQueue<E> queue;
-    private Object[] array;
+    private Object[] array;        // null until late-bound-initialized
     private int index;
     private int fence;
 
@@ -35,11 +35,9 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     }
 
     private int getFence() {
-        int hi;
-        if ((hi = fence) < 0) {
-            hi = fence = (array = queue.toArray()).length;
-        }
-        return hi;
+        if (array == null)
+            fence = (array = queue.toArray()).length;
+        return fence;
     }
 
     @Override
@@ -53,23 +51,19 @@ final class PBQueueSpliterator<E> implements Spliterator<E> {
     @SuppressWarnings("unchecked")
     public void forEachRemaining(Consumer<? super E> action) {
         Objects.requireNonNull(action);
-        Object[] a;
-        int i, hi; // hoist accesses and checks from loop
-        if ((a = array) == null) {
-            fence = (a = queue.toArray()).length;
-        }
-        if ((hi = fence) <= a.length &&
-            (i = index) >= 0 && i < (index = hi)) {
-            do { action.accept((E) a[i]); } while (++i < hi);
-        }
+        int hi = getFence(), lo = index;
+        Object[] a = array;
+        index = hi;                 // ensure exhaustion
+        for (int i = lo; i < hi; i++)
+            action.accept((E) a[i]);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         if (getFence() > index && index >= 0) {
-            @SuppressWarnings("unchecked") E e = (E) array[index++];
-            action.accept(e);
+            action.accept((E) array[index++]);
             return true;
         }
         return false;
