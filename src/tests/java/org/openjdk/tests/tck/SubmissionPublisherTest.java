@@ -25,7 +25,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.16
+// CVS rev. 1.18
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -154,7 +154,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * defaultExecutor
      */
     public void testConstructor1() {
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>();
+        SubmissionPublisher<Integer> p = new SubmissionPublisher<>();
         checkInitialState(p);
         assertEquals(p.getMaxBufferCapacity(), Flow.defaultBufferSize());
         Executor e = p.getExecutor(), c = ForkJoinPool.commonPool();
@@ -170,7 +170,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      */
     public void testConstructor2() {
         Executor e = Executors.newFixedThreadPool(1);
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(e, 8);
+        SubmissionPublisher<Integer> p = new SubmissionPublisher<>(e, 8);
         checkInitialState(p);
         assertSame(p.getExecutor(), e);
         assertEquals(8, p.getMaxBufferCapacity());
@@ -452,9 +452,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      */
     public void testThrowOnNextHandler() {
         AtomicInteger calls = new AtomicInteger();
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>
-            (basicExecutor, 8,
-             (s, e) -> calls.getAndIncrement());
+        SubmissionPublisher<Integer> p = new SubmissionPublisher<>(
+          basicExecutor, 8, (s, e) -> calls.getAndIncrement());
         TestSubscriber s1 = new TestSubscriber();
         TestSubscriber s2 = new TestSubscriber();
         p.subscribe(s1);
@@ -635,8 +634,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * submit eventually issues requested items when buffer capacity is 1
      */
     public void testCap1Submit() {
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 1);
+        SubmissionPublisher<Integer> p 
+          = new SubmissionPublisher<>(basicExecutor, 1);
         TestSubscriber s1 = new TestSubscriber();
         TestSubscriber s2 = new TestSubscriber();
         p.subscribe(s1);
@@ -714,8 +713,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * offer reports drops if saturated
      */
     public void testDroppedOffer() {
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 4);
+        SubmissionPublisher<Integer> p
+          = new SubmissionPublisher<>(basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
         s1.request = false;
         TestSubscriber s2 = new TestSubscriber();
@@ -743,8 +742,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      */
     public void testHandledDroppedOffer() {
         AtomicInteger calls = new AtomicInteger();
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 4);
+        SubmissionPublisher<Integer> p
+          = new SubmissionPublisher<>(basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
         s1.request = false;
         TestSubscriber s2 = new TestSubscriber();
@@ -771,8 +770,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      */
     public void testRecoveredHandledDroppedOffer() {
         AtomicInteger calls = new AtomicInteger();
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 4);
+        SubmissionPublisher<Integer> p
+          = new SubmissionPublisher<>(basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
         s1.request = false;
         TestSubscriber s2 = new TestSubscriber();
@@ -852,8 +851,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      * Timed offer reports drops if saturated
      */
     public void testDroppedTimedOffer() {
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 4);
+        SubmissionPublisher<Integer> p
+          = new SubmissionPublisher<>(basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
         s1.request = false;
         TestSubscriber s2 = new TestSubscriber();
@@ -884,8 +883,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      */
     public void testHandledDroppedTimedOffer() {
         AtomicInteger calls = new AtomicInteger();
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 4);
+        SubmissionPublisher<Integer> p
+          = new SubmissionPublisher<>(basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
         s1.request = false;
         TestSubscriber s2 = new TestSubscriber();
@@ -914,8 +913,8 @@ public class SubmissionPublisherTest extends JSR166TestCase {
      */
     public void testRecoveredHandledDroppedTimedOffer() {
         AtomicInteger calls = new AtomicInteger();
-        SubmissionPublisher<Integer> p = new SubmissionPublisher<Integer>(
-            basicExecutor, 4);
+        SubmissionPublisher<Integer> p
+          = new SubmissionPublisher<>(basicExecutor, 4);
         TestSubscriber s1 = new TestSubscriber();
         s1.request = false;
         TestSubscriber s2 = new TestSubscriber();

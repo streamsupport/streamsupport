@@ -49,6 +49,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class PhaserTest extends JSR166TestCase {
+// CVS rev. 1.44
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -333,7 +334,7 @@ public class PhaserTest extends JSR166TestCase {
     public void testArrive2() {
         final Phaser phaser = new Phaser();
         assertEquals(0, phaser.register());
-        List<Thread> threads = new ArrayList<Thread>();
+        List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             assertEquals(0, phaser.register());
             threads.add(newStartedThread(new CheckedRunnable() {
@@ -651,7 +652,7 @@ public class PhaserTest extends JSR166TestCase {
     public void testAwaitAdvance4() {
         final Phaser phaser = new Phaser(4);
         final AtomicInteger count = new AtomicInteger(0);
-        List<Thread> threads = new ArrayList<Thread>();
+        List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 4; i++)
             threads.add(newStartedThread(new CheckedRunnable() {
                 public void realRun() {
@@ -675,7 +676,7 @@ public class PhaserTest extends JSR166TestCase {
         assertEquals(1, phaser.awaitAdvance(phaser.arrive()));
         assertEquals(1, phaser.getPhase());
         assertEquals(1, phaser.register());
-        List<Thread> threads = new ArrayList<Thread>();
+        List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             final CountDownLatch latch = new CountDownLatch(1);
             final boolean goesFirst = ((i & 1) == 0);
@@ -703,13 +704,13 @@ public class PhaserTest extends JSR166TestCase {
      */
     public void testAwaitAdvanceTieredPhaser() throws Exception {
         final Phaser parent = new Phaser();
-        final List<Phaser> zeroPartyChildren = new ArrayList<Phaser>(3);
-        final List<Phaser> onePartyChildren = new ArrayList<Phaser>(3);
+        final List<Phaser> zeroPartyChildren = new ArrayList<>(3);
+        final List<Phaser> onePartyChildren = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
             zeroPartyChildren.add(new Phaser(parent, 0));
             onePartyChildren.add(new Phaser(parent, 1));
         }
-        final List<Phaser> phasers = new ArrayList<Phaser>();
+        final List<Phaser> phasers = new ArrayList<>();
         phasers.addAll(zeroPartyChildren);
         phasers.addAll(onePartyChildren);
         phasers.add(parent);
@@ -751,7 +752,7 @@ public class PhaserTest extends JSR166TestCase {
     public void testAwaitAdvance6() {
         final Phaser phaser = new Phaser(3);
         final CountDownLatch pleaseForceTermination = new CountDownLatch(2);
-        final List<Thread> threads = new ArrayList<Thread>();
+        final List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
             Runnable r = new CheckedRunnable() {
                 public void realRun() {
@@ -795,7 +796,7 @@ public class PhaserTest extends JSR166TestCase {
         final Phaser phaser = new Phaser(1);
         final int THREADS = 3;
         final CountDownLatch pleaseArrive = new CountDownLatch(THREADS);
-        final List<Thread> threads = new ArrayList<Thread>();
+        final List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < THREADS; i++)
             threads.add(newStartedThread(new CheckedRunnable() {
                 public void realRun() {

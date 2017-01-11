@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleterTest extends JSR166TestCase {
-// CVS rev. 1.30
+// CVS rev. 1.31
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -223,7 +223,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         final AtomicInteger onCompletionN = new AtomicInteger(0);
         final AtomicInteger onExceptionalCompletionN = new AtomicInteger(0);
         final AtomicInteger setRawResultN = new AtomicInteger(0);
-        final AtomicReference<Object> rawResult = new AtomicReference<Object>(null);
+        final AtomicReference<Object> rawResult = new AtomicReference<>(null);
         int computeN() { return computeN.get(); }
         int onCompletionN() { return onCompletionN.get(); }
         int onExceptionalCompletionN() { return onExceptionalCompletionN.get(); }
