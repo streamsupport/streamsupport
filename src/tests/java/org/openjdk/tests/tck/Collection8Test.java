@@ -380,7 +380,7 @@ public final class Collection8Test extends JSR166TestCase {
     @Test(dataProvider = "Source")
     public void testElementRemovalDuringTraversal(String description, Supplier<CollectionImplementation> sci) {
         CollectionImplementation impl = sci.get();
-        if (hasSpliteratorNodeSelfLinkingBug
+        if (HAS_JAVA8_SPLITERATOR_BUG
                 && LinkedBlockingQueue.class.equals(
                         impl.klazz())) {
             // LinkedBlockingQueue spliterator needs to support node self-linking
@@ -801,7 +801,7 @@ public final class Collection8Test extends JSR166TestCase {
     @Test(dataProvider = "Source")
     public void testStickySpliteratorExhaustion(String description, Supplier<CollectionImplementation> sci) throws Throwable {
         CollectionImplementation impl = sci.get();
-        if (hasSpliteratorNodeSelfLinkingBug
+        if (HAS_JAVA8_SPLITERATOR_BUG
                 && PriorityBlockingQueue.class.equals(
                         impl.klazz())) {
             // Concurrent spliterators fail to handle exhaustion properly
@@ -837,7 +837,7 @@ public final class Collection8Test extends JSR166TestCase {
     public void testDetectRaces(String description, Supplier<CollectionImplementation> sci) throws Throwable {
         CollectionImplementation impl = sci.get();
         if (!impl.isConcurrent()) return;
-        if (hasSpliteratorNodeSelfLinkingBug
+        if (HAS_JAVA8_SPLITERATOR_BUG
                 && LinkedBlockingDeque.class.equals(
                         impl.klazz())) {
             // LinkedBlockingDeque spliterator needs to support node self-linking
@@ -1053,26 +1053,30 @@ public final class Collection8Test extends JSR166TestCase {
     private static final String GLES32 = "android.opengl.GLES32$DebugProc";
     private static final boolean IS_OPENJDK_ANDROID = isOpenJDKAndroid();
     private static final boolean IS_SPLITERATOR_DELEGATION_ENABLED = isSpliteratorDelegationEnabled();
-    private static final boolean hasSpliteratorNodeSelfLinkingBug = hasSpliteratorNodeSelfLinkingBug(); 
+    private static final boolean HAS_JAVA8_SPLITERATOR_BUG = hasJava8SpliteratorBug(); 
 
     /**
-     * The Java 8 Spliterators for LinkedBlockingQueue and LinkedBlockingDeque
-     * both have a bug that can lead to infinite loops in some circumstances.
-     * See
+     * The Java 8 Spliterators for LinkedBlockingQueue, LinkedBlockingDeque and
+     * PriorityBlockingQueue have bugs that can lead to infinite loops or
+     * problems with the proper handling of exhaustion in some circumstances.
+     * 
+     * See:
      * 
      * https://bugs.openjdk.java.net/browse/JDK-8169739
      * https://bugs.openjdk.java.net/browse/JDK-8171051
+     * https://bugs.openjdk.java.net/browse/JDK-8172023
      * 
      * We'd get test failures because of this when we run on Java 8 or Android
-     * 7+ with Spliterator delegation enabled. This bug has been fixed in Java 9
-     * ea build 151, so we require this as the minimum version for test runs on
-     * Java 9 (otherwise we'd also get failures on Java 9 since we do not test
-     * for class.version 53.0 here).
+     * 7+ with Spliterator delegation enabled. These bugs have partly been fixed
+     * in Java 9 ea build 151 (JDK-8172023 still unfixed in build 152), so we
+     * require this as the minimum version for test runs on Java 9 (otherwise
+     * we'd also get failures on Java 9 since we do not test for class.version
+     * 53.0 here).
      * 
      * @return {@code true} on Java 8 or Android 7+ when Spliterator delegation
      *         hasn't been disabled, {@code false} otherwise.
      */
-    private static boolean hasSpliteratorNodeSelfLinkingBug() {
+    private static boolean hasJava8SpliteratorBug() {
         // a) must have exactly major version number 52 (Java 8)
         String ver = System.getProperty("java.class.version", "45");
         if (ver != null && ver.length() >= 2) {
