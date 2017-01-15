@@ -172,18 +172,23 @@ public final class Collection8Test extends JSR166TestCase {
     public void testNullPointerExceptions(String description, Supplier<CollectionImplementation> sci) throws InterruptedException {
         CollectionImplementation impl = sci.get();
         Collection<?> c = impl.emptyCollection();
+
         assertThrows(
             NullPointerException.class,
-            () -> c.addAll(null),
-            () -> c.containsAll(null),
-            () -> c.retainAll(null),
-            () -> c.removeAll(null),
             () -> Iterables.removeIf(c, null),
             () -> Iterables.forEach(c, null),
             () -> Iterators.forEachRemaining(c.iterator(), null),
             () -> Spliterators.spliterator(c).forEachRemaining(null),
-            () -> Spliterators.spliterator(c).tryAdvance(null),
-            () -> c.toArray(null));
+            () -> Spliterators.spliterator(c).tryAdvance(null));
+
+        // not all of them would work on Java 6 & 7
+//        assertThrows(
+//                NullPointerException.class,
+//                () -> c.addAll(null),
+//                () -> c.containsAll(null),
+//                () -> c.retainAll(null),
+//                () -> c.removeAll(null),
+//                () -> c.toArray(null));
 
         if (!impl.permitsNulls()) {
             assertThrows(
@@ -796,6 +801,13 @@ public final class Collection8Test extends JSR166TestCase {
     @Test(dataProvider = "Source")
     public void testStickySpliteratorExhaustion(String description, Supplier<CollectionImplementation> sci) throws Throwable {
         CollectionImplementation impl = sci.get();
+        if (hasSpliteratorNodeSelfLinkingBug
+                && PriorityBlockingQueue.class.equals(
+                        impl.klazz())) {
+            // Concurrent spliterators fail to handle exhaustion properly
+            // https://bugs.openjdk.java.net/browse/JDK-8172023
+            return;
+        }
         if (!impl.isConcurrent()) return;
         if (!testImplementationDetails) return;
         final ThreadLocalRandom rnd = ThreadLocalRandom.current();
