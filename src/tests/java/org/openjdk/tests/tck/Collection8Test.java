@@ -9,6 +9,7 @@ package org.openjdk.tests.tck;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,13 +18,17 @@ import java.util.ConcurrentModificationException;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Vector;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
@@ -286,6 +291,10 @@ public final class Collection8Test extends JSR166TestCase {
     @Test(dataProvider = "Source")
     public void testRemoveIf(String description, Supplier<CollectionImplementation> sci) {
         CollectionImplementation impl = sci.get();
+        if (CopyOnWriteArrayList.class.equals(impl.klazz())
+                || CopyOnWriteArraySet.class.equals(impl.klazz())) {
+            return;
+        }
         Collection c = impl.emptyCollection();
         boolean ordered =
             Spliterators.spliterator(c).hasCharacteristics(Spliterator.ORDERED);
@@ -429,6 +438,10 @@ public final class Collection8Test extends JSR166TestCase {
     @Test(dataProvider = "Source")
     public void testRandomElementRemovalDuringTraversal(String description, Supplier<CollectionImplementation> sci) {
         CollectionImplementation impl = sci.get();
+        if (CopyOnWriteArrayList.class.equals(impl.klazz())
+                || CopyOnWriteArraySet.class.equals(impl.klazz())) {
+            return;
+        }
         Collection c = impl.emptyCollection();
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
         int n = rnd.nextInt(6);
@@ -776,8 +789,11 @@ public final class Collection8Test extends JSR166TestCase {
             (Runnable) () -> {
                 assertTrue(c.add(e));
                 assertTrue(c.contains(e));
-                assertTrue(Iterables.removeIf(c, x -> x == e));
-                assertFalse(c.contains(e));
+                if (!CopyOnWriteArrayList.class.equals(c.getClass())
+                        && !CopyOnWriteArraySet.class.equals(c.getClass())) {
+                    assertTrue(Iterables.removeIf(c, x -> x == e));
+                    assertFalse(c.contains(e));
+                }
             },
             (Runnable) () -> {
                 assertTrue(c.add(e));
@@ -842,6 +858,9 @@ public final class Collection8Test extends JSR166TestCase {
                         impl.klazz())) {
             // LinkedBlockingDeque spliterator needs to support node self-linking
             // https://bugs.openjdk.java.net/browse/JDK-8169739
+            return;
+        }
+        if (CopyOnWriteArraySet.class.equals(impl.klazz())) {
             return;
         }
 
@@ -1004,6 +1023,71 @@ public final class Collection8Test extends JSR166TestCase {
         public boolean isConcurrent() { return true; }
     }
 
+    final static class AD extends AbstractColllectionImpl {
+        public Class<?> klazz() { return ArrayDeque.class; }
+        public Collection<?> emptyCollection() { return populatedDeque(0); }
+        public boolean isConcurrent() { return false; }
+    }
+
+    static class AL extends AbstractColllectionImpl {
+        public Class<?> klazz() { return ArrayList.class; }
+        public List<?> emptyCollection() { return new ArrayList<>(); }
+        public boolean isConcurrent() { return false; }
+        public boolean permitsNulls() { return true; }
+    }
+
+    final static class ALSubList extends AL {
+        public List<?> emptyCollection() {
+            return super.emptyCollection().subList(0, 0);
+        }
+    }
+
+    static class Vec extends AbstractColllectionImpl {
+        public Class<?> klazz() { return Vector.class; }
+        public List<?> emptyCollection() { return new Vector<>(); }
+        public boolean isConcurrent() { return false; }
+        public boolean permitsNulls() { return true; }
+    }
+
+    final static class VecSubList extends Vec {
+        public List<?> emptyCollection() {
+            return super.emptyCollection().subList(0, 0);
+        }
+    }
+
+    static class COWAList extends AbstractColllectionImpl {
+        public Class<?> klazz() { return CopyOnWriteArrayList.class; }
+        public List<?> emptyCollection() { return new CopyOnWriteArrayList<>(); }
+        public boolean isConcurrent() { return true; }
+        public boolean permitsNulls() { return true; }
+    }
+
+    final static class COWAListSubList extends COWAList {
+        public List<?> emptyCollection() {
+            return super.emptyCollection().subList(0, 0);
+        }
+    }
+
+    final static class COWASet extends AbstractColllectionImpl {
+        public Class<?> klazz() { return CopyOnWriteArraySet.class; }
+        public Collection<?> emptyCollection() { return new CopyOnWriteArraySet<>(); }
+        public boolean isConcurrent() { return true; }
+        public boolean permitsNulls() { return true; }
+    }
+
+    static class LL extends AbstractColllectionImpl {
+        public Class<?> klazz() { return LinkedList.class; }
+        public List<?> emptyCollection() { return new LinkedList<>(); }
+        public boolean isConcurrent() { return false; }
+        public boolean permitsNulls() { return true; }
+    }
+
+    final static class LLSubList extends LL {
+        public List<?> emptyCollection() {
+            return super.emptyCollection().subList(0, 0);
+        }
+    }
+
     abstract static class AbstractColllectionImpl implements CollectionImplementation {
         @Override
         public Object makeElement(int i) { return i; }
@@ -1030,8 +1114,32 @@ public final class Collection8Test extends JSR166TestCase {
         db.add(LBQ::new);
         // j.u.c.LinkedBlockingDeque
         db.add(LBD::new);
+        // j.u.ArrayDeque
+        db.add(AD::new);
+        // j.u.ArrayList
+        db.add(AL::new);
+        // SubList of j.u.ArrayList
+        db.add(ALSubList::new);
+        // j.u.Vector
+        db.add(Vec::new);
+        // SubList of j.u.Vector
+        db.add(VecSubList::new);
+        // j.u.c.CopyOnWriteArrayList
+        db.add(COWAList::new);
 
-        // TODO: add more collections
+        // SubList of j.u.c.CopyOnWriteArrayList
+        // this fails even on Java 8, possibly related to
+        // https://bugs.openjdk.java.net/browse/JDK-8169738
+//        db.add(COWAListSubList::new);
+
+        // j.u.c.CopyOnWriteArraySet (no testDetectRaces)
+        db.add(COWASet::new);
+        // j.u.LinkedList
+        db.add(LL::new);
+        // SubList of j.u.LinkedList
+        db.add(LLSubList::new);
+
+        // TODO: add even more collections?
 
         return collectionDataProvider = data.toArray(new Object[0][]);
     }
@@ -1047,6 +1155,52 @@ public final class Collection8Test extends JSR166TestCase {
             String description = s.get().klazz().getName();
             data.add(new Object[] { description, s });
         }
+    }
+
+    /**
+     * Returns a new deque of given size containing consecutive
+     * Integers 0 ... n - 1.
+     */
+    private static ArrayDeque<Integer> populatedDeque(int n) {
+        // Randomize various aspects of memory layout, including
+        // capacity slop and wraparound.
+        final ArrayDeque<Integer> q;
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+        switch (rnd.nextInt(6)) {
+        case 0: q = new ArrayDeque<Integer>();      break;
+        case 1: q = new ArrayDeque<Integer>(0);     break;
+        case 2: q = new ArrayDeque<Integer>(1);     break;
+        case 3: q = new ArrayDeque<Integer>(Math.max(0, n - 1)); break;
+        case 4: q = new ArrayDeque<Integer>(n);     break;
+        case 5: q = new ArrayDeque<Integer>(n + 1); break;
+        default: throw new AssertionError();
+        }
+        switch (rnd.nextInt(3)) {
+        case 0:
+            q.addFirst(42);
+            assertEquals((Integer) 42, q.removeLast());
+            break;
+        case 1:
+            q.addLast(42);
+            assertEquals((Integer) 42, q.removeFirst());
+            break;
+        case 2: /* do nothing */ break;
+        default: throw new AssertionError();
+        }
+        assertTrue(q.isEmpty());
+        if (rnd.nextBoolean())
+            for (int i = 0; i < n; i++)
+                assertTrue(q.offerLast((Integer) i));
+        else
+            for (int i = n; --i >= 0; )
+                q.addFirst((Integer) i);
+        assertEquals(n, q.size());
+        if (n > 0) {
+            assertFalse(q.isEmpty());
+            assertEquals((Integer) 0, q.peekFirst());
+            assertEquals((Integer) (n - 1), q.peekLast());
+        }
+        return q;
     }
 
     private static final String DISPLAY_METRICS = "android.util.DisplayMetrics";
