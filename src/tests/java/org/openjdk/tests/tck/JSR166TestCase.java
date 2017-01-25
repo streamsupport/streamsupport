@@ -33,6 +33,9 @@ package org.openjdk.tests.tck;
  *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=1
  *      -Djava.util.secureRandomSeed=true
  *      JSR166TestCase
+ * @run junit/othervm/timeout=1000/policy=tck.policy
+ *      -Djsr166.testImplementationDetails=true
+ *      JSR166TestCase
  */
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -172,7 +175,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.214
+// CVS rev. 1.217
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
