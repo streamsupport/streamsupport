@@ -84,7 +84,6 @@
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.MapTest"/>
-      <class name="org.openjdk.other.tests.java.util.miscellaneous.NullArgsTestCase"/>
       <class name="org.openjdk.other.tests.java.util.stream.CollectionAndMapModifyStreamTest"/>
       <class name="org.openjdk.other.tests.java.util.stream.COWCollectionsTest"/>
       <class name="org.openjdk.other.tests.java.util.stream.DoublePrimitiveOpsTests"/>
