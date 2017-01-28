@@ -25,7 +25,6 @@
       <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
       <class name="org.openjdk.tests.java.util.comparator.TypeTest"/>
       <class name="org.openjdk.tests.java.util.map.InPlaceOpsCollisions"/>
-      <class name="org.openjdk.tests.java.util.map.DefaultsTest"/>
       <class name="org.openjdk.tests.java.util.map.Defaults"/>
 
       <!-- block 3 -->
