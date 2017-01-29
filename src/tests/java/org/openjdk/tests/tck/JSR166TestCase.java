@@ -20,6 +20,7 @@ package org.openjdk.tests.tck;
  * @summary JSR-166 tck tests (whitebox tests allowed)
  * @build *
  * @modules java.base/java.util.concurrent:open
+ *          java.base/java.lang:open
  *          java.management
  * @run junit/othervm/timeout=1000
  *      -Djsr166.testImplementationDetails=true
@@ -175,7 +176,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.217
+// CVS rev. 1.218
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
