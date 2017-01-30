@@ -1849,5 +1849,15 @@ public final class Collectors {
                 }
             };
         }
+
+        @Override
+        public int size() {
+            return 2;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
     }
 }
