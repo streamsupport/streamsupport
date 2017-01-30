@@ -143,6 +143,7 @@
       <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
 
       <!-- block 13 (JSR 166 TCK tests) -->
+      <!--class name="org.openjdk.tests.tck.ArrayDeque8Test"/-->
       <class name="org.openjdk.tests.tck.Collection8Test"/>
       <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
@@ -150,6 +151,7 @@
       <class name="org.openjdk.tests.tck.DoubleAccumulatorTest"/>
       <class name="org.openjdk.tests.tck.DoubleAdderTest"/>
       <class name="org.openjdk.tests.tck.ForkJoinPool8Test"/>
+      <class name="org.openjdk.tests.tck.ForkJoinPool9Test"/>
       <class name="org.openjdk.tests.tck.ForkJoinPoolTest"/>
       <class name="org.openjdk.tests.tck.ForkJoinTask8Test"/>
       <class name="org.openjdk.tests.tck.ForkJoinTaskTest"/>
