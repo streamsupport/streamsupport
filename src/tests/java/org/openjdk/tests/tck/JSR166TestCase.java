@@ -1069,16 +1069,31 @@ public class JSR166TestCase extends TestCase {
     public static final Integer m6  = new Integer(-6);
     public static final Integer m10 = new Integer(-10);
     // is this Android? (defaults to false)
-    private static final boolean IS_ANDROID = isAndroid();
+    static final boolean IS_ANDROID = isAndroid();
 
     /**
      * Are we running on Android?
      * @return {@code true} if yes, otherwise {@code false}.
      */
-    private static boolean isAndroid() {
+    static boolean isAndroid() {
+        return isClassPresent("android.util.DisplayMetrics");
+    }
+
+    /**
+     * Are we running on Android 7+ ?
+     * 
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    static boolean isOpenJDKAndroid() {
+        return isAndroid() && isClassPresent("android.opengl.GLES32$DebugProc");
+    }
+
+    static boolean isClassPresent(String name) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("android.util.DisplayMetrics", false,
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false,
                     JSR166TestCase.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore

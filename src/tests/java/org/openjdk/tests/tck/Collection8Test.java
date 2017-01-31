@@ -1203,8 +1203,6 @@ public final class Collection8Test extends JSR166TestCase {
         return q;
     }
 
-    private static final String DISPLAY_METRICS = "android.util.DisplayMetrics";
-    private static final String GLES32 = "android.opengl.GLES32$DebugProc";
     private static final boolean IS_OPENJDK_ANDROID = isOpenJDKAndroid();
     private static final boolean IS_SPLITERATOR_DELEGATION_ENABLED = isSpliteratorDelegationEnabled();
     private static final boolean HAS_JAVA8_SPLITERATOR_BUG = hasJava8SpliteratorBug(); 
@@ -1249,27 +1247,5 @@ public final class Collection8Test extends JSR166TestCase {
                 + ".jre.delegation.enabled", Boolean.TRUE.toString());
         return (s == null)
                 || s.trim().equalsIgnoreCase(Boolean.TRUE.toString());
-    }
-
-    /**
-     * Are we running on Android 7+ ?
-     * 
-     * @return {@code true} if yes, otherwise {@code false}.
-     */
-    private static boolean isOpenJDKAndroid() {
-        return isClassPresent(DISPLAY_METRICS) && isClassPresent(GLES32);
-    }
-
-    private static boolean isClassPresent(String name) {
-        Class<?> clazz = null;
-        try {
-            // avoid <clinit> which triggers a lot of JNI code in the case
-            // of android.util.DisplayMetrics
-            clazz = Class.forName(name, false,
-                    Collection8Test.class.getClassLoader());
-        } catch (Throwable notPresent) {
-            // ignore
-        }
-        return clazz != null;
     }
 }
