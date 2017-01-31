@@ -23,7 +23,7 @@ import java.security.ProtectionDomain;
  * @author Doug Lea
  */
 public class ForkJoinWorkerThread extends Thread {
-// CVS rev. 1.73
+// CVS rev. 1.74
     /*
      * ForkJoinWorkerThreads are managed by ForkJoinPools and perform
      * ForkJoinTasks. For explanation, see the internal documentation
@@ -61,13 +61,28 @@ public class ForkJoinWorkerThread extends Thread {
         this.workQueue = pool.registerWorker(this);
     }
 
+    /**
+     * Version for use by the default pool.  Supports setting the
+     * context class loader.  This is a separate constructor to avoid
+     * affecting the protected constructor.
+     */
+    ForkJoinWorkerThread(ForkJoinPool pool, ClassLoader ccl) {
+        super(NAME_PLACEHOLDER);
+        super.setContextClassLoader(ccl);
+        this.pool = pool;
+        this.workQueue = pool.registerWorker(this);
+    }
+
     // note that this will never get called on Android
     /**
      * Version for InnocuousForkJoinWorkerThread.
      */
-    ForkJoinWorkerThread(ForkJoinPool pool, ThreadGroup threadGroup,
+    ForkJoinWorkerThread(ForkJoinPool pool,
+                         ClassLoader ccl,
+                         ThreadGroup threadGroup,
                          AccessControlContext acc) {
         super(threadGroup, NAME_PLACEHOLDER);
+        super.setContextClassLoader(ccl);
         TLRandom.setInheritedAccessControlContext(this, acc);
         TLRandom.eraseThreadLocals(this); // clear before registering
         this.pool = pool;
@@ -156,7 +171,8 @@ public class ForkJoinWorkerThread extends Thread {
     // note that this will never get called on Android!
     /**
      * A worker thread that has no permissions, is not a member of any
-     * user-defined ThreadGroup, and erases all ThreadLocals after
+     * user-defined ThreadGroup, uses the system class loader as
+     * thread context class loader, and erases all ThreadLocals after
      * running each top-level task.
      */
     static final class InnocuousForkJoinWorkerThread extends ForkJoinWorkerThread {
@@ -179,17 +195,15 @@ public class ForkJoinWorkerThread extends Thread {
                 });
 
         InnocuousForkJoinWorkerThread(ForkJoinPool pool) {
-            super(pool, innocuousThreadGroup, INNOCUOUS_ACC);
+            super(pool,
+                  ClassLoader.getSystemClassLoader(),
+                  innocuousThreadGroup,
+                  INNOCUOUS_ACC);
         }
 
         @Override // to erase ThreadLocals
         void afterTopLevelExec() {
             TLRandom.eraseThreadLocals(this);
-        }
-
-        @Override // to always report system loader
-        public ClassLoader getContextClassLoader() {
-            return ClassLoader.getSystemClassLoader();
         }
 
         @Override // to silently fail

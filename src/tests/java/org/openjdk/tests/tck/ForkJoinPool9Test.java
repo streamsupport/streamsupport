@@ -13,7 +13,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool9Test extends JSR166TestCase {
-// CVS rev. 1.1
+// CVS rev. 1.2
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -27,15 +27,26 @@ public class ForkJoinPool9Test extends JSR166TestCase {
      * Check handling of common pool thread context class loader
      */
     public void testCommonPoolThreadContextClassLoader() throws Throwable {
-        if (!testImplementationDetails) return;
+        if (!testImplementationDetails || isOpenJDKAndroid()) return;
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        //if (System.getSecurityManager() == null) return;
+        boolean haveSecurityManager = (System.getSecurityManager() != null);
         CompletableFuture.runAsync(
             () -> {
                 assertSame(systemClassLoader,
                            Thread.currentThread().getContextClassLoader());
                 assertSame(systemClassLoader,
                            getContextClassLoader(Thread.currentThread()));
+                if (haveSecurityManager)
+                    assertThrows(
+                        SecurityException.class,
+                        () -> System.getProperty("foo"),
+                        () -> Thread.currentThread().setContextClassLoader(null));
+
+                // TODO ?
+//                 if (haveSecurityManager
+//                     && Thread.currentThread().getClass().getSimpleName()
+//                     .equals("InnocuousForkJoinWorkerThread"))
+//                     assertThrows(SecurityException.class, /* ?? */);
             }).join();
     }
 
