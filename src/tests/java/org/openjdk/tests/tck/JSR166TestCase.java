@@ -1198,6 +1198,8 @@ public class JSR166TestCase extends TestCase {
             (new RuntimePermission("modifyThread"),
              new RuntimePermission("getClassLoader"),
              new RuntimePermission("setContextClassLoader"),
+//             new RuntimePermission("modifyThreadGroup"),
+//             new RuntimePermission("enableContextClassLoaderOverride"),
              // Permissions needed to change permissions!
              new SecurityPermission("getPolicy"),
              new SecurityPermission("setPolicy"),
