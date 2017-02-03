@@ -648,8 +648,8 @@ public class ForkJoinPool extends AbstractExecutorService {
     private static final class DefaultForkJoinWorkerThreadFactory
         implements ForkJoinWorkerThreadFactory {
         private static final AccessControlContext ACC = contextWithPermissions(
-            new RuntimePermission("getClassLoader"),
-            new RuntimePermission("setContextClassLoader"));
+//            new RuntimePermission("setContextClassLoader"), // streamsupport changed
+            new RuntimePermission("getClassLoader"));
 
         public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
             return AccessController.doPrivileged(

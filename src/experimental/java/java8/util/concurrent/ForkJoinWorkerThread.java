@@ -68,7 +68,7 @@ public class ForkJoinWorkerThread extends Thread {
      */
     ForkJoinWorkerThread(ForkJoinPool pool, ClassLoader ccl) {
         super(NAME_PLACEHOLDER);
-        super.setContextClassLoader(ccl);
+        TLRandom.setContextClassLoader(this, ccl); // streamsupport changed
         this.pool = pool;
         this.workQueue = pool.registerWorker(this);
     }
