@@ -113,9 +113,8 @@ import java8.util.function.Predicate;
  *  </tr>
  * </table>
  *
- * <p>The common pool is by default constructed with default
- * parameters, but these may be controlled by setting the following
- * {@linkplain System#getProperty system properties}:
+ * <p>The parameters used to construct the common pool may be controlled by
+ * setting the following {@linkplain System#getProperty system properties}:
  * <ul>
  * <li>{@code java.util.concurrent.ForkJoinPool.common.parallelism}
  * - the parallelism level, a non-negative integer
@@ -131,10 +130,12 @@ import java8.util.function.Predicate;
  * - the maximum number of allowed extra threads to maintain target
  * parallelism (default 256).
  * </ul>
- * If a {@link SecurityManager} is present and no factory is specified,
- * then the default pool uses a factory supplying threads that have no
- * {@link Permissions} enabled, and uses the system class loader as the
+ * If no thread factory is supplied via a system property, then the
+ * common pool uses a factory that uses the system class loader as the
  * {@linkplain Thread#getContextClassLoader() thread context class loader}.
+ * In addition, if a {@link SecurityManager} is present, then
+ * the common pool uses a factory supplying threads that have no
+ * {@link Permissions} enabled.
  * 
  * Upon any error in establishing these settings, default parameters
  * are used. It is possible to disable or limit the use of threads in
@@ -155,7 +156,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.332
+// CVS rev. 1.333
     /*
      * Implementation Overview
      *
