@@ -1851,6 +1851,18 @@ public final class Collectors {
         }
 
         @Override
+        public boolean containsKey(Object key) {
+            return key instanceof Boolean;
+        }
+
+        @Override
+        public T get(Object key) {
+            return (key instanceof Boolean)
+                    ? (((Boolean) key).booleanValue() ? forTrue : forFalse)
+                    : null;
+        }
+
+        @Override
         public int size() {
             return 2;
         }
