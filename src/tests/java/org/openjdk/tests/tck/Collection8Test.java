@@ -1220,7 +1220,7 @@ public final class Collection8Test extends JSR166TestCase {
      * 
      * We'd get test failures because of this when we run on Java 8 or Android
      * 7+ with Spliterator delegation enabled. These bugs have partly been fixed
-     * in Java 9 ea build 151 (JDK-8172023 still unfixed in build 152), so we
+     * in Java 9 ea build 151 (JDK-8172023 got fixed in build 156), so we
      * require this as the minimum version for test runs on Java 9 (otherwise
      * we'd also get failures on Java 9 since we do not test for class.version
      * 53.0 here).
