@@ -91,7 +91,7 @@ import java8.util.stream.DoubleStream;
  * @since   1.8
  */
 public final class SplittableRandom {
-// CVS rev. 1.38
+// CVS rev. 1.39
 
     /*
      * Implementation Overview.
@@ -786,8 +786,7 @@ public final class SplittableRandom {
      * @return a stream of pseudorandom {@code double} values,
      *         each with the given origin (inclusive) and bound (exclusive)
      * @throws IllegalArgumentException if {@code streamSize} is
-     *         less than zero
-     * @throws IllegalArgumentException if {@code randomNumberOrigin}
+     *         less than zero, or {@code randomNumberOrigin}
      *         is greater than or equal to {@code randomNumberBound}
      */
     public DoubleStream doubles(long streamSize, double randomNumberOrigin,
