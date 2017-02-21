@@ -1,31 +1,4 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
- */
-
-/*
- * This file is available under and governed by the GNU General Public
- * License version 2 only, as published by the Free Software Foundation.
- * However, the following notice accompanied the original version of this
- * file:
- *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -49,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class PhaserTest extends JSR166TestCase {
-// CVS rev. 1.44
+// CVS rev. 1.45
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -555,7 +528,7 @@ public class PhaserTest extends JSR166TestCase {
             }});
 
         await(pleaseArrive);
-        waitForThreadToEnterWaitState(t, SHORT_DELAY_MS);
+        waitForThreadToEnterWaitState(t);
         assertEquals(0, phaser.arrive());
         awaitTermination(t);
 
@@ -583,7 +556,7 @@ public class PhaserTest extends JSR166TestCase {
             }});
 
         await(pleaseArrive);
-        waitForThreadToEnterWaitState(t, SHORT_DELAY_MS);
+        waitForThreadToEnterWaitState(t);
         t.interrupt();
         assertEquals(0, phaser.arrive());
         awaitTermination(t);
@@ -599,20 +572,20 @@ public class PhaserTest extends JSR166TestCase {
     public void testArriveAndAwaitAdvanceAfterInterrupt() {
         final Phaser phaser = new Phaser();
         assertEquals(0, phaser.register());
-        final CountDownLatch pleaseInterrupt = new CountDownLatch(1);
+        final CountDownLatch pleaseArrive = new CountDownLatch(1);
 
         Thread t = newStartedThread(new CheckedRunnable() {
             public void realRun() {
                 Thread.currentThread().interrupt();
                 assertEquals(0, phaser.register());
-                pleaseInterrupt.countDown();
+                pleaseArrive.countDown();
                 assertTrue(Thread.currentThread().isInterrupted());
                 assertEquals(1, phaser.arriveAndAwaitAdvance());
-                assertTrue(Thread.currentThread().isInterrupted());
+                assertTrue(Thread.interrupted());
             }});
 
-        await(pleaseInterrupt);
-        waitForThreadToEnterWaitState(t, SHORT_DELAY_MS);
+        await(pleaseArrive);
+        waitForThreadToEnterWaitState(t);
         Thread.currentThread().interrupt();
         assertEquals(1, phaser.arriveAndAwaitAdvance());
         assertTrue(Thread.interrupted());
@@ -633,11 +606,11 @@ public class PhaserTest extends JSR166TestCase {
                 assertFalse(Thread.currentThread().isInterrupted());
                 pleaseInterrupt.countDown();
                 assertEquals(1, phaser.arriveAndAwaitAdvance());
-                assertTrue(Thread.currentThread().isInterrupted());
+                assertTrue(Thread.interrupted());
             }});
 
         await(pleaseInterrupt);
-        waitForThreadToEnterWaitState(t, SHORT_DELAY_MS);
+        waitForThreadToEnterWaitState(t);
         t.interrupt();
         Thread.currentThread().interrupt();
         assertEquals(1, phaser.arriveAndAwaitAdvance());
@@ -812,7 +785,7 @@ public class PhaserTest extends JSR166TestCase {
         assertEquals(THREADS, phaser.getArrivedParties());
         assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
         for (Thread thread : threads)
-            waitForThreadToEnterWaitState(thread, SHORT_DELAY_MS);
+            waitForThreadToEnterWaitState(thread);
         for (Thread thread : threads)
             assertTrue(thread.isAlive());
         assertState(phaser, 0, THREADS + 1, 1);
