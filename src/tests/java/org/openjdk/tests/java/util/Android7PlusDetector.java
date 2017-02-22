@@ -4,12 +4,22 @@ import java.lang.reflect.Field;
 
 final class Android7PlusDetector {
 
+    static final boolean IS_ANDROID = isAndroid();
     static final boolean IS_OPENJDK_ANDROID = isOpenJDKAndroid();
     static final boolean IS_ANDROID_API24 = isAndroidAPI24();
     static final boolean IS_HARMONY_ANDROID = isHarmonyAndroid();
 
     private static final String DISPLAY_METRICS = "android.util.DisplayMetrics";
     private static final String GLES32 = "android.opengl.GLES32$DebugProc";
+
+    /**
+     * Are we running on Android ?
+     * 
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    static boolean isAndroid() {
+        return isClassPresent(DISPLAY_METRICS);
+    }
 
     /**
      * Are we running on Android 7+ ?

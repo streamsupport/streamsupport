@@ -71,6 +71,10 @@
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
+					<excludes>
+						<!-- exclude build.IgnoreJava8API annotation -->
+						<exclude>build/**</exclude>
+					</excludes>
 					<archive>
 						<addMavenDescriptor>false</addMavenDescriptor>
 						<manifestEntries>
@@ -93,6 +97,9 @@
 						<artifactId>java16</artifactId>
 						<version>1.1</version>
 					</signature>
+					<annotations>
+						<annotation>build.IgnoreJava8API</annotation>
+					</annotations>
 					<ignores>
 						<ignore>sun.misc.Unsafe</ignore>
 					</ignores>
