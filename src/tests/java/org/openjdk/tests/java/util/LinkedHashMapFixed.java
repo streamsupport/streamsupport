@@ -23,20 +23,18 @@ import build.IgnoreJava8API;
 @SuppressWarnings("serial")
 final class LinkedHashMapFixed<K, V> extends LinkedHashMap<K, V> {
 
-    private final LinkedHashMap<K, V> lhm;
     private Set<K> keySet;
     private Collection<V> values;
     private Set<Map.Entry<K, V>> entrySet;
 
-    public LinkedHashMapFixed(LinkedHashMap<K, V> lhm) {
-        this.lhm = lhm;
+    public LinkedHashMapFixed() {
     }
 
     @Override
     public Set<K> keySet() {
         Set<K> ks = keySet;
         if (ks == null) {
-            ks = new KS<K>(lhm.keySet());
+            ks = new KS<K>(super.keySet());
             keySet = ks;
         }
         return ks;
@@ -46,7 +44,7 @@ final class LinkedHashMapFixed<K, V> extends LinkedHashMap<K, V> {
     public Collection<V> values() {
         Collection<V> vs = values;
         if (vs == null) {
-            vs = new Vals<V>(lhm.values());
+            vs = new Vals<V>(super.values());
             values = vs;
         }
         return vs;
@@ -56,7 +54,7 @@ final class LinkedHashMapFixed<K, V> extends LinkedHashMap<K, V> {
     public Set<java.util.Map.Entry<K, V>> entrySet() {
         Set<Map.Entry<K,V>> es = entrySet;
         if (es == null) {
-            es = new ES<K, V>(lhm.entrySet());
+            es = new ES<K, V>(super.entrySet());
             entrySet = es;
         }
         return es;
