@@ -134,7 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
-// CVS rev. 1.68
+// CVS rev. 1.69
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -592,8 +592,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
             synchronized (this) {
                 b = clients;
                 clients = null;
+                if (!closed) // don't override plain close
+                    closedException = error;
                 closed = true;
-                closedException = error;
             }
             while (b != null) {
                 BufferedSubscription<T> next = b.next;
