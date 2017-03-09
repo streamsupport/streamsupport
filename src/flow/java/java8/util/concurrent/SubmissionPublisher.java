@@ -134,7 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
-// CVS rev. 1.70
+// CVS rev. 1.71
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -1352,9 +1352,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                     }
                 }
             }
-            else if (n < 0L)
+            else
                 onError(new IllegalArgumentException(
-                            "negative subscription request"));
+                            "non-positive subscription request"));
         }
 
         public final boolean isReleasable() { // for ManagedBlocker

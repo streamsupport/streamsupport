@@ -25,7 +25,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.18
+// CVS rev. 1.19
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -547,11 +547,15 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         SubmissionPublisher<Integer> p = basicPublisher();
         TestSubscriber s1 = new TestSubscriber();
         TestSubscriber s2 = new TestSubscriber();
+        TestSubscriber s3 = new TestSubscriber();
         p.subscribe(s1);
         p.subscribe(s2);
+        p.subscribe(s3);
+        s3.awaitSubscribe();
         s2.awaitSubscribe();
         s1.awaitSubscribe();
         s1.sn.request(-1L);
+        s3.sn.request(0L);
         p.submit(1);
         p.submit(2);
         p.close();
@@ -561,6 +565,9 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         s1.awaitError();
         assertEquals(1, s1.errors);
         assertTrue(s1.lastError instanceof IllegalArgumentException);
+        s3.awaitError();
+        assertEquals(1, s3.errors);
+        assertTrue(s3.lastError instanceof IllegalArgumentException);
     }
 
     /**
