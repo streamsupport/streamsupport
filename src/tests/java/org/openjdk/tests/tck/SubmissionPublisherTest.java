@@ -541,7 +541,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
     }
 
     /**
-     * Negative request causes error
+     * Non-positive request causes error
      */
     public void testRequest3() {
         SubmissionPublisher<Integer> p = basicPublisher();
