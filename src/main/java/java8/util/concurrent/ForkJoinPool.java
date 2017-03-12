@@ -156,7 +156,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.333
+// CVS rev. 1.334
     /*
      * Implementation Overview
      *
@@ -2408,7 +2408,7 @@ public class ForkJoinPool extends AbstractExecutorService {
         checkPermission();
     }
 
-    private Object newInstanceFromSystemProperty(String property)
+    private static Object newInstanceFromSystemProperty(String property)
         throws Exception {
         String className = System.getProperty(property);
         return (className == null)
