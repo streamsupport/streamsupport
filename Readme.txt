@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.5.3-stable" is the current stable release
+ - "1.5.4-stable" is the current stable release
 
 
 GENERAL
@@ -12,27 +12,9 @@ GENERAL
  - The static methods from interface j.u.s.Stream are located in j8.u.s.RefStreams
    which also contains the new Java 9 j.u.s.Stream default methods.
 
- - As of release 1.4, the former single streamsupport.jar has been partitioned into
-   a core streamsupport.jar and 3 additional optional components:
-
-   * streamsupport-cfuture (CompletableFuture API)
-   * streamsupport-atomic  (j8.u.c.atomic package)
-   * streamsupport-flow    (Java 9 Flow API)
-
-   All of them have a dependency on the core streamsupport.jar
-
  - The provided Jar files are compiled for Java 6 (Bytecode version 50). You'll need
    Retrolambda (https://github.com/orfjackal/retrolambda) to build the core
    streamsupport.jar from its sources
-
- - It is possible to turn on an OpenJDK "compatibility mode" by setting the
-   boolean system property
-
-   java8.util.Spliterators.assume.oracle.collections.impl=false
-
-   This switch is provided for users of non-OpenJDK based JREs (e.g. IBM Java 6/7)
-   to increase the odds that streamsupport can be used on their platform.
-   This switch is not needed (and has no effect) on Android.
 
  - Release 1.3 adds the new Java 9 Stream methods takeWhile() and dropWhile().
    If anyone longs for the default method implementations, they are available
@@ -45,12 +27,14 @@ GENERAL
    to j.u.c.CompletableFuture and fork/join as well as improvements to their
    implementation.
 
- - As of 1.4.1, the deprecated static methods from interface j.u.s.Stream that
-   were located in j8.u.s.StreamSupport have been removed. Please use the
-   equivalent methods in j8.u.s.RefStreams.
+ - As of release 1.4, the former single streamsupport.jar has been partitioned into
+   a core streamsupport.jar and 3 additional optional components:
 
- - As of 1.4.2, the deprecated "concurrent" methods in j8.u.Maps have been
-   removed. Please use the equivalent methods in j8.u.c.ConcurrentMaps.
+   * streamsupport-cfuture (CompletableFuture API)
+   * streamsupport-atomic  (j8.u.c.atomic package)
+   * streamsupport-flow    (Java 9 Flow API)
+
+   All of them have a dependency on the core streamsupport.jar
 
  - As of release 1.5, a new optional component "streamsupport-literal"
    that contains the implementation for JEP 269 (Java 9) has been added.
@@ -58,9 +42,6 @@ GENERAL
    http://openjdk.java.net/jeps/269
 
    * streamsupport-literal (Java 9 JEP 269 Collections factory methods)
-
-   From release 1.5.3 onwards streamsupport-literal can be used without
-   any dependencies.
 
  - As of release 1.5.3 streamsupport detects when it is running on a
    stream enabled Android 7+ device and automatically delegates to the
@@ -72,6 +53,27 @@ GENERAL
 
 
 VERSION HISTORY
+
+1.5.4-stable (2017-03-21)
+ - JDK-8172023: Concurrent spliterators fail to handle exhaustion properly
+ - JDK-8172726: FJ common pool retains a reference to TCCL
+ - JDK-8166365: Small immutable collections optimized implementations
+ - JDK-8170484: Misc. changes imported from jsr166 CVS 2016-12
+ - JDK-8171886: Misc. changes imported from jsr166 CVS 2017-02
+ - JDK-8173909: Misc. changes imported from jsr166 CVS 2017-03
+ - JDK-8170945: Collectors$Partition implement more Map methods
+ - JDK-8176155: SubmissionPublisher closeExceptionally may override close
+ - JDK-8176551: testCommonPoolThreadContextClassLoader() fails
+ - JDK-8176303: Flow.Subscription.request(0) should be treated as error
+ - JDK-8174950: Gracefully handle null Supplier in requireNonNull
+ - JDK-8169903: Refactor spliterator traversing tests
+ - JDK-8023898: Consolidate Map tests into general Map-based test
+ - JDK-8175360: Error in Collectors.averaging... Javadoc
+ - add new JSR 166 TCK test Collection8Test (#273)
+ - IteratorSpliterator for j.u.Queue could often report ORDERED (#274)
+ - TLRandom/FJWorkerThread: update createThreadGroup to JDK-8160710 (#272)
+ - eliminate SinkConsumer compiler kludge (#266)
+ - remove unused NullArgsTestCase [JDK-8173414] (#276)
 
 1.5.3-stable (2016-12-17)
  - JDK-8166646: Misc. changes imported from jsr166 CVS 2016-11
