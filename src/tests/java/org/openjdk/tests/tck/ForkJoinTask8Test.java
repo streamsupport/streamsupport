@@ -51,7 +51,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTask8Test extends JSR166TestCase {
-// CVS rev. 1.27
+// CVS rev. 1.28
     /*
      * Testing notes: This differs from ForkJoinTaskTest mainly by
      * defining a version of BinaryAsyncAction that uses JDK8 task
@@ -137,7 +137,8 @@ public class ForkJoinTask8Test extends JSR166TestCase {
         assertNull(a.getException());
         assertNull(a.getRawResult());
         if (a instanceof BinaryAsyncAction)
-            assertTrue(((BinaryAsyncAction)a).getForkJoinTaskTag() == INITIAL_STATE);
+            assertEquals(INITIAL_STATE,
+                    ((BinaryAsyncAction)a).getForkJoinTaskTag());
 
         try {
             a.get(0L, SECONDS);
@@ -158,7 +159,8 @@ public class ForkJoinTask8Test extends JSR166TestCase {
         assertNull(a.getException());
         assertSame(expected, a.getRawResult());
         if (a instanceof BinaryAsyncAction)
-            assertTrue(((BinaryAsyncAction)a).getForkJoinTaskTag() == COMPLETE_STATE);
+            assertEquals(COMPLETE_STATE,
+                    ((BinaryAsyncAction)a).getForkJoinTaskTag());
 
         {
             Thread.currentThread().interrupt();

@@ -25,7 +25,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 @org.testng.annotations.Test
 public class SubmissionPublisherTest extends JSR166TestCase {
-// CVS rev. 1.19
+// CVS rev. 1.20
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -500,7 +500,7 @@ public class SubmissionPublisherTest extends JSR166TestCase {
         s1.request = false;
         p.subscribe(s1);
         s1.awaitSubscribe();
-        assertTrue(p.estimateMinimumDemand() == 0);
+        assertEquals(0, p.estimateMinimumDemand());
         TestSubscriber s2 = new TestSubscriber();
         p.subscribe(s2);
         p.submit(1);
