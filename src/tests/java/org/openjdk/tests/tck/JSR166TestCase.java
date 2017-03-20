@@ -1,6 +1,7 @@
 /*
- * Written by Doug Lea with assistance from members of JCP JSR-166
- * Expert Group and released to the public domain, as explained at
+ * Written by Doug Lea and Martin Buchholz with assistance from
+ * members of JCP JSR-166 Expert Group and released to the public
+ * domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
  * Other contributors include Andrew Wright, Jeffrey Hayes,
  * Pat Fisher, Mike Judd.
@@ -9,32 +10,33 @@ package org.openjdk.tests.tck;
 
 /*
  * @test
- * @summary JSR-166 tck tests (conformance testing mode)
+ * @summary JSR-166 tck tests, in a number of variations.
+ *          The first is the conformance testing variant,
+ *          while others also test implementation details.
  * @build *
  * @modules java.management
  * @run junit/othervm/timeout=1000 JSR166TestCase
- */
-
-/*
- * @test
- * @summary JSR-166 tck tests (whitebox tests allowed)
- * @build *
- * @modules java.base/java.util.concurrent:open
- *          java.base/java.lang:open
- *          java.management
  * @run junit/othervm/timeout=1000
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      JSR166TestCase
  * @run junit/othervm/timeout=1000
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=0
  *      JSR166TestCase
  * @run junit/othervm/timeout=1000
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=1
  *      -Djava.util.secureRandomSeed=true
  *      JSR166TestCase
  * @run junit/othervm/timeout=1000/policy=tck.policy
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      JSR166TestCase
  */
@@ -176,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.220
+// CVS rev. 1.221
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
