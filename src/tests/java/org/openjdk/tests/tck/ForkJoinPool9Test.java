@@ -6,14 +6,20 @@
  */
 package org.openjdk.tests.tck;
 
-import java8.util.concurrent.CompletableFuture;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
+
+import java8.util.concurrent.ForkJoinPool;
+import java8.util.concurrent.ForkJoinTask;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool9Test extends JSR166TestCase {
-// CVS rev. 1.2
+// CVS rev. 1.3
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -28,10 +34,20 @@ public class ForkJoinPool9Test extends JSR166TestCase {
      */
     public void testCommonPoolThreadContextClassLoader() throws Throwable {
         if (!testImplementationDetails || isOpenJDKAndroid()) return;
+
+        // Ensure common pool has at least one real thread
+        String prop = System.getProperty(
+            "java.util.concurrent.ForkJoinPool.common.parallelism");
+        if ("0".equals(prop)) return;
+
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         boolean haveSecurityManager = (System.getSecurityManager() != null);
-        CompletableFuture.runAsync(
-            () -> {
+        CountDownLatch taskStarted = new CountDownLatch(1);
+        Runnable runInCommonPool = () -> {
+            taskStarted.countDown();
+            assertTrue(ForkJoinTask.inForkJoinPool());
+            assertSame(ForkJoinPool.commonPool(),
+                       ForkJoinTask.getPool());
                 assertSame(systemClassLoader,
                            Thread.currentThread().getContextClassLoader());
                 assertSame(systemClassLoader,
@@ -47,7 +63,12 @@ public class ForkJoinPool9Test extends JSR166TestCase {
 //                     && Thread.currentThread().getClass().getSimpleName()
 //                     .equals("InnocuousForkJoinWorkerThread"))
 //                     assertThrows(SecurityException.class, /* ?? */);
-            }).join();
+            };
+            Future<?> f = ForkJoinPool.commonPool().submit(runInCommonPool);
+            // Ensure runInCommonPool is truly running in the common pool,
+            // by giving this thread no opportunity to "help" on get().
+            assertTrue(taskStarted.await(LONG_DELAY_MS, MILLISECONDS));
+            assertNull(f.get());
     }
 
     static ClassLoader getContextClassLoader(Thread thread) {
