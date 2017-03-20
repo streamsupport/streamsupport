@@ -53,7 +53,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool8Test extends JSR166TestCase {
-// CVS rev. 1.34
+// CVS rev. 1.35
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -215,7 +215,7 @@ public class ForkJoinPool8Test extends JSR166TestCase {
         public FJException(Throwable cause) { super(cause); }
     }
 
-    // A simple recursive action for testing
+    /** A simple recursive action for testing. */
     final class FibAction extends CheckedRecursiveAction {
         private static final long serialVersionUID = 1L;
         final int number;
@@ -234,7 +234,7 @@ public class ForkJoinPool8Test extends JSR166TestCase {
         }
     }
 
-    // A recursive action failing in base case
+    /** A recursive action failing in base case. */
     static final class FailingFibAction extends RecursiveAction {
         private static final long serialVersionUID = 1L;
         final int number;
@@ -980,7 +980,7 @@ public class ForkJoinPool8Test extends JSR166TestCase {
         }
     }
 
-    // Version of CCF with forced failure in left completions
+    /** Version of CCF with forced failure in left completions. */
     abstract static class FailingCCF extends CountedCompleter<Object> {
         private static final long serialVersionUID = 1L;
         int number;
