@@ -52,6 +52,65 @@ GENERAL
 
 
 
+KNOWN PROBLEMS
+
+ - Incorrect LinkedHashMap Spliterator ordering in Android N.
+
+   The implementation of LinkedHashMap's collection views' spliterators in
+   Android Nougat (API levels 24 and 25) uses the wrong order (inconsistent
+   with the iterators, which use the correct order), despite reporting
+   Spliterator#ORDERED (however, the unordered HashMap spliterators are used).
+
+   Since streamsupport 1.5.3 and later will by default delegate to the Android 7.x
+   spliterators you'd be affected by this unordered behavior on Android 7.x unless
+   you disable spliterator delegation altogether or you workaround this behavior
+   on API level 24 and 25 as follows.
+
+   You may use the following code to obtain a correctly ordered Spliterator:
+
+   For a Collection view
+   col = lhm.keySet(), col = lhm.entrySet() or col = lhm.values(), use
+
+   Spliterator sp = java8.util.Spliterators.spliterator(col, c) where
+
+   int c = Spliterator.DISTINCT | Spliterator.ORDERED | Spliterator.SIZED
+
+   for keySet() and entrySet() and
+
+   int c = Spliterator.ORDERED | Spliterator.SIZED for values()
+
+   to obtain a correctly ordered spliterator. Then, instead of
+   StreamSupport.stream(col) or StreamSupport.parallelStream(col), use
+
+   java8.util.stream.StreamSupport.stream(sp, false)
+
+   to construct a (nonparallel) java8.util.stream.Stream from the Spliterator sp.
+
+   Note that these workarounds are only suggested where lhm is a LinkedHashMap.
+   Note further that everything works perfectly fine on API level 23 and below (if
+   you don't plan to deploy on Android 7.x devices, you can ignore this whole advice
+   altogether).
+
+   To mitigate the risk if you don't follow this advice, streamsupport 1.5.3 (and
+   later) exercises a check whether the spliterator for a HashMap collection view
+   reports ORDERED (a bug) and excepts these cases from the delegation mechanism
+   (using the reflective implementation instead. So, in effect the same mechanism
+   that is used on API level 23 and below gets employed in this case).
+
+   But note that this check isn't 100% fool-proof as the LinkedHashMap (or its
+   collection view) could be wrapped, for example in a j.u.Collections$UnmodifiableMap
+   (whose UnmodifiableEntrySetSpliterator delegates back to the defective
+   HashMap$EntrySpliterator).
+
+   Since we can't know an arbitrary wrapper beforehand there is nothing streamsupport
+   can do about this in such cases - you have been warned.
+
+   The latest version of LinkedHashMap in AOSP implements its Spliterators via
+   Spliterators.spliterator(), which means that this bug has already been fixed
+   in Android O.
+
+
+
 VERSION HISTORY
 
 1.5.4-stable (2017-03-21)
