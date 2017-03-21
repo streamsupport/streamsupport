@@ -65,7 +65,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPoolTest extends JSR166TestCase {
-// CVS rev. 1.71
+// CVS rev. 1.72
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -104,9 +104,9 @@ public class ForkJoinPoolTest extends JSR166TestCase {
 
     static class FailingThreadFactory
             implements ForkJoinPool.ForkJoinWorkerThreadFactory {
-    	final AtomicInteger calls = new AtomicInteger(0);
+        final AtomicInteger calls = new AtomicInteger(0);
         public ForkJoinWorkerThread newThread(ForkJoinPool p) {
-        	if (calls.incrementAndGet() > 1) return null;
+            if (calls.incrementAndGet() > 1) return null;
             return new FailingFJWSubclass(p);
         }
     }
@@ -814,7 +814,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(null);
             try {
                 e.invokeAny(l);
@@ -836,7 +836,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(latchAwaitingStringTask(latch));
             l.add(null);
             try {
@@ -859,7 +859,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new NPETask());
             try {
                 e.invokeAny(l);
@@ -882,7 +882,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             l.add(new StringTask());
             String result = e.invokeAny(l);
@@ -939,7 +939,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             l.add(null);
             try {
@@ -962,7 +962,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new NPETask());
             List<Future<String>> futures = e.invokeAll(l);
             assertEquals(1, futures.size());
@@ -987,7 +987,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             l.add(new StringTask());
             List<Future<String>> futures = e.invokeAll(l);
@@ -1028,7 +1028,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             try {
                 e.invokeAny(l, MEDIUM_DELAY_MS, null);
@@ -1070,7 +1070,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(latchAwaitingStringTask(latch));
             l.add(null);
             try {
@@ -1094,7 +1094,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         try {
             cleaner = cleaner(e);
             long startTime = System.nanoTime();
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new NPETask());
             try {
                 e.invokeAny(l, LONG_DELAY_MS, MILLISECONDS);
@@ -1119,7 +1119,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         try {
             cleaner = cleaner(e);
             long startTime = System.nanoTime();
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             l.add(new StringTask());
             String result = e.invokeAny(l, LONG_DELAY_MS, MILLISECONDS);
@@ -1159,7 +1159,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             try {
                 e.invokeAll(l, MEDIUM_DELAY_MS, null);
@@ -1199,7 +1199,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             l.add(null);
             try {
@@ -1221,7 +1221,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new NPETask());
             List<Future<String>> futures
                 = e.invokeAll(l, LONG_DELAY_MS, MILLISECONDS);
@@ -1247,7 +1247,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Callable<String>> l = new ArrayList<Callable<String>>();
+            List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             l.add(new StringTask());
             List<Future<String>> futures

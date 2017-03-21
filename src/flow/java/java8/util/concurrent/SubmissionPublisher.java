@@ -134,7 +134,7 @@ import java8.util.function.Consumer;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Flow.Publisher<T> {
-// CVS rev. 1.68
+// CVS rev. 1.71
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -170,7 +170,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
 
     /** Fallback if ForkJoinPool.commonPool() cannot support parallelism */
     private static final class ThreadPerTaskExecutor implements Executor {
-        ThreadPerTaskExecutor() {} // prevents bridge class creation
+        ThreadPerTaskExecutor() {}      // prevent access constructor creation
         public void execute(Runnable r) { new Thread(r).start(); }
     }
 
@@ -561,6 +561,7 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         if (!closed) {
             BufferedSubscription<T> b;
             synchronized (this) {
+                // no need to re-check closed here
                 b = clients;
                 clients = null;
                 closed = true;
@@ -591,9 +592,11 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
             BufferedSubscription<T> b;
             synchronized (this) {
                 b = clients;
-                clients = null;
-                closed = true;
-                closedException = error;
+                if (!closed) { // don't clobber racing close
+                    clients = null;
+                    closedException = error;
+                    closed = true;
+                }
             }
             while (b != null) {
                 BufferedSubscription<T> next = b.next;
@@ -1349,9 +1352,9 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
                     }
                 }
             }
-            else if (n < 0L)
+            else
                 onError(new IllegalArgumentException(
-                            "negative subscription request"));
+                            "non-positive subscription request"));
         }
 
         public final boolean isReleasable() { // for ManagedBlocker

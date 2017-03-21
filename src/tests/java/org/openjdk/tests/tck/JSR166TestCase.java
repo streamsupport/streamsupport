@@ -1,6 +1,7 @@
 /*
- * Written by Doug Lea with assistance from members of JCP JSR-166
- * Expert Group and released to the public domain, as explained at
+ * Written by Doug Lea and Martin Buchholz with assistance from
+ * members of JCP JSR-166 Expert Group and released to the public
+ * domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
  * Other contributors include Andrew Wright, Jeffrey Hayes,
  * Pat Fisher, Mike Judd.
@@ -9,29 +10,34 @@ package org.openjdk.tests.tck;
 
 /*
  * @test
- * @summary JSR-166 tck tests (conformance testing mode)
+ * @summary JSR-166 tck tests, in a number of variations.
+ *          The first is the conformance testing variant,
+ *          while others also test implementation details.
  * @build *
  * @modules java.management
  * @run junit/othervm/timeout=1000 JSR166TestCase
- */
-
-/*
- * @test
- * @summary JSR-166 tck tests (whitebox tests allowed)
- * @build *
- * @modules java.base/java.util.concurrent:open
- *          java.management
  * @run junit/othervm/timeout=1000
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      JSR166TestCase
  * @run junit/othervm/timeout=1000
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=0
  *      JSR166TestCase
  * @run junit/othervm/timeout=1000
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
  *      -Djsr166.testImplementationDetails=true
  *      -Djava.util.concurrent.ForkJoinPool.common.parallelism=1
  *      -Djava.util.secureRandomSeed=true
+ *      JSR166TestCase
+ * @run junit/othervm/timeout=1000/policy=tck.policy
+ *      --add-opens java.base/java.util.concurrent=ALL-UNNAMED
+ *      --add-opens java.base/java.lang=ALL-UNNAMED
+ *      -Djsr166.testImplementationDetails=true
  *      JSR166TestCase
  */
 
@@ -172,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.214
+// CVS rev. 1.221
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -468,7 +474,7 @@ public class JSR166TestCase extends TestCase {
     /** Returns list of junit-style test method names in given class. */
     public static ArrayList<String> testMethodNames(Class<?> testClass) {
         Method[] methods = testClass.getDeclaredMethods();
-        ArrayList<String> names = new ArrayList<String>(methods.length);
+        ArrayList<String> names = new ArrayList<>(methods.length);
         for (Method method : methods) {
             if (method.getName().startsWith("test")
                 && Modifier.isPublic(method.getModifiers())
@@ -574,7 +580,7 @@ public class JSR166TestCase extends TestCase {
      * The first exception encountered if any threadAssertXXX method fails.
      */
     private final AtomicReference<Throwable> threadFailure
-        = new AtomicReference<Throwable>(null);
+        = new AtomicReference<>(null);
 
     /**
      * Records an exception so that it can be rethrown later in the test
@@ -1065,16 +1071,31 @@ public class JSR166TestCase extends TestCase {
     public static final Integer m6  = new Integer(-6);
     public static final Integer m10 = new Integer(-10);
     // is this Android? (defaults to false)
-    private static final boolean IS_ANDROID = isAndroid();
+    static final boolean IS_ANDROID = isAndroid();
 
     /**
      * Are we running on Android?
      * @return {@code true} if yes, otherwise {@code false}.
      */
-    private static boolean isAndroid() {
+    static boolean isAndroid() {
+        return isClassPresent("android.util.DisplayMetrics");
+    }
+
+    /**
+     * Are we running on Android 7+ ?
+     * 
+     * @return {@code true} if yes, otherwise {@code false}.
+     */
+    static boolean isOpenJDKAndroid() {
+        return isAndroid() && isClassPresent("android.opengl.GLES32$DebugProc");
+    }
+
+    static boolean isClassPresent(String name) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName("android.util.DisplayMetrics", false,
+            // avoid <clinit> which triggers a lot of JNI code in the case
+            // of android.util.DisplayMetrics
+            clazz = Class.forName(name, false,
                     JSR166TestCase.class.getClassLoader());
         } catch (Throwable notPresent) {
             // ignore
@@ -1163,7 +1184,7 @@ public class JSR166TestCase extends TestCase {
         }
         public void refresh() {}
         public String toString() {
-            List<Permission> ps = new ArrayList<Permission>();
+            List<Permission> ps = new ArrayList<>();
             for (Enumeration<Permission> e = perms.elements(); e.hasMoreElements();)
                 ps.add(e.nextElement());
             return "AdjustablePolicy with permissions " + ps;
@@ -1179,6 +1200,8 @@ public class JSR166TestCase extends TestCase {
             (new RuntimePermission("modifyThread"),
              new RuntimePermission("getClassLoader"),
              new RuntimePermission("setContextClassLoader"),
+//             new RuntimePermission("modifyThreadGroup"),
+//             new RuntimePermission("enableContextClassLoaderOverride"),
              // Permissions needed to change permissions!
              new SecurityPermission("getPolicy"),
              new SecurityPermission("setPolicy"),
@@ -1229,11 +1252,51 @@ public class JSR166TestCase extends TestCase {
     }
 
     /**
-     * Waits up to LONG_DELAY_MS for the given thread to enter a wait
-     * state: BLOCKED, WAITING, or TIMED_WAITING.
+     * Spin-waits up to the specified number of milliseconds for the given
+     * thread to enter a wait state: BLOCKED, WAITING, or TIMED_WAITING,
+     * and additionally satisfy the given condition.
+     */
+    void waitForThreadToEnterWaitState(
+        Thread thread, long timeoutMillis, Callable<Boolean> waitingForGodot) {
+        long startTime = 0L;
+        for (;;) {
+            Thread.State s = thread.getState();
+            if (s == Thread.State.BLOCKED ||
+                s == Thread.State.WAITING ||
+                s == Thread.State.TIMED_WAITING) {
+                try {
+                    if (waitingForGodot.call())
+                        return;
+                } catch (Throwable fail) { threadUnexpectedException(fail); }
+            }
+            else if (s == Thread.State.TERMINATED)
+                fail("Unexpected thread termination");
+            else if (startTime == 0L)
+                startTime = System.nanoTime();
+            else if (millisElapsedSince(startTime) > timeoutMillis) {
+                threadAssertTrue(thread.isAlive());
+                fail("timed out waiting for thread to enter wait state");
+            }
+            Thread.yield();
+        }
+    }
+
+    /**
+     * Spin-waits up to LONG_DELAY_MS milliseconds for the given thread to
+     * enter a wait state: BLOCKED, WAITING, or TIMED_WAITING.
      */
     void waitForThreadToEnterWaitState(Thread thread) {
         waitForThreadToEnterWaitState(thread, LONG_DELAY_MS);
+    }
+
+    /**
+     * Spin-waits up to LONG_DELAY_MS milliseconds for the given thread to
+     * enter a wait state: BLOCKED, WAITING, or TIMED_WAITING,
+     * and additionally satisfy the given condition.
+     */
+    void waitForThreadToEnterWaitState(
+        Thread thread, Callable<Boolean> waitingForGodot) {
+        waitForThreadToEnterWaitState(thread, LONG_DELAY_MS, waitingForGodot);
     }
 
     /**

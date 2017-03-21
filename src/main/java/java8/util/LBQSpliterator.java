@@ -27,7 +27,7 @@ import java8.util.function.Consumer;
  * @param <E> the type of elements held in the LinkedBlockingQueue
  */
 final class LBQSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.101
+// CVS rev. 1.110
     private static final int MAX_BATCH = 1 << 25; // max batch array size
     private final LinkedBlockingQueue<E> queue;
     private final ReentrantLock putLock;
@@ -94,19 +94,20 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     public boolean tryAdvance(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         if (!exhausted) {
-            Object p = current;
             E e = null;
             fullyLock();
             try {
-                if (p != null || (p = getHeadNext(queue)) != null)
+                Object p;
+                if ((p = current) != null || (p = getHeadNext(queue)) != null)
                     do {
                         e = getNodeItem(p);
                         p = succ(p);
                     } while (e == null && p != null);
+                if ((current = p) == null)
+                    exhausted = true;
             } finally {
                 fullyUnlock();
             }
-            exhausted = ((current = p) == null);
             if (e != null) {
                 action.accept(e);
                 return true;
@@ -119,11 +120,10 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     public Spliterator<E> trySplit() {
         Object h;
         LinkedBlockingQueue<E> q = queue;
-        int b = batch;
-        int n = (b <= 0) ? 1 : (b >= MAX_BATCH) ? MAX_BATCH : b + 1;
         if (!exhausted &&
             ((h = current) != null || (h = getHeadNext(q)) != null)
             && getNextNode(h) != null) {
+            int n = batch = Math.min(batch + 1, MAX_BATCH);
             Object[] a = new Object[n];
             int i = 0;
             Object p = current;
@@ -142,13 +142,11 @@ final class LBQSpliterator<E> implements Spliterator<E> {
             }
             else if ((est -= i) < 0L)
                 est = 0L;
-            if (i > 0) {
-                batch = i;
+            if (i > 0)
                 return Spliterators.spliterator
                     (a, 0, i, (Spliterator.ORDERED |
                                Spliterator.NONNULL |
                                Spliterator.CONCURRENT));
-            }
         }
         return null;
     }
@@ -160,7 +158,7 @@ final class LBQSpliterator<E> implements Spliterator<E> {
     void forEachFrom(Consumer<? super E> action, Object p) {
         // Extract batches of elements while holding the lock; then
         // run the action on the elements while not
-        final int batchSize = 32;       // max number of elements per batch
+        final int batchSize = 64;       // max number of elements per batch
         Object[] es = null;             // container for batch of elements
         int n, len = 0;
         do {

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -49,9 +50,11 @@ import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.DelayQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 import build.IgnoreJava8API;
 
@@ -1041,6 +1044,18 @@ public final class Spliterators {
             if (c instanceof PriorityQueue) {
                 return PQueueSpliterator.spliterator((PriorityQueue<T>) c);
             }
+        }
+
+        // cases where the spliterator is known to be ORDERED
+        // https://sourceforge.net/p/streamsupport/tickets/274/
+        if (c instanceof Deque
+                || (c.getClass().getName().startsWith("java.util")
+                        && !(c instanceof PriorityBlockingQueue)
+                        && !(c instanceof PriorityQueue)
+                        && !(c instanceof DelayQueue)
+                        && !(c instanceof SynchronousQueue))) {
+ 
+            return spliterator(c, Spliterator.ORDERED);
         }
 
         // default from j.u.Collection

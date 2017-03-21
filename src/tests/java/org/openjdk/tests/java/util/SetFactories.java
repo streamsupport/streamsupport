@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,6 +38,7 @@ import java8.util.Iterators;
 import java8.util.Sets2;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -101,6 +102,8 @@ public class SetFactories {
               hashSetOf("a", "b", "c", "d", "e", "f", "g", "h", "i")),
             a(   Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
               hashSetOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j")),
+            a(   Sets2.of("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+                 Sets2.of("j", "i", "h", "g", "f", "e", "d", "c", "b", "a")),
             a(   Sets2.of(stringArray),
               hashSetOf(stringArray))
         ).iterator();
@@ -189,6 +192,17 @@ public class SetFactories {
         array[0] = array[1];
         @SuppressWarnings("unused")
         Set<String> set = Sets2.of(array);
+    }
+
+    @Test(dataProvider="all")
+    public void hashCodeEqual(Set<String> act, Set<String> exp) {
+        assertEquals(act.hashCode(), exp.hashCode());
+    }
+
+    @Test(dataProvider="all")
+    public void containsAll(Set<String> act, Set<String> exp) {
+        assertTrue(act.containsAll(exp));
+        assertTrue(exp.containsAll(act));
     }
 
     @Test(expectedExceptions=NullPointerException.class)

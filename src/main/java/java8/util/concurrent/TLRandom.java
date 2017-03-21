@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Doug Lea
  */
 /*package*/ final class TLRandom {
-// CVS rev. 1.50
+// CVS rev. 1.52
 
     static long mix64(long z) {
         z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
@@ -161,7 +161,7 @@ import java.util.concurrent.atomic.AtomicLong;
      * Erases ThreadLocals by nulling out Thread maps.
      */
     static final void eraseThreadLocals(Thread thread) {
-    	// note that this will/should never get called on Android!
+        // note that this will/should never get called on Android!
         if (!IS_ANDROID) {
             U.putObject(thread, THREADLOCALS, null);
             U.putObject(thread, INHERITABLETHREADLOCALS, null);
@@ -175,33 +175,8 @@ import java.util.concurrent.atomic.AtomicLong;
         }
     }
 
-    /**
-     * Returns a new group with the system ThreadGroup (the
-     * topmost, parent-less group) as parent.  Uses Unsafe to
-     * traverse Thread.group and ThreadGroup.parent fields.
-     */
-    static final ThreadGroup createThreadGroup(String name) {
-        if (name == null)
-            throw new NullPointerException();
-        try {
-            String groupFieldName = IS_PRE8_IBM ? "threadGroup" : "group";
-            long tg = U.objectFieldOffset
-                (Thread.class.getDeclaredField(groupFieldName));
-            long gp = U.objectFieldOffset
-                (ThreadGroup.class.getDeclaredField("parent"));
-            ThreadGroup group = (ThreadGroup)
-                U.getObject(Thread.currentThread(), tg);
-            while (group != null) {
-                ThreadGroup parent = (ThreadGroup) U.getObject(group, gp);
-                if (parent == null)
-                    return new ThreadGroup(group, name);
-                group = parent;
-            }
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-        // fall through if null as cannot-happen safeguard
-        throw new Error("Cannot create ThreadGroup");
+    static final void setContextClassLoader(Thread thread, ClassLoader ccl) {
+        U.putObject(thread, CCL, ccl);
     }
 
     // Static initialization
@@ -234,23 +209,6 @@ import java.util.concurrent.atomic.AtomicLong;
         }
     }
 
-    /**
-     * Are we running on a pre-Java8 IBM VM?
-     * @return
-     */
-    private static boolean isIBMPre8() {
-        if (isClassPresent("com.ibm.misc.JarVersion")) {
-            String ver = System.getProperty("java.class.version", "45");
-            if (ver != null && ver.length() >= 2) {
-                ver = ver.substring(0, 2);
-                if ("52".compareTo(ver) > 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private static boolean isClassPresent(String name) {
         Class<?> clazz = null;
         try {
@@ -266,33 +224,30 @@ import java.util.concurrent.atomic.AtomicLong;
     // Unsafe mechanics
     private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
     private static final long VALUE_OFF;
-    private static final boolean IS_PRE8_IBM;
     private static final boolean IS_ANDROID;
     private static final long THREADLOCALS;
     private static final long INHERITABLETHREADLOCALS;
     private static final long INHERITEDACCESSCONTROLCONTEXT;
+    private static final long CCL;
     static {
         try {
-            IS_PRE8_IBM = isIBMPre8();
             IS_ANDROID = isAndroid();
             if (!IS_ANDROID) {
                 THREADLOCALS = U.objectFieldOffset(Thread.class
                         .getDeclaredField("threadLocals"));
                 INHERITABLETHREADLOCALS = U.objectFieldOffset(Thread.class
                         .getDeclaredField("inheritableThreadLocals"));
-                String accFieldName = IS_PRE8_IBM ? "accessControlContext"
-                        : "inheritedAccessControlContext";
                 INHERITEDACCESSCONTROLCONTEXT = U
                         .objectFieldOffset(Thread.class
-                                .getDeclaredField(accFieldName));
+                                .getDeclaredField("inheritedAccessControlContext"));
             } else {
                 // we don't need these offsets when on Android
                 THREADLOCALS = 0L;
                 INHERITABLETHREADLOCALS = 0L;
                 INHERITEDACCESSCONTROLCONTEXT = 0L;
             }
-            VALUE_OFF = U.objectFieldOffset(Integer.class
-                    .getDeclaredField("value"));
+            VALUE_OFF = U.objectFieldOffset(Integer.class.getDeclaredField("value"));
+            CCL = U.objectFieldOffset(Thread.class.getDeclaredField("contextClassLoader"));
         } catch (Exception e) {
             throw new Error(e);
         }

@@ -18,7 +18,7 @@ import java8.util.function.DoubleBinaryOperator;
  */
 @SuppressWarnings("serial")
 abstract class Striped64 extends Number {
-// CVS rev. 1.21
+// CVS rev. 1.22
     /*
      * This class maintains a lazily-initialized table of atomically
      * updated variables, plus an extra "base" field. The table size

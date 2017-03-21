@@ -14,7 +14,7 @@ import junit.framework.Test;
 
 @org.testng.annotations.Test
 public class LinkedBlockingDeque8Test extends JSR166TestCase {
-// CVS rev. 1.1
+// CVS rev. 1.2
 
 //    public static void main(String[] args) {
 //        main(suite(), args);

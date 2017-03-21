@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -103,6 +103,11 @@ final class ImmutableCollections {
         }
 
         @Override
+        public Iterator<E> iterator() {
+            return J9Collections.emptyIterator();
+        }
+
+        @Override
         public E get(int index) {
             J9Collections.checkIndex(index, 0); // always throws IndexOutOfBoundsException
             return null;                        // but the compiler doesn't know this
@@ -114,6 +119,22 @@ final class ImmutableCollections {
 
         private Object writeReplace() {
             return new CollSer(CollSer.IMM_LIST);
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            J9Collections.requireNonNull(o);
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> o) {
+            return o.isEmpty(); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
         }
     }
 
@@ -132,7 +153,6 @@ final class ImmutableCollections {
         @Override
         public E get(int index) {
             J9Collections.checkIndex(index, 1);
-            // assert index == 0
             return e0;
         }
 
@@ -142,6 +162,16 @@ final class ImmutableCollections {
 
         private Object writeReplace() {
             return new CollSer(CollSer.IMM_LIST, e0);
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return o.equals(e0); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 + e0.hashCode();
         }
     }
 
@@ -167,6 +197,17 @@ final class ImmutableCollections {
             } else { // index == 1
                 return e1;
             }
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return o.equals(e0) || o.equals(e1); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 31 + e0.hashCode();
+            return 31 * hash + e1.hashCode();
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -200,6 +241,25 @@ final class ImmutableCollections {
         public E get(int index) {
             J9Collections.checkIndex(index, elements.length);
             return elements[index];
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            for (E e : elements) {
+                if (o.equals(e)) { // implicit nullcheck of o
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 1;
+            for (E e : elements) {
+                hash = 31 * hash + e.hashCode();
+            }
+            return hash;
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -239,7 +299,13 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return super.contains(J9Collections.requireNonNull(o));
+            J9Collections.requireNonNull(o);
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> o) {
+            return o.isEmpty(); // implicit nullcheck of o
         }
 
         @Override
@@ -253,6 +319,11 @@ final class ImmutableCollections {
 
         private Object writeReplace() {
             return new CollSer(CollSer.IMM_SET);
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
         }
     }
 
@@ -270,7 +341,7 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return super.contains(J9Collections.requireNonNull(o));
+            return o.equals(e0); // implicit nullcheck of o
         }
 
         @Override
@@ -285,6 +356,11 @@ final class ImmutableCollections {
         private Object writeReplace() {
             return new CollSer(CollSer.IMM_SET, e0);
         }
+
+        @Override
+        public int hashCode() {
+            return e0.hashCode();
+        }
     }
 
     static final class Set2<E> extends AbstractImmutableSet<E> {
@@ -292,10 +368,7 @@ final class ImmutableCollections {
         final E e1;
 
         Set2(E e0, E e1) {
-            J9Collections.requireNonNull(e0);
-            J9Collections.requireNonNull(e1);
-
-            if (e0.equals(e1)) {
+            if (e0.equals(J9Collections.requireNonNull(e1))) { // implicit nullcheck of e0
                 throw new IllegalArgumentException("duplicate element: " + e0);
             }
 
@@ -315,7 +388,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return super.contains(J9Collections.requireNonNull(o));
+            return o.equals(e0) || o.equals(e1); // implicit nullcheck of o
+        }
+
+        @Override
+        public int hashCode() {
+            return e0.hashCode() + e1.hashCode();
         }
 
         @Override
@@ -368,8 +446,8 @@ final class ImmutableCollections {
 
             elements = (E[]) new Object[EXPAND_FACTOR * input.length];
             for (int i = 0; i < input.length; i++) {
-                E e = J9Collections.requireNonNull(input[i]);
-                int idx = probe(e);
+                E e = input[i];
+                int idx = probe(e); // implicit nullcheck of e
                 if (idx >= 0) {
                     throw new IllegalArgumentException("duplicate element: " + e);
                 } else {
@@ -385,7 +463,7 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            return probe(J9Collections.requireNonNull(o)) >= 0;
+            return probe(o) >= 0; // implicit nullcheck of o
         }
 
         @Override
@@ -413,8 +491,21 @@ final class ImmutableCollections {
             };
         }
 
+        @Override
+        public int hashCode() {
+            int h = 0;
+            for (E e : elements) {
+                if (e != null) {
+                    h += e.hashCode();
+                }
+            }
+            return h;
+        }
+
         // returns index at which element is present; or if absent,
-        // (-i - 1) where i is location where element should be inserted
+        // (-i - 1) where i is location where element should be inserted.
+        // Callers are relying on this method to perform an implicit nullcheck
+        // of pe.
         private int probe(Object pe) {
             int idx = floorMod(pe.hashCode() ^ SALT, elements.length);
             while (true) {
@@ -471,12 +562,14 @@ final class ImmutableCollections {
 
         @Override
         public boolean containsKey(Object o) {
-            return super.containsKey(J9Collections.requireNonNull(o));
+            J9Collections.requireNonNull(o);
+            return false;
         }
 
         @Override
         public boolean containsValue(Object o) {
-            return super.containsValue(J9Collections.requireNonNull(o));
+            J9Collections.requireNonNull(o);
+            return false;
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -485,6 +578,11 @@ final class ImmutableCollections {
 
         private Object writeReplace() {
             return new CollSer(CollSer.IMM_MAP);
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
         }
     }
 
@@ -504,12 +602,12 @@ final class ImmutableCollections {
 
         @Override
         public boolean containsKey(Object o) {
-            return super.containsKey(J9Collections.requireNonNull(o));
+            return o.equals(k0); // implicit nullcheck of o
         }
 
         @Override
         public boolean containsValue(Object o) {
-            return super.containsValue(J9Collections.requireNonNull(o));
+            return o.equals(v0); // implicit nullcheck of o
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -518,6 +616,11 @@ final class ImmutableCollections {
 
         private Object writeReplace() {
             return new CollSer(CollSer.IMM_MAP, k0, v0);
+        }
+
+        @Override
+        public int hashCode() {
+            return k0.hashCode() ^ v0.hashCode();
         }
     }
 
@@ -535,8 +638,7 @@ final class ImmutableCollections {
         final int size; // number of pairs
 
         MapN(Object... input) {
-            J9Collections.requireNonNull(input);
-            if ((input.length & 1) != 0) {
+            if ((input.length & 1) != 0) { // implicit nullcheck of input
                 throw new AssertionError("length is odd");
             }
             size = input.length >> 1;
@@ -561,12 +663,30 @@ final class ImmutableCollections {
 
         @Override
         public boolean containsKey(Object o) {
-            return probe(J9Collections.requireNonNull(o)) >= 0;
+            return probe(o) >= 0; // implicit nullcheck of o
         }
 
         @Override
         public boolean containsValue(Object o) {
-            return super.containsValue(J9Collections.requireNonNull(o));
+            for (int i = 1; i < table.length; i += 2) {
+                Object v = table[i];
+                if (v != null && o.equals(v)) { // implicit nullcheck of o
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            for (int i = 0; i < table.length; i += 2) {
+                Object k = table[i];
+                if (k != null) {
+                    hash += k.hashCode() ^ table[i + 1].hashCode();
+                }
+            }
+            return hash;
         }
 
         @Override
@@ -626,7 +746,9 @@ final class ImmutableCollections {
         }
 
         // returns index at which the probe key is present; or if absent,
-        // (-i - 1) where i is location where element should be inserted
+        // (-i - 1) where i is location where element should be inserted.
+        // Callers are relying on this method to perform an implicit nullcheck
+        // of pk.
         private int probe(Object pk) {
             int idx = floorMod(pk.hashCode() ^ SALT, table.length >> 1) << 1;
             while (true) {
@@ -667,8 +789,7 @@ final class ImmutableCollections {
     }
 
     static <E> List<E> listOf(E[] elements) { // streamsupport added
-        J9Collections.requireNonNull(elements);
-        switch (elements.length) {
+        switch (elements.length) { // implicit null check of elements
             case 0:
                 return List0.instance();
             case 1:
@@ -685,8 +806,7 @@ final class ImmutableCollections {
     }
 
     static <E> Set<E> setOf(E[] elements) { // streamsupport added
-        J9Collections.requireNonNull(elements);
-        switch (elements.length) {
+        switch (elements.length) { // implicit null check of elements
             case 0:
                 return ImmutableCollections.Set0.instance();
             case 1:

@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleter8Test extends JSR166TestCase {
-// CVS rev. 1.3
+// CVS rev. 1.4
 
 //    public static void main(String[] args) {
 //        main(suite(), args);

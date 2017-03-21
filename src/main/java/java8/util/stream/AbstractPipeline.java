@@ -25,6 +25,7 @@
 package java8.util.stream;
 
 import java8.util.Objects;
+import java8.util.function.Consumer;
 import java8.util.function.IntFunction;
 import java8.util.function.Supplier;
 import java8.util.Spliterator;
@@ -473,7 +474,7 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     }
 
     @Override
-    final <P_IN, S_ extends SinkConsumer<E_OUT>> S_ wrapAndCopyInto(S_ sink, Spliterator<P_IN> spliterator) {
+    final <P_IN, S_ extends Consumer<E_OUT>> S_ wrapAndCopyInto(S_ sink, Spliterator<P_IN> spliterator) {
         copyInto(wrapSink(Objects.requireNonNull(sink)), spliterator);
         return sink;
     }
@@ -527,7 +528,7 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
     }
 
     @Override
-    final <P_IN> Sink<P_IN> wrapSink(final SinkConsumer<E_OUT> sink) {
+    final <P_IN> Sink<P_IN> wrapSink(final Consumer<E_OUT> sink) {
         Objects.requireNonNull(sink);
 
         Sink<E_OUT> trampoline = new Sink<E_OUT>() {

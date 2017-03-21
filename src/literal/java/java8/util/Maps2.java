@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -387,8 +387,7 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> ofEntries(Map.Entry<? extends K, ? extends V>... entries) {
-        J9Collections.requireNonNull(entries);
-        if (entries.length == 0) {
+        if (entries.length == 0) { // implicit null check of entries
             return ImmutableCollections.Map0.instance();
         } else if (entries.length == 1) {
             return new ImmutableCollections.Map1<K, V>(entries[0].getKey(),

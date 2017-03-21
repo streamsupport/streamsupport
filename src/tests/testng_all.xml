@@ -24,7 +24,9 @@
       <class name="org.openjdk.tests.java.util.arrays.SetAllTest"/>
       <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
       <class name="org.openjdk.tests.java.util.comparator.TypeTest"/>
-      <class name="org.openjdk.tests.java.util.map.DefaultsTest"/>
+      <class name="org.openjdk.tests.java.util.map.InPlaceOpsCollisions"/>
+      <class name="org.openjdk.tests.java.util.map.Defaults"/>
+      <class name="org.openjdk.tests.java.util.map.FunctionalCMEs"/>
 
       <!-- block 3 -->
       <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/>
@@ -83,7 +85,6 @@
       <class name="org.openjdk.other.tests.function.BiFunctionTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.FillableStringTest"/>
       <class name="org.openjdk.other.tests.java.util.miscellaneous.MapTest"/>
-      <class name="org.openjdk.other.tests.java.util.miscellaneous.NullArgsTestCase"/>
       <class name="org.openjdk.other.tests.java.util.stream.CollectionAndMapModifyStreamTest"/>
       <class name="org.openjdk.other.tests.java.util.stream.COWCollectionsTest"/>
       <class name="org.openjdk.other.tests.java.util.stream.DoublePrimitiveOpsTests"/>
@@ -111,8 +112,10 @@
       <class name="java8.util.Ticket66Test"/>
       <class name="org.openjdk.tests.java.util.SpliteratorCharacteristics"/>
       <class name="org.openjdk.tests.java.util.SpliteratorCollisions"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorCollisions2"/>
       <class name="org.openjdk.tests.java.util.SpliteratorLateBindingFailFastTest"/>
       <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest"/>
+      <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest2"/>
       <class name="org.openjdk.tests.java.util.SpliteratorFailFastTest"/>
       <class name="org.openjdk.tests.java.util.SpliteratorLateBindingTest"/>
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
@@ -142,12 +145,15 @@
       <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
 
       <!-- block 13 (JSR 166 TCK tests) -->
+      <!--class name="org.openjdk.tests.tck.ArrayDeque8Test"/-->
+      <class name="org.openjdk.tests.tck.Collection8Test"/>
       <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleter8Test"/>
       <class name="org.openjdk.tests.tck.DoubleAccumulatorTest"/>
       <class name="org.openjdk.tests.tck.DoubleAdderTest"/>
       <class name="org.openjdk.tests.tck.ForkJoinPool8Test"/>
+      <class name="org.openjdk.tests.tck.ForkJoinPool9Test"/>
       <class name="org.openjdk.tests.tck.ForkJoinPoolTest"/>
       <class name="org.openjdk.tests.tck.ForkJoinTask8Test"/>
       <class name="org.openjdk.tests.tck.ForkJoinTaskTest"/>

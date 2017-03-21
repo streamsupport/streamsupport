@@ -318,7 +318,7 @@ class StreamSpliterators {
                 Objects.requireNonNull(consumer);
                 init();
 
-                ph.wrapAndCopyInto((SinkConsumer<P_OUT>) consumer::accept, spliterator);
+                ph.wrapAndCopyInto((Consumer<P_OUT>) consumer::accept, spliterator);
                 finished = true;
             }
             else {

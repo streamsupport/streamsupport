@@ -82,7 +82,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.181
+// CVS rev. 1.184
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -132,10 +132,10 @@ public class CompletableFutureTest extends JSR166TestCase {
      * Returns the "raw" internal exceptional completion of f,
      * without any additional wrapping with CompletionException.
      */
-    <U> Throwable exceptionalCompletion(CompletableFuture<U> f) {
-        // handle (and whenComplete) can distinguish between "direct"
-        // and "wrapped" exceptional completion
-        return f.handle((U u, Throwable t) -> t).join();
+    Throwable exceptionalCompletion(CompletableFuture<?> f) {
+        // handle (and whenComplete and exceptionally) can distinguish
+        // between "direct" and "wrapped" exceptional completion
+        return f.handle((u, t) -> t).join();
     }
 
     void checkCompletedExceptionally(CompletableFuture<?> f,
@@ -2601,28 +2601,28 @@ public class CompletableFutureTest extends JSR166TestCase {
 
         // unspecified behavior - both source completions available
         try {
-            assertEquals(null, h0.join());
+            assertNull(h0.join());
             rs[0].assertValue(v1);
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h0, ex);
             rs[0].assertNotInvoked();
         }
         try {
-            assertEquals(null, h1.join());
+            assertNull(h1.join());
             rs[1].assertValue(v1);
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h1, ex);
             rs[1].assertNotInvoked();
         }
         try {
-            assertEquals(null, h2.join());
+            assertNull(h2.join());
             rs[2].assertValue(v1);
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h2, ex);
             rs[2].assertNotInvoked();
         }
         try {
-            assertEquals(null, h3.join());
+            assertNull(h3.join());
             rs[3].assertValue(v1);
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h3, ex);
@@ -2861,28 +2861,28 @@ public class CompletableFutureTest extends JSR166TestCase {
 
         // unspecified behavior - both source completions available
         try {
-            assertEquals(null, h0.join());
+            assertNull(h0.join());
             rs[0].assertInvoked();
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h0, ex);
             rs[0].assertNotInvoked();
         }
         try {
-            assertEquals(null, h1.join());
+            assertNull(h1.join());
             rs[1].assertInvoked();
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h1, ex);
             rs[1].assertNotInvoked();
         }
         try {
-            assertEquals(null, h2.join());
+            assertNull(h2.join());
             rs[2].assertInvoked();
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h2, ex);
             rs[2].assertNotInvoked();
         }
         try {
-            assertEquals(null, h3.join());
+            assertNull(h3.join());
             rs[3].assertInvoked();
         } catch (CompletionException ok) {
             checkCompletedWithWrappedException(h3, ex);
@@ -3574,7 +3574,7 @@ public class CompletableFutureTest extends JSR166TestCase {
      */
     public void testCompletedStage() {
         AtomicInteger x = new AtomicInteger(0);
-        AtomicReference<Throwable> r = new AtomicReference<Throwable>();
+        AtomicReference<Throwable> r = new AtomicReference<>();
         CompletionStage<Integer> f = CompletableFuture.completedStage(1);
         f.whenComplete((v, e) -> {if (e != null) r.set(e); else x.set(v);});
         assertEquals(x.get(), 1);
@@ -3677,7 +3677,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         CompletableFuture<Integer> f = new CompletableFuture<>();
         CompletionStage<Integer> g = f.minimalCompletionStage();
         AtomicInteger x = new AtomicInteger(0);
-        AtomicReference<Throwable> r = new AtomicReference<Throwable>();
+        AtomicReference<Throwable> r = new AtomicReference<>();
         checkIncomplete(f);
         g.whenComplete((v, e) -> {if (e != null) r.set(e); else x.set(v);});
         f.complete(1);
@@ -3694,7 +3694,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         CompletableFuture<Integer> f = new CompletableFuture<>();
         CompletionStage<Integer> g = f.minimalCompletionStage();
         AtomicInteger x = new AtomicInteger(0);
-        AtomicReference<Throwable> r = new AtomicReference<Throwable>();
+        AtomicReference<Throwable> r = new AtomicReference<>();
         g.whenComplete((v, e) -> {if (e != null) r.set(e); else x.set(v);});
         checkIncomplete(f);
         CFException ex = new CFException();
@@ -3712,7 +3712,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         CFException ex = new CFException();
         CompletionStage<Integer> f = CompletableFuture.failedStage(ex);
         AtomicInteger x = new AtomicInteger(0);
-        AtomicReference<Throwable> r = new AtomicReference<Throwable>();
+        AtomicReference<Throwable> r = new AtomicReference<>();
         f.whenComplete((v, e) -> {if (e != null) r.set(e); else x.set(v);});
         assertEquals(x.get(), 0);
         assertEquals(r.get(), ex);
