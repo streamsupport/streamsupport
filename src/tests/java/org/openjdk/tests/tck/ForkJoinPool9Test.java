@@ -6,8 +6,6 @@
  */
 package org.openjdk.tests.tck;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
@@ -19,7 +17,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool9Test extends JSR166TestCase {
-// CVS rev. 1.3
+// CVS rev. 1.4
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -67,7 +65,7 @@ public class ForkJoinPool9Test extends JSR166TestCase {
             Future<?> f = ForkJoinPool.commonPool().submit(runInCommonPool);
             // Ensure runInCommonPool is truly running in the common pool,
             // by giving this thread no opportunity to "help" on get().
-            assertTrue(taskStarted.await(LONG_DELAY_MS, MILLISECONDS));
+            await(taskStarted);
             assertNull(f.get());
     }
 

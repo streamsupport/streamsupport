@@ -65,7 +65,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPoolTest extends JSR166TestCase {
-// CVS rev. 1.72
+// CVS rev. 1.73
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -270,7 +270,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
                     taskStarted.countDown();
                     assertEquals(1, p.getPoolSize());
                     assertEquals(1, p.getActiveThreadCount());
-                    done.await();
+                    await(done);
                 }};
             @SuppressWarnings("unused")
             Future<?> future = p.submit(task);
