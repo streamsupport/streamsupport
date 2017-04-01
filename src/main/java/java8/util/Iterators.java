@@ -47,7 +47,8 @@ public final class Iterators {
      * <p>
      * The behavior of an iterator is unspecified if the action modifies the underlying
      * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method), unless an overriding class has specified a concurrent modification policy.
+     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
+     * class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -82,7 +83,8 @@ public final class Iterators {
      * <p>
      * The behavior of an iterator is unspecified if the action modifies the underlying
      * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method), unless an overriding class has specified a concurrent modification policy.
+     * methodor other mutator methods of {@code Iterator} subtypes), unless an overriding
+     * class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -116,7 +118,8 @@ public final class Iterators {
      * <p>
      * The behavior of an iterator is unspecified if the action modifies the underlying
      * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method), unless an overriding class has specified a concurrent modification policy.
+     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
+     * class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
@@ -150,7 +153,8 @@ public final class Iterators {
      * <p>
      * The behavior of an iterator is unspecified if the action modifies the underlying
      * source of elements in any way (even by calling the {@link Iterator#remove() remove}
-     * method), unless an overriding class has specified a concurrent modification policy.
+     * method or other mutator methods of {@code Iterator} subtypes), unless an overriding
+     * class has specified a concurrent modification policy.
      * <p>
      * Subsequent behavior of an iterator is unspecified if the action throws an
      * exception.
