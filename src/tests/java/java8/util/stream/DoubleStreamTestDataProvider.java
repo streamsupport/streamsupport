@@ -36,7 +36,8 @@ public class DoubleStreamTestDataProvider {
     private static final double[] to1 = new double[1];
     private static final double[] to10 = new double[10];
     private static final double[] to100 = new double[100];
-    private static final double[] to1000 = new double[1000];
+    // Android-changed: remove 0..1000 test data from data providers.
+    //private static final double[] to1000 = new double[1000];
     private static final double[] reversed = new double[100];
     private static final double[] ones = new double[100];
     private static final double[] twice = new double[200];
@@ -47,7 +48,9 @@ public class DoubleStreamTestDataProvider {
     private static final Object[][] spliteratorTestData;
 
     static {
-        double[][] arrays = {to0, to1, to10, to100, to1000};
+        // Android-changed: remove 0..1000 test data from data providers.
+        //double[][] arrays = {to0, to1, to10, to100, to1000};
+        double[][] arrays = {to0, to1, to10, to100};
         for (double[] arr : arrays) {
             for (int i = 0; i < arr.length; i++) {
                 arr[i] = i;
@@ -72,7 +75,8 @@ public class DoubleStreamTestDataProvider {
             {"0..1", to1},
             {"0..10", to10},
             {"0..100", to100},
-            {"0..1000", to1000},
+            // Android-changed: remove 0..1000 test data from data providers.
+            //{"0..1000", to1000},
             {"100x[1]", ones},
             {"2x[0..100]", twice},
             {"reverse 0..100", reversed},

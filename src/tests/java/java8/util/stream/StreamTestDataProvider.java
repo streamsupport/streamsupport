@@ -47,7 +47,8 @@ public class StreamTestDataProvider {
     private static final Integer[] to1 = new Integer[1];
     private static final Integer[] to10 = new Integer[10];
     private static final Integer[] to100 = new Integer[100];
-    private static final Integer[] to1000 = new Integer[1000];
+    // Android-changed: remove 0..1000 test data from data providers.
+    //private static final Integer[] to1000 = new Integer[1000];
     private static final Integer[] reversed = new Integer[100];
     private static final Integer[] ones = new Integer[100];
     private static final Integer[] twice = new Integer[200];
@@ -60,7 +61,9 @@ public class StreamTestDataProvider {
     private static final Object[][] spliteratorTestData;
 
     static {
-        Integer[][] arrays = {to0, to1, to10, to100, to1000};
+        // Android-changed: remove 0..1000 test data from data providers.
+        //Integer[][] arrays = {to0, to1, to10, to100, to1000};
+        Integer[][] arrays = {to0, to1, to10, to100};
         for (Integer[] arr : arrays) {
             for (int i = 0; i < arr.length; i++) {
                 arr[i] = i;
@@ -85,7 +88,8 @@ public class StreamTestDataProvider {
             {"0..1", to1},
             {"0..10", to10},
             {"0..100", to100},
-            {"0..1000", to1000},
+            // Android-changed: remove 0..1000 test data from data providers.
+            //{"0..1000", to1000},
             {"100x[1]", ones},
             {"2x[0..100]", twice},
             {"reverse 0..100", reversed},
