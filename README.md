@@ -72,6 +72,7 @@ build.gradle:
 
 ```gradle
 repositories {
+    jcenter()
     maven { url "https://jitpack.io" }
 }
 
@@ -86,10 +87,11 @@ dependencies {
 }
 ```
 
-or via jitpack (comming soon):
+or via jitpack:
 
 ```gradle
 repositories {
+    jcenter()
     maven { url "https://jitpack.io" }
 }
 
