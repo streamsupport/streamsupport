@@ -71,12 +71,18 @@ public static String[] getNames(User[] users) {
 build.gradle:
 
 ```gradle
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'
     compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.4'
     compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.4'
     compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.4'
     compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.4'
+
+    //compile 'com.github.streamsupport.streamsupport:streamsupport-pro:-SNAPSHOT' // proguard config for android
 }
 ```
 
@@ -93,12 +99,14 @@ dependencies {
     compile 'com.github.streamsupport.streamsupport:streamsupport-atomic:-SNAPSHOT'
     compile 'com.github.streamsupport.streamsupport:streamsupport-flow:-SNAPSHOT'
     compile 'com.github.streamsupport.streamsupport:streamsupport-literal:-SNAPSHOT'
+
+    //compile 'com.github.streamsupport.streamsupport:streamsupport-pro:-SNAPSHOT' // proguard config for android
 }
 ```
 
 ## Proguard
 
-[streamsupport.pro](streamsupport.pro)
+[streamsupport.pro](streamsupport-pro/streamsupport.pro)
 
 ## Build
 

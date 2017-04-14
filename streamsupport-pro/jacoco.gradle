@@ -1,0 +1,28 @@
+// ref. https://github.com/adelnizamutdinov/headphone-reminder/blob/master/app/build.gradle
+apply plugin: 'jacoco'
+
+final jacocoExcludes = [
+    '**/R*.class',
+    '**/BuildConfig*',
+    "**/*Package.class"
+]
+
+
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+  reports {
+    xml.enabled = true
+    html.enabled = true
+  }
+
+  classDirectories = fileTree(dir: 'build/intermediates/classes/debug', excludes: jacocoExcludes)
+  sourceDirectories = files("src/main/java")
+  executionData = files("build/jacoco/testDebugUnitTest.exec")
+
+  doFirst {
+    file('build/intermediates/classes/debug').eachFileRecurse { file ->
+      if (file.name.contains('$$')) {
+        file.renameTo(file.path.replace('$$', '$'))
+      }
+    }
+  }
+}
