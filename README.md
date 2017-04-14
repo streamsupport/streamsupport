@@ -96,6 +96,10 @@ dependencies {
 }
 ```
 
+## Proguard
+
+[streamsupport.pro](streamsupport.pro)
+
 ## Build
 
 ### maven
