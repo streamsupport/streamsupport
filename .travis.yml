@@ -1,10 +1,17 @@
-language: java
+language: android
 jdk:
     - oraclejdk8
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-25.0.1
+    - android-25
 before_install:
     - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
     - export JAVA_HOME=$JAVA8_HOME
-script:
-    - ./mvnw clean install
 after_success:
     - ./gradlew coveralls
+
+# as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+sudo: false
