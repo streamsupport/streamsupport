@@ -33,6 +33,6 @@ android {
 dependencies {
 }
 
-apply from: 'javadoc.gradle'
+//apply from: 'javadoc.gradle'
 apply plugin: 'com.github.dcendents.android-maven'
 //apply from: 'jacoco.gradle'
