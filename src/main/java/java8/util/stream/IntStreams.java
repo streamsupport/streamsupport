@@ -63,7 +63,7 @@ public final class IntStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.intStream(
                 new WhileOps.UnorderedWhileSpliterator.OfInt.Taking(stream.spliterator(), true, predicate),
-                stream.isParallel()).onClose(stream::close);
+                stream.isParallel()).onClose(StreamSupport.closeHandler(stream));
     }
 
     /**
@@ -90,7 +90,7 @@ public final class IntStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.intStream(
                 new WhileOps.UnorderedWhileSpliterator.OfInt.Dropping(stream.spliterator(), true, predicate),
-                stream.isParallel()).onClose(stream::close);
+                stream.isParallel()).onClose(StreamSupport.closeHandler(stream));
     }
 
     // Static factories

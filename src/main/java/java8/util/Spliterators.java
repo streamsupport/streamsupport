@@ -268,8 +268,12 @@ public final class Spliterators {
                 return this_.tryAdvance((IntConsumer) action);
             }
             else {
-               return this_.tryAdvance((IntConsumer) action::accept);
+               return this_.tryAdvance(toIntConsumer(action));
             }
+        }
+
+        private static IntConsumer toIntConsumer(Consumer<? super Integer> action) {
+            return (IntConsumer) action::accept;
         }
 
         /**
@@ -297,7 +301,7 @@ public final class Spliterators {
                 this_.forEachRemaining((IntConsumer) action);
             }
             else {
-                this_.forEachRemaining((IntConsumer) action::accept);
+                this_.forEachRemaining(toIntConsumer(action));
             }
         }
 
@@ -357,8 +361,12 @@ public final class Spliterators {
                 return this_.tryAdvance((LongConsumer) action);
             }
             else {
-                return this_.tryAdvance((LongConsumer) action::accept);
+                return this_.tryAdvance(toLongConsumer(action));
             }
+        }
+
+        private static LongConsumer toLongConsumer(Consumer<? super Long> action) {
+            return (LongConsumer) action::accept;
         }
 
         /**
@@ -386,7 +394,7 @@ public final class Spliterators {
                 this_.forEachRemaining((LongConsumer) action);
             }
             else {
-                this_.forEachRemaining((LongConsumer) action::accept);
+                this_.forEachRemaining(toLongConsumer(action));
             }
         }
 
@@ -446,8 +454,12 @@ public final class Spliterators {
                 return this_.tryAdvance((DoubleConsumer) action);
             }
             else {
-                return this_.tryAdvance((DoubleConsumer) action::accept);
+                return this_.tryAdvance(toDoubleConsumer(action));
             }
+        }
+
+        private static DoubleConsumer toDoubleConsumer(Consumer<? super Double> action) {
+            return (DoubleConsumer) action::accept;
         }
 
         /**
@@ -476,7 +488,7 @@ public final class Spliterators {
                 this_.forEachRemaining((DoubleConsumer) action);
             }
             else {
-                this_.forEachRemaining((DoubleConsumer) action::accept);
+                this_.forEachRemaining(toDoubleConsumer(action));
             }
         }
 

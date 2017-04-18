@@ -550,4 +550,8 @@ public final class StreamSupport {
                                          StreamOpFlag.fromCharacteristics(characteristics),
                                          parallel);
     }
+
+    static Runnable closeHandler(BaseStream<?, ?> stream) {
+        return stream::close;
+    }
 }
