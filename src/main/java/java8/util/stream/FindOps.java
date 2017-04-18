@@ -46,6 +46,40 @@ final class FindOps {
 
     private FindOps() { }
 
+    private static final Predicate<Optional<Object>> REF_IS_PRESENT = Optional::isPresent;
+    private static final Predicate<OptionalInt> INT_IS_PRESENT = OptionalInt::isPresent;
+    private static final Predicate<OptionalLong> LONG_IS_PRESENT = OptionalLong::isPresent;
+    private static final Predicate<OptionalDouble> DOUBLE_IS_PRESENT = OptionalDouble::isPresent;
+    private static final Supplier<TerminalSink<Object, Optional<Object>>> REF_SINK_SUPP = FindSink.OfRef::new;
+    private static final Supplier<TerminalSink<Integer, OptionalInt>> INT_SINK_SUPP = FindSink.OfInt::new;
+    private static final Supplier<TerminalSink<Long, OptionalLong>> LONG_SINK_SUPP = FindSink.OfLong::new;
+    private static final Supplier<TerminalSink<Double, OptionalDouble>> DOUBLE_SINK_SUPP = FindSink.OfDouble::new;
+
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp FIRST_REF = new FindOp<>(true, StreamShape.REFERENCE, Optional.empty(),
+            REF_IS_PRESENT, REF_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp ANY_REF = new FindOp<>(false, StreamShape.REFERENCE, Optional.empty(),
+            REF_IS_PRESENT, REF_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp FIRST_INT = new FindOp<>(true, StreamShape.INT_VALUE, OptionalInt.empty(),
+            INT_IS_PRESENT, INT_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp ANY_INT = new FindOp<>(false, StreamShape.INT_VALUE, OptionalInt.empty(),
+            INT_IS_PRESENT, INT_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp FIRST_LONG = new FindOp<>(true, StreamShape.LONG_VALUE, OptionalLong.empty(),
+            LONG_IS_PRESENT, LONG_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp ANY_LONG = new FindOp<>(false, StreamShape.LONG_VALUE, OptionalLong.empty(),
+            LONG_IS_PRESENT, LONG_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp FIRST_DOUBLE = new FindOp<>(true, StreamShape.DOUBLE_VALUE, OptionalDouble.empty(),
+            DOUBLE_IS_PRESENT, DOUBLE_SINK_SUPP);
+    @SuppressWarnings("rawtypes")
+    private static final TerminalOp ANY_DOUBLE = new FindOp<>(false, StreamShape.DOUBLE_VALUE, OptionalDouble.empty(),
+            DOUBLE_IS_PRESENT, DOUBLE_SINK_SUPP);
+
     /**
      * Constructs a {@code TerminalOp} for streams of objects.
      *
@@ -54,9 +88,9 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
+    @SuppressWarnings("unchecked")
     public static <T> TerminalOp<T, Optional<T>> makeRef(boolean mustFindFirst) {
-        return new FindOp<>(mustFindFirst, StreamShape.REFERENCE, Optional.empty(),
-                            Optional::isPresent, FindSink.OfRef::new);
+        return mustFindFirst ? FIRST_REF : ANY_REF;
     }
 
     /**
@@ -66,9 +100,9 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
+    @SuppressWarnings("unchecked")
     public static TerminalOp<Integer, OptionalInt> makeInt(boolean mustFindFirst) {
-        return new FindOp<>(mustFindFirst, StreamShape.INT_VALUE, OptionalInt.empty(),
-                            OptionalInt::isPresent, FindSink.OfInt::new);
+        return mustFindFirst ? FIRST_INT : ANY_INT;
     }
 
     /**
@@ -78,9 +112,9 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
+    @SuppressWarnings("unchecked")
     public static TerminalOp<Long, OptionalLong> makeLong(boolean mustFindFirst) {
-        return new FindOp<>(mustFindFirst, StreamShape.LONG_VALUE, OptionalLong.empty(),
-                            OptionalLong::isPresent, FindSink.OfLong::new);
+        return mustFindFirst ? FIRST_LONG : ANY_LONG;
     }
 
     /**
@@ -90,9 +124,9 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
+    @SuppressWarnings("unchecked")
     public static TerminalOp<Double, OptionalDouble> makeDouble(boolean mustFindFirst) {
-        return new FindOp<>(mustFindFirst, StreamShape.DOUBLE_VALUE, OptionalDouble.empty(),
-                            OptionalDouble::isPresent, FindSink.OfDouble::new);
+        return mustFindFirst ? FIRST_DOUBLE : ANY_DOUBLE;
     }
 
     /**
