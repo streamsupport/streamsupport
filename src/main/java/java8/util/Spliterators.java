@@ -1067,7 +1067,9 @@ public final class Spliterators {
                         && !(c instanceof DelayQueue)
                         && !(c instanceof SynchronousQueue))) {
  
-            return spliterator(c, Spliterator.ORDERED);
+            // https://sourceforge.net/p/streamsupport/tickets/297/
+            return spliterator(c,
+                    c instanceof ArrayDeque ? Spliterator.NONNULL | Spliterator.ORDERED : Spliterator.ORDERED);
         }
 
         // default from j.u.Collection
