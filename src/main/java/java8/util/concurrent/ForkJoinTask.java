@@ -183,7 +183,7 @@ import java8.util.Objects;
  * @author Doug Lea
  */
 public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
-// CVS rev. 1.114
+// CVS rev. 1.115
 
     /*
      * See the internal documentation of class ForkJoinPool for a
@@ -673,13 +673,13 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     }
 
     /**
-     * Returns the result of the computation when it {@link #isDone is
-     * done}.  This method differs from {@link #get()} in that
-     * abnormal completion results in {@code RuntimeException} or
-     * {@code Error}, not {@code ExecutionException}, and that
-     * interrupts of the calling thread do <em>not</em> cause the
-     * method to abruptly return by throwing {@code
-     * InterruptedException}.
+     * Returns the result of the computation when it
+     * {@link #isDone is done}.
+     * This method differs from {@link #get()} in that abnormal
+     * completion results in {@code RuntimeException} or {@code Error},
+     * not {@code ExecutionException}, and that interrupts of the
+     * calling thread do <em>not</em> cause the method to abruptly
+     * return by throwing {@code InterruptedException}.
      *
      * @return the computed result
      */
