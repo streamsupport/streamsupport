@@ -40,7 +40,7 @@ import java8.util.stream.IntStreams;
  * <p>Additional methods that depend on the presence or absence of a contained
  * value are provided, such as {@link #orElse(int) orElse()}
  * (returns a default value if no value is present) and
- * {@link #ifPresent(java8.util.function.IntConsumer) ifPresent()} (performs an
+ * {@link #ifPresent(IntConsumer) ifPresent()} (performs an
  * action if a value is present).
  *
  * <p>This is a <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>

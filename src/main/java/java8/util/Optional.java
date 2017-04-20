@@ -40,9 +40,9 @@ import java8.util.stream.Stream;
  * {@code get()} returns the value.
  *
  * <p>Additional methods that depend on the presence or absence of a contained
- * value are provided, such as {@link #orElse(java.lang.Object) orElse()}
+ * value are provided, such as {@link #orElse(Object) orElse()}
  * (returns a default value if no value is present) and
- * {@link #ifPresent(java8.util.function.Consumer) ifPresent()} (performs an
+ * {@link #ifPresent(Consumer) ifPresent()} (performs an
  * action if a value is present).
  *
  * <p>This is a <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>

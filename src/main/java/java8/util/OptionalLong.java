@@ -41,7 +41,7 @@ import java8.util.stream.LongStreams;
  * <p>Additional methods that depend on the presence or absence of a contained
  * value are provided, such as {@link #orElse(long) orElse()}
  * (returns a default value if no value is present) and
- * {@link #ifPresent(java8.util.function.LongConsumer) ifPresent()} (performs an
+ * {@link #ifPresent(LongConsumer) ifPresent()} (performs an
  * action if a value is present).
  *
  * <p>This is a <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>
