@@ -30,11 +30,12 @@ import java8.util.function.LongBinaryOperator;
  * applicable to functions for which the order of accumulation does
  * not matter. The supplied accumulator function should be
  * side-effect-free, since it may be re-applied when attempted updates
- * fail due to contention among threads. The function is applied with
- * the current value as its first argument, and the given update as
- * the second argument.  For example, to maintain a running maximum
- * value, you could supply {@code Long::max} along with {@code
- * Long.MIN_VALUE} as the identity.
+ * fail due to contention among threads. For predictable results, the
+ * accumulator function should be associative and commutative. The
+ * function is applied with an existing value (or identity) as one
+ * argument, and a given update as the other argument.  For example,
+ * to maintain a running maximum value, you could supply {@code
+ * Long::max} along with {@code Long.MIN_VALUE} as the identity.
  *
  * <p>Class {@link LongAdder} provides analogs of the functionality of
  * this class for the common special case of maintaining counts and
@@ -50,7 +51,7 @@ import java8.util.function.LongBinaryOperator;
  * @author Doug Lea
  */
 public class LongAccumulator extends Striped64 implements Serializable {
-// CVS rev. 1.31
+// CVS rev. 1.33
     private static final long serialVersionUID = 7249069246863182397L;
 
     private final LongBinaryOperator function;
