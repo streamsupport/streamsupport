@@ -1,31 +1,4 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
- */
-
-/*
- * This file is available under and governed by the GNU General Public
- * License version 2 only, as published by the Free Software Foundation.
- * However, the following notice accompanied the original version of this
- * file:
- *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -44,6 +17,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class LongAccumulatorTest extends JSR166TestCase {
+// CVS rev. 1.8
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -54,96 +28,97 @@ public class LongAccumulatorTest extends JSR166TestCase {
     }
 
     /**
-     * default constructed initializes to zero
+     * new instance initialized to supplied identity
      */
     public void testConstructor() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        assertEquals(0, ai.get());
+        for (long identity : new long[] { Long.MIN_VALUE, 0, Long.MAX_VALUE })
+            assertEquals(identity,
+                         new LongAccumulator(Longs::max, identity).get());
     }
 
     /**
      * accumulate accumulates given value to current, and get returns current value
      */
     public void testAccumulateAndGet() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        ai.accumulate(2);
-        assertEquals(2, ai.get());
-        ai.accumulate(-4);
-        assertEquals(2, ai.get());
-        ai.accumulate(4);
-        assertEquals(4, ai.get());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        acc.accumulate(2);
+        assertEquals(2, acc.get());
+        acc.accumulate(-4);
+        assertEquals(2, acc.get());
+        acc.accumulate(4);
+        assertEquals(4, acc.get());
     }
 
     /**
      * reset() causes subsequent get() to return zero
      */
     public void testReset() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        ai.accumulate(2);
-        assertEquals(2, ai.get());
-        ai.reset();
-        assertEquals(0, ai.get());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        acc.accumulate(2);
+        assertEquals(2, acc.get());
+        acc.reset();
+        assertEquals(0, acc.get());
     }
 
     /**
      * getThenReset() returns current value; subsequent get() returns zero
      */
     public void testGetThenReset() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        ai.accumulate(2);
-        assertEquals(2, ai.get());
-        assertEquals(2, ai.getThenReset());
-        assertEquals(0, ai.get());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        acc.accumulate(2);
+        assertEquals(2, acc.get());
+        assertEquals(2, acc.getThenReset());
+        assertEquals(0, acc.get());
     }
 
     /**
      * toString returns current value.
      */
     public void testToString() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        assertEquals("0", ai.toString());
-        ai.accumulate(1);
-        assertEquals(Long.toString(1), ai.toString());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        assertEquals("0", acc.toString());
+        acc.accumulate(1);
+        assertEquals(Long.toString(1), acc.toString());
     }
 
     /**
      * intValue returns current value.
      */
     public void testIntValue() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        assertEquals(0, ai.intValue());
-        ai.accumulate(1);
-        assertEquals(1, ai.intValue());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        assertEquals(0, acc.intValue());
+        acc.accumulate(1);
+        assertEquals(1, acc.intValue());
     }
 
     /**
      * longValue returns current value.
      */
     public void testLongValue() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        assertEquals(0, ai.longValue());
-        ai.accumulate(1);
-        assertEquals(1, ai.longValue());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        assertEquals(0, acc.longValue());
+        acc.accumulate(1);
+        assertEquals(1, acc.longValue());
     }
 
     /**
      * floatValue returns current value.
      */
     public void testFloatValue() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        assertEquals(0.0f, ai.floatValue());
-        ai.accumulate(1);
-        assertEquals(1.0f, ai.floatValue());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        assertEquals(0.0f, acc.floatValue());
+        acc.accumulate(1);
+        assertEquals(1.0f, acc.floatValue());
     }
 
     /**
      * doubleValue returns current value.
      */
     public void testDoubleValue() {
-        LongAccumulator ai = new LongAccumulator(Longs::max, 0L);
-        assertEquals(0.0, ai.doubleValue());
-        ai.accumulate(1);
-        assertEquals(1.0, ai.doubleValue());
+        LongAccumulator acc = new LongAccumulator(Longs::max, 0L);
+        assertEquals(0.0, acc.doubleValue());
+        acc.accumulate(1);
+        assertEquals(1.0, acc.doubleValue());
     }
 
     /**
