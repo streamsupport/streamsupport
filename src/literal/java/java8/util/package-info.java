@@ -26,7 +26,7 @@
 /**
  * Provides the <a href="http://openjdk.java.net/jeps/269">JEP 269: Convenience Factory Methods for Collections</a>.
  * 
- * <h2><a name="Value-based-Classes">Value-based Classes</a></h2>
+ * <h2><a id="Value-based-Classes">Value-based Classes</a></h2>
  * <p>
  * Some classes, such as {@code java8.util.Optional}, are value-based. Instances
  * of a value-based class:

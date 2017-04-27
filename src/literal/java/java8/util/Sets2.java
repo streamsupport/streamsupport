@@ -31,7 +31,7 @@ import java.util.Set;
  * 269</a> {@code "Immutable Set Static Factory Methods"} in the {@link Set}
  * interface.
  *
- * <h2><a name="immutable">Immutable Set Static Factory Methods</a></h2>
+ * <h2><a id="immutable">Immutable Set Static Factory Methods</a></h2>
  * <p>
  * The {@link Sets2#of(Object...) Sets.of()} static factory methods provide a
  * convenient way to create immutable sets. The {@code Set} instances created by

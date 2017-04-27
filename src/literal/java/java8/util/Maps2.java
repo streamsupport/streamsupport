@@ -32,7 +32,7 @@ import java.util.Map.Entry;
  * 269</a> {@code "Immutable Map Static Factory Methods"} in the {@link Map}
  * interface.
  * 
- * <h2><a name="immutable">Immutable Map Static Factory Methods</a></h2>
+ * <h2><a id="immutable">Immutable Map Static Factory Methods</a></h2>
  * <p>
  * The {@link Maps2#of() Maps.of()} and {@link Maps2#ofEntries(Map.Entry...)
  * Maps.ofEntries()} static factory methods provide a convenient way to create

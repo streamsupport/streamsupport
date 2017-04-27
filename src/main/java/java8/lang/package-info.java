@@ -26,7 +26,7 @@
 /**
  * Provides classes for some of the new static methods that were added in Java 8.
  *
- * <h2><a name="Value-based-Classes">Value-based Classes</a></h2>
+ * <h2><a id="Value-based-Classes">Value-based Classes</a></h2>
  * <p>
  * Some classes, such as {@code java8.util.Optional}, are value-based. Instances
  * of a value-based class:
