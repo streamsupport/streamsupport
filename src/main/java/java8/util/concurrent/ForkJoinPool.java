@@ -93,8 +93,8 @@ import java8.util.function.Predicate;
  * <caption>Summary of task execution methods</caption>
  *  <tr>
  *    <td></td>
- *    <td ALIGN=CENTER> <b>Call from non-fork/join clients</b></td>
- *    <td ALIGN=CENTER> <b>Call from within fork/join computations</b></td>
+ *    <td style="text-align:center"> <b>Call from non-fork/join clients</b></td>
+ *    <td style="text-align:center"> <b>Call from within fork/join computations</b></td>
  *  </tr>
  *  <tr>
  *    <td> <b>Arrange async execution</b></td>
