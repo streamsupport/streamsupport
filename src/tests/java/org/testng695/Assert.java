@@ -43,6 +43,26 @@ public final class Assert {
         expectThrows(throwableClass, runnable);
     }
 
+    private static <T extends Throwable> void assertThrows(
+            Class<T> throwableClass, ThrowingRunnable runnable, String message) {
+        try {
+            assertThrows(throwableClass, runnable);
+        } catch (AssertionError e) {
+            AssertionError err = new AssertionError(String.format("%s%n%s",
+                    ((null != message) ? message : ""), e.getMessage()));
+            err.initCause(e);
+            throw err;
+        }
+    }
+
+    public static void assertThrowsNPE(ThrowingRunnable r, String message) {
+        assertThrows(NullPointerException.class, r, message);
+    }
+
+    public static void assertThrowsNPE(ThrowingRunnable r) {
+        assertThrows(NullPointerException.class, r);
+    }
+
     /**
      * Asserts that {@code runnable} throws an exception of type
      * {@code throwableClass} when executed and returns the exception. If
