@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -61,24 +61,18 @@ final class FindOps {
     @SuppressWarnings("rawtypes")
     private static final TerminalOp ANY_REF = new FindOp<>(false, StreamShape.REFERENCE, Optional.empty(),
             REF_IS_PRESENT, REF_SINK_SUPP);
-    @SuppressWarnings("rawtypes")
-    private static final TerminalOp FIRST_INT = new FindOp<>(true, StreamShape.INT_VALUE, OptionalInt.empty(),
-            INT_IS_PRESENT, INT_SINK_SUPP);
-    @SuppressWarnings("rawtypes")
-    private static final TerminalOp ANY_INT = new FindOp<>(false, StreamShape.INT_VALUE, OptionalInt.empty(),
-            INT_IS_PRESENT, INT_SINK_SUPP);
-    @SuppressWarnings("rawtypes")
-    private static final TerminalOp FIRST_LONG = new FindOp<>(true, StreamShape.LONG_VALUE, OptionalLong.empty(),
-            LONG_IS_PRESENT, LONG_SINK_SUPP);
-    @SuppressWarnings("rawtypes")
-    private static final TerminalOp ANY_LONG = new FindOp<>(false, StreamShape.LONG_VALUE, OptionalLong.empty(),
-            LONG_IS_PRESENT, LONG_SINK_SUPP);
-    @SuppressWarnings("rawtypes")
-    private static final TerminalOp FIRST_DOUBLE = new FindOp<>(true, StreamShape.DOUBLE_VALUE, OptionalDouble.empty(),
-            DOUBLE_IS_PRESENT, DOUBLE_SINK_SUPP);
-    @SuppressWarnings("rawtypes")
-    private static final TerminalOp ANY_DOUBLE = new FindOp<>(false, StreamShape.DOUBLE_VALUE, OptionalDouble.empty(),
-            DOUBLE_IS_PRESENT, DOUBLE_SINK_SUPP);
+    private static final TerminalOp<Integer, OptionalInt> FIRST_INT = new FindOp<>(true, StreamShape.INT_VALUE,
+            OptionalInt.empty(), INT_IS_PRESENT, INT_SINK_SUPP);
+    private static final TerminalOp<Integer, OptionalInt> ANY_INT = new FindOp<>(false, StreamShape.INT_VALUE,
+            OptionalInt.empty(), INT_IS_PRESENT, INT_SINK_SUPP);
+    private static final TerminalOp<Long, OptionalLong> FIRST_LONG = new FindOp<>(true, StreamShape.LONG_VALUE,
+            OptionalLong.empty(), LONG_IS_PRESENT, LONG_SINK_SUPP);
+    private static final TerminalOp<Long, OptionalLong> ANY_LONG = new FindOp<>(false, StreamShape.LONG_VALUE,
+            OptionalLong.empty(), LONG_IS_PRESENT, LONG_SINK_SUPP);
+    private static final TerminalOp<Double, OptionalDouble> FIRST_DOUBLE = new FindOp<>(true, StreamShape.DOUBLE_VALUE,
+            OptionalDouble.empty(), DOUBLE_IS_PRESENT, DOUBLE_SINK_SUPP);
+    private static final TerminalOp<Double, OptionalDouble> ANY_DOUBLE = new FindOp<>(false, StreamShape.DOUBLE_VALUE,
+            OptionalDouble.empty(), DOUBLE_IS_PRESENT, DOUBLE_SINK_SUPP);
 
     /**
      * Constructs a {@code TerminalOp} for streams of objects.
@@ -100,7 +94,6 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
-    @SuppressWarnings("unchecked")
     public static TerminalOp<Integer, OptionalInt> makeInt(boolean mustFindFirst) {
         return mustFindFirst ? FIRST_INT : ANY_INT;
     }
@@ -112,7 +105,6 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
-    @SuppressWarnings("unchecked")
     public static TerminalOp<Long, OptionalLong> makeLong(boolean mustFindFirst) {
         return mustFindFirst ? FIRST_LONG : ANY_LONG;
     }
@@ -124,7 +116,6 @@ final class FindOps {
      *        first element in the encounter order
      * @return a {@code TerminalOp} implementing the find operation
      */
-    @SuppressWarnings("unchecked")
     public static TerminalOp<Double, OptionalDouble> makeDouble(boolean mustFindFirst) {
         return mustFindFirst ? FIRST_DOUBLE : ANY_DOUBLE;
     }
