@@ -63,6 +63,14 @@ public final class Assert {
         assertThrows(NullPointerException.class, r);
     }
 
+    public static void assertThrowsIAE(ThrowingRunnable r, String message) {
+        assertThrows(IllegalArgumentException.class, r, message);
+    }
+
+    public static void assertThrowsIAE(ThrowingRunnable r) {
+        assertThrows(IllegalArgumentException.class, r);
+    }
+
     /**
      * Asserts that {@code runnable} throws an exception of type
      * {@code throwableClass} when executed and returns the exception. If
