@@ -102,6 +102,7 @@
       <class name="org.openjdk.other.tests.phaser.FickleRegister"/>
       <class name="org.openjdk.other.tests.phaser.PhaseOverflow"/>
       <class name="org.openjdk.other.tests.phaser.TieredArriveLoops"/>
+      <class name="org.openjdk.tests.java.util.PrimitiveIteratorDefaults"/>
       <class name="org.openjdk.tests.java.util.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
