@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2017,  Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -67,6 +67,7 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
+import static org.testng695.Assert.assertThrowsNPE;
 
 public class Defaults {
 
@@ -164,14 +165,8 @@ public class Defaults {
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=nonNull values=nonNull")
     public static void testReplaceAllNoNullReplacement(String description, Map<IntegerEnum, String> map) {
-        assertThrows(
-            () -> { Maps.replaceAll(map, null); },
-            NullPointerException.class,
-            description);
-        assertThrows(
-            () -> { Maps.replaceAll(map, (k,v) -> null); },
-            NullPointerException.class,
-            description + " should not allow replacement with null value");
+        assertThrowsNPE(() -> Maps.replaceAll(map, null));
+        assertThrowsNPE(() -> Maps.replaceAll(map, (k,v) -> null)); //should not allow replacement with null value
     }
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
@@ -214,7 +209,7 @@ public class Defaults {
     public void testReplaceKVNoNulls(String description, Map<IntegerEnum, String> map) {
         assertTrue(map.containsKey(FIRST_KEY), "expected key missing");
         assertSame(map.get(FIRST_KEY), FIRST_VALUE, "found wrong value");
-        assertThrows( () -> {Maps.replace(map, FIRST_KEY, null);}, NullPointerException.class, description + ": should throw NPE");
+        assertThrowsNPE(() -> Maps.replace(map, FIRST_KEY, null));
         assertSame(Maps.replace(map, FIRST_KEY, EXTRA_VALUE), FIRST_VALUE, description + ": replaced wrong value");
         assertSame(map.get(FIRST_KEY), EXTRA_VALUE, "found wrong value");
     }
@@ -253,8 +248,13 @@ public class Defaults {
     public void testReplaceKVVNoNulls(String description, Map<IntegerEnum, String> map) {
         assertTrue(map.containsKey(FIRST_KEY), "expected key missing");
         assertSame(map.get(FIRST_KEY), FIRST_VALUE, "found wrong value");
-        assertThrows( () -> {Maps.replace(map, FIRST_KEY, FIRST_VALUE, null);}, NullPointerException.class, description + ": should throw NPE");
-        assertThrows( () -> {if (!Maps.replace(map, FIRST_KEY, null, EXTRA_VALUE)) throw new NullPointerException("default returns false rather than throwing");}, NullPointerException.class,  description + ": should throw NPE");
+        assertThrowsNPE(() -> Maps.replace(map, FIRST_KEY, FIRST_VALUE, null));
+        assertThrowsNPE(
+                () -> {
+                    if (!Maps.replace(map, FIRST_KEY, null, EXTRA_VALUE)) {
+                        throw new NullPointerException("default returns false rather than throwing");
+                    }
+                });
         assertTrue(Maps.replace(map, FIRST_KEY, FIRST_VALUE, EXTRA_VALUE), description + ": replaced wrong value");
         assertSame(map.get(FIRST_KEY), EXTRA_VALUE, "found wrong value");
     }
@@ -324,9 +324,7 @@ public class Defaults {
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=all values=all")
     public void testComputeIfAbsentNullFunction(String description, Map<IntegerEnum, String> map) {
-        assertThrows( () -> { Maps.computeIfAbsent(map, KEYS[1], null);},
-                NullPointerException.class,
-                "Should throw NPE");
+        assertThrowsNPE(() -> Maps.computeIfAbsent(map, KEYS[1], null));
     }
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
@@ -371,9 +369,7 @@ public class Defaults {
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=all values=all")
     public void testComputeIfPresentNullFunction(String description, Map<IntegerEnum, String> map) {
-        assertThrows( () -> { Maps.computeIfPresent(map, KEYS[1], null);},
-                NullPointerException.class,
-                "Should throw NPE");
+        assertThrowsNPE(() -> Maps.computeIfPresent(map, KEYS[1], null));
     }
 
      @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=withNull values=withNull")
@@ -464,9 +460,7 @@ public class Defaults {
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=all values=all")
     public void testComputeNullFunction(String description, Map<IntegerEnum, String> map) {
-        assertThrows( () -> { Maps.compute(map, KEYS[1], null);},
-                NullPointerException.class,
-                "Should throw NPE");
+        assertThrowsNPE(() -> Maps.compute(map, KEYS[1], null));
     }
 
     @Test(dataProvider = "MergeCases")
@@ -536,9 +530,7 @@ public class Defaults {
 
     @Test(dataProvider = "Map<IntegerEnum,String> rw=true keys=all values=all")
     public void testMergeNullMerger(String description, Map<IntegerEnum, String> map) {
-        assertThrows( () -> { Maps.merge(map, KEYS[1], VALUES[1], null);},
-                NullPointerException.class,
-                "Should throw NPE");
+        assertThrowsNPE(() -> Maps.merge(map, KEYS[1], VALUES[1], null));
     }
 
     /** A function that flipflops between running two other functions. */
@@ -977,43 +969,6 @@ public class Defaults {
         }
 
         return cases;
-    }
-
-    public interface Thrower<T extends Throwable> {
-
-        public void run() throws T;
-    }
-
-    public static <T extends Throwable> void assertThrows(Thrower<T> thrower, Class<T> throwable) {
-        assertThrows(thrower, throwable, null);
-    }
-
-    public static <T extends Throwable> void assertThrows(Thrower<T> thrower, Class<T> throwable, String message) {
-        Throwable thrown;
-        try {
-            thrower.run();
-            thrown = null;
-        } catch (Throwable caught) {
-            thrown = caught;
-        }
-
-        assertInstance(thrown, throwable,
-            ((null != message) ? message : "") +
-            " Failed to throw " + throwable.getCanonicalName());
-    }
-
-    public static <T extends Throwable> void assertThrows(Class<T> throwable, String message, Thrower<T>... throwers) {
-        for (Thrower<T> thrower : throwers) {
-            assertThrows(thrower, throwable, message);
-        }
-    }
-
-    public static void assertInstance(Object actual, Class<?> expected) {
-        assertInstance(expected.isInstance(actual), null);
-    }
-
-    public static void assertInstance(Object actual, Class<?> expected, String message) {
-        assertTrue(expected.isInstance(actual), message);
     }
 
     /**
