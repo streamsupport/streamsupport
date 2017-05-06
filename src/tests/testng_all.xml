@@ -22,6 +22,7 @@
       <class name="org.openjdk.tests.java.util.arrays.ParallelPrefix"/>
       <class name="org.openjdk.tests.java.util.arrays.ParallelSorting"/>
       <class name="org.openjdk.tests.java.util.arrays.SetAllTest"/>
+      <class name="org.openjdk.tests.java.util.arrays.StreamAndSpliterator"/>
       <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
       <class name="org.openjdk.tests.java.util.comparator.TypeTest"/>
       <class name="org.openjdk.tests.java.util.map.InPlaceOpsCollisions"/>
