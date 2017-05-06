@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -38,9 +38,11 @@ import java8.util.function.LongBinaryOperator;
 import java8.util.stream.IntStreams;
 import java8.util.stream.LongStreams;
 import static org.testng.Assert.*;
+import static org.testng695.Assert.*;
 
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng695.ThrowingRunnable;
 
 public class ParallelPrefix {
     //Array size less than MIN_PARTITION
@@ -183,120 +185,57 @@ public class ParallelPrefix {
     @Test
     public void testNPEs() {
         // null array
-        assertThrows( () -> J8Arrays.parallelPrefix((int[]) null, java8.lang.Integers::max),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix((long []) null, java8.lang.Longs::max),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix((double []) null, java8.lang.Doubles::max),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix((String []) null, String::concat),
-                NullPointerException.class, "should throw NPE");
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((int[]) null, java8.lang.Integers::max));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((long []) null, java8.lang.Longs::max));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((double []) null, java8.lang.Doubles::max));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((String []) null, String::concat));
 
         // null array w/ range
-        assertThrows( () -> J8Arrays.parallelPrefix((int[]) null, 0, 0, java8.lang.Integers::max),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix((long []) null, 0, 0, java8.lang.Longs::max),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix((double []) null, 0, 0, java8.lang.Doubles::max),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix((String []) null, 0, 0, String::concat),
-                NullPointerException.class, "should throw NPE");
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((int[]) null, 0, 0, java8.lang.Integers::max));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((long []) null, 0, 0, java8.lang.Longs::max));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((double []) null, 0, 0, java8.lang.Doubles::max));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix((String []) null, 0, 0, String::concat));
 
         // null op
-        assertThrows( () -> J8Arrays.parallelPrefix(new int[] {}, null),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new long[] {}, null),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new double[] {}, null),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new String[] {}, null),
-                NullPointerException.class, "should throw NPE");
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new int[] {}, null));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new long[] {}, null));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new double[] {}, null));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new String[] {}, null));
 
         // null op w/ range
-        assertThrows( () -> J8Arrays.parallelPrefix(new int[] {}, 0, 0, null),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new long[] {}, 0, 0, null),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new double[] {}, 0, 0, null),
-                NullPointerException.class, "should throw NPE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new String[] {}, 0, 0, null),
-                NullPointerException.class, "should throw NPE");
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new int[] {}, 0, 0, null));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new long[] {}, 0, 0, null));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new double[] {}, 0, 0, null));
+        assertThrowsNPE(() -> J8Arrays.parallelPrefix(new String[] {}, 0, 0, null));
     }
 
     @Test
     public void testIAEs() {
-        assertThrows( () -> J8Arrays.parallelPrefix(new int[] {}, 1, 0, java8.lang.Integers::max),
-                IllegalArgumentException.class, "should throw IAE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new long[] {}, 1, 0, java8.lang.Longs::max),
-                IllegalArgumentException.class, "should throw IAE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new double[] {}, 1, 0, java8.lang.Doubles::max),
-                IllegalArgumentException.class, "should throw IAE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new String[] {}, 1, 0, String::concat),
-                IllegalArgumentException.class, "should throw IAE");
+        assertThrowsIAE(() -> J8Arrays.parallelPrefix(new int[] {}, 1, 0, java8.lang.Integers::max));
+        assertThrowsIAE(() -> J8Arrays.parallelPrefix(new long[] {}, 1, 0, java8.lang.Longs::max));
+        assertThrowsIAE(() -> J8Arrays.parallelPrefix(new double[] {}, 1, 0, java8.lang.Doubles::max));
+        assertThrowsIAE(() -> J8Arrays.parallelPrefix(new String[] {}, 1, 0, String::concat));
     }
 
     @Test
     public void testAIOBEs() {
         // bad "fromIndex"
-        assertThrows( () -> J8Arrays.parallelPrefix(new int[] {}, -1, 0, java8.lang.Integers::max),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new long[] {}, -1, 0, java8.lang.Longs::max),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new double[] {}, -1, 0, java8.lang.Doubles::max),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new String[] {}, -1, 0, String::concat),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new int[] {}, -1, 0, java8.lang.Integers::max));
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new long[] {}, -1, 0, java8.lang.Longs::max));
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new double[] {}, -1, 0, java8.lang.Doubles::max));
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new String[] {}, -1, 0, String::concat));
 
         // bad "toIndex"
-        assertThrows( () -> J8Arrays.parallelPrefix(new int[] {}, 0, 1, java8.lang.Integers::max),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new long[] {}, 0, 1, java8.lang.Longs::max),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new double[] {}, 0, 1, java8.lang.Doubles::max),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
-        assertThrows( () -> J8Arrays.parallelPrefix(new String[] {}, 0, 1, String::concat),
-                ArrayIndexOutOfBoundsException.class, "should throw AIOBE");
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new int[] {}, 0, 1, java8.lang.Integers::max));
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new long[] {}, 0, 1, java8.lang.Longs::max));
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new double[] {}, 0, 1, java8.lang.Doubles::max));
+        assertThrowsAIOOB(() -> J8Arrays.parallelPrefix(new String[] {}, 0, 1, String::concat));
     }
 
     // "library" code
 
-    public interface Thrower<T extends Throwable> {
-
-        public void run() throws T;
-    }
-
-
-    public static <T extends Throwable> void assertThrows(Thrower<T> thrower, Class<T> throwable) {
-        assertThrows(thrower, throwable, null);
-    }
-
-    public static <T extends Throwable> void assertThrows(Thrower<T> thrower, Class<T> throwable, String message) {
-        Throwable thrown;
-        try {
-            thrower.run();
-            thrown = null;
-        } catch (Throwable caught) {
-            thrown = caught;
-        }
-
-        assertInstance(thrown, throwable,
-            ((null != message) ? message : "") +
-            " Failed to throw " + throwable.getCanonicalName());
-    }
-
-    //@SafeVarargs
-    public static <T extends Throwable> void assertThrows(Class<T> throwable, String message, Thrower<T>... throwers) {
-        for(Thrower<T> thrower : throwers) {
-            assertThrows(thrower, throwable, message);
-        }
-    }
-
-    public static void assertInstance(Object actual, Class<?> expected) {
-        assertInstance(expected.isInstance(actual), null);
-    }
-
-    public static void assertInstance(Object actual, Class<?> expected, String message) {
-        assertTrue(expected.isInstance(actual), message);
+    private void assertThrowsAIOOB(ThrowingRunnable r) {
+        assertThrows(ArrayIndexOutOfBoundsException.class, r);
     }
 
     static void assertArraysEqual(int[] actual, int[] expected) {
