@@ -34,6 +34,8 @@ package org.openjdk.tests.java.util;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.testng695.Assert.assertThrowsNPE;
+
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractSet;
@@ -645,8 +647,8 @@ public class SpliteratorTraversingAndSplittingTest2 extends SpliteratorTestHelpe
 
     @Test(dataProvider = "Spliterator<Integer>")
     public void testNullPointerException(String description, Collection<Integer> exp, Supplier<Spliterator<Integer>> s) {
-        executeAndCatch(NullPointerException.class, () -> s.get().forEachRemaining(null));
-        executeAndCatch(NullPointerException.class, () -> s.get().tryAdvance(null));
+        assertThrowsNPE(() -> s.get().forEachRemaining(null));
+        assertThrowsNPE(() -> s.get().tryAdvance(null));
     }
 
     @Test(dataProvider = "Spliterator<Integer>")
@@ -781,8 +783,8 @@ public class SpliteratorTraversingAndSplittingTest2 extends SpliteratorTestHelpe
 
     @Test(dataProvider = "Spliterator.OfInt")
     public void testIntNullPointerException(String description, Collection<Integer> exp, Supplier<Spliterator.OfInt> s) {
-        executeAndCatch(NullPointerException.class, () -> s.get().forEachRemaining((IntConsumer) null));
-        executeAndCatch(NullPointerException.class, () -> s.get().tryAdvance((IntConsumer) null));
+        assertThrowsNPE(() -> s.get().forEachRemaining((IntConsumer) null));
+        assertThrowsNPE(() -> s.get().tryAdvance((IntConsumer) null));
     }
 
     @Test(dataProvider = "Spliterator.OfInt")
@@ -924,8 +926,8 @@ public class SpliteratorTraversingAndSplittingTest2 extends SpliteratorTestHelpe
 
     @Test(dataProvider = "Spliterator.OfLong")
     public void testLongNullPointerException(String description, Collection<Long> exp, Supplier<Spliterator.OfLong> s) {
-        executeAndCatch(NullPointerException.class, () -> s.get().forEachRemaining((LongConsumer) null));
-        executeAndCatch(NullPointerException.class, () -> s.get().tryAdvance((LongConsumer) null));
+        assertThrowsNPE(() -> s.get().forEachRemaining((LongConsumer) null));
+        assertThrowsNPE(() -> s.get().tryAdvance((LongConsumer) null));
     }
 
     @Test(dataProvider = "Spliterator.OfLong")
@@ -1067,8 +1069,8 @@ public class SpliteratorTraversingAndSplittingTest2 extends SpliteratorTestHelpe
 
     @Test(dataProvider = "Spliterator.OfDouble")
     public void testDoubleNullPointerException(String description, Collection<Double> exp, Supplier<Spliterator.OfDouble> s) {
-        executeAndCatch(NullPointerException.class, () -> s.get().forEachRemaining((DoubleConsumer) null));
-        executeAndCatch(NullPointerException.class, () -> s.get().tryAdvance((DoubleConsumer) null));
+        assertThrowsNPE(() -> s.get().forEachRemaining((DoubleConsumer) null));
+        assertThrowsNPE(() -> s.get().tryAdvance((DoubleConsumer) null));
     }
 
     @Test(dataProvider = "Spliterator.OfDouble")

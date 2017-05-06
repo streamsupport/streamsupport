@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -22,9 +22,6 @@
  */
 package org.openjdk.tests.java.util;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
@@ -43,8 +40,12 @@ import java.util.WeakHashMap;
 
 import java8.util.Spliterator;
 import java8.util.function.Supplier;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import org.testng695.ThrowingRunnable;
+
+import static org.testng695.Assert.assertThrows;
 
 /**
  * @test
@@ -129,7 +130,7 @@ public class SpliteratorFailFastTest extends SpliteratorLateBindingFailFastHelpe
             });
             source.update();
 
-            executeAndCatch(() -> s.tryAdvance(e -> {
+            assertThrowsCME(() -> s.tryAdvance(e -> {
             }));
         }
 
@@ -141,7 +142,7 @@ public class SpliteratorFailFastTest extends SpliteratorLateBindingFailFastHelpe
             });
             source.update();
 
-            executeAndCatch(() -> s.forEachRemaining(e -> {
+            assertThrowsCME(() -> s.forEachRemaining(e -> {
             }));
         }
     }
@@ -151,7 +152,7 @@ public class SpliteratorFailFastTest extends SpliteratorLateBindingFailFastHelpe
         Source<T> source = ss.get();
         Spliterator<T> s = source.spliterator();
 
-        executeAndCatch(() -> s.forEachRemaining(e -> {
+        assertThrowsCME(() -> s.forEachRemaining(e -> {
             source.update();
         }));
     }
@@ -165,7 +166,7 @@ public class SpliteratorFailFastTest extends SpliteratorLateBindingFailFastHelpe
             s.estimateSize();
             source.update();
 
-            executeAndCatch(() -> s.tryAdvance(e -> {
+            assertThrowsCME(() -> s.tryAdvance(e -> {
             }));
         }
 
@@ -176,30 +177,13 @@ public class SpliteratorFailFastTest extends SpliteratorLateBindingFailFastHelpe
             s.estimateSize();
             source.update();
 
-            executeAndCatch(() -> s.forEachRemaining(e -> {
+            assertThrowsCME(() -> s.forEachRemaining(e -> {
             }));
         }
     }
 
-    private void executeAndCatch(Runnable r) {
-        executeAndCatch(ConcurrentModificationException.class, r);
-    }
-
-    private void executeAndCatch(Class<? extends Exception> expected, Runnable r) {
-        Exception caught = null;
-        try {
-            r.run();
-        }
-        catch (Exception e) {
-            caught = e;
-        }
-
-        assertNotNull(caught,
-                      String.format("No Exception was thrown, expected an Exception of %s to be thrown",
-                                    expected.getName()));
-        assertTrue(expected.isInstance(caught),
-                   String.format("Exception thrown %s not an instance of %s",
-                                 caught.getClass().getName(), expected.getName()));
+    private void assertThrowsCME(ThrowingRunnable r) {
+        assertThrows(ConcurrentModificationException.class, r);
     }
 
 }
