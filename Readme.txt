@@ -16,6 +16,15 @@ GENERAL
    Retrolambda (https://github.com/orfjackal/retrolambda) to build the core
    streamsupport.jar from its sources
 
+ - It is possible to turn on an OpenJDK "compatibility mode" by setting the
+   boolean system property
+
+   java8.util.Spliterators.assume.oracle.collections.impl=false
+
+   This switch is provided for users of non-OpenJDK based JREs (e.g. IBM Java 6/7)
+   to increase the odds that streamsupport can be used on their platform.
+   This switch is not needed (and has no effect) on Android.
+
  - Release 1.3 adds the new Java 9 Stream methods takeWhile() and dropWhile().
    If anyone longs for the default method implementations, they are available
    in j8.u.s.RefStreams (but that shouldn't be necessary as all Streams created
