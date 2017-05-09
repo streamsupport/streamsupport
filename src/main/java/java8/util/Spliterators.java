@@ -984,9 +984,15 @@ public final class Spliterators {
                 return spliterator(c, Spliterator.ORDERED);
             }
 
-            // this doesn't count as a native specialization for AbstractList
-            // since its 'modCount' field is a well-documented part of its API
-            return RASpliterator.spliterator((List<T>) c);
+            // if NATIVE_SPECIALIZATION == false and c is a COWArrayList we'd
+            // get into trouble with the RASpliterator for parallel streams as
+            // Collection8Test reveals (testDetectRaces / testStreamForEachConcurrentStressTest)
+            if (!(c instanceof CopyOnWriteArrayList)) {
+
+                // this doesn't count as a native specialization for AbstractList
+                // since its 'modCount' field is a well-documented part of its API
+                return RASpliterator.spliterator((List<T>) c);
+            }
         }
 
         // default from j.u.List
