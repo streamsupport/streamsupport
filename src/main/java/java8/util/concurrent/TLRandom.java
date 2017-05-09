@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Doug Lea
  */
 /*package*/ final class TLRandom {
-// CVS rev. 1.52
+// CVS rev. 1.54
 
     static long mix64(long z) {
         z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;

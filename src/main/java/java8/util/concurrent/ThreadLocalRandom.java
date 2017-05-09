@@ -53,7 +53,7 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  */
 public class ThreadLocalRandom extends Random {
-// CVS rev. 1.53
+// CVS rev. 1.54
     /*
      * This class implements the java.util.Random API (and subclasses
      * Random) using a single static instance that accesses random
