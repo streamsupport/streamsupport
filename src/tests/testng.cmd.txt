@@ -17,6 +17,8 @@ SET PAR_GC=-XX:+UseParallelGC
 
 SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
+SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections.impl=false
+
 SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
 
 SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
@@ -25,7 +27,11 @@ SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 %JAVA6% %JIT_BUG% -cp .;./* %ARGS%
 
+%JAVA6% %JIT_BUG% %USE_ITERATOR_SPLITERATOR% -cp .;./* %ARGS%
+
 %JAVA7% -cp .;./* %ARGS%
+
+%JAVA7% %USE_ITERATOR_SPLITERATOR% -cp .;./* %ARGS%
 
 %JAVA8% -cp .;./* %ARGS%
 
