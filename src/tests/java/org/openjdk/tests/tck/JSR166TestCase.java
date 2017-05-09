@@ -1920,4 +1920,24 @@ public class JSR166TestCase extends TestCase {
     static <T> void shuffle(T[] array) {
         Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
     }
+
+    private static final String NATIVE_OPT_ENABLED_P = java8.util.Spliterators.class.getName() + ".assume.oracle.collections.impl";
+    // defaults to true
+    static final boolean NATIVE_SPECIALIZATION = getBooleanPropVal(NATIVE_OPT_ENABLED_P, true);
+
+    protected static boolean getBooleanPropVal(final String prop, final boolean defVal) {
+        return java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<Boolean>() {
+            @Override
+            public Boolean run() {
+                boolean val = defVal;
+                try {
+                    String s = System.getProperty(prop, Boolean.toString(defVal));
+                    val = Boolean.parseBoolean(s.trim());
+                } catch (IllegalArgumentException ignore) {
+                } catch (NullPointerException ignore) {
+                }
+                return val;
+            }
+        });
+    }
 }
