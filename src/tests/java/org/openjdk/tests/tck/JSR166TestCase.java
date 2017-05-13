@@ -178,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.221
+// CVS rev. 1.222
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1045,6 +1045,12 @@ public class JSR166TestCase extends TestCase {
     public void shouldThrow(String exceptionName) {
         fail("Should throw " + exceptionName);
     }
+
+    /**
+     * The maximum number of consecutive spurious wakeups we should
+     * tolerate (from APIs like LockSupport.park) before failing a test.
+     */
+    static final int MAX_SPURIOUS_WAKEUPS = 10;
 
     /**
      * The number of elements to place in collections, arrays, etc.
