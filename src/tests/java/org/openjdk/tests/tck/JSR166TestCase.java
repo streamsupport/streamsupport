@@ -178,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.223
+// CVS rev. 1.229
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -559,12 +559,17 @@ public class JSR166TestCase extends TestCase {
         LONG_DELAY_MS   = SHORT_DELAY_MS * 200;
     }
 
+    private static final long TIMEOUT_DELAY_MS
+        = (long) (12.0 * Math.cbrt(delayFactor));
+
     /**
-     * Returns a timeout in milliseconds to be used in tests that
-     * verify that operations block or time out.
+     * Returns a timeout in milliseconds to be used in tests that verify
+     * that operations block or time out.  We want this to be longer
+     * than the OS scheduling quantum, but not too long, so don't scale
+     * linearly with delayFactor; we use "crazy" cube root instead.
      */
-    protected long timeoutMillis() {
-        return SHORT_DELAY_MS / 4;
+    static long timeoutMillis() {
+        return TIMEOUT_DELAY_MS;
     }
 
     /**
@@ -964,49 +969,6 @@ public class JSR166TestCase extends TestCase {
         System.err.println("------ stacktrace dump end ------");
 
         if (sm != null) System.setSecurityManager(sm);
-    }
-
-    /**
-     * Checks that thread does not terminate within the default
-     * millisecond delay of {@code timeoutMillis()}.
-     */
-    void assertThreadStaysAlive(Thread thread) {
-        assertThreadStaysAlive(thread, timeoutMillis());
-    }
-
-    /**
-     * Checks that thread does not terminate within the given millisecond delay.
-     */
-    void assertThreadStaysAlive(Thread thread, long millis) {
-        try {
-            // No need to optimize the failing case via Thread.join.
-            delay(millis);
-            assertTrue(thread.isAlive());
-        } catch (InterruptedException fail) {
-            threadFail("Unexpected InterruptedException");
-        }
-    }
-
-    /**
-     * Checks that the threads do not terminate within the default
-     * millisecond delay of {@code timeoutMillis()}.
-     */
-    protected void assertThreadsStayAlive(Thread... threads) {
-        assertThreadsStayAlive(timeoutMillis(), threads);
-    }
-
-    /**
-     * Checks that the threads do not terminate within the given millisecond delay.
-     */
-    void assertThreadsStayAlive(long millis, Thread... threads) {
-        try {
-            // No need to optimize the failing case via Thread.join.
-            delay(millis);
-            for (Thread thread : threads)
-                assertTrue(thread.isAlive());
-        } catch (InterruptedException fail) {
-            threadFail("Unexpected InterruptedException");
-        }
     }
 
     /**
@@ -1559,6 +1521,14 @@ public class JSR166TestCase extends TestCase {
             if (!semaphore.tryAcquire(LONG_DELAY_MS, MILLISECONDS))
                 fail("timed out waiting for Semaphore for "
                      + (LONG_DELAY_MS/1000) + " sec");
+        } catch (Throwable fail) {
+            threadUnexpectedException(fail);
+        }
+    }
+
+    public void await(CyclicBarrier barrier) {
+        try {
+            barrier.await(LONG_DELAY_MS, MILLISECONDS);
         } catch (Throwable fail) {
             threadUnexpectedException(fail);
         }
