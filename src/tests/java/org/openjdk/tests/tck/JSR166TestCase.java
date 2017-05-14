@@ -178,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.222
+// CVS rev. 1.223
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1007,6 +1007,26 @@ public class JSR166TestCase extends TestCase {
         } catch (InterruptedException fail) {
             threadFail("Unexpected InterruptedException");
         }
+    }
+
+    /**
+     * Checks that thread eventually enters the expected blocked thread state.
+     */
+    void assertThreadBlocks(Thread thread, Thread.State expected) {
+        // always sleep at least 1 ms, with high probability avoiding
+        // transitory states
+        for (long retries = LONG_DELAY_MS * 3 / 4; retries-->0; ) {
+            try { delay(1); }
+            catch (InterruptedException fail) {
+                fail("Unexpected InterruptedException");
+            }
+            Thread.State s = thread.getState();
+            if (s == expected)
+                return;
+            else if (s == Thread.State.TERMINATED)
+                fail("Unexpected thread termination");
+        }
+        fail("timed out waiting for thread to enter thread state " + expected);
     }
 
     /**
