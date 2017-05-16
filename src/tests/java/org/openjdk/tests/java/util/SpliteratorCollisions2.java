@@ -129,7 +129,12 @@ public class SpliteratorCollisions2 extends SpliteratorTestHelper {
             // Maps
             db.addMap(HashMap::new);
             // https://sourceforge.net/p/streamsupport/tickets/240/#7e0b
-//            db.addMap(LinkedHashMap::new);
+            // https://sourceforge.net/p/streamsupport/tickets/296/
+            if (Android7PlusDetector.IS_OPENJDK_ANDROID && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
+                db.addMap(LinkedHashMapFixed::new);
+            } else {
+                db.addMap(LinkedHashMap::new);
+            }
 
             // Collections that use HashMap
             db.addCollection(HashSet::new);
@@ -155,7 +160,12 @@ public class SpliteratorCollisions2 extends SpliteratorTestHelper {
             // Maps
             db.addMap(HashMap::new);
             // https://sourceforge.net/p/streamsupport/tickets/240/#7e0b
-//            db.addMap(LinkedHashMap::new);
+            // https://sourceforge.net/p/streamsupport/tickets/296/
+            if (Android7PlusDetector.IS_OPENJDK_ANDROID && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
+                db.addMap(LinkedHashMapFixed::new);
+            } else {
+                db.addMap(LinkedHashMap::new);
+            }
             // TODO: add this back in if we decide to keep TreeBin in WeakHashMap
             //db.addMap(WeakHashMap::new);
 

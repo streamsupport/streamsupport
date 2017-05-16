@@ -599,7 +599,12 @@ public class SpliteratorTraversingAndSplittingTest2 extends SpliteratorTestHelpe
             }, "new java.util.HashMap(1, size + 1)");
 
             // https://sourceforge.net/p/streamsupport/tickets/240/#7e0b
-//            db.addMap(LinkedHashMap::new);
+            // https://sourceforge.net/p/streamsupport/tickets/296/
+            if (Android7PlusDetector.IS_OPENJDK_ANDROID && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
+                db.addMap(LinkedHashMapFixed::new);
+            } else {
+                db.addMap(LinkedHashMap::new);
+            }
 
 //            db.addMap(IdentityHashMap::new);
 

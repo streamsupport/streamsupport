@@ -30,6 +30,10 @@ final class LinkedHashMapFixed<K, V> extends LinkedHashMap<K, V> {
     public LinkedHashMapFixed() {
     }
 
+    public LinkedHashMapFixed(Map<? extends K, ? extends V> map) {
+        super(map);
+    }
+
     @Override
     public Set<K> keySet() {
         Set<K> ks = keySet;
