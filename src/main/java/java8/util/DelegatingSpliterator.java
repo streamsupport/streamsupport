@@ -72,12 +72,6 @@ final class DelegatingSpliterator<T> implements Spliterator<T> {
         return spliter.getComparator();
     }
 
-    // This method is only used from the test suite
-    // see https://sourceforge.net/p/streamsupport/tickets/240/
-    Object getDelegatee() {
-        return spliter;
-    }
-
     /**
      * A j.u.f.Consumer implementation that delegates to a j8.u.f.Consumer.
      *
