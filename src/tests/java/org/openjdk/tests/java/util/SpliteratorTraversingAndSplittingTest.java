@@ -90,7 +90,7 @@ import java8.util.function.LongConsumer;
 import java8.util.function.Supplier;
 
 @Test
-public class SpliteratorTraversingAndSplittingTest2 extends SpliteratorTestHelper {
+public class SpliteratorTraversingAndSplittingTest extends SpliteratorTestHelper {
 
     private static final List<Integer> SIZES = Arrays.asList(0, 1, 10, 42);
 

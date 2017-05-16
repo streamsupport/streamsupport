@@ -56,7 +56,7 @@ import java8.util.function.Function;
 import java8.util.function.Supplier;
 
 @Test
-public class SpliteratorCollisions2 extends SpliteratorTestHelper {
+public class SpliteratorCollisions extends SpliteratorTestHelper {
 
     private static final List<Integer> SIZES = Arrays.asList(0, 1, 10, 100, 1000);
 
