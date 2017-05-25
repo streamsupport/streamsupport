@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.5.4-stable" is the current stable release
+ - "1.5.5-stable" is the current stable release
 
 
 GENERAL
@@ -121,6 +121,21 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.5.5-stable (2017-05-25)
+ - JDK-8174267: findFirst() unnecessarily always allocates an Op
+ - JDK-8176543: Misc. changes imported from jsr166 CVS 2017-04
+ - JDK-8177653: Clarify restrictions on Iterator.forEachRemaining
+ - JDK-8167981: Missing explanation of intended use of Optional
+ - JDK-8178956: Misleading doc of LongAccumulator accumulator function
+ - JDK-8023897: Rename executeAndCatch in various tests to assertThrow
+ - update to retrolambda 2.5.1 to reduce method count for Android apps [#292]
+ - cut down on Bytecode size [#293]
+ - deduplicate spliterator traversing tests [#296]
+ - ArrayDeque IteratorSpliterator should report NONNULL [#297]
+ - add new JSR 166 TCK test ArrayDeque8Test [#298]
+ - disable COWAL Java 6/7 RASpliterator sans native specialization [#300]
+ - TLRandom: revert static initializer changes from commit 3e381f [#301]
 
 1.5.4-stable (2017-03-21)
  - JDK-8172023: Concurrent spliterators fail to handle exhaustion properly
