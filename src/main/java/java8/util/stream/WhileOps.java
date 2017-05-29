@@ -53,6 +53,10 @@ final class WhileOps {
 
     static final int DROP_FLAGS = StreamOpFlag.NOT_SIZED;
 
+    private static final IntFunction<Integer[]> INT_ARR_GEN = Integer[]::new;
+    private static final IntFunction<Long[]> LONG_ARR_GEN = Long[]::new;
+    private static final IntFunction<Double[]> DOUBLE_ARR_GEN = Double[]::new;
+
     /**
      * Appends a "takeWhile" operation to the provided Stream.
      *
@@ -125,7 +129,7 @@ final class WhileOps {
             <P_IN> Spliterator<Integer> opEvaluateParallelLazy(PipelineHelper<Integer> helper,
                                                                Spliterator<P_IN> spliterator) {
                 if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
-                    return opEvaluateParallel(helper, spliterator, Integer[]::new)
+                    return opEvaluateParallel(helper, spliterator, INT_ARR_GEN)
                             .spliterator();
                 }
                 else {
@@ -182,7 +186,7 @@ final class WhileOps {
             <P_IN> Spliterator<Long> opEvaluateParallelLazy(PipelineHelper<Long> helper,
                                                             Spliterator<P_IN> spliterator) {
                 if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
-                    return opEvaluateParallel(helper, spliterator, Long[]::new)
+                    return opEvaluateParallel(helper, spliterator, LONG_ARR_GEN)
                             .spliterator();
                 }
                 else {
@@ -239,7 +243,7 @@ final class WhileOps {
             <P_IN> Spliterator<Double> opEvaluateParallelLazy(PipelineHelper<Double> helper,
                                                               Spliterator<P_IN> spliterator) {
                 if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
-                    return opEvaluateParallel(helper, spliterator, Double[]::new)
+                    return opEvaluateParallel(helper, spliterator, DOUBLE_ARR_GEN)
                             .spliterator();
                 }
                 else {
@@ -417,7 +421,7 @@ final class WhileOps {
             <P_IN> Spliterator<Integer> opEvaluateParallelLazy(PipelineHelper<Integer> helper,
                                                                Spliterator<P_IN> spliterator) {
                 if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
-                    return opEvaluateParallel(helper, spliterator, Integer[]::new)
+                    return opEvaluateParallel(helper, spliterator, INT_ARR_GEN)
                             .spliterator();
                 }
                 else {
@@ -492,7 +496,7 @@ final class WhileOps {
             <P_IN> Spliterator<Long> opEvaluateParallelLazy(PipelineHelper<Long> helper,
                                                             Spliterator<P_IN> spliterator) {
                 if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
-                    return opEvaluateParallel(helper, spliterator, Long[]::new)
+                    return opEvaluateParallel(helper, spliterator, LONG_ARR_GEN)
                             .spliterator();
                 }
                 else {
@@ -567,7 +571,7 @@ final class WhileOps {
             <P_IN> Spliterator<Double> opEvaluateParallelLazy(PipelineHelper<Double> helper,
                                                               Spliterator<P_IN> spliterator) {
                 if (StreamOpFlag.ORDERED.isKnown(helper.getStreamAndOpFlags())) {
-                    return opEvaluateParallel(helper, spliterator, Double[]::new)
+                    return opEvaluateParallel(helper, spliterator, DOUBLE_ARR_GEN)
                             .spliterator();
                 }
                 else {

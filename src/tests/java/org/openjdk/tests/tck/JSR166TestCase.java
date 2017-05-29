@@ -178,7 +178,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.221
+// CVS rev. 1.231
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -559,12 +559,17 @@ public class JSR166TestCase extends TestCase {
         LONG_DELAY_MS   = SHORT_DELAY_MS * 200;
     }
 
+    private static final long TIMEOUT_DELAY_MS
+        = (long) (12.0 * Math.cbrt(delayFactor));
+
     /**
-     * Returns a timeout in milliseconds to be used in tests that
-     * verify that operations block or time out.
+     * Returns a timeout in milliseconds to be used in tests that verify
+     * that operations block or time out.  We want this to be longer
+     * than the OS scheduling quantum, but not too long, so don't scale
+     * linearly with delayFactor; we use "crazy" cube root instead.
      */
-    protected long timeoutMillis() {
-        return SHORT_DELAY_MS / 4;
+    static long timeoutMillis() {
+        return TIMEOUT_DELAY_MS;
     }
 
     /**
@@ -967,46 +972,23 @@ public class JSR166TestCase extends TestCase {
     }
 
     /**
-     * Checks that thread does not terminate within the default
-     * millisecond delay of {@code timeoutMillis()}.
+     * Checks that thread eventually enters the expected blocked thread state.
      */
-    void assertThreadStaysAlive(Thread thread) {
-        assertThreadStaysAlive(thread, timeoutMillis());
-    }
-
-    /**
-     * Checks that thread does not terminate within the given millisecond delay.
-     */
-    void assertThreadStaysAlive(Thread thread, long millis) {
-        try {
-            // No need to optimize the failing case via Thread.join.
-            delay(millis);
-            assertTrue(thread.isAlive());
-        } catch (InterruptedException fail) {
-            threadFail("Unexpected InterruptedException");
+    void assertThreadBlocks(Thread thread, Thread.State expected) {
+        // always sleep at least 1 ms, with high probability avoiding
+        // transitory states
+        for (long retries = LONG_DELAY_MS * 3 / 4; retries-->0; ) {
+            try { delay(1); }
+            catch (InterruptedException fail) {
+                fail("Unexpected InterruptedException");
+            }
+            Thread.State s = thread.getState();
+            if (s == expected)
+                return;
+            else if (s == Thread.State.TERMINATED)
+                fail("Unexpected thread termination");
         }
-    }
-
-    /**
-     * Checks that the threads do not terminate within the default
-     * millisecond delay of {@code timeoutMillis()}.
-     */
-    protected void assertThreadsStayAlive(Thread... threads) {
-        assertThreadsStayAlive(timeoutMillis(), threads);
-    }
-
-    /**
-     * Checks that the threads do not terminate within the given millisecond delay.
-     */
-    void assertThreadsStayAlive(long millis, Thread... threads) {
-        try {
-            // No need to optimize the failing case via Thread.join.
-            delay(millis);
-            for (Thread thread : threads)
-                assertTrue(thread.isAlive());
-        } catch (InterruptedException fail) {
-            threadFail("Unexpected InterruptedException");
-        }
+        fail("timed out waiting for thread to enter thread state " + expected);
     }
 
     /**
@@ -1045,6 +1027,12 @@ public class JSR166TestCase extends TestCase {
     public void shouldThrow(String exceptionName) {
         fail("Should throw " + exceptionName);
     }
+
+    /**
+     * The maximum number of consecutive spurious wakeups we should
+     * tolerate (from APIs like LockSupport.park) before failing a test.
+     */
+    static final int MAX_SPURIOUS_WAKEUPS = 10;
 
     /**
      * The number of elements to place in collections, arrays, etc.
@@ -1538,6 +1526,14 @@ public class JSR166TestCase extends TestCase {
         }
     }
 
+    public void await(CyclicBarrier barrier) {
+        try {
+            barrier.await(LONG_DELAY_MS, MILLISECONDS);
+        } catch (Throwable fail) {
+            threadUnexpectedException(fail);
+        }
+    }
+
     public static class NPETask implements Callable<String> {
         public String call() { throw new NullPointerException(); }
     }
@@ -1919,5 +1915,25 @@ public class JSR166TestCase extends TestCase {
 
     static <T> void shuffle(T[] array) {
         Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
+    }
+
+    private static final String NATIVE_OPT_ENABLED_P = java8.util.Spliterators.class.getName() + ".assume.oracle.collections.impl";
+    // defaults to true
+    static final boolean NATIVE_SPECIALIZATION = getBooleanPropVal(NATIVE_OPT_ENABLED_P, true);
+
+    protected static boolean getBooleanPropVal(final String prop, final boolean defVal) {
+        return java.security.AccessController.doPrivileged(new java.security.PrivilegedAction<Boolean>() {
+            @Override
+            public Boolean run() {
+                boolean val = defVal;
+                try {
+                    String s = System.getProperty(prop, Boolean.toString(defVal));
+                    val = Boolean.parseBoolean(s.trim());
+                } catch (IllegalArgumentException ignore) {
+                } catch (NullPointerException ignore) {
+                }
+                return val;
+            }
+        });
     }
 }

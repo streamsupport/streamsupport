@@ -34,8 +34,7 @@ import java8.util.function.*;
 import java8.util.stream.LambdaTestHelpers;
 
 import static org.testng.Assert.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
+import static org.testng695.Assert.assertThrowsNPE;
 
 /**
  * Assertion methods for spliterators, to be called from other tests
@@ -232,22 +231,22 @@ public class SpliteratorTestHelper {
         // directly test the primitive methods
         if (sp instanceof Spliterator.OfInt) {
             Spliterator.OfInt psp = (Spliterator.OfInt) sp;
-            executeAndCatch(NullPointerException.class, () -> psp.forEachRemaining((IntConsumer) null));
-            executeAndCatch(NullPointerException.class, () -> psp.tryAdvance((IntConsumer) null));
+            assertThrowsNPE(() -> psp.forEachRemaining((IntConsumer) null));
+            assertThrowsNPE(() -> psp.tryAdvance((IntConsumer) null));
         }
         else if (sp instanceof Spliterator.OfLong) {
             Spliterator.OfLong psp = (Spliterator.OfLong) sp;
-            executeAndCatch(NullPointerException.class, () -> psp.forEachRemaining((LongConsumer) null));
-            executeAndCatch(NullPointerException.class, () -> psp.tryAdvance((LongConsumer) null));
+            assertThrowsNPE(() -> psp.forEachRemaining((LongConsumer) null));
+            assertThrowsNPE(() -> psp.tryAdvance((LongConsumer) null));
         }
         else if (sp instanceof Spliterator.OfDouble) {
             Spliterator.OfDouble psp = (Spliterator.OfDouble) sp;
-            executeAndCatch(NullPointerException.class, () -> psp.forEachRemaining((DoubleConsumer) null));
-            executeAndCatch(NullPointerException.class, () -> psp.tryAdvance((DoubleConsumer) null));
+            assertThrowsNPE(() -> psp.forEachRemaining((DoubleConsumer) null));
+            assertThrowsNPE(() -> psp.tryAdvance((DoubleConsumer) null));
         }
         else {
-            executeAndCatch(NullPointerException.class, () -> sp.forEachRemaining(null));
-            executeAndCatch(NullPointerException.class, () -> sp.tryAdvance(null));
+            assertThrowsNPE(() -> sp.forEachRemaining(null));
+            assertThrowsNPE(() -> sp.tryAdvance(null));
         }
     }
 
@@ -659,23 +658,6 @@ public class SpliteratorTestHelper {
         else {
             LambdaTestHelpers.assertContentsUnordered(actual, expected);
         }
-    }
-
-    public static void executeAndCatch(Class<? extends Exception> expected, Runnable r) {
-        Exception caught = null;
-        try {
-            r.run();
-        }
-        catch (Exception e) {
-            caught = e;
-        }
-
-        assertNotNull(caught,
-                      String.format("No Exception was thrown, expected an Exception of %s to be thrown",
-                                    expected.getName()));
-        assertTrue(expected.isInstance(caught),
-                   String.format("Exception thrown %s not an instance of %s",
-                                 caught.getClass().getName(), expected.getName()));
     }
 
     public static<U> void mixedTraverseAndSplit(Consumer<U> b, Spliterator<U> splTop) {

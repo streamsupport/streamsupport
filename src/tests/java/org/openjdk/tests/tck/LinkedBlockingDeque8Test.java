@@ -36,6 +36,10 @@ public class LinkedBlockingDeque8Test extends JSR166TestCase {
      * Spliterator characteristics are as advertised
      */
     public void testSpliterator_characteristics() {
+        if (!NATIVE_SPECIALIZATION && !IS_ANDROID) {
+            // Iterator-based Spliterator doesn't have all characteristics
+            return;
+        }
         LinkedBlockingDeque<?> q = new LinkedBlockingDeque<Object>();
         Spliterator<?> s = Spliterators.spliterator(q);
         int characteristics = s.characteristics();

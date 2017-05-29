@@ -125,6 +125,14 @@ public final class Collectors {
 
     private Collectors() { }
 
+    private static <K, V> Supplier<Map<K, V>> hashMapFactory() {
+        return HashMap::new;
+    }
+
+    private static <K, V> Supplier<ConcurrentMap<K, V>> concurrentHashMapFactory() {
+        return ConcurrentHashMap::new;
+    }
+
     /**
      * Returns a new {@code Collector} described by the given {@code supplier},
      * {@code accumulator}, and {@code combiner} functions.  The resulting
@@ -1106,7 +1114,7 @@ public final class Collectors {
     public static <T, K, A, D>
     Collector<T, ?, Map<K, D>> groupingBy(Function<? super T, ? extends K> classifier,
                                           Collector<? super T, A, D> downstream) {
-        return groupingBy(classifier, HashMap::new, downstream);
+        return groupingBy(classifier, hashMapFactory(), downstream);
     }
 
     /**
@@ -1220,7 +1228,7 @@ public final class Collectors {
     public static <T, K>
     Collector<T, ?, ConcurrentMap<K, List<T>>>
     groupingByConcurrent(Function<? super T, ? extends K> classifier) {
-        return groupingByConcurrent(classifier, ConcurrentHashMap::new, toList());
+        return groupingByConcurrent(classifier, concurrentHashMapFactory(), toList());
     }
 
     /**
@@ -1264,7 +1272,7 @@ public final class Collectors {
     public static <T, K, A, D>
     Collector<T, ?, ConcurrentMap<K, D>> groupingByConcurrent(Function<? super T, ? extends K> classifier,
                                                               Collector<? super T, A, D> downstream) {
-        return groupingByConcurrent(classifier, ConcurrentHashMap::new, downstream);
+        return groupingByConcurrent(classifier, concurrentHashMapFactory(), downstream);
     }
 
     /**
@@ -1486,7 +1494,7 @@ public final class Collectors {
     public static <T, K, U>
     Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
                                     Function<? super T, ? extends U> valueMapper) {
-        return new CollectorImpl<>(HashMap::new,
+        return new CollectorImpl<>(hashMapFactory(),
                 uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
                 uniqKeysMapMerger(),
                 CH_ID);
@@ -1550,7 +1558,7 @@ public final class Collectors {
     Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
                                     Function<? super T, ? extends U> valueMapper,
                                     BinaryOperator<U> mergeFunction) {
-        return toMap(keyMapper, valueMapper, mergeFunction, HashMap::new);
+        return toMap(keyMapper, valueMapper, mergeFunction, hashMapFactory());
     }
 
     /**
@@ -1715,7 +1723,7 @@ public final class Collectors {
     toConcurrentMap(Function<? super T, ? extends K> keyMapper,
                     Function<? super T, ? extends U> valueMapper,
                     BinaryOperator<U> mergeFunction) {
-        return toConcurrentMap(keyMapper, valueMapper, mergeFunction, ConcurrentHashMap::new);
+        return toConcurrentMap(keyMapper, valueMapper, mergeFunction, concurrentHashMapFactory());
     }
 
     /**

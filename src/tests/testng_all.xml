@@ -22,6 +22,7 @@
       <class name="org.openjdk.tests.java.util.arrays.ParallelPrefix"/>
       <class name="org.openjdk.tests.java.util.arrays.ParallelSorting"/>
       <class name="org.openjdk.tests.java.util.arrays.SetAllTest"/>
+      <class name="org.openjdk.tests.java.util.arrays.StreamAndSpliterator"/>
       <class name="org.openjdk.tests.java.util.comparator.BasicTest"/>
       <class name="org.openjdk.tests.java.util.comparator.TypeTest"/>
       <class name="org.openjdk.tests.java.util.map.InPlaceOpsCollisions"/>
@@ -101,6 +102,7 @@
       <class name="org.openjdk.other.tests.phaser.FickleRegister"/>
       <class name="org.openjdk.other.tests.phaser.PhaseOverflow"/>
       <class name="org.openjdk.other.tests.phaser.TieredArriveLoops"/>
+      <class name="org.openjdk.tests.java.util.PrimitiveIteratorDefaults"/>
       <class name="org.openjdk.tests.java.util.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.MergeTest"/>
       <class name="org.openjdk.other.tests.stringJoiner.StringJoinerTest"/>
@@ -112,10 +114,7 @@
       <class name="java8.util.Ticket66Test"/>
       <class name="org.openjdk.tests.java.util.SpliteratorCharacteristics"/>
       <class name="org.openjdk.tests.java.util.SpliteratorCollisions"/>
-      <class name="org.openjdk.tests.java.util.SpliteratorCollisions2"/>
-      <class name="org.openjdk.tests.java.util.SpliteratorLateBindingFailFastTest"/>
       <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest"/>
-      <class name="org.openjdk.tests.java.util.SpliteratorTraversingAndSplittingTest2"/>
       <class name="org.openjdk.tests.java.util.SpliteratorFailFastTest"/>
       <class name="org.openjdk.tests.java.util.SpliteratorLateBindingTest"/>
       <class name="org.openjdk.other.tests.java.util.arrays.ParallelSorting"/>
@@ -136,8 +135,8 @@
       <!-- Test dependencies block 12: streamsupport.jar + streamsupport-atomic.jar -->
 
       <!-- block 12 (j8.u.c.atomic package - streamsupport-atomic) -->
-      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
-      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/>
+      <!--class name="org.openjdk.other.tests.java.util.concurrent.atomic.LongAdderDemo"/>
+      <class name="org.openjdk.other.tests.java.util.concurrent.atomic.DoubleAdderDemo"/-->
       <!-- Not really j8.u.c.atomic tests, but tests that have a dependency on LongAdder (streamsupport-atomic)-->
       <class name="org.openjdk.other.tests.splittableRandom.SplittableRandomTest"/>
       <class name="org.openjdk.other.tests.threadLocalRandom.ThreadLocalRandomTest"/>
@@ -145,7 +144,7 @@
       <!-- Test dependencies block 13: streamsupport.jar + streamsupport-atomic.jar + streamsupport-cfuture.jar + streamsupport-flow.jar -->
 
       <!-- block 13 (JSR 166 TCK tests) -->
-      <!--class name="org.openjdk.tests.tck.ArrayDeque8Test"/-->
+      <class name="org.openjdk.tests.tck.ArrayDeque8Test"/>
       <class name="org.openjdk.tests.tck.Collection8Test"/>
       <class name="org.openjdk.tests.tck.CompletableFutureTest"/>
       <class name="org.openjdk.tests.tck.CountedCompleterTest"/>
@@ -181,6 +180,7 @@
       <!-- block 15 (superseded or questionable tests) -->
       <!--class name="org.openjdk.other.tests.forkjoin.Integrate"/-->
       <!--class name="org.openjdk.other.tests.forkjoin.MergeDemo"/-->
+      <!--class name="org.openjdk.tests.java.util.SpliteratorLateBindingFailFastTest"/-->
 
     </classes>
   </test>

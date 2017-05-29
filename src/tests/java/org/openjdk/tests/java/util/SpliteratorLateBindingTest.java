@@ -116,47 +116,6 @@ public class SpliteratorLateBindingTest extends SpliteratorLateBindingFailFastHe
         // @@@  Descending maps etc
         db.addMap(TreeMap::new);
 
-        // BitSet
-
-//        List<Integer> bits = List.of(0, 1, 2);
-//        Function<BitSet, Spliterator.OfInt> bitsSource = bs -> bs.stream().spliterator();
-//        db.add("new BitSet.stream().spliterator() ADD",
-//               () -> new IntSource<>(toBitSet(bits), bitsSource, bs -> bs.set(3)));
-//        db.add("new BitSet.stream().spliterator() REMOVE",
-//               () -> new IntSource<>(toBitSet(bits), bitsSource, bs -> bs.clear(2)));
-
-        // CharSequence
-
-//        Function<CharSequence, Spliterator.OfInt> charsSource = sb -> sb.chars().spliterator();
-//        Function<CharSequence, Spliterator.OfInt> pointsSource = sb -> sb.codePoints().spliterator();
-
-//        db.add("new StringBuilder.chars().spliterator() ADD",
-//               () -> new IntSource<>(new StringBuilder("ABC"), charsSource, bs -> bs.append("D"), true));
-//        db.add("new StringBuilder.chars().spliterator() REMOVE",
-//               () -> new IntSource<>(new StringBuilder("ABC"), charsSource, bs -> bs.deleteCharAt(2), true));
-//        db.add("new StringBuilder.codePoints().spliterator() ADD",
-//               () -> new IntSource<>(new StringBuilder("ABC"), pointsSource, bs -> bs.append("D"), true));
-//        db.add("new StringBuilder.codePoints().spliterator() REMOVE",
-//               () -> new IntSource<>(new StringBuilder("ABC"), pointsSource, bs -> bs.deleteCharAt(2), true));
-
-//        db.add("new StringBuffer.chars().spliterator() ADD",
-//               () -> new IntSource<>(new StringBuffer("ABC"), charsSource, bs -> bs.append("D"), true));
-//        db.add("new StringBuffer.chars().spliterator() REMOVE",
-//               () -> new IntSource<>(new StringBuffer("ABC"), charsSource, bs -> bs.deleteCharAt(2), true));
-//        db.add("new StringBuffer.codePoints().spliterator() ADD",
-//               () -> new IntSource<>(new StringBuffer("ABC"), pointsSource, bs -> bs.append("D"), true));
-//        db.add("new StringBuffer.codePoints().spliterator() REMOVE",
-//               () -> new IntSource<>(new StringBuffer("ABC"), pointsSource, bs -> bs.deleteCharAt(2), true));
-
-//        db.add("CharBuffer.wrap().chars().spliterator() ADD",
-//               () -> new IntSource<>(CharBuffer.wrap("ABCD").limit(3), charsSource, bs -> bs.limit(4), true));
-//        db.add("CharBuffer.wrap().chars().spliterator() REMOVE",
-//               () -> new IntSource<>(CharBuffer.wrap("ABCD"), charsSource, bs -> bs.limit(3), true));
-//        db.add("CharBuffer.wrap().codePoints().spliterator() ADD",
-//               () -> new IntSource<>(CharBuffer.wrap("ABCD").limit(3), pointsSource, bs -> bs.limit(4), true));
-//        db.add("CharBuffer.wrap().codePoints().spliterator() REMOVE",
-//               () -> new IntSource<>(CharBuffer.wrap("ABCD"), pointsSource, bs -> bs.limit(3), true));
-
         return spliteratorDataProvider = data.toArray(new Object[0][]);
     }
 
@@ -169,13 +128,6 @@ public class SpliteratorLateBindingTest extends SpliteratorLateBindingFailFastHe
             return !s.get().bindOnCharacteristics();
         }).toArray(Object[][]::new);
     }
-
-//    private static BitSet toBitSet(List<Integer> bits) {
-//        BitSet bs = new BitSet();
-//        bits.forEach(bs::set);
-//        return bs;
-//    }
-
 
     @Test(dataProvider = "Source")
     public <T> void testForEach(String description, Supplier<Source<T>> ss) {

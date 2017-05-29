@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class PhaserTest extends JSR166TestCase {
-// CVS rev. 1.45
+// CVS rev. 1.47
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -498,7 +498,8 @@ public class PhaserTest extends JSR166TestCase {
 
         await(pleaseInterrupt);
         assertState(phaser, 0, 1, 1);
-        assertThreadsStayAlive(t1, t2);
+        assertThreadBlocks(t1, Thread.State.WAITING);
+        assertThreadBlocks(t2, Thread.State.TIMED_WAITING);
         t1.interrupt();
         t2.interrupt();
         awaitTermination(t1);
@@ -528,7 +529,7 @@ public class PhaserTest extends JSR166TestCase {
             }});
 
         await(pleaseArrive);
-        waitForThreadToEnterWaitState(t);
+        assertThreadBlocks(t, Thread.State.WAITING);
         assertEquals(0, phaser.arrive());
         awaitTermination(t);
 
@@ -556,7 +557,7 @@ public class PhaserTest extends JSR166TestCase {
             }});
 
         await(pleaseArrive);
-        waitForThreadToEnterWaitState(t);
+        assertThreadBlocks(t, Thread.State.WAITING);
         t.interrupt();
         assertEquals(0, phaser.arrive());
         awaitTermination(t);
@@ -585,7 +586,7 @@ public class PhaserTest extends JSR166TestCase {
             }});
 
         await(pleaseArrive);
-        waitForThreadToEnterWaitState(t);
+        assertThreadBlocks(t, Thread.State.WAITING);
         Thread.currentThread().interrupt();
         assertEquals(1, phaser.arriveAndAwaitAdvance());
         assertTrue(Thread.interrupted());
@@ -610,7 +611,7 @@ public class PhaserTest extends JSR166TestCase {
             }});
 
         await(pleaseInterrupt);
-        waitForThreadToEnterWaitState(t);
+        assertThreadBlocks(t, Thread.State.WAITING);
         t.interrupt();
         Thread.currentThread().interrupt();
         assertEquals(1, phaser.arriveAndAwaitAdvance());
@@ -785,7 +786,7 @@ public class PhaserTest extends JSR166TestCase {
         assertEquals(THREADS, phaser.getArrivedParties());
         assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
         for (Thread thread : threads)
-            waitForThreadToEnterWaitState(thread);
+            assertThreadBlocks(thread, Thread.State.WAITING);
         for (Thread thread : threads)
             assertTrue(thread.isAlive());
         assertState(phaser, 0, THREADS + 1, 1);

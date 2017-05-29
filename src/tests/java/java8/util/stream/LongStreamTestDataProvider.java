@@ -36,7 +36,8 @@ public class LongStreamTestDataProvider {
     private static final long[] to1 = new long[1];
     private static final long[] to10 = new long[10];
     private static final long[] to100 = new long[100];
-    private static final long[] to1000 = new long[1000];
+    // Android-changed: remove 0..1000 test data from data providers.
+    //private static final long[] to1000 = new long[1000];
     private static final long[] reversed = new long[100];
     private static final long[] ones = new long[100];
     private static final long[] twice = new long[200];
@@ -47,7 +48,9 @@ public class LongStreamTestDataProvider {
     private static final Object[][] spliteratorTestData;
 
     static {
-        long[][] arrays = {to0, to1, to10, to100, to1000};
+        // Android-changed: remove 0..1000 test data from data providers.
+        //long[][] arrays = {to0, to1, to10, to100, to1000};
+        long[][] arrays = {to0, to1, to10, to100};
         for (long[] arr : arrays) {
             for (int i = 0; i < arr.length; i++) {
                 arr[i] = i;
@@ -72,7 +75,8 @@ public class LongStreamTestDataProvider {
             {"0..1", to1},
             {"0..10", to10},
             {"0..100", to100},
-            {"0..1000", to1000},
+            // Android-changed: remove 0..1000 test data from data providers.
+            //{"0..1000", to1000},
             {"100x[1]", ones},
             {"2x[0..100]", twice},
             {"reverse 0..100", reversed},

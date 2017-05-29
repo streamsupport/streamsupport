@@ -31,7 +31,7 @@ import java.util.List;
  * 269</a> {@code "Immutable List Static Factory Methods"} in the {@link List}
  * interface.
  * 
- * <h2><a name="immutable">Immutable List Static Factory Methods</a></h2>
+ * <h2><a id="immutable">Immutable List Static Factory Methods</a></h2>
  * <p>
  * The {@link Lists2#of(Object...) Lists.of()} static factory methods provide a
  * convenient way to create immutable lists. The {@code List} instances created

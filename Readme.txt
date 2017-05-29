@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.5.4-stable" is the current stable release
+ - "1.5.5-stable" is the current stable release
 
 
 GENERAL
@@ -15,6 +15,15 @@ GENERAL
  - The provided Jar files are compiled for Java 6 (Bytecode version 50). You'll need
    Retrolambda (https://github.com/orfjackal/retrolambda) to build the core
    streamsupport.jar from its sources
+
+ - It is possible to turn on an OpenJDK "compatibility mode" by setting the
+   boolean system property
+
+   java8.util.Spliterators.assume.oracle.collections.impl=false
+
+   This switch is provided for users of non-OpenJDK based JREs (e.g. IBM Java 6/7)
+   to increase the odds that streamsupport can be used on their platform.
+   This switch is not needed (and has no effect) on Android.
 
  - Release 1.3 adds the new Java 9 Stream methods takeWhile() and dropWhile().
    If anyone longs for the default method implementations, they are available
@@ -112,6 +121,21 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.5.5-stable (2017-05-25)
+ - JDK-8174267: findFirst() unnecessarily always allocates an Op
+ - JDK-8176543: Misc. changes imported from jsr166 CVS 2017-04
+ - JDK-8177653: Clarify restrictions on Iterator.forEachRemaining
+ - JDK-8167981: Missing explanation of intended use of Optional
+ - JDK-8178956: Misleading doc of LongAccumulator accumulator function
+ - JDK-8023897: Rename executeAndCatch in various tests to assertThrow
+ - update to retrolambda 2.5.1 to reduce method count for Android apps [#292]
+ - cut down on Bytecode size [#293]
+ - deduplicate spliterator traversing tests [#296]
+ - ArrayDeque IteratorSpliterator should report NONNULL [#297]
+ - add new JSR 166 TCK test ArrayDeque8Test [#298]
+ - disable COWAL Java 6/7 RASpliterator sans native specialization [#300]
+ - TLRandom: revert static initializer changes from commit 3e381f [#301]
 
 1.5.4-stable (2017-03-21)
  - JDK-8172023: Concurrent spliterators fail to handle exhaustion properly

@@ -16,7 +16,7 @@ import java8.util.Spliterator;
  * Immutable snapshot spliterator that binds to elements "late".
  */
 final class PBQueueSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.127
+// CVS rev. 1.128
     private final PriorityBlockingQueue<E> queue;
     private Object[] array;        // null until late-bound-initialized
     private int index;

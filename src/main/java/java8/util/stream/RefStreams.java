@@ -123,7 +123,7 @@ public final class RefStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.stream(
                 new WhileOps.UnorderedWhileSpliterator.OfRef.Taking<>(s.spliterator(), true, predicate),
-                s.isParallel()).onClose(s::close);
+                s.isParallel()).onClose(StreamSupport.closeHandler(s));
     }
 
     /**
@@ -198,7 +198,7 @@ public final class RefStreams {
         // is safe to use as long as it configured not to split
         return StreamSupport.stream(
                 new WhileOps.UnorderedWhileSpliterator.OfRef.Dropping<>(s.spliterator(), true, predicate),
-                s.isParallel()).onClose(s::close);
+                s.isParallel()).onClose(StreamSupport.closeHandler(s));
     }
 
     /**
