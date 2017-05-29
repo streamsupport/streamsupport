@@ -77,11 +77,11 @@ repositories {
 }
 
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.4'
-    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.4'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.5'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.5'
 
     //compile 'com.github.streamsupport.streamsupport:streamsupport-pro:-SNAPSHOT' // proguard config for android
 }
@@ -122,6 +122,12 @@ dependencies {
 
 ```sh
 ./gradlew clean assemble
+```
+
+## Improting
+
+```sh
+GIT_COMMITTER_NAME="" GIT_COMMITTER_EMAIL="" git rebase --committer-date-is-author-date 1.5.4 1.5.5 --onto _1.5.4
 ```
 
 ## Release Notes
