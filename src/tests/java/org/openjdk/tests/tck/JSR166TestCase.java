@@ -91,6 +91,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -178,7 +179,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.231
+// CVS rev. 1.232
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -538,6 +539,33 @@ public class JSR166TestCase extends TestCase {
     public static long SMALL_DELAY_MS;
     public static long MEDIUM_DELAY_MS;
     public static long LONG_DELAY_MS;
+
+    private static final long RANDOM_TIMEOUT;
+    private static final long RANDOM_EXPIRED_TIMEOUT;
+    private static final TimeUnit RANDOM_TIMEUNIT;
+    static {
+        ThreadLocalRandom rnd = ThreadLocalRandom.current();
+        long[] timeouts = { Long.MIN_VALUE, -1, 0, 1, Long.MAX_VALUE };
+        RANDOM_TIMEOUT = timeouts[rnd.nextInt(timeouts.length)];
+        RANDOM_EXPIRED_TIMEOUT = timeouts[rnd.nextInt(3)];
+        TimeUnit[] timeUnits = TimeUnit.values();
+        RANDOM_TIMEUNIT = timeUnits[rnd.nextInt(timeUnits.length)];
+    }
+
+    /**
+     * Returns a timeout for use when any value at all will do.
+     */
+    static long randomTimeout() { return RANDOM_TIMEOUT; }
+
+    /**
+     * Returns a timeout that means "no waiting", i.e. not positive.
+     */
+    static long randomExpiredTimeout() { return RANDOM_EXPIRED_TIMEOUT; }
+
+    /**
+     * Returns a random non-null TimeUnit.
+     */
+    static TimeUnit randomTimeUnit() { return RANDOM_TIMEUNIT; }
 
     /**
      * Returns the shortest timed delay. This can be scaled up for
@@ -1538,52 +1566,11 @@ public class JSR166TestCase extends TestCase {
         public String call() { throw new NullPointerException(); }
     }
 
-    public static class CallableOne implements Callable<Integer> {
-        public Integer call() { return one; }
-    }
-
-    public class ShortRunnable extends CheckedRunnable {
-        protected void realRun() throws Throwable {
-            delay(SHORT_DELAY_MS);
-        }
-    }
-
-    public class ShortInterruptedRunnable extends CheckedInterruptedRunnable {
-        protected void realRun() throws InterruptedException {
-            delay(SHORT_DELAY_MS);
-        }
-    }
-
-    public class SmallRunnable extends CheckedRunnable {
-        protected void realRun() throws Throwable {
-            delay(SMALL_DELAY_MS);
-        }
-    }
-
     public class SmallPossiblyInterruptedRunnable extends CheckedRunnable {
         protected void realRun() {
             try {
                 delay(SMALL_DELAY_MS);
             } catch (InterruptedException ok) {}
-        }
-    }
-
-    public class SmallCallable extends CheckedCallable<Object> {
-        protected Object realCall() throws InterruptedException {
-            delay(SMALL_DELAY_MS);
-            return Boolean.TRUE;
-        }
-    }
-
-    public class MediumRunnable extends CheckedRunnable {
-        protected void realRun() throws Throwable {
-            delay(MEDIUM_DELAY_MS);
-        }
-    }
-
-    public class MediumInterruptedRunnable extends CheckedInterruptedRunnable {
-        protected void realRun() throws InterruptedException {
-            delay(MEDIUM_DELAY_MS);
         }
     }
 
@@ -1594,22 +1581,6 @@ public class JSR166TestCase extends TestCase {
                     delay(timeoutMillis);
                 } catch (InterruptedException ok) {}
             }};
-    }
-
-    public class MediumPossiblyInterruptedRunnable extends CheckedRunnable {
-        protected void realRun() {
-            try {
-                delay(MEDIUM_DELAY_MS);
-            } catch (InterruptedException ok) {}
-        }
-    }
-
-    public class LongPossiblyInterruptedRunnable extends CheckedRunnable {
-        protected void realRun() {
-            try {
-                delay(LONG_DELAY_MS);
-            } catch (InterruptedException ok) {}
-        }
     }
 
     /**
@@ -1625,74 +1596,10 @@ public class JSR166TestCase extends TestCase {
         boolean isDone();
     }
 
-    public static TrackedRunnable trackedRunnable(final long timeoutMillis) {
-        return new TrackedRunnable() {
-                private volatile boolean done = false;
-                public boolean isDone() { return done; }
-                public void run() {
-                    try {
-                        delay(timeoutMillis);
-                        done = true;
-                    } catch (InterruptedException ok) {}
-                }
-            };
-    }
-
-    public static class TrackedShortRunnable implements Runnable {
-        public volatile boolean done = false;
-        public void run() {
-            try {
-                delay(SHORT_DELAY_MS);
-                done = true;
-            } catch (InterruptedException ok) {}
-        }
-    }
-
-    public static class TrackedSmallRunnable implements Runnable {
-        public volatile boolean done = false;
-        public void run() {
-            try {
-                delay(SMALL_DELAY_MS);
-                done = true;
-            } catch (InterruptedException ok) {}
-        }
-    }
-
-    public static class TrackedMediumRunnable implements Runnable {
-        public volatile boolean done = false;
-        public void run() {
-            try {
-                delay(MEDIUM_DELAY_MS);
-                done = true;
-            } catch (InterruptedException ok) {}
-        }
-    }
-
-    public static class TrackedLongRunnable implements Runnable {
-        public volatile boolean done = false;
-        public void run() {
-            try {
-                delay(LONG_DELAY_MS);
-                done = true;
-            } catch (InterruptedException ok) {}
-        }
-    }
-
     public static class TrackedNoOpRunnable implements Runnable {
         public volatile boolean done = false;
         public void run() {
             done = true;
-        }
-    }
-
-    public static class TrackedCallable implements Callable<Object> {
-        public volatile boolean done = false;
-        public Object call() {
-            try {
-                delay(SMALL_DELAY_MS);
-                done = true;
-            } catch (InterruptedException ok) {}
-            return Boolean.TRUE;
         }
     }
 
@@ -1765,7 +1672,7 @@ public class JSR166TestCase extends TestCase {
             assertEquals(0, q.size());
             assertNull(q.peek());
             assertNull(q.poll());
-            assertNull(q.poll(0, MILLISECONDS));
+            assertNull(q.poll(randomExpiredTimeout(), randomTimeUnit()));
             assertEquals(q.toString(), "[]");
             assertTrue(Arrays.equals(q.toArray(), new Object[0]));
             assertFalse(q.iterator().hasNext());
