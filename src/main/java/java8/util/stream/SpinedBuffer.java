@@ -236,7 +236,7 @@ class SpinedBuffer<E>
     }
 
     public Iterator<E> iterator() {
-        return Spliterators.iterator(getSpliterator());
+        return Spliterators.iterator(spliterator());
     }
 
     public void forEach(Consumer<? super E> consumer) {
@@ -280,13 +280,6 @@ class SpinedBuffer<E>
      * Return a {@link Spliterator} describing the contents of the buffer.
      */
     Spliterator<E> spliterator() {
-        return getSpliterator();
-    }
-
-    /**
-     * Return a {@link Spliterator} describing the contents of the buffer.
-     */
-    Spliterator<E> getSpliterator() {
         class Splitr implements Spliterator<E> {
             // The current spine index
             int splSpineIndex;

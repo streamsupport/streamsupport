@@ -1846,12 +1846,7 @@ final class Nodes {
 
         @Override
         public Spliterator<T> spliterator() {
-            return getSpliterator();
-        }
-
-        @Override
-        public Spliterator<T> getSpliterator() {
-            return super.getSpliterator();
+            return super.spliterator();
         }
 
         @Override

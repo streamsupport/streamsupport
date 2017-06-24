@@ -437,7 +437,7 @@ final class Streams {
                 count = -count - 1;
                 // Use this spliterator if 0 or 1 elements, otherwise use
                 // the spliterator of the spined buffer
-                return (c < 2) ? StreamSupport.stream(this, false) : StreamSupport.stream(buffer.getSpliterator(), false);
+                return (c < 2) ? StreamSupport.stream(this, false) : StreamSupport.stream(buffer.spliterator(), false);
             }
 
             throw new IllegalStateException();
