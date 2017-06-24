@@ -744,10 +744,6 @@ class SpinedBuffer<E>
             super(initialCapacity);
         }
 
-        public Spliterator.OfInt spliterator() {
-        	return getSpliterator();
-        }
-
         @Override
         public void forEach(Consumer<? super Integer> consumer) {
             if (consumer instanceof IntConsumer) {
@@ -799,10 +795,10 @@ class SpinedBuffer<E>
 
         @Override
         public PrimitiveIterator.OfInt iterator() {
-            return Spliterators.iterator(getSpliterator());
+            return Spliterators.iterator(spliterator());
         }
 
-        public Spliterator.OfInt getSpliterator() {
+        public Spliterator.OfInt spliterator() {
             class Splitr extends BaseSpliterator<Spliterator.OfInt>
                     implements Spliterator.OfInt {
                 Splitr(int firstSpineIndex, int lastSpineIndex,
@@ -884,10 +880,6 @@ class SpinedBuffer<E>
             super(initialCapacity);
         }
 
-        public Spliterator.OfLong spliterator() {
-            return getSpliterator();
-        }
-
         @Override
         public void forEach(Consumer<? super Long> consumer) {
             if (consumer instanceof LongConsumer) {
@@ -939,11 +931,11 @@ class SpinedBuffer<E>
 
         @Override
         public PrimitiveIterator.OfLong iterator() {
-            return Spliterators.iterator(getSpliterator());
+            return Spliterators.iterator(spliterator());
         }
 
 
-        public Spliterator.OfLong getSpliterator() {
+        public Spliterator.OfLong spliterator() {
             class Splitr extends BaseSpliterator<Spliterator.OfLong>
                     implements Spliterator.OfLong {
                 Splitr(int firstSpineIndex, int lastSpineIndex,
@@ -1026,10 +1018,6 @@ class SpinedBuffer<E>
             super(initialCapacity);
         }
 
-        public Spliterator.OfDouble spliterator() {
-            return getSpliterator();
-        }
-
         @Override
         public void forEach(Consumer<? super Double> consumer) {
             if (consumer instanceof DoubleConsumer) {
@@ -1081,10 +1069,10 @@ class SpinedBuffer<E>
 
         @Override
         public PrimitiveIterator.OfDouble iterator() {
-            return Spliterators.iterator(getSpliterator());
+            return Spliterators.iterator(spliterator());
         }
 
-        public Spliterator.OfDouble getSpliterator() {
+        public Spliterator.OfDouble spliterator() {
             class Splitr extends BaseSpliterator<Spliterator.OfDouble>
                     implements Spliterator.OfDouble {
                 Splitr(int firstSpineIndex, int lastSpineIndex,

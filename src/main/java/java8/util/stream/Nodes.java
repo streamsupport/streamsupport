@@ -2446,8 +2446,8 @@ final class Nodes {
         IntSpinedNodeBuilder() {} // Avoid creation of special accessor
 
         @Override
-        public Spliterator.OfInt getSpliterator() {
-            return super.getSpliterator();
+        public Spliterator.OfInt spliterator() {
+            return super.spliterator();
         }
 
         @Override
@@ -2552,8 +2552,8 @@ final class Nodes {
         }
 
         @Override
-        public Spliterator.OfLong getSpliterator() {
-            return super.getSpliterator();
+        public Spliterator.OfLong spliterator() {
+            return super.spliterator();
         }
 
         @Override
@@ -2652,8 +2652,8 @@ final class Nodes {
         }
 
         @Override
-        public Spliterator.OfDouble getSpliterator() {
-            return super.getSpliterator();
+        public Spliterator.OfDouble spliterator() {
+            return super.spliterator();
         }
 
         @Override
@@ -2661,7 +2661,6 @@ final class Nodes {
             super.forEach(consumer);
         }
 
-        //
         @Override
         public void begin(long size) {
             clear();
