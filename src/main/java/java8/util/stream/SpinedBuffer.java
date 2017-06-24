@@ -253,10 +253,6 @@ class SpinedBuffer<E>
         }
     }
 
-    private void forEach_(Consumer<? super E> consumer) {
-        forEach(consumer);
-    }
-
     @Override
     public void accept(E e) {
         if (elementIndex == curChunk.length) {
@@ -273,7 +269,7 @@ class SpinedBuffer<E>
     @Override
     public String toString() {
         List<E> list = new ArrayList<>();
-        forEach_(list::add);
+        forEach(list::add);
         return "SpinedBuffer:" + list.toString();
     }
 
