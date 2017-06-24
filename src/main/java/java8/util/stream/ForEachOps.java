@@ -172,7 +172,7 @@ final class ForEachOps {
 
         @Override
         public StreamShape inputShape() {
-            return TerminalOpDefaults.inputShape() ;
+        	return StreamShape.REFERENCE;
         }
 
         @Override
