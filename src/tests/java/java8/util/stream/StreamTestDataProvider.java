@@ -178,7 +178,7 @@ public class StreamTestDataProvider {
                                                 SpinedBuffer<Integer> sb = new SpinedBuffer<>();
                                                 for (Integer i : ints)
                                                     sb.accept(i);
-                                                return sb.getSpliterator();
+                                                return sb.spliterator();
                                             }));
                 spliterators.add(splitDescr("Iterators.s(Arrays.s(array).iterator(), size):" + name,
                                             () -> Spliterators.spliterator(Arrays.asList(ints).iterator(), ints.length, 0)));

@@ -91,14 +91,14 @@ public class SpinedBufferTest {
     @Test(dataProvider = "SpinedBuffer")
     public void testSpliterator(int[] array, SpinedBuffer<Integer> sb) {
         assertEquals(sb.count(), array.length);
-        assertEquals(sb.count(), sb.getSpliterator().getExactSizeIfKnown());
+        assertEquals(sb.count(), sb.spliterator().getExactSizeIfKnown());
 
-        SpliteratorTestHelper.testSpliterator(sb::getSpliterator);
+        SpliteratorTestHelper.testSpliterator(sb::spliterator);
     }
 
     @Test(dataProvider = "SpinedBuffer", groups = { "serialization-hostile" })
     public void testLastSplit(int[] array, SpinedBuffer<Integer> sb) {
-        Spliterator<Integer> spliterator = sb.getSpliterator();
+        Spliterator<Integer> spliterator = sb.spliterator();
         Spliterator<Integer> split = spliterator.trySplit();
         long splitSizes = (split == null) ? 0 : split.getExactSizeIfKnown();
         long lastSplitSize = spliterator.getExactSizeIfKnown();
