@@ -929,7 +929,9 @@ public final class Spliterators {
     public static <T> Spliterator<T> spliterator(Collection<? extends T> c) {
         Objects.requireNonNull(c);
 
-        if (HAS_STREAMS && DELEGATION_ENABLED && !hasAndroid7LHMBug(c)) {
+        if (HAS_STREAMS && (DELEGATION_ENABLED || IS_JAVA9) && !hasAndroid7LHMBug(c)) {
+            // always use spliterator delegation on Java 9 from 1.5.6 onwards
+            // https://sourceforge.net/p/streamsupport/tickets/299/
             return delegatingSpliterator(c);
         }
 
@@ -1049,7 +1051,7 @@ public final class Spliterators {
             if (c instanceof LinkedBlockingQueue) {
                 return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
             }
-            if (c instanceof ArrayDeque && !IS_JAVA9) {
+            if (c instanceof ArrayDeque) {
                 return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
             }
             if (c instanceof LinkedBlockingDeque) {
