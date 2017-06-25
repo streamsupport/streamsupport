@@ -1126,7 +1126,6 @@ final class Nodes {
         @Override
         public Spliterator<T> spliterator() {
             return Spliterators.spliterator(c);
-//            return c.stream().spliterator(); // original Java 8 code
         }
 
         @Override
@@ -1874,7 +1873,6 @@ final class Nodes {
             return Nodes.truncate(this, from, to, generator);
         }
 
-        //
         @Override
         public void begin(long size) {
             clear();
@@ -2561,7 +2559,6 @@ final class Nodes {
             super.forEach(consumer);
         }
 
-        //
         @Override
         public void begin(long size) {
             clear();

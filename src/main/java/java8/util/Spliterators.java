@@ -175,7 +175,6 @@ public final class Spliterators {
      *         a characteristic of {@code SORTED}.
      */
     public static <T> Comparator<? super T> getComparator(Spliterator<T> this_) {
-        //return this_.getComparator();
         throw new IllegalStateException();
     }
 

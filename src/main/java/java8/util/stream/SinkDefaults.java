@@ -57,39 +57,6 @@ final class SinkDefaults {
     }
 
     /**
-     * Resets the sink state to receive a fresh data set.  This must be called
-     * before sending any data to the sink.  After calling {@link #end()},
-     * you may call this method to reset the sink for another calculation.
-     * @param size The exact size of the data to be pushed downstream, if
-     * known or {@code -1} if unknown or infinite.
-     *
-     * <p>Prior to this call, the sink must be in the initial state, and after
-     * this call it is in the active state.
-     */
-//    static <T> void begin(Sink<T> this_, long size) {}
-
-    /**
-     * Indicates that all elements have been pushed.  If the {@code Sink} is
-     * stateful, it should send any stored state downstream at this time, and
-     * should clear any accumulated state (and associated resources).
-     *
-     * <p>Prior to this call, the sink must be in the active state, and after
-     * this call it is returned to the initial state.
-     */
-//    static <T> void end(Sink<T> this_) {}
-
-    /**
-     * Indicates that this {@code Sink} does not wish to receive any more data.
-     *
-     * <p><b>Implementation Requirements:</b><br> The default implementation always returns false.
-     *
-     * @return true if cancellation is requested
-     */
-//    static <T> boolean cancellationRequested(Sink<T> this_) {
-//        return false;
-//    }
-
-    /**
      * Accepts an int value.
      *
      * <p><b>Implementation Requirements:</b><br> The default implementation throws IllegalStateException.
