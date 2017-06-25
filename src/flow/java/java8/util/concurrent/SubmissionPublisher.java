@@ -854,7 +854,6 @@ public class SubmissionPublisher<T> implements Flow.Publisher<T> {
         }
         public final void onSubscribe(final Flow.Subscription subscription) {
             this.subscription = subscription;
-//          status.whenComplete((v, e) -> subscription.cancel());
             status.whenComplete(new BiConsumer<Void, Throwable>() {
                 @Override
                 public void accept(Void v, Throwable e) {
