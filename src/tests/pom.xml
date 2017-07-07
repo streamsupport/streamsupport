@@ -3,6 +3,11 @@
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-all-tests</artifactId>
 	<version>1.5.6-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>

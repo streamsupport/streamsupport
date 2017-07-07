@@ -32,9 +32,6 @@ import java8.util.Spliterator;
 import java8.util.Spliterators;
 import java8.util.function.Consumer;
 import java8.util.function.Predicate;
-import java8.util.function.Supplier;
-import java8.util.stream.Stream;
-import java8.util.stream.StreamSupport;
 
 /**
  * A place for static default implementations of the new Java 8
