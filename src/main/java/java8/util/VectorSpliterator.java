@@ -118,7 +118,7 @@ final class VectorSpliterator<E> implements Spliterator<E> {
 
     @Override
     public Comparator<? super E> getComparator() {
-        return Spliterators.getComparator(this);
+    	throw new IllegalStateException();
     }
 
     @Override

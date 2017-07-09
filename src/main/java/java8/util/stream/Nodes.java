@@ -1632,7 +1632,7 @@ final class Nodes {
 
             @Override
             public Comparator<? super T> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
         }
 
@@ -1701,7 +1701,7 @@ final class Nodes {
 
             @Override
             public Comparator<? super T> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
         }
 

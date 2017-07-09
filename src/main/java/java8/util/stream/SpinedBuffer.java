@@ -338,7 +338,7 @@ class SpinedBuffer<E>
 
             @Override
             public Comparator<? super E> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
 
             @Override
@@ -836,7 +836,7 @@ class SpinedBuffer<E>
 
                 @Override
                 public Comparator<? super Integer> getComparator() {
-                    return Spliterators.getComparator(this);
+                	throw new IllegalStateException();
                 }
 
                 @Override
@@ -973,7 +973,7 @@ class SpinedBuffer<E>
 
                 @Override
                 public Comparator<? super Long> getComparator() {
-                    return Spliterators.getComparator(this);
+                	throw new IllegalStateException();
                 }
 
                 @Override
@@ -1110,7 +1110,7 @@ class SpinedBuffer<E>
 
                 @Override
                 public Comparator<? super Double> getComparator() {
-                    return Spliterators.getComparator(this);
+                	throw new IllegalStateException();
                 }
 
                 @Override

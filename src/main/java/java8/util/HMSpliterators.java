@@ -138,7 +138,7 @@ final class HMSpliterators {
 
         @Override
         public Comparator<? super K> getComparator() {
-            return Spliterators.getComparator(this);
+        	throw new IllegalStateException();
         }
     }
 
@@ -218,7 +218,7 @@ final class HMSpliterators {
 
         @Override
         public Comparator<? super V> getComparator() {
-            return Spliterators.getComparator(this);
+        	throw new IllegalStateException();
         }
     }
 
@@ -299,7 +299,7 @@ final class HMSpliterators {
 
         @Override
         public Comparator<? super Entry<K, V>> getComparator() {
-            return Spliterators.getComparator(this);
+        	throw new IllegalStateException();
         }
     }
 
