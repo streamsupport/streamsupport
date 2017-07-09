@@ -1618,7 +1618,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super T> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
         }
 
@@ -1639,7 +1639,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Integer> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
 
             @Override
@@ -1670,7 +1670,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Long> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
 
             @Override
@@ -1701,7 +1701,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Double> getComparator() {
-                return Spliterators.getComparator(this);
+            	throw new IllegalStateException();
             }
 
             @Override
