@@ -174,6 +174,7 @@ public final class Spliterators {
      * @throws IllegalStateException if the spliterator does not report
      *         a characteristic of {@code SORTED}.
      */
+    @Deprecated
     public static <T> Comparator<? super T> getComparator(Spliterator<T> this_) {
         throw new IllegalStateException();
     }
@@ -1618,7 +1619,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super T> getComparator() {
-            	throw new IllegalStateException();
+                throw new IllegalStateException();
             }
         }
 
@@ -1639,7 +1640,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Integer> getComparator() {
-            	throw new IllegalStateException();
+                throw new IllegalStateException();
             }
 
             @Override
@@ -1670,7 +1671,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Long> getComparator() {
-            	throw new IllegalStateException();
+                throw new IllegalStateException();
             }
 
             @Override
@@ -1701,7 +1702,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Double> getComparator() {
-            	throw new IllegalStateException();
+                throw new IllegalStateException();
             }
 
             @Override
