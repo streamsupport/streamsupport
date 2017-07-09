@@ -78,7 +78,7 @@ final class Nodes {
      *
      * @return the stream shape associated with this node
      */
-    static <T> StreamShape getShape(Node<T> node) {
+    static <T> StreamShape getShape() {
         return StreamShape.REFERENCE;
     }
 
@@ -89,7 +89,7 @@ final class Nodes {
      *
      * @return the number of child nodes
      */
-    static <T> int getChildCount(Node<T> node) {
+    static <T> int getChildCount() {
         return 0;
     }
 
@@ -104,7 +104,7 @@ final class Nodes {
      * @throws IndexOutOfBoundsException if the index is less than 0 or greater
      *         than or equal to the number of child nodes
      */
-    static <T> Node<T> getChild(Node<T> node, int i) {
+    static <T> Node<T> getChild() {
         throw new IndexOutOfBoundsException();
     }
 
@@ -140,7 +140,7 @@ final class Nodes {
     }
 
     static final class OfPrimitive {
-        static <T, T_CONS, T_ARR, T_NODE extends Node.OfPrimitive<T, T_CONS, T_ARR, T_SPLITR, T_NODE>, T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>> T_NODE getChild(Node.OfPrimitive<T, T_CONS, T_ARR, T_SPLITR, T_NODE> this_, int i) {
+        static <T, T_CONS, T_ARR, T_NODE extends Node.OfPrimitive<T, T_CONS, T_ARR, T_SPLITR, T_NODE>, T_SPLITR extends Spliterator.OfPrimitive<T, T_CONS, T_SPLITR>> T_NODE getChild() {
             throw new IndexOutOfBoundsException();
         }
 
@@ -219,7 +219,7 @@ final class Nodes {
          * <p><b>Implementation Requirements:</b><br> The default in {@code Node.OfDouble} returns
          * {@code StreamShape.DOUBLE_VALUE}
          */
-        static StreamShape getShape(Node.OfDouble this_) {
+        static StreamShape getShape() {
             return StreamShape.DOUBLE_VALUE;
         }
 
@@ -287,7 +287,7 @@ final class Nodes {
          * <p><b>Implementation Requirements:</b><br> The default in {@code Node.OfLong} returns
          * {@code StreamShape.LONG_VALUE}
          */
-        static StreamShape getShape(Node.OfLong this_) {
+        static StreamShape getShape() {
             return StreamShape.LONG_VALUE;
         }
 
@@ -355,7 +355,7 @@ final class Nodes {
          * <p><b>Implementation Requirements:</b><br> The default in {@code Node.OfInt} returns
          * {@code StreamShape.INT_VALUE}
          */
-        static StreamShape getShape(Node.OfInt this_) {
+        static StreamShape getShape() {
             return StreamShape.INT_VALUE;
         }
 
@@ -873,17 +873,17 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.getShape(this);
+            return Nodes.getShape();
         }
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public Node<T> getChild(int i) {
-            return Nodes.getChild(this, i);
+            return Nodes.getChild();
         }
 
         @Override
@@ -922,7 +922,7 @@ final class Nodes {
 
             @Override
             public Node.OfInt getChild(int i) {
-                return Nodes.OfPrimitive.getChild(this, i);
+                return Nodes.OfPrimitive.getChild();
             }
 
             @Override
@@ -965,7 +965,7 @@ final class Nodes {
 
             @Override
             public Node.OfLong getChild(int i) {
-                return Nodes.OfPrimitive.getChild(this, i);
+                return Nodes.OfPrimitive.getChild();
             }
 
             @Override
@@ -1003,7 +1003,7 @@ final class Nodes {
 
             @Override
             public Node.OfDouble getChild(int i) {
-                return Nodes.OfPrimitive.getChild(this, i);
+                return Nodes.OfPrimitive.getChild();
             }
 
             @Override
@@ -1060,17 +1060,17 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.getShape(this);
+            return Nodes.getShape();
         }
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public Node<T> getChild(int i) {
-            return Nodes.getChild(this, i);
+            return Nodes.getChild();
         }
 
         @Override
@@ -1130,17 +1130,17 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.getShape(this);
+            return Nodes.getShape();
         }
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public Node<T> getChild(int i) {
-            return Nodes.getChild(this, i);
+            return Nodes.getChild();
         }
 
         @Override
@@ -1206,7 +1206,7 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.getShape(this);
+            return Nodes.getShape();
         }
 
         @Override
@@ -1855,17 +1855,17 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.getShape(this);
+            return Nodes.getShape();
         }
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public Node<T> getChild(int i) {
-            return Nodes.getChild(this, i);
+            return Nodes.getChild();
         }
 
         @Override
@@ -1951,7 +1951,7 @@ final class Nodes {
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
@@ -1961,7 +1961,7 @@ final class Nodes {
 
         @Override
         public OfInt getChild(int i) {
-            return Nodes.OfPrimitive.getChild(this, i);
+            return Nodes.OfPrimitive.getChild();
         }
 
         @Override
@@ -2001,7 +2001,7 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.OfInt.getShape(this);
+            return Nodes.OfInt.getShape();
         }
 
         @Override
@@ -2051,12 +2051,12 @@ final class Nodes {
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public java8.util.stream.Node.OfLong getChild(int i) {
-            return Nodes.OfPrimitive.getChild(this, i);
+            return Nodes.OfPrimitive.getChild();
         }
 
         @Override
@@ -2096,7 +2096,7 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.OfLong.getShape(this);
+            return Nodes.OfLong.getShape();
         }
 
         @Override
@@ -2146,12 +2146,12 @@ final class Nodes {
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public OfDouble getChild(int i) {
-            return Nodes.OfPrimitive.getChild(this, i);
+            return Nodes.OfPrimitive.getChild();
         }
 
         @Override
@@ -2191,7 +2191,7 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.OfDouble.getShape(this);
+            return Nodes.OfDouble.getShape();
         }
 
         @Override
@@ -2518,7 +2518,7 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.OfInt.getShape(this);
+            return Nodes.OfInt.getShape();
         }
 
         @Override
@@ -2528,12 +2528,12 @@ final class Nodes {
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public java8.util.stream.Node.OfInt getChild(int i) {
-            return Nodes.OfPrimitive.getChild(this, i);
+            return Nodes.OfPrimitive.getChild();
         }
     }
 
@@ -2617,7 +2617,7 @@ final class Nodes {
 
         @Override
         public StreamShape getShape() {
-            return Nodes.OfLong.getShape(this);
+            return Nodes.OfLong.getShape();
         }
 
         @Override
@@ -2627,12 +2627,12 @@ final class Nodes {
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public java8.util.stream.Node.OfLong getChild(int i) {
-            return Nodes.OfPrimitive.getChild(this, i);
+            return Nodes.OfPrimitive.getChild();
         }
     }
 
@@ -2721,17 +2721,17 @@ final class Nodes {
 
         @Override
         public int getChildCount() {
-            return Nodes.getChildCount(this);
+            return Nodes.getChildCount();
         }
 
         @Override
         public java8.util.stream.Node.OfDouble getChild(int i) {
-            return Nodes.OfPrimitive.getChild(this, i);
+            return Nodes.OfPrimitive.getChild();
         }
 
         @Override
         public StreamShape getShape() {
-            return Nodes.OfDouble.getShape(this);
+            return Nodes.OfDouble.getShape();
         }
     }
 
