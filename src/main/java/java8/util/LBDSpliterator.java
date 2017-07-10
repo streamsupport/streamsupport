@@ -76,7 +76,7 @@ final class LBDSpliterator<E> implements Spliterator<E> {
 
     @Override
     public Comparator<? super E> getComparator() {
-    	throw new IllegalStateException();
+        return Spliterators.getComparator(null);
     }
 
     @Override

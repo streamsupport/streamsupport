@@ -105,7 +105,7 @@ final class LinkedListSpliterator<T> implements Spliterator<T> {
 
     @Override
     public Comparator<? super T> getComparator() {
-    	throw new IllegalStateException();
+        return Spliterators.getComparator(null);
     }
 
     @Override
