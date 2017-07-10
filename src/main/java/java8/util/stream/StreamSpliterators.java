@@ -978,7 +978,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super T> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
         }
 
@@ -1068,7 +1068,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super Integer> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1117,7 +1117,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super Long> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1166,7 +1166,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super Double> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1366,7 +1366,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super T> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1478,7 +1478,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super Integer> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1538,7 +1538,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super Long> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1598,7 +1598,7 @@ class StreamSpliterators {
 
             @Override
             public Comparator<? super Double> getComparator() {
-            	throw new IllegalStateException();
+                return Spliterators.getComparator(this);
             }
 
             @Override
@@ -1760,7 +1760,7 @@ class StreamSpliterators {
 
         @Override
         public Comparator<? super T> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         static final class OfRef<T> extends InfiniteSupplyingSpliterator<T> {

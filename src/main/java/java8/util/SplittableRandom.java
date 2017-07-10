@@ -905,7 +905,7 @@ public final class SplittableRandom {
          */
         @Override
         public Comparator<? super Integer> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**
@@ -1000,7 +1000,7 @@ public final class SplittableRandom {
          */
         @Override
         public Comparator<? super Long> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**
@@ -1095,7 +1095,7 @@ public final class SplittableRandom {
          */
         @Override
         public Comparator<? super Double> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**

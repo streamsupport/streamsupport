@@ -365,7 +365,7 @@ final class Streams {
 
         @Override
         public Comparator<? super T> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         @Override

@@ -771,7 +771,7 @@ public class ThreadLocalRandom extends Random {
 
         @Override
         public Comparator<? super Integer> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         public boolean tryAdvance(IntConsumer consumer) {
@@ -850,7 +850,7 @@ public class ThreadLocalRandom extends Random {
 
         @Override
         public Comparator<? super Long> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         public boolean tryAdvance(LongConsumer consumer) {
@@ -929,7 +929,7 @@ public class ThreadLocalRandom extends Random {
 
         @Override
         public Comparator<? super Double> getComparator() {
-        	throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         public boolean tryAdvance(DoubleConsumer consumer) {
