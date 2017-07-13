@@ -124,7 +124,7 @@ dependencies {
 ./gradlew clean assemble
 ```
 
-## Improting
+## Importing
 
 ```sh
 GIT_COMMITTER_NAME="" GIT_COMMITTER_EMAIL="" git rebase --committer-date-is-author-date 1.5.4 1.5.5 --onto _1.5.4
