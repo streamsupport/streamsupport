@@ -135,7 +135,7 @@ final class RASpliterator<E> implements Spliterator<E> {
 
     @Override
     public Comparator<? super E> getComparator() {
-        return Spliterators.getComparator(null);
+        return Spliterators.getComparator(this);
     }
 
     private static void checkAbsListModCount(AbstractList<?> alist, int expectedModCount) {

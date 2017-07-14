@@ -120,7 +120,7 @@ final class PQueueSpliterator<E> implements Spliterator<E> {
 
     @Override
     public Comparator<? super E> getComparator() {
-        return Spliterators.getComparator(null);
+        return Spliterators.getComparator(this);
     }
 
     @Override
