@@ -172,7 +172,7 @@ final class ForEachOps {
 
         @Override
         public StreamShape inputShape() {
-        	return StreamShape.REFERENCE;
+            return StreamShape.REFERENCE;
         }
 
         @Override
