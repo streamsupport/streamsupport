@@ -179,7 +179,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.232
+// CVS rev. 1.233
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1819,6 +1819,16 @@ public class JSR166TestCase extends TestCase {
         new ThreadPoolExecutor(0, Integer.MAX_VALUE,
                                1000L, MILLISECONDS,
                                new SynchronousQueue<Runnable>());
+
+    /**
+     * Returns maximum number of tasks that can be submitted to given
+     * pool (with bounded queue) before saturation (when submission
+     * throws RejectedExecutionException).
+     */
+    static final int saturatedSize(ThreadPoolExecutor pool) {
+        BlockingQueue<Runnable> q = pool.getQueue();
+        return pool.getMaximumPoolSize() + q.size() + q.remainingCapacity();
+    }
 
     static <T> void shuffle(T[] array) {
         Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
