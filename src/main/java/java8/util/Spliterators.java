@@ -93,6 +93,8 @@ public final class Spliterators {
     static final boolean IS_ANDROID = isAndroid();
     // is this an Apache Harmony-based Android? (defaults to false)
     static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("android.opengl.GLES32$DebugProc");
+    // is this Android O or later (defaults to false)
+    static final boolean IS_ANDROID_O = IS_ANDROID && isClassPresent("java.time.DateTimeException");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
@@ -3447,8 +3449,8 @@ public final class Spliterators {
      */
     @IgnoreJava8API
     private static boolean hasAndroid7LHMBug(Collection<?> c) {
-        // is this Android 7.0 or above?
-        if (IS_ANDROID && !IS_HARMONY_ANDROID) {
+        // is this Android API level 24 or 25?
+        if (IS_ANDROID && !(IS_HARMONY_ANDROID || IS_ANDROID_O)) {
             String name = c.getClass().getName();
             if (name.startsWith("java.util.HashMap$")) {
                 // Since it is a Collection this must be one of KeySet, Values
