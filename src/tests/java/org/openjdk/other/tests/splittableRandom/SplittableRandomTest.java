@@ -72,13 +72,19 @@ public class SplittableRandomTest {
     static final int NCALLS = 10000;
 
     // max sampled int bound
-    static final int MAX_INT_BOUND = (1 << 28);
+    // cut down test size to reduce test runtime on Android
+//    static final int MAX_INT_BOUND = (1 << 28);
+    static final int MAX_INT_BOUND = (1 << 27);
 
     // max sampled long bound
-    static final long MAX_LONG_BOUND = (1L << 42);
+    // cut down test size to reduce test runtime on Android
+//    static final long MAX_LONG_BOUND = (1L << 42);
+    static final long MAX_LONG_BOUND = (1L << 41);
 
     // Number of replications for other checks
-    static final int REPS = 20;
+    // cut down test size to reduce test runtime on Android
+//    static final int REPS = 20;
+    static final int REPS = 10;
 
     /**
      * Repeated calls to nextInt produce at least two distinct results
@@ -333,8 +339,8 @@ public class SplittableRandomTest {
         testDoubleBadOriginBound(new BiConsumer<Double, Double>() {
             @Override
             public void accept(Double aDouble, Double aDouble2) {
-            	SplittableRandom sr = new SplittableRandom();
-            	sr.nextDouble(aDouble, aDouble2);
+                SplittableRandom sr = new SplittableRandom();
+                sr.nextDouble(aDouble, aDouble2);
             }
         });
     }
