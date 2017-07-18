@@ -179,7 +179,7 @@ import junit.framework.TestSuite;
  * </ul>
  */
 public class JSR166TestCase extends TestCase {
-// CVS rev. 1.233
+// CVS rev. 1.234
     private static final boolean useSecurityManager =
         Boolean.getBoolean("jsr166.useSecurityManager");
 
@@ -1820,6 +1820,10 @@ public class JSR166TestCase extends TestCase {
                                1000L, MILLISECONDS,
                                new SynchronousQueue<Runnable>());
 
+    static <T> void shuffle(T[] array) {
+        Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
+    }
+
     /**
      * Returns maximum number of tasks that can be submitted to given
      * pool (with bounded queue) before saturation (when submission
@@ -1828,10 +1832,6 @@ public class JSR166TestCase extends TestCase {
     static final int saturatedSize(ThreadPoolExecutor pool) {
         BlockingQueue<Runnable> q = pool.getQueue();
         return pool.getMaximumPoolSize() + q.size() + q.remainingCapacity();
-    }
-
-    static <T> void shuffle(T[] array) {
-        Collections.shuffle(Arrays.asList(array), ThreadLocalRandom.current());
     }
 
     private static final String NATIVE_OPT_ENABLED_P = java8.util.Spliterators.class.getName() + ".assume.oracle.collections.impl";
