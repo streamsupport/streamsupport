@@ -58,9 +58,9 @@ import java.util.concurrent.Executor;
  *       this.executor = executor;
  *     }
  *     public synchronized void request(long n) {
- *       if (n != 0 && !completed) {
+ *       if (!completed) {
  *         completed = true;
- *         if (n < 0) {
+ *         if (n <= 0) {
  *           IllegalArgumentException ex = new IllegalArgumentException();
  *           executor.execute(() -> subscriber.onError(ex));
  *         } else {
@@ -137,7 +137,7 @@ import java.util.concurrent.Executor;
  * @since 9
  */
 public final class Flow {
-// CVS rev. 1.31
+// CVS rev. 1.32
     private Flow() {} // uninstantiable
 
     /**
