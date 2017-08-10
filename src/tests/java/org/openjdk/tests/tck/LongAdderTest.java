@@ -15,7 +15,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class LongAdderTest extends JSR166TestCase {
-// CVS rev. 1.7
+// CVS rev. 1.8
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -89,7 +89,7 @@ public class LongAdderTest extends JSR166TestCase {
     }
 
     /**
-     * a deserialized serialized adder holds same value
+     * a deserialized/reserialized adder holds same value
      */
     public void testSerialization() throws Exception {
         LongAdder x = new LongAdder();
