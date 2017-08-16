@@ -9,6 +9,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 
@@ -24,7 +25,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTaskTest extends JSR166TestCase {
-// CVS rev. 1.52
+// CVS rev. 1.53
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -1735,5 +1736,44 @@ public class ForkJoinTaskTest extends JSR166TestCase {
                     checkCompletedNormally(f);
                 }};
         testInvokeOnPool(mainPool(), a);
+    }
+
+    /**
+     * adapt(runnable).toString() contains toString of wrapped task
+     */
+    public void testAdapt_Runnable_toString() {
+        if (testImplementationDetails) {
+            Runnable r = () -> {};
+            ForkJoinTask<?> task = ForkJoinTask.adapt(r);
+            assertEquals(
+                identityString(task) + "[Wrapped task = " + r.toString() + "]",
+                task.toString());
+        }
+    }
+
+    /**
+     * adapt(runnable, x).toString() contains toString of wrapped task
+     */
+    public void testAdapt_Runnable_withResult_toString() {
+        if (testImplementationDetails) {
+            Runnable r = () -> {};
+            ForkJoinTask<String> task = ForkJoinTask.adapt(r, "");
+            assertEquals(
+                identityString(task) + "[Wrapped task = " + r.toString() + "]",
+                task.toString());
+        }
+    }
+
+    /**
+     * adapt(callable).toString() contains toString of wrapped task
+     */
+    public void testAdapt_Callable_toString() {
+        if (testImplementationDetails) {
+            Callable<String> c = () -> "";
+            ForkJoinTask<String> task = ForkJoinTask.adapt(c);
+            assertEquals(
+                identityString(task) + "[Wrapped task = " + c.toString() + "]",
+                task.toString());
+        }
     }
 }

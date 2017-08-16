@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.187
+// CVS rev. 1.188
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -71,7 +71,7 @@ public class CompletableFutureTest extends JSR166TestCase {
     void checkIncomplete(CompletableFuture<?> f) {
         assertFalse(f.isDone());
         assertFalse(f.isCancelled());
-        assertTrue(f.toString().contains("Not completed"));
+        assertTrue(f.toString().matches(".*\\[.*Not completed.*\\]"));
         try {
             assertNull(f.getNow(null));
         } catch (Throwable fail) { threadUnexpectedException(fail); }
@@ -94,7 +94,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         assertTrue(f.isDone());
         assertFalse(f.isCancelled());
         assertFalse(f.isCompletedExceptionally());
-        assertTrue(f.toString().contains("[Completed normally]"));
+        assertTrue(f.toString().matches(".*\\[.*Completed normally.*\\]"));
     }
 
     /**
@@ -150,7 +150,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         assertFalse(f.isCancelled());
         assertTrue(f.isDone());
         assertTrue(f.isCompletedExceptionally());
-        assertTrue(f.toString().contains("[Completed exceptionally]"));
+        assertTrue(f.toString().matches(".*\\[.*Completed exceptionally.*\\]"));
     }
 
     void checkCompletedWithWrappedCFException(CompletableFuture<?> f) {
@@ -205,7 +205,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         assertTrue(f.isDone());
         assertTrue(f.isCompletedExceptionally());
         assertTrue(f.isCancelled());
-        assertTrue(f.toString().contains("[Completed exceptionally]"));
+        assertTrue(f.toString().matches(".*\\[.*Completed exceptionally.*\\]"));
     }
 
     /**
@@ -341,23 +341,40 @@ public class CompletableFutureTest extends JSR166TestCase {
     /**
      * toString indicates current completion state
      */
-    public void testToString() {
-        CompletableFuture<String> f;
+    public void testToString_incomplete() {
+        CompletableFuture<String> f = new CompletableFuture<String>();
+        assertTrue(f.toString().matches(".*\\[.*Not completed.*\\]"));
+        if (testImplementationDetails)
+            assertEquals(identityString(f) + "[Not completed]",
+                         f.toString());
+    }
 
-        f = new CompletableFuture<String>();
-        assertTrue(f.toString().contains("[Not completed]"));
-
+    public void testToString_normal() {
+        CompletableFuture<String> f = new CompletableFuture<String>();
         assertTrue(f.complete("foo"));
-        assertTrue(f.toString().contains("[Completed normally]"));
+        assertTrue(f.toString().matches(".*\\[.*Completed normally.*\\]"));
+        if (testImplementationDetails)
+            assertEquals(identityString(f) + "[Completed normally]",
+                         f.toString());
+    }
 
-        f = new CompletableFuture<String>();
+    public void testToString_exception() {
+        CompletableFuture<String> f = new CompletableFuture<String>();
         assertTrue(f.completeExceptionally(new IndexOutOfBoundsException()));
-        assertTrue(f.toString().contains("[Completed exceptionally]"));
+        assertTrue(f.toString().matches(".*\\[.*Completed exceptionally.*\\]"));
+        if (testImplementationDetails)
+            assertTrue(f.toString().startsWith(
+                               identityString(f) + "[Completed exceptionally: "));
+    }
 
+    public void testToString_cancelled() {
         for (boolean mayInterruptIfRunning : new boolean[] { true, false }) {
-            f = new CompletableFuture<String>();
+            CompletableFuture<String> f = new CompletableFuture<String>();
             assertTrue(f.cancel(mayInterruptIfRunning));
-            assertTrue(f.toString().contains("[Completed exceptionally]"));
+            assertTrue(f.toString().matches(".*\\[.*Completed exceptionally.*\\]"));
+            if (testImplementationDetails)
+                assertTrue(f.toString().startsWith(
+                                   identityString(f) + "[Completed exceptionally: "));
         }
     }
 
