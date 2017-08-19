@@ -508,15 +508,6 @@ public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
      *
      * @param delta the value to add
      */
-//    public final void addToPendingCount(int delta) {
-//        U.getAndAddInt(this, PENDING, delta);
-//    }
-
-    /**
-     * Adds (atomically) the given value to the pending count.
-     *
-     * @param delta the value to add
-     */
     public final void addToPendingCount(int delta) {
         int c;
         do {} while (!U.compareAndSwapInt(this, PENDING, c = pending, c+delta));

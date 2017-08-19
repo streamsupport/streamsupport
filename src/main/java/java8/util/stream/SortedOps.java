@@ -116,7 +116,7 @@ final class SortedOps {
             this.isNaturalSort = true;
             // Will throw CCE when we try to sort if T is not Comparable
             @SuppressWarnings("unchecked")
-			Comparator<? super T> comp = (Comparator<? super T>) Comparators.naturalOrder();
+            Comparator<? super T> comp = (Comparator<? super T>) Comparators.naturalOrder();
             this.comparator = comp;
         }
 
@@ -338,7 +338,7 @@ final class SortedOps {
             super(sink, comparator);
         }
 
-		@Override
+        @Override
         @SuppressWarnings("unchecked")
         public void begin(long size) {
             if (size >= Nodes.MAX_ARRAY_SIZE)

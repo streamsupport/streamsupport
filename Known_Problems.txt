@@ -11,7 +11,7 @@ KNOWN PROBLEMS
 
    Since streamsupport 1.5.3 and later will by default delegate to the Android 7.x
    spliterators you'd be affected by this unordered behavior on Android 7.x unless
-   you disable spliterator delegation altogether or you workaround this behavior
+   you disable spliterator delegation altogether or you work around this behavior
    on API level 24 and 25 as follows.
 
    You may use the following code to obtain a correctly ordered Spliterator:

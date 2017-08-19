@@ -32,6 +32,13 @@ import java8.util.Spliterator;
 import java8.util.Spliterators;
 import java8.util.function.Consumer;
 
+
+// NOTE: this implementation can only be used on Java 8 or below!
+// The recent substantial Java 9 rewrite of ArrayDeque starting
+// with CVS rev. 1.75 precludes this from being applicable on Java 9.
+// Cf. https://sourceforge.net/p/streamsupport/tickets/273/
+// and https://sourceforge.net/p/streamsupport/tickets/299/
+
 final class ArrayDequeSpliterator<E> implements Spliterator<E> {
 // CVS rev. 1.74
     private final ArrayDeque<E> deq;

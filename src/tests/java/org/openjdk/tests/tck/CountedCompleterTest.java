@@ -6,7 +6,6 @@
 package org.openjdk.tests.tck;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 import java.util.HashSet;
 import java.util.concurrent.CancellationException;
@@ -25,7 +24,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleterTest extends JSR166TestCase {
-// CVS rev. 1.32
+// CVS rev. 1.33
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -88,7 +87,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         assertNull(a.getRawResult());
 
         try {
-            a.get(0L, SECONDS);
+            a.get(randomExpiredTimeout(), randomTimeUnit());
             shouldThrow();
         } catch (TimeoutException success) {
         } catch (Throwable fail) { threadUnexpectedException(fail); }
@@ -106,7 +105,7 @@ public class CountedCompleterTest extends JSR166TestCase {
             Thread.currentThread().interrupt();
             long startTime = System.nanoTime();
             assertNull(a.join());
-            assertTrue(millisElapsedSince(startTime) < SMALL_DELAY_MS);
+            assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
             Thread.interrupted();
         }
 
@@ -114,7 +113,7 @@ public class CountedCompleterTest extends JSR166TestCase {
             Thread.currentThread().interrupt();
             long startTime = System.nanoTime();
             a.quietlyJoin();        // should be no-op
-            assertTrue(millisElapsedSince(startTime) < SMALL_DELAY_MS);
+            assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
             Thread.interrupted();
         }
 
@@ -122,9 +121,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         assertFalse(a.cancel(true));
         try {
             assertNull(a.get());
-        } catch (Throwable fail) { threadUnexpectedException(fail); }
-        try {
-            assertNull(a.get(5L, SECONDS));
+            assertNull(a.get(randomTimeout(), randomTimeUnit()));
         } catch (Throwable fail) { threadUnexpectedException(fail); }
     }
 
@@ -149,7 +146,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         {
             long startTime = System.nanoTime();
             a.quietlyJoin();        // should be no-op
-            assertTrue(millisElapsedSince(startTime) < SMALL_DELAY_MS);
+            assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
         }
 
         try {
@@ -159,7 +156,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         } catch (Throwable fail) { threadUnexpectedException(fail); }
 
         try {
-            a.get(5L, SECONDS);
+            a.get(randomTimeout(), randomTimeUnit());
             shouldThrow();
         } catch (CancellationException success) {
         } catch (Throwable fail) { threadUnexpectedException(fail); }
@@ -187,7 +184,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         {
             long startTime = System.nanoTime();
             a.quietlyJoin();        // should be no-op
-            assertTrue(millisElapsedSince(startTime) < SMALL_DELAY_MS);
+            assertTrue(millisElapsedSince(startTime) < LONG_DELAY_MS);
         }
 
         try {
@@ -198,7 +195,7 @@ public class CountedCompleterTest extends JSR166TestCase {
         } catch (Throwable fail) { threadUnexpectedException(fail); }
 
         try {
-            a.get(5L, SECONDS);
+            a.get(randomTimeout(), randomTimeUnit());
             shouldThrow();
         } catch (ExecutionException success) {
             assertSame(t.getClass(), success.getCause().getClass());
@@ -730,7 +727,7 @@ public class CountedCompleterTest extends JSR166TestCase {
                 CCF f = new LCCF(8);
                 assertSame(f, f.fork());
                 try {
-                    f.get(5L, null);
+                    f.get(randomTimeout(), null);
                     shouldThrow();
                 } catch (NullPointerException success) {}
             }};
@@ -1494,7 +1491,7 @@ public class CountedCompleterTest extends JSR166TestCase {
                 CCF f = new LCCF(8);
                 assertSame(f, f.fork());
                 try {
-                    f.get(5L, null);
+                    f.get(randomTimeout(), null);
                     shouldThrow();
                 } catch (NullPointerException success) {}
             }};

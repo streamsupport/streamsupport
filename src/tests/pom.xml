@@ -2,32 +2,37 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport-all-tests</artifactId>
-	<version>1.5.5</version>
+	<version>1.5.6</version>
+
+	<properties>
+		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-atomic</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-cfuture</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-flow</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.streamsupport</groupId>
 			<artifactId>streamsupport-literal</artifactId>
-			<version>1.5.5</version>
+			<version>1.5.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -62,7 +67,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<java8home>F:/Java/jdk1.8.0_131-64bit/</java8home>
+					<java8home>F:/Java/jdk1.8.0_144-64bit/</java8home>
 					<target>1.6</target>
 				</configuration>
 			</plugin>

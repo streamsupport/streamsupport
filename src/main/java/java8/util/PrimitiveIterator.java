@@ -133,18 +133,6 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          */
         @Override
         Integer next();
-
-        /**
-         * {@inheritDoc}
-         * <p><b>Implementation Requirements:</b><br>
-         * If the action is an instance of {@code IntConsumer} then it is cast
-         * to {@code IntConsumer} and passed to {@link #forEachRemaining};
-         * otherwise the action is adapted to an instance of
-         * {@code IntConsumer}, by boxing the argument of {@code IntConsumer},
-         * and then passed to {@link #forEachRemaining}.
-         */
-//        @Override
-//        void forEachRemaining(Consumer<? super Integer> action);
     }
 
     /**
@@ -196,18 +184,6 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          */
         @Override
         Long next();
-
-        /**
-         * {@inheritDoc}
-         * <p><b>Implementation Requirements:</b><br>
-         * If the action is an instance of {@code LongConsumer} then it is cast
-         * to {@code LongConsumer} and passed to {@link #forEachRemaining};
-         * otherwise the action is adapted to an instance of
-         * {@code LongConsumer}, by boxing the argument of {@code LongConsumer},
-         * and then passed to {@link #forEachRemaining}.
-         */
-//        @Override
-//        void forEachRemaining(Consumer<? super Long> action);
     }
 
     /**
@@ -259,18 +235,5 @@ public interface PrimitiveIterator<T, T_CONS> extends Iterator<T> {
          */
         @Override
         Double next();
-
-        /**
-         * {@inheritDoc}
-         * <p><b>Implementation Requirements:</b><br>
-         * If the action is an instance of {@code DoubleConsumer} then it is
-         * cast to {@code DoubleConsumer} and passed to
-         * {@link #forEachRemaining}; otherwise the action is adapted to
-         * an instance of {@code DoubleConsumer}, by boxing the argument of
-         * {@code DoubleConsumer}, and then passed to
-         * {@link #forEachRemaining}.
-         */
-//        @Override
-//        void forEachRemaining(Consumer<? super Double> action);
     }
 }

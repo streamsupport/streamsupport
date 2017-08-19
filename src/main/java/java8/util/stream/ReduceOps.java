@@ -1260,7 +1260,7 @@ final class ReduceOps {
 
         @Override
         public int getOpFlags() {
-            return TerminalOpDefaults.getOpFlags();
+            return 0;
         }
 
         @Override

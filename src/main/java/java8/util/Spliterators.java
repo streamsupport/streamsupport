@@ -93,6 +93,8 @@ public final class Spliterators {
     static final boolean IS_ANDROID = isAndroid();
     // is this an Apache Harmony-based Android? (defaults to false)
     static final boolean IS_HARMONY_ANDROID = IS_ANDROID && !isClassPresent("android.opengl.GLES32$DebugProc");
+    // is this Android O or later (defaults to false)
+    static final boolean IS_ANDROID_O = IS_ANDROID && isClassPresent("java.time.DateTimeException");
     // is this Java 6? (defaults to false - as of 1.4.2, Android doesn't get identified as Java 6 anymore!)
     static final boolean IS_JAVA6 = !IS_ANDROID && isJava6();
     // defaults to false
@@ -175,7 +177,6 @@ public final class Spliterators {
      *         a characteristic of {@code SORTED}.
      */
     public static <T> Comparator<? super T> getComparator(Spliterator<T> this_) {
-        //return this_.getComparator();
         throw new IllegalStateException();
     }
 
@@ -930,7 +931,9 @@ public final class Spliterators {
     public static <T> Spliterator<T> spliterator(Collection<? extends T> c) {
         Objects.requireNonNull(c);
 
-        if (HAS_STREAMS && DELEGATION_ENABLED && !hasAndroid7LHMBug(c)) {
+        if (HAS_STREAMS && (DELEGATION_ENABLED || IS_JAVA9) && !hasAndroid7LHMBug(c)) {
+            // always use spliterator delegation on Java 9 from 1.5.6 onwards
+            // https://sourceforge.net/p/streamsupport/tickets/299/
             return delegatingSpliterator(c);
         }
 
@@ -1050,7 +1053,7 @@ public final class Spliterators {
             if (c instanceof LinkedBlockingQueue) {
                 return LBQSpliterator.spliterator((LinkedBlockingQueue<T>) c);
             }
-            if (c instanceof ArrayDeque && !IS_JAVA9) {
+            if (c instanceof ArrayDeque) {
                 return ArrayDequeSpliterator.spliterator((ArrayDeque<T>) c);
             }
             if (c instanceof LinkedBlockingDeque) {
@@ -1617,7 +1620,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super T> getComparator() {
-                return Spliterators.getComparator(this);
+                throw new IllegalStateException();
             }
         }
 
@@ -1638,7 +1641,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Integer> getComparator() {
-                return Spliterators.getComparator(this);
+                throw new IllegalStateException();
             }
 
             @Override
@@ -1669,7 +1672,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Long> getComparator() {
-                return Spliterators.getComparator(this);
+                throw new IllegalStateException();
             }
 
             @Override
@@ -1700,7 +1703,7 @@ public final class Spliterators {
 
             @Override
             public Comparator<? super Double> getComparator() {
-                return Spliterators.getComparator(this);
+                throw new IllegalStateException();
             }
 
             @Override
@@ -2266,7 +2269,7 @@ public final class Spliterators {
          */
         @Override
         public Comparator<? super T> getComparator() {
-            throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**
@@ -2408,7 +2411,7 @@ public final class Spliterators {
          */
         @Override
         public Comparator<? super Integer> getComparator() {
-            throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**
@@ -2566,7 +2569,7 @@ public final class Spliterators {
          */
         @Override
         public Comparator<? super Long> getComparator() {
-            throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**
@@ -2724,7 +2727,7 @@ public final class Spliterators {
          */
         @Override
         public Comparator<? super Double> getComparator() {
-            throw new IllegalStateException();
+            return Spliterators.getComparator(this);
         }
 
         /**
@@ -3446,8 +3449,8 @@ public final class Spliterators {
      */
     @IgnoreJava8API
     private static boolean hasAndroid7LHMBug(Collection<?> c) {
-        // is this Android 7.0 or above?
-        if (IS_ANDROID && !IS_HARMONY_ANDROID) {
+        // is this Android API level 24 or 25?
+        if (IS_ANDROID && !(IS_HARMONY_ANDROID || IS_ANDROID_O)) {
             String name = c.getClass().getName();
             if (name.startsWith("java.util.HashMap$")) {
                 // Since it is a Collection this must be one of KeySet, Values

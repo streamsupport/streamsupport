@@ -674,7 +674,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
 
     /**
      * Returns the result of the computation when it
-     * {@link #isDone is done}.
+     * {@linkplain #isDone is done}.
      * This method differs from {@link #get()} in that abnormal
      * completion results in {@code RuntimeException} or {@code Error},
      * not {@code ExecutionException}, and that interrupts of the

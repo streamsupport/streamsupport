@@ -130,7 +130,8 @@ public class SpliteratorCollisions extends SpliteratorTestHelper {
             db.addMap(HashMap::new);
             // https://sourceforge.net/p/streamsupport/tickets/240/#7e0b
             // https://sourceforge.net/p/streamsupport/tickets/296/
-            if (Android7PlusDetector.IS_OPENJDK_ANDROID && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
+            // https://sourceforge.net/p/streamsupport/tickets/314/
+            if (Android7PlusDetector.IS_ANDROID_7X && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
                 db.addMap(LinkedHashMapFixed::new);
             } else {
                 db.addMap(LinkedHashMap::new);
@@ -161,7 +162,8 @@ public class SpliteratorCollisions extends SpliteratorTestHelper {
             db.addMap(HashMap::new);
             // https://sourceforge.net/p/streamsupport/tickets/240/#7e0b
             // https://sourceforge.net/p/streamsupport/tickets/296/
-            if (Android7PlusDetector.IS_OPENJDK_ANDROID && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
+            // https://sourceforge.net/p/streamsupport/tickets/314/
+            if (Android7PlusDetector.IS_ANDROID_7X && DelegationActive.IS_SPLITERATOR_DELEGATION_ENABLED) {
                 db.addMap(LinkedHashMapFixed::new);
             } else {
                 db.addMap(LinkedHashMap::new);

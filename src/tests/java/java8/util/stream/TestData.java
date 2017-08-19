@@ -101,9 +101,9 @@ public interface TestData<T, S extends BaseStream<T, S>>
 
         public static <T> OfRef<T> ofSpinedBuffer(String name, SpinedBuffer<T> buffer) {
             return new AbstractTestData.RefTestData<>(name, buffer,
-                                                      b -> StreamSupport.stream(b.getSpliterator(), false),
-                                                      b -> StreamSupport.stream(b.getSpliterator(), true),
-                                                      SpinedBuffer::getSpliterator,
+                                                      b -> StreamSupport.stream(b.spliterator(), false),
+                                                      b -> StreamSupport.stream(b.spliterator(), true),
+                                                      SpinedBuffer::spliterator,
                                                       b -> (int) b.count());
         }
 

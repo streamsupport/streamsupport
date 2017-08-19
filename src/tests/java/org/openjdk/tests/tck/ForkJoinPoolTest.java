@@ -1,31 +1,4 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
- *
- * This code is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License version 2 only, as
- * published by the Free Software Foundation.
- *
- * This code is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
- * version 2 for more details (a copy is included in the LICENSE file that
- * accompanied this code).
- *
- * You should have received a copy of the GNU General Public License version
- * 2 along with this work; if not, write to the Free Software Foundation,
- * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
- *
- * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
- * or visit www.oracle.com if you need additional information or have any
- * questions.
- */
-
-/*
- * This file is available under and governed by the GNU General Public
- * License version 2 only, as published by the Free Software Foundation.
- * However, the following notice accompanied the original version of this
- * file:
- *
  * Written by Doug Lea with assistance from members of JCP JSR-166
  * Expert Group and released to the public domain, as explained at
  * http://creativecommons.org/publicdomain/zero/1.0/
@@ -39,6 +12,7 @@ import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -65,7 +39,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPoolTest extends JSR166TestCase {
-// CVS rev. 1.73
+// CVS rev. 1.75
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -300,8 +274,8 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             assertFalse(p.awaitTermination(Long.MIN_VALUE, MILLISECONDS));
             assertFalse(p.awaitTermination(-1L, NANOSECONDS));
             assertFalse(p.awaitTermination(-1L, MILLISECONDS));
-            assertFalse(p.awaitTermination(0L, NANOSECONDS));
-            assertFalse(p.awaitTermination(0L, MILLISECONDS));
+            assertFalse(p.awaitTermination(randomExpiredTimeout(),
+                                           randomTimeUnit()));
             long timeoutNanos = 999999L;
             long startTime = System.nanoTime();
             assertFalse(p.awaitTermination(timeoutNanos, NANOSECONDS));
@@ -525,7 +499,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
                     done.set(true);
                 }});
             assertNull(future.get());
-            assertNull(future.get(0, MILLISECONDS));
+            assertNull(future.get(randomExpiredTimeout(), randomTimeUnit()));
             assertTrue(done.get());
             assertTrue(future.isDone());
             assertFalse(future.isCancelled());
@@ -914,15 +888,16 @@ public class ForkJoinPoolTest extends JSR166TestCase {
     }
 
     /**
-     * invokeAll(empty collection) returns empty collection
+     * invokeAll(empty collection) returns empty list
      */
     public void testInvokeAll2() throws InterruptedException {
         ExecutorService e = new ForkJoinPool(1);
+        final Collection<Callable<String>> emptyCollection
+            = Collections.emptyList();
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
-            List<Future<String>> r
-                = e.invokeAll(new ArrayList<Callable<String>>());
+            List<Future<String>> r = e.invokeAll(emptyCollection);
             assertTrue(r.isEmpty());
         } finally {
             if (cleaner != null) {
@@ -1010,7 +985,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         try {
             cleaner = cleaner(e);
             try {
-                e.invokeAny(null, MEDIUM_DELAY_MS, MILLISECONDS);
+                e.invokeAny(null, randomTimeout(), randomTimeUnit());
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {
@@ -1031,7 +1006,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             try {
-                e.invokeAny(l, MEDIUM_DELAY_MS, null);
+                e.invokeAny(l, randomTimeout(), null);
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {
@@ -1051,7 +1026,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             cleaner = cleaner(e);
             try {
                 e.invokeAny(new ArrayList<Callable<String>>(),
-                            MEDIUM_DELAY_MS, MILLISECONDS);
+                        randomTimeout(), randomTimeUnit());
                 shouldThrow();
             } catch (IllegalArgumentException success) {}
         } finally {
@@ -1074,7 +1049,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             l.add(latchAwaitingStringTask(latch));
             l.add(null);
             try {
-                e.invokeAny(l, MEDIUM_DELAY_MS, MILLISECONDS);
+                e.invokeAny(l, randomTimeout(), randomTimeUnit());
                 shouldThrow();
             } catch (NullPointerException success) {}
             latch.countDown();
@@ -1141,7 +1116,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
         try {
             cleaner = cleaner(e);
             try {
-                e.invokeAll(null, MEDIUM_DELAY_MS, MILLISECONDS);
+                e.invokeAll(null, randomTimeout(), randomTimeUnit());
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {
@@ -1162,7 +1137,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             List<Callable<String>> l = new ArrayList<>();
             l.add(new StringTask());
             try {
-                e.invokeAll(l, MEDIUM_DELAY_MS, null);
+                e.invokeAll(l, randomTimeout(), null);
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {
@@ -1173,16 +1148,18 @@ public class ForkJoinPoolTest extends JSR166TestCase {
     }
 
     /**
-     * timed invokeAll(empty collection) returns empty collection
+     * timed invokeAll(empty collection) returns empty list
      */
     public void testTimedInvokeAll2() throws InterruptedException {
         ExecutorService e = new ForkJoinPool(1);
+        final Collection<Callable<String>> emptyCollection
+            = Collections.emptyList();
         PoolCleaner cleaner = null;
         try {
             cleaner = cleaner(e);
             List<Future<String>> r
-                = e.invokeAll(new ArrayList<Callable<String>>(),
-                              MEDIUM_DELAY_MS, MILLISECONDS);
+                = e.invokeAll(emptyCollection,
+                              randomTimeout(), randomTimeUnit());
             assertTrue(r.isEmpty());
         } finally {
             if (cleaner != null) {
@@ -1203,7 +1180,7 @@ public class ForkJoinPoolTest extends JSR166TestCase {
             l.add(new StringTask());
             l.add(null);
             try {
-                e.invokeAll(l, MEDIUM_DELAY_MS, MILLISECONDS);
+                e.invokeAll(l, randomTimeout(), randomTimeUnit());
                 shouldThrow();
             } catch (NullPointerException success) {}
         } finally {

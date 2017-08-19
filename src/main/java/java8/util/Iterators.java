@@ -105,7 +105,7 @@ public final class Iterators {
         Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
-            action.accept(it.next());
+            action.accept(it.nextInt());
         }
     }
 
@@ -140,7 +140,7 @@ public final class Iterators {
         Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
-            action.accept(it.next());
+            action.accept(it.nextLong());
         }
     }
 
@@ -175,7 +175,7 @@ public final class Iterators {
         Objects.requireNonNull(it);
         Objects.requireNonNull(action);
         while (it.hasNext()) {
-            action.accept(it.next());
+            action.accept(it.nextDouble());
         }
     }
 

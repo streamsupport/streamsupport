@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.5.5-stable" is the current stable release
+ - "1.5.6-stable" is the current stable release
 
 
 GENERAL
@@ -72,7 +72,7 @@ KNOWN PROBLEMS
 
    Since streamsupport 1.5.3 and later will by default delegate to the Android 7.x
    spliterators you'd be affected by this unordered behavior on Android 7.x unless
-   you disable spliterator delegation altogether or you workaround this behavior
+   you disable spliterator delegation altogether or you work around this behavior
    on API level 24 and 25 as follows.
 
    You may use the following code to obtain a correctly ordered Spliterator:
@@ -121,6 +121,14 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.5.6-stable (2017-08-13)
+ - JDK-8178409: Misc. changes imported from jsr166 CVS 2017-07
+ - JDK-8185099: Misc. changes imported from jsr166 CVS 2017-08
+ - reenable LHM Spliterator delegation on Android O [#314]
+ - test on Android O preview [#315]
+ - reduce method count and jar size [#303]
+ - enforce Spliterator delegation on Java 9 [#299]
 
 1.5.5-stable (2017-05-25)
  - JDK-8174267: findFirst() unnecessarily always allocates an Op

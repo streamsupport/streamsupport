@@ -95,7 +95,7 @@ class SpinedBuffer<E>
      *         is negative
      */
     @SuppressWarnings("unchecked")
-	SpinedBuffer(int initialCapacity) {
+    SpinedBuffer(int initialCapacity) {
         super(initialCapacity);
         curChunk = (E[]) new Object[1 << initialChunkPower];
     }
@@ -104,7 +104,7 @@ class SpinedBuffer<E>
      * Constructs an empty list with an initial capacity of sixteen.
      */
     @SuppressWarnings("unchecked")
-	SpinedBuffer() {
+    SpinedBuffer() {
         super();
         curChunk = (E[]) new Object[1 << initialChunkPower];
     }
@@ -119,7 +119,7 @@ class SpinedBuffer<E>
     }
 
     @SuppressWarnings("unchecked")
-	private void inflateSpine() {
+    private void inflateSpine() {
         if (spine == null) {
             spine = (E[][]) new Object[MIN_SPINE_SIZE][];
             priorElementCount = new long[MIN_SPINE_SIZE];
@@ -131,7 +131,7 @@ class SpinedBuffer<E>
      * Ensure that the buffer has at least capacity to hold the target size
      */
     @SuppressWarnings("unchecked")
-	protected final void ensureCapacity(long targetSize) {
+    protected final void ensureCapacity(long targetSize) {
         long capacity = capacity();
         if (targetSize > capacity) {
             inflateSpine();
@@ -236,7 +236,7 @@ class SpinedBuffer<E>
     }
 
     public Iterator<E> iterator() {
-        return Spliterators.iterator(getSpliterator());
+        return Spliterators.iterator(spliterator());
     }
 
     public void forEach(Consumer<? super E> consumer) {
@@ -251,10 +251,6 @@ class SpinedBuffer<E>
         for (int i=0; i<elementIndex; i++) {
             consumer.accept(curChunk[i]);
         }
-    }
-
-    private void forEach_(Consumer<? super E> consumer) {
-        forEach(consumer);
     }
 
     @Override
@@ -273,7 +269,7 @@ class SpinedBuffer<E>
     @Override
     public String toString() {
         List<E> list = new ArrayList<>();
-        forEach_(list::add);
+        forEach(list::add);
         return "SpinedBuffer:" + list.toString();
     }
 
@@ -284,13 +280,6 @@ class SpinedBuffer<E>
      * Return a {@link Spliterator} describing the contents of the buffer.
      */
     Spliterator<E> spliterator() {
-        return getSpliterator();
-    }
-
-    /**
-     * Return a {@link Spliterator} describing the contents of the buffer.
-     */
-    Spliterator<E> getSpliterator() {
         class Splitr implements Spliterator<E> {
             // The current spine index
             int splSpineIndex;
@@ -755,10 +744,6 @@ class SpinedBuffer<E>
             super(initialCapacity);
         }
 
-        public Spliterator.OfInt spliterator() {
-        	return getSpliterator();
-        }
-
         @Override
         public void forEach(Consumer<? super Integer> consumer) {
             if (consumer instanceof IntConsumer) {
@@ -810,10 +795,10 @@ class SpinedBuffer<E>
 
         @Override
         public PrimitiveIterator.OfInt iterator() {
-            return Spliterators.iterator(getSpliterator());
+            return Spliterators.iterator(spliterator());
         }
 
-        public Spliterator.OfInt getSpliterator() {
+        public Spliterator.OfInt spliterator() {
             class Splitr extends BaseSpliterator<Spliterator.OfInt>
                     implements Spliterator.OfInt {
                 Splitr(int firstSpineIndex, int lastSpineIndex,
@@ -895,10 +880,6 @@ class SpinedBuffer<E>
             super(initialCapacity);
         }
 
-        public Spliterator.OfLong spliterator() {
-            return getSpliterator();
-        }
-
         @Override
         public void forEach(Consumer<? super Long> consumer) {
             if (consumer instanceof LongConsumer) {
@@ -950,11 +931,11 @@ class SpinedBuffer<E>
 
         @Override
         public PrimitiveIterator.OfLong iterator() {
-            return Spliterators.iterator(getSpliterator());
+            return Spliterators.iterator(spliterator());
         }
 
 
-        public Spliterator.OfLong getSpliterator() {
+        public Spliterator.OfLong spliterator() {
             class Splitr extends BaseSpliterator<Spliterator.OfLong>
                     implements Spliterator.OfLong {
                 Splitr(int firstSpineIndex, int lastSpineIndex,
@@ -1037,10 +1018,6 @@ class SpinedBuffer<E>
             super(initialCapacity);
         }
 
-        public Spliterator.OfDouble spliterator() {
-            return getSpliterator();
-        }
-
         @Override
         public void forEach(Consumer<? super Double> consumer) {
             if (consumer instanceof DoubleConsumer) {
@@ -1092,10 +1069,10 @@ class SpinedBuffer<E>
 
         @Override
         public PrimitiveIterator.OfDouble iterator() {
-            return Spliterators.iterator(getSpliterator());
+            return Spliterators.iterator(spliterator());
         }
 
-        public Spliterator.OfDouble getSpliterator() {
+        public Spliterator.OfDouble spliterator() {
             class Splitr extends BaseSpliterator<Spliterator.OfDouble>
                     implements Spliterator.OfDouble {
                 Splitr(int firstSpineIndex, int lastSpineIndex,

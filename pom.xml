@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.streamsupport</groupId>
 	<artifactId>streamsupport</artifactId>
-	<version>1.5.5</version>
+	<version>1.5.6</version>
 	<name>net.sourceforge.streamsupport:streamsupport</name>
 	<description>streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and
  java.util.stream (streams) API for Java 6 / 7 and Android developers</description>
@@ -54,7 +54,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<java8home>F:/Java/jdk1.8.0_131-64bit/</java8home>
+					<java8home>F:/Java/jdk1.8.0_144-64bit/</java8home>
 					<target>1.6</target>
 				</configuration>
 			</plugin>
