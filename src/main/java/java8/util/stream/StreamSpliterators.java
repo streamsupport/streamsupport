@@ -366,11 +366,11 @@ class StreamSpliterators {
                 }
                 @Override
                 public void accept(double value) {
-                    SinkDefaults.accept(this, value);
+                    SinkDefaults.reject();
                 }
                 @Override
                 public void accept(long value) {
-                    SinkDefaults.accept(this, value);
+                    SinkDefaults.reject();
                 }
                 @Override
                 public void accept(Integer i) {
@@ -423,11 +423,11 @@ class StreamSpliterators {
                     }
                     @Override
                     public void accept(double value) {
-                        SinkDefaults.accept(this, value);
+                        SinkDefaults.reject();
                     }
                     @Override
                     public void accept(long value) {
-                        SinkDefaults.accept(this, value);
+                        SinkDefaults.reject();
                     }
                     @Override
                     public void accept(Integer i) {
@@ -491,11 +491,11 @@ class StreamSpliterators {
                 }
                 @Override
                 public void accept(double value) {
-                    SinkDefaults.accept(this, value);
+                    SinkDefaults.reject();
                 }
                 @Override
                 public void accept(int value) {
-                    SinkDefaults.accept(this, value);
+                    SinkDefaults.reject();
                 }
                 @Override
                 public void accept(Long i) {
@@ -548,11 +548,11 @@ class StreamSpliterators {
                     }
                     @Override
                     public void accept(double value) {
-                        SinkDefaults.accept(this, value);
+                        SinkDefaults.reject();
                     }
                     @Override
                     public void accept(int value) {
-                        SinkDefaults.accept(this, value);
+                        SinkDefaults.reject();
                     }
                     @Override
                     public void accept(Long i) {
@@ -616,11 +616,11 @@ class StreamSpliterators {
                 }
                 @Override
                 public void accept(int value) {
-                    SinkDefaults.accept(this, value);
+                    SinkDefaults.reject();
                 }
                 @Override
                 public void accept(long value) {
-                    SinkDefaults.accept(this, value);
+                    SinkDefaults.reject();
                 }
                 @Override
                 public void accept(double value) {
@@ -673,11 +673,11 @@ class StreamSpliterators {
                     }
                     @Override
                     public void accept(int value) {
-                        SinkDefaults.accept(this, value);
+                        SinkDefaults.reject();
                     }
                     @Override
                     public void accept(long value) {
-                        SinkDefaults.accept(this, value);
+                        SinkDefaults.reject();
                     }
                     @Override
                     public void accept(double value) {

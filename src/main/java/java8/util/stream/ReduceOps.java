@@ -91,17 +91,17 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -159,17 +159,17 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -228,17 +228,17 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -303,17 +303,17 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -409,12 +409,12 @@ final class ReduceOps {
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -482,12 +482,12 @@ final class ReduceOps {
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -555,12 +555,12 @@ final class ReduceOps {
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -655,12 +655,12 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -728,12 +728,12 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -801,12 +801,12 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -901,12 +901,12 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -974,12 +974,12 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
@@ -1052,12 +1052,12 @@ final class ReduceOps {
 
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
 
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
         }
         return new ReduceOp<Double, R, ReducingSink>(StreamShape.DOUBLE_VALUE) {
@@ -1140,17 +1140,17 @@ final class ReduceOps {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         static final class OfRef<T> extends CountingSink<T> {

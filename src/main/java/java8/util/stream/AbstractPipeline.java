@@ -548,15 +548,15 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
             }
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
         };
 

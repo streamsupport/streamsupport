@@ -1814,17 +1814,17 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -1891,17 +1891,17 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2276,12 +2276,12 @@ final class Nodes {
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2349,12 +2349,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2422,12 +2422,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2482,12 +2482,12 @@ final class Nodes {
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2587,12 +2587,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2686,12 +2686,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2824,17 +2824,17 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         static final class OfRef<P_IN, P_OUT>

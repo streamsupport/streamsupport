@@ -224,17 +224,17 @@ final class FindOps {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         /** Specialization of {@code FindSink} for reference streams */
