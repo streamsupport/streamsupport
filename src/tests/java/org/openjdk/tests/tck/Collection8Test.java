@@ -62,7 +62,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.46
+// CVS rev. 1.47
 
     Collection8Test() {
     }
@@ -80,9 +80,9 @@ public final class Collection8Test extends JSR166TestCase {
 
     static Object bomb() {
         return new Object() {
-                public boolean equals(Object x) { throw new AssertionError(); }
-                public int hashCode() { throw new AssertionError(); }
-            };
+            public boolean equals(Object x) { throw new AssertionError(); }
+            public int hashCode() { throw new AssertionError(); }
+        };
     }
 
     /** Checks properties of empty collections. */
