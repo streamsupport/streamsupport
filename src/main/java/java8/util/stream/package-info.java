@@ -415,7 +415,7 @@
  * elements -- but a properly constructed reduce operation is inherently
  * parallelizable, so long as the function(s) used to process the elements
  * are <a href="package-summary.html#Associativity">associative</a> and
- * <a href="package-summary.html#NonInterfering">stateless</a>.
+ * <a href="package-summary.html#Statelessness">stateless</a>.
  * For example, given a stream of numbers for which we want to find the sum, we
  * can write:
  * <pre>{@code
