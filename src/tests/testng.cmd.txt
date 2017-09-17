@@ -19,10 +19,6 @@ SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections.impl=false
 
-SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
-
-SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
-
 
 
 %JAVA6% %JIT_BUG% -cp .;./* %ARGS%
@@ -41,9 +37,9 @@ SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 
 
-REM %JAVA9% %NO_DELEG% %PAR_GC% -cp .;./* %ARGS%
+REM SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
+
+REM SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 REM %JAVA9% %DBG_MOD_ACCESS% %PAR_GC% %OPENS% -cp .;./* %ARGS%
-
-REM %JAVA9% %DBG_MOD_ACCESS% %NO_DELEG% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 
