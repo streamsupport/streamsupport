@@ -3330,7 +3330,7 @@ public class ForkJoinPool extends AbstractExecutorService {
             Class<?> c = null;
             try {
                 c = Class
-                        .forName("java8.util.concurrent.CompletableFuture.AsynchronousCompletionTask");
+                        .forName("java8.util.concurrent.CompletableFuture$AsynchronousCompletionTask");
             } catch (Exception ign) {
                 // ignore
             } finally {
