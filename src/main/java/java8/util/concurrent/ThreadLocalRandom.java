@@ -53,7 +53,7 @@ import java8.util.stream.StreamSupport;
  * @author Doug Lea
  */
 public class ThreadLocalRandom extends Random {
-// CVS rev. 1.55
+// CVS rev. 1.56
     /*
      * This class implements the java.util.Random API (and subclasses
      * Random) using a single static instance that accesses random
@@ -1005,7 +1005,10 @@ public class ThreadLocalRandom extends Random {
 
     // Static initialization
 
-    // Constants from SplittableRandom
+    /**
+     * The least non-zero value returned by nextDouble(). This value
+     * is scaled by a random value of 53 bits to produce a result.
+     */
     private static final double DOUBLE_UNIT = 0x1.0p-53;  // 1.0  / (1L << 53)
     private static final float  FLOAT_UNIT  = 0x1.0p-24f; // 1.0f / (1 << 24)
 

@@ -91,7 +91,7 @@ import java8.util.stream.DoubleStream;
  * @since   1.8
  */
 public final class SplittableRandom {
-// CVS rev. 1.39
+// CVS rev. 1.40
 
     /*
      * Implementation Overview.
@@ -403,6 +403,26 @@ public final class SplittableRandom {
      */
     public SplittableRandom split() {
         return new SplittableRandom(nextLong(), mixGamma(nextSeed()));
+    }
+
+    /**
+     * Fills a user-supplied byte array with generated pseudorandom bytes.
+     *
+     * @param  bytes the byte array to fill with pseudorandom bytes
+     * @throws NullPointerException if bytes is null
+     * @since  10
+     */
+    public void nextBytes(byte[] bytes) {
+        int i = 0;
+        int len = bytes.length;
+        for (int words = len >> 3; words--> 0; ) {
+            long rnd = nextLong();
+            for (int n = 8; n--> 0; rnd >>>= Byte.SIZE)
+                bytes[i++] = (byte) rnd;
+        }
+        if (i < len)
+            for (long rnd = nextLong(); i < len; rnd >>>= Byte.SIZE)
+                bytes[i++] = (byte) rnd;
     }
 
     /**
