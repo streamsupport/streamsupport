@@ -5,17 +5,22 @@
  */
 package org.openjdk.tests.tck;
 
-import java8.util.SplittableRandom;
-
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import java8.util.J8Arrays;
+import java8.util.SplittableRandom;
 import java8.util.concurrent.atomic.LongAdder;
+import java8.util.function.Predicate;
+import java8.util.stream.Collectors;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class SplittableRandomTest extends JSR166TestCase {
-// CVS rev. 1.21
+// CVS rev. 1.22
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -530,5 +535,51 @@ public class SplittableRandomTest extends JSR166TestCase {
         long size = 100;
         r.doubles().limit(size).forEach(x -> counter.increment());
         assertEquals(size, counter.sum());
+    }
+
+    /**
+     * SplittableRandom should implement most of Random's public methods
+     */
+    public void testShouldImplementMostRandomMethods() throws Throwable {
+        Predicate<Method> wasForgotten = method -> {
+            String name = method.getName();
+            // some methods deliberately not implemented
+            if (name.equals("setSeed")) return false;
+            if (name.equals("nextFloat")) return false;
+            if (name.equals("nextGaussian")) return false;
+            try {
+                SplittableRandom.class.getMethod(
+                    method.getName(), method.getParameterTypes());
+            } catch (Exception ex) {
+                return true;
+            }
+            return false;
+        };
+        List<Method> forgotten =
+            J8Arrays.stream(java.util.Random.class.getMethods())
+            .filter(wasForgotten)
+            .collect(Collectors.toList());
+        if (!forgotten.isEmpty())
+            throw new AssertionError("Please implement: " + forgotten);
+    }
+
+    /**
+     * Repeated calls to nextBytes produce at least values of different signs for every byte
+     */
+    public void testNextBytes() {
+        SplittableRandom sr = new SplittableRandom();
+        int n = sr.nextInt(20);
+        byte[] bytes = new byte[n];
+        outer:
+        for (int i = 0; i < n; i++) {
+            for (int tries = NCALLS; tries-->0; ) {
+                byte before = bytes[i];
+                sr.nextBytes(bytes);
+                byte after = bytes[i];
+                if (after * before < 0)
+                    continue outer;
+            }
+            fail("not enough variation in random bytes");
+        }
     }
 }
