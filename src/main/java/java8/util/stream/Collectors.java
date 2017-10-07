@@ -457,7 +457,7 @@ public final class Collectors {
      * @return a merge function for two maps
      */
     private static <K, V, M extends Map<K,V>>
-    BinaryOperator<M> mapMerger(final BinaryOperator<V> mergeFunction) {
+    BinaryOperator<M> mapMerger(BinaryOperator<V> mergeFunction) {
         return (m1, m2) -> {
             for (Map.Entry<K,V> e : m2.entrySet()) {
                 Maps.merge(m1, e.getKey(), e.getValue(), mergeFunction);
@@ -467,7 +467,7 @@ public final class Collectors {
     }
 
     private static <K, V, M extends ConcurrentMap<K,V>>
-    BinaryOperator<M> mapMergerConcurrent(final BinaryOperator<V> mergeFunction) {
+    BinaryOperator<M> mapMergerConcurrent(BinaryOperator<V> mergeFunction) {
         return (m1, m2) -> {
             for (Map.Entry<K,V> e : m2.entrySet()) {
                 ConcurrentMaps.merge(m1, e.getKey(), e.getValue(), mergeFunction);
@@ -928,7 +928,7 @@ public final class Collectors {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Supplier<T[]> boxSupplier(final T identity) {
+    private static <T> Supplier<T[]> boxSupplier(T identity) {
         return () -> (T[]) new Object[] { identity };
     }
 
@@ -959,7 +959,7 @@ public final class Collectors {
      * @see #reducing(Object, Function, BinaryOperator)
      */
     public static <T> Collector<T, ?, Optional<T>>
-    reducing(final BinaryOperator<T> op) {
+    reducing(BinaryOperator<T> op) {
         class OptionalBox implements Consumer<T> {
             T value = null;
             boolean present = false;
@@ -1162,11 +1162,11 @@ public final class Collectors {
      * @see #groupingByConcurrent(Function, Supplier, Collector)
      */
     public static <T, K, D, A, M extends Map<K, D>>
-    Collector<T, ?, M> groupingBy(final Function<? super T, ? extends K> classifier,
+    Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,
                                   Supplier<M> mapFactory,
                                   Collector<? super T, A, D> downstream) {
         Supplier<A> downstreamSupplier = downstream.supplier();
-        final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
             K key = Objects.requireNonNull(classifier.apply(t), "element cannot be mapped to a null key");
             A container = Maps.computeIfAbsent(m, key, k -> downstreamSupplier.get());
@@ -1316,11 +1316,11 @@ public final class Collectors {
      * @see #groupingBy(Function, Supplier, Collector)
      */
     public static <T, K, A, D, M extends ConcurrentMap<K, D>>
-    Collector<T, ?, M> groupingByConcurrent(final Function<? super T, ? extends K> classifier,
+    Collector<T, ?, M> groupingByConcurrent(Function<? super T, ? extends K> classifier,
                                             Supplier<M> mapFactory,
                                             Collector<? super T, A, D> downstream) {
         Supplier<A> downstreamSupplier = downstream.supplier();
-        final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BinaryOperator<ConcurrentMap<K, A>> merger = Collectors.<K, A, ConcurrentMap<K, A>>mapMergerConcurrent(downstream.combiner());
         @SuppressWarnings("unchecked")
         Supplier<ConcurrentMap<K, A>> mangledFactory = (Supplier<ConcurrentMap<K, A>>) mapFactory;
@@ -1414,12 +1414,12 @@ public final class Collectors {
      * @see #partitioningBy(Predicate)
      */
     public static <T, D, A>
-    Collector<T, ?, Map<Boolean, D>> partitioningBy(final Predicate<? super T> predicate,
-            final Collector<? super T, A, D> downstream) {
-        final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+    Collector<T, ?, Map<Boolean, D>> partitioningBy(Predicate<? super T> predicate,
+            Collector<? super T, A, D> downstream) {
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BiConsumer<Partition<A>, T> accumulator = (result, t) ->
                 downstreamAccumulator.accept(predicate.test(t) ? result.forTrue : result.forFalse, t);
-                final BinaryOperator<A> op = downstream.combiner();
+        BinaryOperator<A> op = downstream.combiner();
         BinaryOperator<Partition<A>> merger = (left, right) ->
                 new Partition<>(op.apply(left.forTrue, right.forTrue),
                                 op.apply(left.forFalse, right.forFalse));
@@ -1601,9 +1601,9 @@ public final class Collectors {
      * @see #toConcurrentMap(Function, Function, BinaryOperator, Supplier)
      */
     public static <T, K, U, M extends Map<K, U>>
-    Collector<T, ?, M> toMap(final Function<? super T, ? extends K> keyMapper,
-                             final Function<? super T, ? extends U> valueMapper,
-                             final BinaryOperator<U> mergeFunction,
+    Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
+                             Function<? super T, ? extends U> valueMapper,
+                             BinaryOperator<U> mergeFunction,
                              Supplier<M> mapFactory) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> Maps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
@@ -1761,9 +1761,9 @@ public final class Collectors {
      * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     public static <T, K, U, M extends ConcurrentMap<K, U>>
-    Collector<T, ?, M> toConcurrentMap(final Function<? super T, ? extends K> keyMapper,
-                                       final Function<? super T, ? extends U> valueMapper,
-                                       final BinaryOperator<U> mergeFunction,
+    Collector<T, ?, M> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
+                                       Function<? super T, ? extends U> valueMapper,
+                                       BinaryOperator<U> mergeFunction,
                                        Supplier<M> mapFactory) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> ConcurrentMaps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
