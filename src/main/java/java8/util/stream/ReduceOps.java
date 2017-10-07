@@ -66,7 +66,7 @@ final class ReduceOps {
      * @return a {@code TerminalOp} implementing the reduction
      */
     public static <T, U> TerminalOp<T, U>
-    makeRef(final U seed, BiFunction<U, ? super T, U> reducer, BinaryOperator<U> combiner) {
+    makeRef(U seed, BiFunction<U, ? super T, U> reducer, BinaryOperator<U> combiner) {
         Objects.requireNonNull(reducer);
         Objects.requireNonNull(combiner);
         class ReducingSink extends Box<U> implements AccumulatingSink<T, U, ReducingSink> {
@@ -202,9 +202,9 @@ final class ReduceOps {
      */
     public static <T, I> TerminalOp<T, I>
     makeRef(Collector<? super T, I, ?> collector) {
-        final Supplier<I> supplier = Objects.requireNonNull(collector).supplier();
-        final BiConsumer<I, ? super T> accumulator = collector.accumulator();
-        final BinaryOperator<I> combiner = collector.combiner();
+        Supplier<I> supplier = Objects.requireNonNull(collector).supplier();
+        BiConsumer<I, ? super T> accumulator = collector.accumulator();
+        BinaryOperator<I> combiner = collector.combiner();
         class ReducingSink extends Box<I>
                 implements AccumulatingSink<T, I, ReducingSink> {
             @Override

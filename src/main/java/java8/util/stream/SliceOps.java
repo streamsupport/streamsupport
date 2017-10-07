@@ -107,7 +107,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static <T> Stream<T> makeRef(AbstractPipeline<?, T, ?> upstream,
-            final long skip, final long limit) {
+            long skip, long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -223,7 +223,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static IntStream makeInt(AbstractPipeline<?, Integer, ?> upstream,
-            final long skip, final long limit) {
+            long skip, long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -332,7 +332,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static LongStream makeLong(AbstractPipeline<?, Long, ?> upstream,
-            final long skip, final long limit) {
+            long skip, long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -441,7 +441,7 @@ final class SliceOps {
      *        is to be imposed
      */
     public static DoubleStream makeDouble(AbstractPipeline<?, Double, ?> upstream,
-            final long skip, final long limit) {
+            long skip, long limit) {
         if (skip < 0)
             throw new IllegalArgumentException("Skip must be non-negative: " + skip);
 
@@ -595,8 +595,8 @@ final class SliceOps {
             if (isRoot()) {
                 long sizeIfKnown = StreamOpFlag.SIZED.isPreserved(op.sourceOrOpFlags)
                                    ? op.exactOutputSizeIfKnown(spliterator)
-                                   : -1;
-                final Node.Builder<P_OUT> nb = op.makeNodeBuilder(sizeIfKnown, generator);
+                                   : -1L;
+                Node.Builder<P_OUT> nb = op.makeNodeBuilder(sizeIfKnown, generator);
                 Sink<P_OUT> opSink = op.opWrapSink(helper.getStreamAndOpFlags(), nb);
                 helper.copyIntoWithCancel(helper.wrapSink(opSink), spliterator);
                 // There is no need to truncate since the op performs the

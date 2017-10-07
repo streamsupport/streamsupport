@@ -463,7 +463,7 @@ abstract class LongPipeline<E_IN>
     @Override
     public final <R> R collect(Supplier<R> supplier,
                                ObjLongConsumer<R> accumulator,
-                               final BiConsumer<R, R> combiner) {
+                               BiConsumer<R, R> combiner) {
         Objects.requireNonNull(combiner);
         BinaryOperator<R> operator = (left, right) -> {
             combiner.accept(left, right);

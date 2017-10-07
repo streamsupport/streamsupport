@@ -210,7 +210,7 @@ final class DistinctOps {
         public Iterator<E> iterator() {
             return new Iterator<E>() {
                 boolean nullDelivered = false;
-                final Iterator<E> it = keys.iterator();
+                Iterator<E> it = keys.iterator();
                 @Override
                 public boolean hasNext() {
                     if (!nullDelivered) {

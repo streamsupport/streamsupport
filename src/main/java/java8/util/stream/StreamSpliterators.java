@@ -350,7 +350,7 @@ class StreamSpliterators {
 
         @Override
         void initPartialTraversalState() {
-            final SpinedBuffer.OfInt b = new SpinedBuffer.OfInt();
+            SpinedBuffer.OfInt b = new SpinedBuffer.OfInt();
             buffer = b;
 
             Sink.OfInt trampoline = new Sink.OfInt() {
@@ -475,7 +475,7 @@ class StreamSpliterators {
 
         @Override
         void initPartialTraversalState() {
-            final SpinedBuffer.OfLong b = new SpinedBuffer.OfLong();
+            SpinedBuffer.OfLong b = new SpinedBuffer.OfLong();
             buffer = b;
 
             Sink.OfLong trampoline = new Sink.OfLong() {
@@ -600,7 +600,7 @@ class StreamSpliterators {
 
         @Override
         void initPartialTraversalState() {
-            final SpinedBuffer.OfDouble b = new SpinedBuffer.OfDouble();
+            SpinedBuffer.OfDouble b = new SpinedBuffer.OfDouble();
             buffer = b;
 
             Sink.OfDouble trampoline = new Sink.OfDouble() {
