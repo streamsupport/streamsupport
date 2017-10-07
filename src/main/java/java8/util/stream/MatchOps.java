@@ -76,8 +76,8 @@ final class MatchOps {
      * @return a {@code TerminalOp} implementing the desired quantified match
      *         criteria
      */
-    public static <T> TerminalOp<T, Boolean> makeRef(final Predicate<? super T> predicate,
-            final MatchKind matchKind) {
+    public static <T> TerminalOp<T, Boolean> makeRef(Predicate<? super T> predicate,
+            MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<T> {
@@ -105,8 +105,8 @@ final class MatchOps {
      * @return a {@code TerminalOp} implementing the desired quantified match
      *         criteria
      */
-    public static TerminalOp<Integer, Boolean> makeInt(final IntPredicate predicate,
-            final MatchKind matchKind) {
+    public static TerminalOp<Integer, Boolean> makeInt(IntPredicate predicate,
+            MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<Integer> implements Sink.OfInt {
@@ -139,8 +139,8 @@ final class MatchOps {
      * @return a {@code TerminalOp} implementing the desired quantified match
      *         criteria
      */
-    public static TerminalOp<Long, Boolean> makeLong(final LongPredicate predicate,
-            final MatchKind matchKind) {
+    public static TerminalOp<Long, Boolean> makeLong(LongPredicate predicate,
+            MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<Long> implements Sink.OfLong {
@@ -174,8 +174,8 @@ final class MatchOps {
      * @return a {@code TerminalOp} implementing the desired quantified match
      *         criteria
      */
-    public static TerminalOp<Double, Boolean> makeDouble(final DoublePredicate predicate,
-            final MatchKind matchKind) {
+    public static TerminalOp<Double, Boolean> makeDouble(DoublePredicate predicate,
+            MatchKind matchKind) {
         Objects.requireNonNull(predicate);
         Objects.requireNonNull(matchKind);
         class MatchSink extends BooleanTerminalSink<Double> implements Sink.OfDouble {

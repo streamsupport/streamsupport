@@ -229,7 +229,7 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
-    public final IntStream map(final IntUnaryOperator mapper) {
+    public final IntStream map(IntUnaryOperator mapper) {
         Objects.requireNonNull(mapper);
         return new StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                         StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -246,13 +246,13 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
-    public final <U> Stream<U> mapToObj(final IntFunction<? extends U> mapper) {
+    public final <U> Stream<U> mapToObj(IntFunction<? extends U> mapper) {
         Objects.requireNonNull(mapper);
         return mapToObj(mapper, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT);
     }
 
     @Override
-    public final LongStream mapToLong(final IntToLongFunction mapper) {
+    public final LongStream mapToLong(IntToLongFunction mapper) {
         Objects.requireNonNull(mapper);
         return new LongPipeline.StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                                      StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -269,7 +269,7 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
-    public final DoubleStream mapToDouble(final IntToDoubleFunction mapper) {
+    public final DoubleStream mapToDouble(IntToDoubleFunction mapper) {
         Objects.requireNonNull(mapper);
         return new DoublePipeline.StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                                        StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -286,7 +286,7 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
-    public final IntStream flatMap(final IntFunction<? extends IntStream> mapper) {
+    public final IntStream flatMap(IntFunction<? extends IntStream> mapper) {
         Objects.requireNonNull(mapper);
         return new StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                         StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT | StreamOpFlag.NOT_SIZED) {
@@ -331,7 +331,7 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
-    public final IntStream filter(final IntPredicate predicate) {
+    public final IntStream filter(IntPredicate predicate) {
         Objects.requireNonNull(predicate);
         return new StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                         StreamOpFlag.NOT_SIZED) {
@@ -354,7 +354,7 @@ abstract class IntPipeline<E_IN>
     }
 
     @Override
-    public final IntStream peek(final IntConsumer action) {
+    public final IntStream peek(IntConsumer action) {
         Objects.requireNonNull(action);
         return new StatelessOp<Integer>(this, StreamShape.INT_VALUE,
                                         0) {

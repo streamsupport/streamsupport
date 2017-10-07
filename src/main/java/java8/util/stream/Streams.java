@@ -960,7 +960,7 @@ final class Streams {
      * even if the first throws an exception, and if both throw exceptions, add
      * any exceptions thrown by the second as suppressed exceptions of the first.
      */
-    static Runnable composeWithExceptions(final Runnable a, final Runnable b) {
+    static Runnable composeWithExceptions(Runnable a, Runnable b) {
         return new Runnable() {
             @Override
             public void run() {
@@ -992,7 +992,7 @@ final class Streams {
      * even if the first throws an exception, and if both throw exceptions, add
      * any exceptions thrown by the second as suppressed exceptions of the first.
      */
-    static Runnable composedClose(final BaseStream<?, ?> a, final BaseStream<?, ?> b) {
+    static Runnable composedClose(BaseStream<?, ?> a, BaseStream<?, ?> b) {
         return new Runnable() {
             @Override
             public void run() {

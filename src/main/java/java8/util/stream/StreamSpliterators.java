@@ -405,7 +405,7 @@ class StreamSpliterators {
         }
 
         @Override
-        public void forEachRemaining(final IntConsumer consumer) {
+        public void forEachRemaining(IntConsumer consumer) {
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
@@ -530,7 +530,7 @@ class StreamSpliterators {
         }
 
         @Override
-        public void forEachRemaining(final LongConsumer consumer) {
+        public void forEachRemaining(LongConsumer consumer) {
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();
@@ -655,7 +655,7 @@ class StreamSpliterators {
         }
 
         @Override
-        public void forEachRemaining(final DoubleConsumer consumer) {
+        public void forEachRemaining(DoubleConsumer consumer) {
             if (buffer == null && !finished) {
                 Objects.requireNonNull(consumer);
                 init();

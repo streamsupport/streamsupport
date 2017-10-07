@@ -528,7 +528,7 @@ final class Nodes {
      * @param array the array
      * @return a node holding an array
      */
-    static Node.OfLong node(final long[] array) {
+    static Node.OfLong node(long[] array) {
         return new LongArrayNode(array);
     }
 
@@ -565,7 +565,7 @@ final class Nodes {
      * @param array the array
      * @return a node holding an array
      */
-    static Node.OfDouble node(final double[] array) {
+    static Node.OfDouble node(double[] array) {
         return new DoubleArrayNode(array);
     }
 
