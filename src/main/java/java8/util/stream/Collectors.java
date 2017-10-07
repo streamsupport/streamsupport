@@ -453,7 +453,7 @@ public final class Collectors {
      * @param <V> type of the map values
      * @param <M> type of the map
      * @param mergeFunction A merge function suitable for
-     * {@link Map#merge(Object, Object, BiFunction) Map.merge()}
+     * {@link Maps#merge(Map, Object, Object, BiFunction)}
      * @return a merge function for two maps
      */
     private static <K, V, M extends Map<K,V>>

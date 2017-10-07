@@ -735,7 +735,7 @@
  * cannot directly supply a recommended spliterator, it may indirectly supply
  * a spliterator using a {@code Supplier}, and construct a stream via the
  * {@code Supplier}-accepting versions of
- * {@link java8.util.stream.StreamSupport#stream(Supplier, int, boolean) stream()}.
+ * {@link java8.util.stream.StreamSupport#stream(java8.util.function.Supplier, int, boolean) stream()}.
  * The spliterator is obtained from the supplier only after the terminal
  * operation of the stream pipeline commences.
  *

@@ -132,10 +132,11 @@ import java8.util.Optional;
  * <p>Streams have a {@link #close()} method and implement {@link AutoCloseable},
  * but nearly all stream instances do not actually need to be closed after use.
  * Generally, only streams whose source is an IO channel (such as those returned
- * by {@link java.nio.file.Files#lines(Path, Charset)}) will require closing.  Most streams
- * are backed by collections, arrays, or generating functions, which require no
- * special resource management.  (If a stream does require closing, it can be
- * declared as a resource in a {@code try}-with-resources statement.)
+ * by {@link java.nio.file.Files#lines(java.nio.file.Path, java.nio.charset.Charset)})
+ * will require closing.  Most streams are backed by collections, arrays, or
+ * generating functions, which require no special resource management.  (If a
+ * stream does require closing, it can be declared as a resource in a
+ * {@code try}-with-resources statement.)
  *
  * <p>Stream pipelines may execute either sequentially or in
  * <a href="package-summary.html#Parallelism">parallel</a>.  This
