@@ -51,7 +51,7 @@ public final class Functions {
      *
      * @see #andThen(Function, Function)
      */
-    public static <R, T, V> Function<V, R> compose(final Function<? super T, ? extends R> this_, final Function<? super V, ? extends T> before) {
+    public static <R, T, V> Function<V, R> compose(Function<? super T, ? extends R> this_, Function<? super V, ? extends T> before) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(before);
         return (V v) -> this_.apply(before.apply(v));
@@ -76,7 +76,7 @@ public final class Functions {
      *
      * @see #compose(Function, Function)
      */
-    public static <R, T, V> Function<T, V> andThen(final Function<? super T, ? extends R> this_, final Function<? super R, ? extends V> after) {
+    public static <R, T, V> Function<T, V> andThen(Function<? super T, ? extends R> this_, Function<? super R, ? extends V> after) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (T t) -> after.apply(this_.apply(t));

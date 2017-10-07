@@ -52,7 +52,7 @@ public final class BiPredicates {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if {@code other} is null
      */
-    public static <T, U> BiPredicate<T, U> and(final BiPredicate<? super T, ? super U> this_, final BiPredicate<? super T, ? super U> other) {
+    public static <T, U> BiPredicate<T, U> and(BiPredicate<? super T, ? super U> this_, BiPredicate<? super T, ? super U> other) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (T t, U u) -> this_.test(t, u) && other.test(t, u);
@@ -69,7 +69,7 @@ public final class BiPredicates {
      * predicate
      * @throws NullPointerException if {@code this_} is null
      */
-    public static <T, U> BiPredicate<T, U> negate(final BiPredicate<? super T, ? super U> this_) {
+    public static <T, U> BiPredicate<T, U> negate(BiPredicate<? super T, ? super U> this_) {
         Objects.requireNonNull(this_);
         return (T t, U u) -> !this_.test(t, u);
     }
@@ -94,7 +94,7 @@ public final class BiPredicates {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if {@code other} is null
      */
-    public static <T, U> BiPredicate<T, U> or(final BiPredicate<? super T, ? super U> this_, final BiPredicate<? super T, ? super U> other) {
+    public static <T, U> BiPredicate<T, U> or(BiPredicate<? super T, ? super U> this_, BiPredicate<? super T, ? super U> other) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (T t, U u) -> this_.test(t, u) || other.test(t, u);

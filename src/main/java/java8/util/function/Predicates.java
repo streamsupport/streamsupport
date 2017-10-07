@@ -51,7 +51,7 @@ public final class Predicates {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if other is null
      */
-    public static <T> Predicate<T> and(final Predicate<? super T> this_, final Predicate<? super T> other) {
+    public static <T> Predicate<T> and(Predicate<? super T> this_, Predicate<? super T> other) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (t) -> this_.test(t) && other.test(t);
@@ -66,7 +66,7 @@ public final class Predicates {
      * predicate
      * @throws NullPointerException if {@code this_} is null
      */
-    public static <T> Predicate<T> negate(final Predicate<? super T> this_) {
+    public static <T> Predicate<T> negate(Predicate<? super T> this_) {
         Objects.requireNonNull(this_);
         return (t) -> !this_.test(t);
     }
@@ -90,7 +90,7 @@ public final class Predicates {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if other is null
      */
-    public static <T> Predicate<T> or(final Predicate<? super T> this_, final Predicate<? super T> other) {
+    public static <T> Predicate<T> or(Predicate<? super T> this_, Predicate<? super T> other) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (t) -> this_.test(t) || other.test(t);

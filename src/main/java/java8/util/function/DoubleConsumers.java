@@ -46,7 +46,7 @@ public final class DoubleConsumers {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if {@code after} is null
      */
-    public static DoubleConsumer andThen(final DoubleConsumer this_, final DoubleConsumer after) {
+    public static DoubleConsumer andThen(DoubleConsumer this_, DoubleConsumer after) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (double t) -> { this_.accept(t); after.accept(t); };
