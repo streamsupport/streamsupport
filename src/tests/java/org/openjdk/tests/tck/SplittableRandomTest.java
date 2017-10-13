@@ -20,7 +20,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class SplittableRandomTest extends JSR166TestCase {
-// CVS rev. 1.22
+// CVS rev. 1.24
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -568,11 +568,11 @@ public class SplittableRandomTest extends JSR166TestCase {
      */
     public void testNextBytes() {
         SplittableRandom sr = new SplittableRandom();
-        int n = sr.nextInt(20);
+        int n = sr.nextInt(1, 20);
         byte[] bytes = new byte[n];
         outer:
         for (int i = 0; i < n; i++) {
-            for (int tries = NCALLS; tries-->0; ) {
+            for (int tries = NCALLS; tries-- > 0; ) {
                 byte before = bytes[i];
                 sr.nextBytes(bytes);
                 byte after = bytes[i];
@@ -581,5 +581,19 @@ public class SplittableRandomTest extends JSR166TestCase {
             }
             fail("not enough variation in random bytes");
         }
+    }
+
+    /**
+     * Filling an empty array with random bytes succeeds without effect.
+     */
+    public void testNextBytes_emptyArray() {
+        new SplittableRandom().nextBytes(new byte[0]);
+    }
+
+    public void testNextBytes_nullArray() {
+        try {
+            new SplittableRandom().nextBytes(null);
+            shouldThrow();
+        } catch (NullPointerException success) {}
     }
 }
