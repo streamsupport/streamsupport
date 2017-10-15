@@ -442,6 +442,15 @@ public final class Collection8Test extends JSR166TestCase {
                 || CopyOnWriteArraySet.class.equals(impl.klazz())) {
             return;
         }
+        if (HAS_JAVA8_SPLITERATOR_BUG
+                && (LinkedBlockingDeque.class.equals(impl.klazz()))
+                || LinkedBlockingQueue.class.equals(impl.klazz())) {
+            // LinkedBlockingDeque spliterator needs to support node self-linking
+            // https://bugs.openjdk.java.net/browse/JDK-8169739
+            // LinkedBlockingQueue spliterator needs to support node self-linking
+            // https://bugs.openjdk.java.net/browse/JDK-8171051
+            return;
+        }
         Collection c = impl.emptyCollection();
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
         int n = rnd.nextInt(6);
