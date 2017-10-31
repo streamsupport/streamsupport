@@ -22,7 +22,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class RecursiveTaskTest extends JSR166TestCase {
-// CVS rev. 1.36
+// CVS rev. 1.37
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -108,7 +108,7 @@ public class RecursiveTaskTest extends JSR166TestCase {
         try {
             assertSame(expected, a.get());
             assertSame(expected, a.get(randomTimeout(), randomTimeUnit()));
-        } catch (Throwable fail) { threadUnexpectedException(fail); }
+        } catch (Exception fail) { threadUnexpectedException(fail); }
     }
 
     /**

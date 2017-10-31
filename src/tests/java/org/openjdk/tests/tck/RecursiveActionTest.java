@@ -28,7 +28,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class RecursiveActionTest extends JSR166TestCase {
-// CVS rev. 1.50
+// CVS rev. 1.51
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -113,7 +113,7 @@ public class RecursiveActionTest extends JSR166TestCase {
         try {
             assertNull(a.get());
             assertNull(a.get(randomTimeout(), randomTimeUnit()));
-        } catch (Throwable fail) { threadUnexpectedException(fail); }
+        } catch (Exception fail) { threadUnexpectedException(fail); }
     }
 
     void checkCancelled(RecursiveAction a) {

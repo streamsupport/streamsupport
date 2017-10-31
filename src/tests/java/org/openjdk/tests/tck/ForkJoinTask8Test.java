@@ -23,7 +23,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTask8Test extends JSR166TestCase {
-// CVS rev. 1.29
+// CVS rev. 1.30
     /*
      * Testing notes: This differs from ForkJoinTaskTest mainly by
      * defining a version of BinaryAsyncAction that uses JDK8 task
@@ -155,7 +155,7 @@ public class ForkJoinTask8Test extends JSR166TestCase {
         try {
             assertSame(expected, a.get());
             assertSame(expected, a.get(randomTimeout(), randomTimeUnit()));
-        } catch (Throwable fail) { threadUnexpectedException(fail); }
+        } catch (Exception fail) { threadUnexpectedException(fail); }
     }
 
     void checkCompletedAbnormally(ForkJoinTask<?> a, Throwable t) {
