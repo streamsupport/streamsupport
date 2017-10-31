@@ -24,7 +24,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CountedCompleterTest extends JSR166TestCase {
-// CVS rev. 1.34
+// CVS rev. 1.35
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -761,6 +761,8 @@ public class CountedCompleterTest extends JSR166TestCase {
                 CCF f = new LCCF(8);
                 assertSame(f, f.fork());
                 helpQuiesce();
+                while (!f.isDone()) // wait out race
+                    ;
                 assertEquals(21, f.number);
                 assertEquals(0, getQueuedTaskCount());
                 checkCompletedNormally(f);
