@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -24,8 +24,30 @@
  */
 
 /**
- * Provides some of the new {@code java.util} classes and implementations
- * of static and default interface methods added in Java 8. 
+ * Provides some of the new {@code java.util} classes and implementations of
+ * static and default interface methods added in Java 8 and, in addition, the
+ * <a href="http://openjdk.java.net/jeps/269">JEP 269: Convenience Factory
+ * Methods for Collections</a> that were introduced in Java 9.
+ * 
+ * <p>
+ * <a id="unmodifiable"><b>Unmodifiable collections</b></a> An <i>unmodifiable
+ * collection</i> is a collection, all of whose mutator methods are specified to
+ * throw {@code UnsupportedOperationException}. Such a collection thus cannot be
+ * modified by calling any methods on it. For a collection to be properly
+ * unmodifiable, any view collections derived from it must also be unmodifiable.
+ * For example, if a List is unmodifiable, the List returned by
+ * {@link java.util.List#subList List.subList} is also unmodifiable.
+ *
+ * <p>
+ * An unmodifiable collection is not necessarily immutable. If the contained
+ * elements are mutable, the entire collection is clearly mutable, even though
+ * it might be unmodifiable. For example, consider two unmodifiable lists
+ * containing mutable elements. The result of calling
+ * {@code list1.equals(list2)} might differ from one call to the next if the
+ * elements had been mutated, even though both lists are unmodifiable. However,
+ * if an unmodifiable collection contains all immutable elements, it can be
+ * considered effectively immutable.
+ * 
  * @since 1.8
  */
 package java8.util;
