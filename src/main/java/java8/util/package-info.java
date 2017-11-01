@@ -29,14 +29,14 @@
  * <a href="http://openjdk.java.net/jeps/269">JEP 269: Convenience Factory
  * Methods for Collections</a> that were introduced in Java 9.
  * 
+ * <h2><a id="unmodifiable"><b>Unmodifiable collections</b></a></h2>
  * <p>
- * <a id="unmodifiable"><b>Unmodifiable collections</b></a> An <i>unmodifiable
- * collection</i> is a collection, all of whose mutator methods are specified to
- * throw {@code UnsupportedOperationException}. Such a collection thus cannot be
- * modified by calling any methods on it. For a collection to be properly
- * unmodifiable, any view collections derived from it must also be unmodifiable.
- * For example, if a List is unmodifiable, the List returned by
- * {@link java.util.List#subList List.subList} is also unmodifiable.
+ * An <i>unmodifiable collection</i> is a collection, all of whose mutator
+ * methods are specified to throw {@code UnsupportedOperationException}. Such a
+ * collection thus cannot be modified by calling any methods on it. For a
+ * collection to be properly unmodifiable, any view collections derived from it
+ * must also be unmodifiable. For example, if a List is unmodifiable, the List
+ * returned by {@link java.util.List#subList List.subList} is also unmodifiable.
  *
  * <p>
  * An unmodifiable collection is not necessarily immutable. If the contained
