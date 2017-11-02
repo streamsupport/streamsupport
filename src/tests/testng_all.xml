@@ -32,6 +32,7 @@
       <!-- block 3 -->
       <class name="org.openjdk.tests.java.util.stream.StreamCloseTest"/>
       <class name="org.openjdk.tests.java.util.stream.SummaryStatisticsTest"/>
+      <class name="org.openjdk.tests.java.util.stream.CollectAndSummaryStatisticsTest"/>
       <class name="org.openjdk.tests.java.util.stream.ForEachOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.IntUniqOpTest"/>
       <class name="org.openjdk.tests.java.util.stream.SpliteratorTest"/>
