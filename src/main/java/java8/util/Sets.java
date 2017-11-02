@@ -303,7 +303,7 @@ public final class Sets {
      *     Set<String[]> list = Sets.<String[]>of(array);
      * }</pre>
      *
-     * This will cause the {@link Sets#of(Object) Set.of(E)} method
+     * This will cause the {@link Sets#of(Object) Sets.of(E)} method
      * to be invoked instead.
      *
      * @param <E> the {@code Set}'s element type
