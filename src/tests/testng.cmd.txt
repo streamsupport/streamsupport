@@ -7,6 +7,8 @@ SET JAVA8=F:/Java/jdk1.8.0_152-64bit/bin/java
 
 SET JAVA9=F:/Java/jdk9.0.1+11-64bit/bin/java
 
+SET JAVA10=F:/Java/jdk10_ea+29-64bit/bin/java
+
 SET TEST_JAR=streamsupport-all-tests-1.6.0-SNAPSHOT.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
@@ -34,6 +36,8 @@ SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections
 %JAVA8% %NO_DELEG% -cp .;./* %ARGS%
 
 %JAVA9% %PAR_GC% -cp .;./* %ARGS%
+
+%JAVA10% %PAR_GC% -cp .;./* %ARGS%
 
 
 
