@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2005, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -92,9 +92,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import java8.util.Lists;
 import java8.util.Lists2;
+import java8.util.Maps;
 import java8.util.Maps2;
 import java8.util.Objects;
+import java8.util.Sets;
 import java8.util.Sets2;
 import java8.util.concurrent.ThreadLocalRandom;
 
@@ -123,7 +126,9 @@ public class MOAT {
 
         // Immutable List
         testEmptyList(Lists2.of());
+        testEmptyList(Lists.of());
         testListMutatorsAlwaysThrow(Lists2.of());
+        testListMutatorsAlwaysThrow(Lists.of());
 //        testEmptyListMutatorsAlwaysThrow(Lists2.of());
         for (List<Integer> list : Arrays.asList(
                 Lists2.<Integer>of(),
@@ -137,7 +142,20 @@ public class MOAT {
                 Lists2.of(1, 2, 3, 4, 5, 6, 7, 8),
                 Lists2.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
                 Lists2.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                Lists2.of(integerArray))) {
+                Lists2.of(integerArray),
+                Lists.<Integer>of(),
+                Lists.of(1),
+                Lists.of(1, 2),
+                Lists.of(1, 2, 3),
+                Lists.of(1, 2, 3, 4),
+                Lists.of(1, 2, 3, 4, 5),
+                Lists.of(1, 2, 3, 4, 5, 6),
+                Lists.of(1, 2, 3, 4, 5, 6, 7),
+                Lists.of(1, 2, 3, 4, 5, 6, 7, 8),
+                Lists.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                Lists.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                Lists.of(integerArray)))
+        {
             testCollection(list);
             testImmutableList(list);
             testListMutatorsAlwaysThrow(list);
@@ -145,8 +163,11 @@ public class MOAT {
 
         // Immutable Set
         testEmptySet(Sets2.of());
+        testEmptySet(Sets.of());
         testCollMutatorsAlwaysThrow(Sets2.of());
+        testCollMutatorsAlwaysThrow(Sets.of());
         testEmptyCollMutatorsAlwaysThrow(Sets2.of());
+        testEmptyCollMutatorsAlwaysThrow(Sets.of());
         for (Set<Integer> set : Arrays.asList(
                 Sets2.<Integer>of(),
                 Sets2.of(1),
@@ -159,7 +180,20 @@ public class MOAT {
                 Sets2.of(1, 2, 3, 4, 5, 6, 7, 8),
                 Sets2.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
                 Sets2.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                Sets2.of(integerArray))) {
+                Sets2.of(integerArray),
+                Sets.<Integer>of(),
+                Sets.of(1),
+                Sets.of(1, 2),
+                Sets.of(1, 2, 3),
+                Sets.of(1, 2, 3, 4),
+                Sets.of(1, 2, 3, 4, 5),
+                Sets.of(1, 2, 3, 4, 5, 6),
+                Sets.of(1, 2, 3, 4, 5, 6, 7),
+                Sets.of(1, 2, 3, 4, 5, 6, 7, 8),
+                Sets.of(1, 2, 3, 4, 5, 6, 7, 8, 9),
+                Sets.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                Sets.of(integerArray)))
+        {
             testCollection(set);
             testImmutableSet(set);
             testCollMutatorsAlwaysThrow(set);
@@ -168,14 +202,22 @@ public class MOAT {
         // Immutable Map
 
         @SuppressWarnings("unchecked")
+        Map.Entry<Integer,Integer>[] ea2 = (Map.Entry<Integer,Integer>[])new Map.Entry<?,?>[20];
+        for (int i = 0; i < ea2.length; i++) {
+            ea2[i] = Maps2.entry(i+1, i+101);
+        }
+        @SuppressWarnings("unchecked")
         Map.Entry<Integer,Integer>[] ea = (Map.Entry<Integer,Integer>[])new Map.Entry<?,?>[20];
         for (int i = 0; i < ea.length; i++) {
-            ea[i] = Maps2.entry(i+1, i+101);
+            ea[i] = Maps.entry(i+1, i+101);
         }
 
         testEmptyMap(Maps2.of());
+        testEmptyMap(Maps.of());
         testMapMutatorsAlwaysThrow(Maps2.of());
+        testMapMutatorsAlwaysThrow(Maps.of());
         testEmptyMapMutatorsAlwaysThrow(Maps2.of());
+        testEmptyMapMutatorsAlwaysThrow(Maps.of());
         for (Map<Integer,Integer> map : Arrays.asList(
                 Maps2.<Integer,Integer>of(),
                 Maps2.of(1, 101),
@@ -188,7 +230,20 @@ public class MOAT {
                 Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808),
                 Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909),
                 Maps2.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909, 10, 1010),
-                Maps2.ofEntries(ea))) {
+                Maps2.ofEntries(ea2),
+                Maps.<Integer,Integer>of(),
+                Maps.of(1, 101),
+                Maps.of(1, 101, 2, 202),
+                Maps.of(1, 101, 2, 202, 3, 303),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909),
+                Maps.of(1, 101, 2, 202, 3, 303, 4, 404, 5, 505, 6, 606, 7, 707, 8, 808, 9, 909, 10, 1010),
+                Maps.ofEntries(ea)))
+        {
             testMap(map);
             testImmutableMap(map);
             testMapMutatorsAlwaysThrow(map);
