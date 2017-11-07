@@ -767,11 +767,13 @@ public class MapFactories {
 
     @Test(expectedExceptions=NullPointerException.class)
     public void copyOfRejectsNullMap2() {
+        @SuppressWarnings("unused")
         Map<Integer, String> map = Maps2.copyOf(null);
     }
 
     @Test(expectedExceptions=NullPointerException.class)
     public void copyOfRejectsNullMap() {
+        @SuppressWarnings("unused")
         Map<Integer, String> map = Maps.copyOf(null);
     }
 
@@ -779,6 +781,7 @@ public class MapFactories {
     public void copyOfRejectsNullKey2() {
         Map<Integer, String> map = genMap();
         map.put(null, "x");
+        @SuppressWarnings("unused")
         Map<Integer, String> copy = Maps2.copyOf(map);
     }
 
@@ -786,6 +789,7 @@ public class MapFactories {
     public void copyOfRejectsNullKey() {
         Map<Integer, String> map = genMap();
         map.put(null, "x");
+        @SuppressWarnings("unused")
         Map<Integer, String> copy = Maps.copyOf(map);
     }
 
@@ -793,6 +797,7 @@ public class MapFactories {
     public void copyOfRejectsNullValue2() {
         Map<Integer, String> map = genMap();
         map.put(-1, null);
+        @SuppressWarnings("unused")
         Map<Integer, String> copy = Maps2.copyOf(map);
     }
 
@@ -800,6 +805,7 @@ public class MapFactories {
     public void copyOfRejectsNullValue() {
         Map<Integer, String> map = genMap();
         map.put(-1, null);
+        @SuppressWarnings("unused")
         Map<Integer, String> copy = Maps.copyOf(map);
     }
 
