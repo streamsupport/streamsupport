@@ -39,6 +39,9 @@ import java8.util.Sets;
 import java8.util.Sets2;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import org.testng.annotations.DataProvider;
@@ -447,5 +450,103 @@ public class SetFactories {
         } catch (IOException | ClassNotFoundException e) {
             throw new AssertionError(e);
         }
+    }
+
+    Set<Integer> genSet() {
+        return new HashSet<>(Arrays.asList(1, 2, 3));
+    }
+
+    @Test
+    public void copyOfResultsEqual2() {
+        Set<Integer> orig = genSet();
+        Set<Integer> copy = Sets2.copyOf(orig);
+
+        assertEquals(orig, copy);
+        assertEquals(copy, orig);
+    }
+
+    @Test
+    public void copyOfResultsEqual() {
+        Set<Integer> orig = genSet();
+        Set<Integer> copy = Sets.copyOf(orig);
+
+        assertEquals(orig, copy);
+        assertEquals(copy, orig);
+    }
+
+    @Test
+    public void copyOfModifiedUnequal2() {
+        Set<Integer> orig = genSet();
+        Set<Integer> copy = Sets2.copyOf(orig);
+        orig.add(4);
+
+        assertNotEquals(orig, copy);
+        assertNotEquals(copy, orig);
+    }
+
+    @Test
+    public void copyOfModifiedUnequal() {
+        Set<Integer> orig = genSet();
+        Set<Integer> copy = Sets.copyOf(orig);
+        orig.add(4);
+
+        assertNotEquals(orig, copy);
+        assertNotEquals(copy, orig);
+    }
+
+    @Test
+    public void copyOfIdentity2() {
+        Set<Integer> orig = genSet();
+        Set<Integer> copy1 = Sets2.copyOf(orig);
+        Set<Integer> copy2 = Sets2.copyOf(copy1);
+
+        assertNotSame(orig, copy1);
+        assertSame(copy1, copy2);
+    }
+
+    @Test
+    public void copyOfIdentity() {
+        Set<Integer> orig = genSet();
+        Set<Integer> copy1 = Sets.copyOf(orig);
+        Set<Integer> copy2 = Sets.copyOf(copy1);
+
+        assertNotSame(orig, copy1);
+        assertSame(copy1, copy2);
+    }
+
+    @Test(expectedExceptions=NullPointerException.class)
+    public void copyOfRejectsNullCollection2() {
+        @SuppressWarnings("unused")
+        Set<Integer> set = Sets2.copyOf(null);
+    }
+
+    @Test(expectedExceptions=NullPointerException.class)
+    public void copyOfRejectsNullCollection() {
+        @SuppressWarnings("unused")
+        Set<Integer> set = Sets.copyOf(null);
+    }
+
+    @Test(expectedExceptions=NullPointerException.class)
+    public void copyOfRejectsNullElements2() {
+        @SuppressWarnings("unused")
+        Set<Integer> set = Sets2.copyOf(Arrays.asList(1, null, 3));
+    }
+
+    @Test(expectedExceptions=NullPointerException.class)
+    public void copyOfRejectsNullElements() {
+        @SuppressWarnings("unused")
+        Set<Integer> set = Sets.copyOf(Arrays.asList(1, null, 3));
+    }
+
+    @Test
+    public void copyOfAcceptsDuplicates2() {
+        Set<Integer> set = Sets2.copyOf(Arrays.asList(1, 1, 2, 3, 3, 3));
+        assertEquals(set, Sets2.of(1, 2, 3));
+    }
+
+    @Test
+    public void copyOfAcceptsDuplicates() {
+        Set<Integer> set = Sets.copyOf(Arrays.asList(1, 1, 2, 3, 3, 3));
+        assertEquals(set, Sets.of(1, 2, 3));
     }
 }
