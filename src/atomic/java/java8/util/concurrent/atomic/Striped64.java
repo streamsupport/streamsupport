@@ -164,7 +164,7 @@ abstract class Striped64 extends Number {
      * Returns the probe value for the current thread.
      * Duplicated from ThreadLocalRandom because of packaging restrictions.
      */
-    static final int getProbe() {
+    static int getProbe() {
         try {
             return ((Integer) GET_PROBE_METHOD.invoke(null)).intValue();
         } catch (Exception e) {
@@ -172,7 +172,7 @@ abstract class Striped64 extends Number {
         }
     }
 
-    private static final int getInitializedProbe(Integer uncontended) {
+    private static int getInitializedProbe(Integer uncontended) {
         try {
             return ((Integer) GET_INIT_PROBE_METHOD.invoke(null, uncontended)).intValue();
         } catch (Exception e) {
@@ -193,7 +193,7 @@ abstract class Striped64 extends Number {
      * given thread.
      * Duplicated from ThreadLocalRandom because of packaging restrictions.
      */
-    static final int advanceProbe(int probe) {
+    static int advanceProbe(int probe) {
         probe ^= probe << 13;   // xorshift
         probe ^= probe >>> 17;
         probe ^= probe << 5;
