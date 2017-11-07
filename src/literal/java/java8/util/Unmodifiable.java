@@ -49,7 +49,7 @@ import java.util.Set;
  * classes use a serial proxy and thus have no need to declare serialVersionUID.
  */
 @SuppressWarnings("serial")
-final class ImmutableCollections {
+final class Unmodifiable {
     /**
      * A "salt" value used for randomizing iteration order. This is initialized once
      * and stays constant for the lifetime of the JVM. It need not be truly random, but
@@ -63,7 +63,7 @@ final class ImmutableCollections {
     }
 
     /** No instances. */
-    private ImmutableCollections() { }
+    private Unmodifiable() { }
 
     /**
      * The reciprocal of load factor. Given a number of elements
@@ -104,13 +104,13 @@ final class ImmutableCollections {
 
         @Override
         public Iterator<E> iterator() {
-            return J9Collections.emptyIterator();
+            return FactoryUtil.emptyIterator();
         }
 
         @Override
         public E get(int index) {
-            J9Collections.checkIndex(index, 0); // always throws IndexOutOfBoundsException
-            return null;                        // but the compiler doesn't know this
+            FactoryUtil.checkIndex(index, 0); // always throws IndexOutOfBoundsException
+            return null;                      // but the compiler doesn't know this
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -123,7 +123,7 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            J9Collections.requireNonNull(o);
+            FactoryUtil.requireNonNull(o);
             return false;
         }
 
@@ -142,7 +142,7 @@ final class ImmutableCollections {
         private final E e0;
 
         List1(E e0) {
-            this.e0 = J9Collections.requireNonNull(e0);
+            this.e0 = FactoryUtil.requireNonNull(e0);
         }
 
         @Override
@@ -152,7 +152,7 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            J9Collections.checkIndex(index, 1);
+            FactoryUtil.checkIndex(index, 1);
             return e0;
         }
 
@@ -180,8 +180,8 @@ final class ImmutableCollections {
         private final E e1;
 
         List2(E e0, E e1) {
-            this.e0 = J9Collections.requireNonNull(e0);
-            this.e1 = J9Collections.requireNonNull(e1);
+            this.e0 = FactoryUtil.requireNonNull(e0);
+            this.e1 = FactoryUtil.requireNonNull(e1);
         }
 
         @Override
@@ -191,7 +191,7 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            J9Collections.checkIndex(index, 2);
+            FactoryUtil.checkIndex(index, 2);
             if (index == 0) {
                 return e0;
             } else { // index == 1
@@ -227,7 +227,7 @@ final class ImmutableCollections {
             @SuppressWarnings("unchecked")
             E[] tmp = (E[]) new Object[input.length]; // implicit nullcheck of input
             for (int i = 0; i < input.length; i++) {
-                tmp[i] = J9Collections.requireNonNull(input[i]);
+                tmp[i] = FactoryUtil.requireNonNull(input[i]);
             }
             this.elements = tmp;
         }
@@ -239,7 +239,7 @@ final class ImmutableCollections {
 
         @Override
         public E get(int index) {
-            J9Collections.checkIndex(index, elements.length);
+            FactoryUtil.checkIndex(index, elements.length);
             return elements[index];
         }
 
@@ -299,7 +299,7 @@ final class ImmutableCollections {
 
         @Override
         public boolean contains(Object o) {
-            J9Collections.requireNonNull(o);
+            FactoryUtil.requireNonNull(o);
             return false;
         }
 
@@ -310,7 +310,7 @@ final class ImmutableCollections {
 
         @Override
         public Iterator<E> iterator() {
-            return J9Collections.emptyIterator();
+            return FactoryUtil.emptyIterator();
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -331,7 +331,7 @@ final class ImmutableCollections {
         private final E e0;
 
         Set1(E e0) {
-            this.e0 = J9Collections.requireNonNull(e0);
+            this.e0 = FactoryUtil.requireNonNull(e0);
         }
 
         @Override
@@ -346,7 +346,7 @@ final class ImmutableCollections {
 
         @Override
         public Iterator<E> iterator() {
-            return J9Collections.singletonIterator(e0);
+            return FactoryUtil.singletonIterator(e0);
         }
 
         private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -368,7 +368,7 @@ final class ImmutableCollections {
         final E e1;
 
         Set2(E e0, E e1) {
-            if (e0.equals(J9Collections.requireNonNull(e1))) { // implicit nullcheck of e0
+            if (e0.equals(FactoryUtil.requireNonNull(e1))) { // implicit nullcheck of e0
                 throw new IllegalArgumentException("duplicate element: " + e0);
             }
 
@@ -398,7 +398,7 @@ final class ImmutableCollections {
 
         @Override
         public Iterator<E> iterator() {
-            return new J9Collections.ImmutableIt<E>() {
+            return new FactoryUtil.ImmutableIt<E>() {
                 private int idx = 0;
 
                 @Override
@@ -468,7 +468,7 @@ final class ImmutableCollections {
 
         @Override
         public Iterator<E> iterator() {
-            return new J9Collections.ImmutableIt<E>() {
+            return new FactoryUtil.ImmutableIt<E>() {
                 private int idx = 0;
 
                 @Override
@@ -505,7 +505,7 @@ final class ImmutableCollections {
         // returns index at which element is present; or if absent,
         // (-i - 1) where i is location where element should be inserted.
         // Callers are relying on this method to perform an implicit nullcheck
-        // of pe.
+        // of pe
         private int probe(Object pe) {
             int idx = floorMod(pe.hashCode() ^ SALT, elements.length);
             while (true) {
@@ -557,18 +557,18 @@ final class ImmutableCollections {
 
         @Override
         public Set<Map.Entry<K,V>> entrySet() {
-            return ImmutableCollections.Set0.instance();
+            return Unmodifiable.Set0.instance();
         }
 
         @Override
         public boolean containsKey(Object o) {
-            J9Collections.requireNonNull(o);
+            FactoryUtil.requireNonNull(o);
             return false;
         }
 
         @Override
         public boolean containsValue(Object o) {
-            J9Collections.requireNonNull(o);
+            FactoryUtil.requireNonNull(o);
             return false;
         }
 
@@ -591,13 +591,13 @@ final class ImmutableCollections {
         private final V v0;
 
         Map1(K k0, V v0) {
-            this.k0 = J9Collections.requireNonNull(k0);
-            this.v0 = J9Collections.requireNonNull(v0);
+            this.k0 = FactoryUtil.requireNonNull(k0);
+            this.v0 = FactoryUtil.requireNonNull(v0);
         }
 
         @Override
         public Set<Map.Entry<K,V>> entrySet() {
-            return setOf((Map.Entry<K, V>) new KeyValueHolder<K, V>(k0, v0));
+            return setOf((Map.Entry<K, V>) new KVHolder<K, V>(k0, v0));
         }
 
         @Override
@@ -648,8 +648,8 @@ final class ImmutableCollections {
             table = new Object[len];
 
             for (int i = 0; i < input.length; i += 2) {
-                Object k = J9Collections.requireNonNull(input[i]);
-                Object v = J9Collections.requireNonNull(input[i + 1]);
+                Object k = FactoryUtil.requireNonNull(input[i]);
+                Object v = FactoryUtil.requireNonNull(input[i + 1]);
                 int idx = probe(k);
                 if (idx >= 0) {
                     throw new IllegalArgumentException("duplicate key: " + k);
@@ -715,7 +715,7 @@ final class ImmutableCollections {
 
                 @Override
                 public Iterator<Map.Entry<K,V>> iterator() {
-                    return new J9Collections.ImmutableIt<Map.Entry<K,V>>() {
+                    return new FactoryUtil.ImmutableIt<Map.Entry<K,V>>() {
                         int idx = 0;
 
                         @Override
@@ -733,7 +733,7 @@ final class ImmutableCollections {
                             if (hasNext()) {
                                 @SuppressWarnings("unchecked")
                                 Map.Entry<K,V> e =
-                                    new KeyValueHolder<K, V>((K) table[idx], (V) table[idx + 1]);
+                                    new KVHolder<K, V>((K) table[idx], (V) table[idx + 1]);
                                 idx += 2;
                                 return e;
                             } else {
@@ -793,28 +793,28 @@ final class ImmutableCollections {
             case 0:
                 return List0.instance();
             case 1:
-                return new ImmutableCollections.List1<E>(elements[0]);
+                return new Unmodifiable.List1<E>(elements[0]);
             case 2:
-                return new ImmutableCollections.List2<E>(elements[0], elements[1]);
+                return new Unmodifiable.List2<E>(elements[0], elements[1]);
             default:
-                return new ImmutableCollections.ListN<E>(elements);
+                return new Unmodifiable.ListN<E>(elements);
         }
     }
 
     static <E> Set<E> setOf(E e1) { // streamsupport added
-        return new ImmutableCollections.Set1<E>(e1);
+        return new Unmodifiable.Set1<E>(e1);
     }
 
     static <E> Set<E> setOf(E[] elements) { // streamsupport added
         switch (elements.length) { // implicit null check of elements
             case 0:
-                return ImmutableCollections.Set0.instance();
+                return Unmodifiable.Set0.instance();
             case 1:
-                return new ImmutableCollections.Set1<E>(elements[0]);
+                return new Unmodifiable.Set1<E>(elements[0]);
             case 2:
-                return new ImmutableCollections.Set2<E>(elements[0], elements[1]);
+                return new Unmodifiable.Set2<E>(elements[0], elements[1]);
             default:
-                return new ImmutableCollections.SetN<E>(elements);
+                return new Unmodifiable.SetN<E>(elements);
         }
     }
 
@@ -965,16 +965,16 @@ final class CollSer implements Serializable {
             // ignore high order 24 bits
             switch (tag & 0xff) {
                 case IMM_LIST:
-                    return ImmutableCollections.listOf(array);
+                    return Unmodifiable.listOf(array);
                 case IMM_SET:
-                    return ImmutableCollections.setOf(array);
+                    return Unmodifiable.setOf(array);
                 case IMM_MAP:
                     if (array.length == 0) {
-                        return ImmutableCollections.Map0.instance();
+                        return Unmodifiable.Map0.instance();
                     } else if (array.length == 2) {
-                        return new ImmutableCollections.Map1<Object, Object>(array[0], array[1]);
+                        return new Unmodifiable.Map1<Object, Object>(array[0], array[1]);
                     } else {
-                        return new ImmutableCollections.MapN<Object, Object>(array);
+                        return new Unmodifiable.MapN<Object, Object>(array);
                     }
                 default:
                     throw new InvalidObjectException(String.format("invalid flags 0x%x", tag));

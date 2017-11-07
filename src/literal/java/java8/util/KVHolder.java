@@ -30,10 +30,10 @@ import java.util.Map;
  * An immutable container for a key and a value, suitable for use
  * in creating and populating {@code Map} instances.
  *
- * <p>This is a <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>
+ * <p>This is a <a href="package-summary.html#Value-based-Classes">value-based</a>
  * class; use of identity-sensitive operations (including reference equality
  * ({@code ==}), identity hash code, or synchronization) on instances of
- * {@code KeyValueHolder} may have unpredictable results and should be avoided.
+ * {@code KVHolder} may have unpredictable results and should be avoided.
  *
  * <p><b>API Note:</b><br>
  * This class is not public. Instances can be created using the
@@ -48,13 +48,13 @@ import java.util.Map;
  * @see Maps2#ofEntries Maps.ofEntries()
  * @since 9
  */
-final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
+final class KVHolder<K, V> implements Map.Entry<K, V> {
     final K key;
     final V value;
 
-    KeyValueHolder(K k, V v) {
-        key = J9Collections.requireNonNull(k);
-        value = J9Collections.requireNonNull(v);
+    KVHolder(K k, V v) {
+        key = FactoryUtil.requireNonNull(k);
+        value = FactoryUtil.requireNonNull(v);
     }
 
     /**

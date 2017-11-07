@@ -29,20 +29,21 @@ import java.util.Map.Entry;
 
 /**
  * A place for the new Java 9 <a href="http://openjdk.java.net/jeps/269">JEP
- * 269</a> {@code "Immutable Map Static Factory Methods"} in the {@link Map}
+ * 269</a> {@code "Unmodifiable Map Static Factory Methods"} in the {@link Map}
  * interface.
  * 
- * <h2><a id="immutable">Immutable Map Static Factory Methods</a></h2>
- * <p>
- * The {@link Maps2#of() Maps.of()} and {@link Maps2#ofEntries(Map.Entry...)
- * Maps.ofEntries()} static factory methods provide a convenient way to create
- * immutable maps. The {@code Map} instances created by these methods have the
- * following characteristics:
+ * <h2><a id="unmodifiable">Unmodifiable Maps</a></h2>
+ * <p>The {@link Maps2#of() Maps2.of},
+ * {@link Maps2#ofEntries(Map.Entry...) Maps2.ofEntries}, and
+ * {@link Maps2#copyOf Maps2.copyOf}
+ * static factory methods provide a convenient way to create unmodifiable maps.
+ * The {@code Map}
+ * instances created by these methods have the following characteristics:
  *
  * <ul>
- * <li>They are <em>structurally immutable</em>. Keys and values cannot be
- * added, removed, or updated. Calling any mutator method will always cause
- * {@code UnsupportedOperationException} to be thrown.
+ * <li>They are <a href="./package-summary.html#unmodifiable"><i>unmodifiable</i></a>. Keys and values
+ * cannot be added, removed, or updated. Calling any mutator method on the Map
+ * will always cause {@code UnsupportedOperationException} to be thrown.
  * However, if the contained keys or values are themselves mutable, this may cause
  * the Map to behave inconsistently or its contents to appear to change.
  * <li>They disallow {@code null} keys and values. Attempts to create them with
@@ -62,8 +63,8 @@ import java.util.Map.Entry;
  */
 public final class Maps2 {
     /**
-     * Returns an immutable map containing zero mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing zero mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -72,12 +73,12 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> of() {
-        return ImmutableCollections.Map0.instance();
+        return Unmodifiable.Map0.instance();
     }
 
     /**
-     * Returns an immutable map containing a single mapping.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing a single mapping.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -89,12 +90,12 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> of(K k1, V v1) {
-        return new ImmutableCollections.Map1<K, V>(k1, v1);
+        return new Unmodifiable.Map1<K, V>(k1, v1);
     }
 
     /**
-     * Returns an immutable map containing two mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing two mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -109,12 +110,12 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2);
     }
 
     /**
-     * Returns an immutable map containing three mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing three mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -131,12 +132,12 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3);
     }
 
     /**
-     * Returns an immutable map containing four mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing four mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -155,12 +156,12 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4);
     }
 
     /**
-     * Returns an immutable map containing five mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing five mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -181,12 +182,12 @@ public final class Maps2 {
      * @since 9
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
     }
 
     /**
-     * Returns an immutable map containing six mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing six mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -210,13 +211,13 @@ public final class Maps2 {
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                       K k6, V v6) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
-                                                   k6, v6);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
+                                           k6, v6);
     }
 
     /**
-     * Returns an immutable map containing seven mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing seven mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -242,13 +243,13 @@ public final class Maps2 {
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                       K k6, V v6, K k7, V v7) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
-                                                   k6, v6, k7, v7);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
+                                           k6, v6, k7, v7);
     }
 
     /**
-     * Returns an immutable map containing eight mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing eight mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -276,13 +277,13 @@ public final class Maps2 {
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                       K k6, V v6, K k7, V v7, K k8, V v8) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
-                                                   k6, v6, k7, v7, k8, v8);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
+                                           k6, v6, k7, v7, k8, v8);
     }
 
     /**
-     * Returns an immutable map containing nine mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing nine mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -312,13 +313,13 @@ public final class Maps2 {
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                       K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
-                                                   k6, v6, k7, v7, k8, v8, k9, v9);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
+                                           k6, v6, k7, v7, k8, v8, k9, v9);
     }
 
     /**
-     * Returns an immutable map containing ten mappings.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * Returns an unmodifiable map containing ten mappings.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -350,24 +351,24 @@ public final class Maps2 {
      */
     public static <K, V> Map<K, V> of(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5,
                                       K k6, V v6, K k7, V v7, K k8, V v8, K k9, V v9, K k10, V v10) {
-        return new ImmutableCollections.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
-                                                   k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
+        return new Unmodifiable.MapN<K, V>(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5,
+                                           k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
     }
 
     /**
-     * Returns an immutable map containing keys and values extracted from the given entries.
+     * Returns an unmodifiable map containing keys and values extracted from the given entries.
      * The entries themselves are not stored in the map.
-     * See <a href="#immutable">Immutable Map Static Factory Methods</a> for details.
+     * See <a href="#unmodifiable">Unmodifiable Maps</a> for details.
      *
      * <p><b>API Note:</b><br>
-     * It is convenient to create the map entries using the {@link Maps2#entry Maps.entry()} method.
+     * It is convenient to create the map entries using the {@link Maps2#entry Maps2.entry()} method.
      * For example,
      *
      * <pre>
      * {@code
      *     import static java.util.Maps.entry;
      *
-     *     Map<Integer,String> map = Maps.ofEntries(
+     *     Map<Integer,String> map = Maps2.ofEntries(
      *         entry(1, "a"),
      *         entry(2, "b"),
      *         entry(3, "c"),
@@ -383,39 +384,41 @@ public final class Maps2 {
      * @throws NullPointerException if any entry, key, or value is {@code null}, or if
      *         the {@code entries} array is {@code null}
      *
-     * @see Maps2#entry Maps.entry()
+     * @see Maps2#entry Maps2.entry()
      * @since 9
      */
     public static <K, V> Map<K, V> ofEntries(Map.Entry<? extends K, ? extends V>... entries) {
-        if (entries.length == 0) { // implicit null check of entries
-            return ImmutableCollections.Map0.instance();
+        if (entries.length == 0) { // implicit null check of entries array
+            return Unmodifiable.Map0.instance();
         } else if (entries.length == 1) {
-            return new ImmutableCollections.Map1<K, V>(entries[0].getKey(),
-                                                       entries[0].getValue());
+        	// implicit null check of the array slot
+            return new Unmodifiable.Map1<K, V>(entries[0].getKey(),
+                                               entries[0].getValue());
         } else {
             Object[] kva = new Object[entries.length << 1];
             int a = 0;
             for (Map.Entry<? extends K, ? extends V> entry : entries) {
+            	// implicit null checks of each array slot
                 kva[a++] = entry.getKey();
                 kva[a++] = entry.getValue();
             }
-            return new ImmutableCollections.MapN<K, V>(kva);
+            return new Unmodifiable.MapN<K, V>(kva);
         }
     }
 
     /**
-     * Returns an immutable {@link Entry} containing the given key and value.
+     * Returns an unmodifiable {@link Entry} containing the given key and value.
      * These entries are suitable for populating {@code Map} instances using the
-     * {@link Maps2#ofEntries Maps.ofEntries()} method.
+     * {@link Maps2#ofEntries Maps2.ofEntries()} method.
      * The {@code Entry} instances created by this method have the following characteristics:
      *
      * <ul>
      * <li>They disallow {@code null} keys and values. Attempts to create them using a {@code null}
      * key or value result in {@code NullPointerException}.
-     * <li>They are immutable. Calls to {@link Map.Entry#setValue Entry.setValue()}
+     * <li>They are unmodifiable. Calls to {@link Map.Entry#setValue Entry.setValue()}
      * on a returned {@code Entry} result in {@code UnsupportedOperationException}.
      * <li>They are not serializable.
-     * <li>They are <a href="../lang/package-summary.html#Value-based-Classes">value-based</a>.
+     * <li>They are <a href="package-summary.html#Value-based-Classes">value-based</a>.
      * Callers should make no assumptions about the identity of the returned instances.
      * This method is free to create new instances or reuse existing ones. Therefore,
      * identity-sensitive operations on these instances (reference equality ({@code ==}),
@@ -433,12 +436,34 @@ public final class Maps2 {
      * @return an {@code Entry} containing the specified key and value
      * @throws NullPointerException if the key or value is {@code null}
      *
-     * @see Maps2#ofEntries Maps.ofEntries()
+     * @see Maps2#ofEntries Maps2.ofEntries()
      * @since 9
      */
     public static <K, V> Map.Entry<K, V> entry(K k, V v) {
-        // KeyValueHolder checks for nulls
-        return new KeyValueHolder<K, V>(k, v);
+        // KVHolder checks for nulls
+        return new KVHolder<K, V>(k, v);
+    }
+
+    /**
+     * Returns an <a href="#unmodifiable">unmodifiable Map</a> containing the entries
+     * of the given Map. The given Map must not be null, and it must not contain any
+     * null keys or values. If the given Map is subsequently modified, the returned
+     * Map will not reflect such modifications.
+     *
+     * @param <K> the {@code Map}'s key type
+     * @param <V> the {@code Map}'s value type
+     * @param map the map from which entries are drawn, must be non-null
+     * @return the new {@code Map}
+     * @throws NullPointerException if map is null, or if it contains any null keys or values
+     * @since 10
+     */
+    @SuppressWarnings({"unchecked"})
+    public static <K, V> Map<K, V> copyOf(Map<? extends K, ? extends V> map) {
+        if (map instanceof Unmodifiable.AbstractImmutableMap) {
+            return (Map<K, V>) map;
+        } else {
+            return (Map<K, V>) Maps2.ofEntries(map.entrySet().toArray(new Map.Entry[0]));
+        }
     }
 
     private Maps2() {
