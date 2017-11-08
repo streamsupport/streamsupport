@@ -55,7 +55,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class CompletableFutureTest extends JSR166TestCase {
-// CVS rev. 1.189
+// CVS rev. 1.190
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -74,7 +74,7 @@ public class CompletableFutureTest extends JSR166TestCase {
         assertTrue(f.toString().matches(".*\\[.*Not completed.*\\]"));
         try {
             assertNull(f.getNow(null));
-        } catch (Exception fail) { threadUnexpectedException(fail); }
+        } catch (Throwable fail) { threadUnexpectedException(fail); }
         try {
             f.get(randomExpiredTimeout(), randomTimeUnit());
             shouldThrow();
@@ -90,7 +90,7 @@ public class CompletableFutureTest extends JSR166TestCase {
             assertEquals(value, f.join());
             assertEquals(value, f.getNow(null));
             assertEquals(value, f.get());
-        } catch (Exception fail) { threadUnexpectedException(fail); }
+        } catch (Throwable fail) { threadUnexpectedException(fail); }
         assertTrue(f.isDone());
         assertFalse(f.isCancelled());
         assertFalse(f.isCompletedExceptionally());

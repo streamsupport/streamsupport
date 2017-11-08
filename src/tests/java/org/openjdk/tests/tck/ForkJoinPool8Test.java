@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinPool8Test extends JSR166TestCase {
-// CVS rev. 1.37
+// CVS rev. 1.38
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -117,7 +117,7 @@ public class ForkJoinPool8Test extends JSR166TestCase {
         try {
             assertNull(a.get());
             assertNull(a.get(randomTimeout(), randomTimeUnit()));
-        } catch (Exception fail) { threadUnexpectedException(fail); }
+        } catch (Throwable fail) { threadUnexpectedException(fail); }
     }
 
     void checkCancelled(ForkJoinTask<?> a) {

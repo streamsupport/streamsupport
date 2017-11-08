@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 @org.testng.annotations.Test
 public class ForkJoinTaskTest extends JSR166TestCase {
-// CVS rev. 1.54
+// CVS rev. 1.55
 
 //    public static void main(String[] args) {
 //        main(suite(), args);
@@ -127,7 +127,7 @@ public class ForkJoinTaskTest extends JSR166TestCase {
         try {
             assertSame(expected, a.get());
             assertSame(expected, a.get(randomTimeout(), randomTimeUnit()));
-        } catch (Exception fail) { threadUnexpectedException(fail); }
+        } catch (Throwable fail) { threadUnexpectedException(fail); }
     }
 
     void checkCancelled(ForkJoinTask<?> a) {
