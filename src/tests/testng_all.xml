@@ -17,6 +17,7 @@
       <class name="java8.util.stream.SpinedBufferTest"/>
       <class name="java8.util.stream.SliceSpliteratorTest"/>
       <class name="java8.util.stream.StreamReuseTest"/>
+      <class name="java8.util.stream.CustomFJPoolTest"/>
 
       <!-- block 2 -->
       <class name="org.openjdk.tests.java.util.arrays.ParallelPrefix"/>
