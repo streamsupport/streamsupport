@@ -129,7 +129,11 @@ public class CustomFJPoolTest {
             int splitsForPHalfC = countSplits(new ForkJoinPool(ForkJoinPool.getCommonPoolParallelism() / 2));
             int splitsForPC = countSplits(ForkJoinPool.commonPool());
 
-            assertEquals(splitsForPC, splitsForPHalfC * 2);
+            if (Integer.bitCount(commonParallelism - 1) != 1) {
+                assertEquals(splitsForPC, splitsForPHalfC * 2);
+            } else {
+                assertEquals(splitsForPC, splitsForPHalfC * 4);
+            }
         }
     }
 
