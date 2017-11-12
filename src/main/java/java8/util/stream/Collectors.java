@@ -137,6 +137,7 @@ public final class Collectors {
         return ConcurrentHashMap::new;
     }
 
+    @SuppressWarnings("unchecked")
     private static <K, V> Supplier<Map<K, V>> concHashMapNew2() {
         return (Supplier<Map<K, V>>) (Supplier<?>) concHashMapNew();
     }
@@ -147,6 +148,15 @@ public final class Collectors {
 
     private static <T> Supplier<Set<T>> hashSetNew() {
         return HashSet::new;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static final Function<Map<?, ?>, Map<?, ?>> UNMOD_MAP_FINISHER = map -> Maps
+            .ofEntries(map.entrySet().toArray(new Map.Entry[0]));
+
+    @SuppressWarnings("unchecked")
+    private static final <K, U> Function<Map<K, U>, Map<K, U>> unmodMapFinisher() {
+        return (Function<Map<K, U>, Map<K, U>>) (Function<?, ?>) UNMOD_MAP_FINISHER;
     }
 
     /**
@@ -1567,6 +1577,44 @@ public final class Collectors {
     }
 
     /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Maps#ofEntries(java.util.Map.Entry[]) unmodifiable Map},
+     * whose keys and values are the result of applying the provided
+     * mapping functions to the input elements.
+     *
+     * <p>If the mapped keys contain duplicates (according to
+     * {@link Object#equals(Object)}), an {@code IllegalStateException} is
+     * thrown when the collection operation is performed.  If the mapped keys
+     * might have duplicates, use {@link #toUnmodifiableMap(Function, Function, BinaryOperator)}
+     * to handle merging of the values.
+     *
+     * <p>The returned Collector disallows null keys and values. If either mapping function
+     * returns null, {@code NullPointerException} will be thrown.
+     *
+     * @param <T> the type of the input elements
+     * @param <K> the output type of the key mapping function
+     * @param <U> the output type of the value mapping function
+     * @param keyMapper a mapping function to produce keys, must be non-null
+     * @param valueMapper a mapping function to produce values, must be non-null
+     * @return a {@code Collector} which collects elements into an <a href="../Maps.html#unmodifiable">unmodifiable Map</a>
+     * whose keys and values are the result of applying mapping functions to
+     * the input elements
+     * @throws NullPointerException if either keyMapper or valueMapper is null
+     *
+     * @see #toUnmodifiableMap(Function, Function, BinaryOperator)
+     * @since 10
+     */
+    public static <T, K, U>
+    Collector<T, ?, Map<K,U>> toUnmodifiableMap(Function<? super T, ? extends K> keyMapper,
+                                                Function<? super T, ? extends U> valueMapper) {
+        Objects.requireNonNull(keyMapper, "keyMapper");
+        Objects.requireNonNull(valueMapper, "valueMapper");
+        return collectingAndThen(
+                toMap(keyMapper, valueMapper),
+                unmodMapFinisher());
+    }
+
+    /**
      * Returns a {@code Collector} that accumulates elements into a
      * {@code Map} whose keys and values are the result of applying the provided
      * mapping functions to the input elements.
@@ -1625,6 +1673,51 @@ public final class Collectors {
                                     Function<? super T, ? extends U> valueMapper,
                                     BinaryOperator<U> mergeFunction) {
         return toMap(keyMapper, valueMapper, mergeFunction, hashMapNew());
+    }
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Maps#ofEntries(java.util.Map.Entry[]) unmodifiable Map},
+     * whose keys and values are the result of applying the provided
+     * mapping functions to the input elements.
+     *
+     * <p>If the mapped
+     * keys contain duplicates (according to {@link Object#equals(Object)}),
+     * the value mapping function is applied to each equal element, and the
+     * results are merged using the provided merging function.
+     *
+     * <p>The returned Collector disallows null keys and values. If either mapping function
+     * returns null, {@code NullPointerException} will be thrown.
+     *
+     * @param <T> the type of the input elements
+     * @param <K> the output type of the key mapping function
+     * @param <U> the output type of the value mapping function
+     * @param keyMapper a mapping function to produce keys, must be non-null
+     * @param valueMapper a mapping function to produce values, must be non-null
+     * @param mergeFunction a merge function, used to resolve collisions between
+     *                      values associated with the same key, as supplied
+     *                      to {@link Maps#merge(Map, Object, Object, BiFunction)},
+     *                      must be non-null
+     * @return a {@code Collector} which collects elements into an <a href="../Maps.html#unmodifiable">unmodifiable Map</a>
+     * whose keys are the result of applying a key mapping function to the input
+     * elements, and whose values are the result of applying a value mapping
+     * function to all input elements equal to the key and combining them
+     * using the merge function
+     * @throws NullPointerException if the keyMapper, valueMapper, or mergeFunction is null
+     *
+     * @see #toUnmodifiableMap(Function, Function)
+     * @since 10
+     */
+    public static <T, K, U>
+    Collector<T, ?, Map<K,U>> toUnmodifiableMap(Function<? super T, ? extends K> keyMapper,
+                                                Function<? super T, ? extends U> valueMapper,
+                                                BinaryOperator<U> mergeFunction) {
+        Objects.requireNonNull(keyMapper, "keyMapper");
+        Objects.requireNonNull(valueMapper, "valueMapper");
+        Objects.requireNonNull(mergeFunction, "mergeFunction");
+        return collectingAndThen(
+                toMap(keyMapper, valueMapper, mergeFunction, hashMapNew()),
+                Collectors.<K, U>unmodMapFinisher());
     }
 
     /**
