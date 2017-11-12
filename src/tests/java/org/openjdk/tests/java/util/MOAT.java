@@ -92,6 +92,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import java8.lang.Integers;
 import java8.util.Lists;
 import java8.util.Lists2;
 import java8.util.Maps;
@@ -100,6 +101,8 @@ import java8.util.Objects;
 import java8.util.Sets;
 import java8.util.Sets2;
 import java8.util.concurrent.ThreadLocalRandom;
+import java8.util.stream.Collectors;
+import java8.util.stream.RefStreams;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -171,6 +174,12 @@ public class MOAT {
         testImmutableList(listCopy);
         testListMutatorsAlwaysThrow(listCopy);
 
+        List<Integer> listCollected = RefStreams.of(1, 2, 3).collect(Collectors.toUnmodifiableList());
+        equal(listCollected, Lists.of(1, 2, 3));
+        testCollection(listCollected);
+        testImmutableList(listCollected);
+        testListMutatorsAlwaysThrow(listCollected);
+
         // Immutable Set
         testEmptySet(Sets2.of());
         testEmptySet(Sets.of());
@@ -218,6 +227,13 @@ public class MOAT {
         testCollection(setCopy);
         testImmutableSet(setCopy);
         testCollMutatorsAlwaysThrow(setCopy);
+
+        Set<Integer> setCollected = RefStreams.of(1, 1, 2, 3, 2, 3)
+                                              .collect(Collectors.toUnmodifiableSet());
+        equal(setCollected, Sets.of(1, 2, 3));
+        testCollection(setCollected);
+        testImmutableSet(setCollected);
+        testCollMutatorsAlwaysThrow(setCollected);
 
         // Immutable Map
 
@@ -278,6 +294,30 @@ public class MOAT {
         testMap(mapCopy);
         testImmutableMap(mapCopy);
         testMapMutatorsAlwaysThrow(mapCopy);
+
+        Map<Integer,Integer> mapCollected1 =
+            RefStreams.of(1, 2, 3)
+                      .collect(Collectors.toUnmodifiableMap(i -> i, i -> 101 * i));
+        equal(mapCollected1, Maps.of(1, 101, 2, 202, 3, 303));
+        testMap(mapCollected1);
+        testImmutableMap(mapCollected1);
+        testMapMutatorsAlwaysThrow(mapCollected1);
+
+        try {
+            RefStreams.of(1, 1, 2, 3, 2, 3)
+                      .collect(Collectors.toUnmodifiableMap(i -> i, i -> 101 * i));
+            fail("duplicates should have thrown an exception");
+        } catch (IllegalStateException ise) {
+            pass();
+        }
+
+        Map<Integer,Integer> mapCollected2 =
+            RefStreams.of(1, 1, 2, 3, 2, 3)
+                      .collect(Collectors.toUnmodifiableMap(i -> i, i -> 101 * i, Integers::sum));
+        equal(mapCollected2, Maps.of(1, 202, 2, 404, 3, 606));
+        testMap(mapCollected2);
+        testImmutableMap(mapCollected2);
+        testMapMutatorsAlwaysThrow(mapCollected2);
 
         Assert.assertEquals(failed, 0, failed + " tests did fail!");
     }
