@@ -382,13 +382,13 @@ public final class Collectors {
 
     /**
      * Returns a {@code Collector} that accumulates the input elements into an
-     * <a href="../Lists.html#unmodifiable">unmodifiable List</a> in encounter
+     * {@link Lists#of(Object[]) unmodifiable List} in encounter
      * order. The returned Collector disallows null values and will throw
      * {@code NullPointerException} if it is presented with a null value.
      *
      * @param <T> the type of the input elements
-     * @return a {@code Collector} which collects all the input elements into a
-     * {@code List}, in encounter order
+     * @return a {@code Collector} which collects all the input elements into an
+     * <a href="../Lists.html#unmodifiable">unmodifiable List</a>, in encounter order
      * @since 10
      */
     @SuppressWarnings("unchecked")
