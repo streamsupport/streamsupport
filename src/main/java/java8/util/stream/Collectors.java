@@ -44,6 +44,7 @@ import java.util.concurrent.ConcurrentMap;
 import java8.util.Lists;
 import java8.util.Maps;
 import java8.util.Objects;
+import java8.util.Sets;
 import java8.util.DoubleSummaryStatistics;
 import java8.util.IntSummaryStatistics;
 import java8.util.LongSummaryStatistics;
@@ -142,6 +143,10 @@ public final class Collectors {
 
     private static <T> Supplier<List<T>> arrayListNew() {
         return ArrayList::new;
+    }
+
+    private static <T> Supplier<Set<T>> hashSetNew() {
+        return HashSet::new;
     }
 
     /**
@@ -375,7 +380,7 @@ public final class Collectors {
      */
     public static <T>
     Collector<T, ?, List<T>> toList() {
-        return new CollectorImpl<>(Collectors.<T>arrayListNew(), List::add,
+        return new CollectorImpl<>(arrayListNew(), List::add,
                                    (left, right) -> { left.addAll(right); return left; },
                                    CH_ID);
     }
@@ -394,7 +399,7 @@ public final class Collectors {
     @SuppressWarnings("unchecked")
     public static <T>
     Collector<T, ?, List<T>> toUnmodifiableList() {
-        return new CollectorImpl<>(Collectors.<T>arrayListNew(), List::add,
+        return new CollectorImpl<>(arrayListNew(), List::add,
                                    (left, right) -> { left.addAll(right); return left; },
                                    list -> (List<T>) Lists.of(list.toArray()),
                                    CH_NOID);
@@ -416,7 +421,7 @@ public final class Collectors {
      */
     public static <T>
     Collector<T, ?, Set<T>> toSet() {
-        return new CollectorImpl<>((Supplier<Set<T>>) HashSet::new, Set::add,
+        return new CollectorImpl<>(hashSetNew(), Set::add,
                                    (left, right) -> {
                                         if (left.size() < right.size()) {
                                            right.addAll(left); return right;
@@ -425,6 +430,36 @@ public final class Collectors {
                                         }
                                     },
                                     CH_UNORDERED_ID);
+    }
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Sets#of(Object[]) unmodifiable Set}. The returned
+     * Collector disallows null values and will throw {@code NullPointerException}
+     * if it is presented with a null value. If the input contains duplicate elements,
+     * an arbitrary element of the duplicates is preserved.
+     *
+     * <p>This is an {@link Collector.Characteristics#UNORDERED unordered}
+     * Collector.
+     *
+     * @param <T> the type of the input elements
+     * @return a {@code Collector} which collects all the input elements into an
+     * <a href="../Sets.html#unmodifiable">unmodifiable Set</a>
+     * @since 10
+     */
+    @SuppressWarnings("unchecked")
+    public static <T>
+    Collector<T, ?, Set<T>> toUnmodifiableSet() {
+        return new CollectorImpl<>(hashSetNew(), Set::add,
+                                   (left, right) -> {
+                                       if (left.size() < right.size()) {
+                                           right.addAll(left); return right;
+                                       } else {
+                                           left.addAll(right); return left;
+                                       }
+                                   },
+                                   set -> (Set<T>) Sets.of(set.toArray()),
+                                   CH_UNORDERED_NOID);
     }
 
     /**
