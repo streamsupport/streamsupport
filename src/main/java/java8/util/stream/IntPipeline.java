@@ -462,7 +462,7 @@ abstract class IntPipeline<E_IN>
 
     @Override
     public final IntSummaryStatistics summaryStatistics() {
-        return collect(IntSummaryStatistics::new, IntSummaryStatistics::accept,
+        return collect(Collectors.INT_SUM_STATS, IntSummaryStatistics::accept,
                        IntSummaryStatistics::combine);
     }
 
@@ -515,7 +515,7 @@ abstract class IntPipeline<E_IN>
 
     @Override
     public final int[] toArray() {
-        return Nodes.flattenInt((Node.OfInt) evaluateToArrayNode(Integer[]::new))
+        return Nodes.flattenInt((Node.OfInt) evaluateToArrayNode(WhileOps.INT_ARR_GEN))
                         .asPrimitiveArray();
     }
 

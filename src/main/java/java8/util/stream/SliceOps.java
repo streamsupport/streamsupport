@@ -255,7 +255,7 @@ final class SliceOps {
                             skip, limit, size);
                 }
                 else {
-                    return new SliceTask<>(this, helper, spliterator, Integer[]::new, skip, limit).
+                    return new SliceTask<>(this, helper, spliterator, WhileOps.INT_ARR_GEN, skip, limit).
                             invoke().spliterator();
                 }
             }
@@ -364,7 +364,7 @@ final class SliceOps {
                             skip, limit, size);
                 }
                 else {
-                    return new SliceTask<>(this, helper, spliterator, Long[]::new, skip, limit).
+                    return new SliceTask<>(this, helper, spliterator, WhileOps.LONG_ARR_GEN, skip, limit).
                             invoke().spliterator();
                 }
             }
@@ -473,7 +473,7 @@ final class SliceOps {
                             skip, limit, size);
                 }
                 else {
-                    return new SliceTask<>(this, helper, spliterator, Double[]::new, skip, limit).
+                    return new SliceTask<>(this, helper, spliterator, WhileOps.DOUBLE_ARR_GEN, skip, limit).
                             invoke().spliterator();
                 }
             }

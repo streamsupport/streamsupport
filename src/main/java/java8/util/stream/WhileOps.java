@@ -53,9 +53,9 @@ final class WhileOps {
 
     static final int DROP_FLAGS = StreamOpFlag.NOT_SIZED;
 
-    private static final IntFunction<Integer[]> INT_ARR_GEN = Integer[]::new;
-    private static final IntFunction<Long[]> LONG_ARR_GEN = Long[]::new;
-    private static final IntFunction<Double[]> DOUBLE_ARR_GEN = Double[]::new;
+    static final IntFunction<Integer[]> INT_ARR_GEN = Integer[]::new;
+    static final IntFunction<Long[]> LONG_ARR_GEN = Long[]::new;
+    static final IntFunction<Double[]> DOUBLE_ARR_GEN = Double[]::new;
 
     /**
      * Appends a "takeWhile" operation to the provided Stream.

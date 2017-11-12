@@ -446,7 +446,7 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public final LongSummaryStatistics summaryStatistics() {
-        return collect(LongSummaryStatistics::new, LongSummaryStatistics::accept,
+        return collect(Collectors.LNG_SUM_STATS, LongSummaryStatistics::accept,
                        LongSummaryStatistics::combine);
     }
 
@@ -499,7 +499,7 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public final long[] toArray() {
-        return Nodes.flattenLong((Node.OfLong) evaluateToArrayNode(Long[]::new))
+        return Nodes.flattenLong((Node.OfLong) evaluateToArrayNode(WhileOps.LONG_ARR_GEN))
                 .asPrimitiveArray();
     }
 

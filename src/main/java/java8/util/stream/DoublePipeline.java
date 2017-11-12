@@ -467,7 +467,7 @@ abstract class DoublePipeline<E_IN>
 
     @Override
     public final DoubleSummaryStatistics summaryStatistics() {
-        return collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept,
+        return collect(Collectors.DBL_SUM_STATS, DoubleSummaryStatistics::accept,
                        DoubleSummaryStatistics::combine);
     }
 
@@ -520,7 +520,7 @@ abstract class DoublePipeline<E_IN>
 
     @Override
     public final double[] toArray() {
-        return Nodes.flattenDouble((Node.OfDouble) evaluateToArrayNode(Double[]::new))
+        return Nodes.flattenDouble((Node.OfDouble) evaluateToArrayNode(WhileOps.DOUBLE_ARR_GEN))
                         .asPrimitiveArray();
     }
 
