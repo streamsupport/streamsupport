@@ -45,6 +45,7 @@ import java8.util.stream.IntStreams;
 import java8.util.stream.StreamSupport;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 @Test
 public class CustomFJPoolTest {
@@ -129,11 +130,9 @@ public class CustomFJPoolTest {
             int splitsForPHalfC = countSplits(new ForkJoinPool(ForkJoinPool.getCommonPoolParallelism() / 2));
             int splitsForPC = countSplits(ForkJoinPool.commonPool());
 
-            if (Integer.bitCount(commonParallelism - 1) != 1) {
-                assertEquals(splitsForPC, splitsForPHalfC * 2);
-            } else {
-                assertEquals(splitsForPC, splitsForPHalfC * 4);
-            }
+            assertTrue(splitsForPHalfC < splitsForPC);
+            assertEquals(splitsForPC / splitsForPHalfC,
+                         nearestPowerOfTwo(commonParallelism) / nearestPowerOfTwo(commonParallelism / 2));
         }
     }
 
@@ -145,5 +144,11 @@ public class CustomFJPoolTest {
             return cs.splits();
         });
         return fInteger.get();
+    }
+
+    static int nearestPowerOfTwo(int i) {
+        return (i & (i - 1)) == 0
+               ? i
+               : 1 << (32 - Integer.numberOfLeadingZeros(i));
     }
 }
