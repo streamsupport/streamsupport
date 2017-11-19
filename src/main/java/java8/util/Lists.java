@@ -68,12 +68,27 @@ import java8.util.function.UnaryOperator;
  */
 public final class Lists {
     /**
-     * Sorts the passed list using the supplied {@code Comparator} to compare
-     * elements.
+     * Sorts the passed list according to the order induced by the specified
+     * {@link Comparator}. The sort is <i>stable</i>: this method does not
+     * reorder equal elements.
+     *
+     * <p>All elements in the list must be <i>mutually comparable</i> using the
+     * specified comparator (that is, {@code c.compare(e1, e2)} must not throw
+     * a {@code ClassCastException} for any elements {@code e1} and {@code e2}
+     * in the list).
+     *
+     * <p>If the specified comparator is {@code null} then all elements in the
+     * list must implement the {@link Comparable} interface and the elements'
+     * {@linkplain Comparable natural ordering} should be used.
+     *
+     * <p>The list must be modifiable, but need not be resizable.
      *
      * <p><b>Implementation Requirements:</b><br>
-     * The default implementation is equivalent to, for the passed {@code list}:
-     * <pre>Collections.sort(list, c)</pre>
+     * The implementation obtains an array containing all elements in
+     * the list, sorts the array, and iterates over the list resetting each
+     * element from the corresponding position in the array. (This avoids the
+     * n<sup>2</sup> log(n) performance that would result from attempting
+     * to sort a linked list in place.)
      *
      * @param <E> the type of the elements of the list to be sorted
      * @param list the list that should be sorted
