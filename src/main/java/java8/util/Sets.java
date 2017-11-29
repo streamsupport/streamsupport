@@ -325,9 +325,13 @@ public final class Sets {
      * an arbitrary element of the duplicates is preserved. If the given Collection is
      * subsequently modified, the returned Set will not reflect such modifications.
      *
+     * <p><b>Implementation Note:</b>
+     * If the given Collection is an <a href="#unmodifiable">unmodifiable Set</a>,
+     * calling copyOf will generally not create a copy.
+     * 
      * @param <E> the {@code Set}'s element type
      * @param coll the collection from which elements are drawn, must be non-null
-     * @return the new {@code Set}
+     * @return a {@code Set} containing the elements of the given {@code Collection}
      * @throws NullPointerException if coll is null, or if it contains any nulls
      * @since 10
      */

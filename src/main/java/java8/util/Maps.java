@@ -1331,10 +1331,14 @@ public final class Maps {
      * null keys or values. If the given Map is subsequently modified, the returned
      * Map will not reflect such modifications.
      *
+     * <p><b>Implementation Note:</b>
+     * If the given Map is an <a href="#unmodifiable">unmodifiable Map</a>,
+     * calling copyOf will generally not create a copy.
+     * 
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
      * @param map the map from which entries are drawn, must be non-null
-     * @return the new {@code Map}
+     * @return a {@code Map} containing the entries of the given {@code Map}
      * @throws NullPointerException if map is null, or if it contains any null keys or values
      * @since 10
      */

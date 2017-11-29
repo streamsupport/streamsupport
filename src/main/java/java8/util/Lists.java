@@ -429,9 +429,13 @@ public final class Lists {
      * and it must not contain any null elements. If the given Collection is subsequently
      * modified, the returned List will not reflect such modifications.
      *
+     * <p><b>Implementation Note:</b>
+     * If the given Collection is an <a href="#unmodifiable">unmodifiable List</a>,
+     * calling copyOf will generally not create a copy.
+     * 
      * @param <E> the {@code List}'s element type
      * @param coll the collection from which elements are drawn, must be non-null
-     * @return the new {@code List}
+     * @return a {@code List} containing the elements of the given {@code Collection}
      * @throws NullPointerException if coll is null, or if it contains any nulls
      * @since 10
      */
