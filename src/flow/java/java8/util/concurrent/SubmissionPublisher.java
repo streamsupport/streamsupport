@@ -146,7 +146,7 @@ import static java8.util.concurrent.Flow.Subscription;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Publisher<T> {
-// CVS rev. 1.76
+// CVS rev. 1.77
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -980,7 +980,6 @@ public class SubmissionPublisher<T> implements Publisher<T> {
         volatile long pad00, pad01, pad02, pad03, pad04, pad05, pad06, pad07;
         volatile long pad08, pad09, pad0a, pad0b, pad0c, pad0d, pad0e, pad0f;
 
-        // Order-sensitive field declarations
         long timeout;                      // Long.MAX_VALUE if untimed wait
         int head;                          // next position to take
         int tail;                          // next position to put
