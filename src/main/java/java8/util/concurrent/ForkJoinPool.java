@@ -923,33 +923,6 @@ public class ForkJoinPool extends AbstractExecutorService {
         // Specialized execution methods
 
         /**
-         * Atomically exchanges the given reference value with the current
-         * reference value of a field or array element within the given
-         * object <code>o</code> at the given <code>offset</code>.
-         *
-         * @param o object/array to update the field/element in
-         * @param offset field/element offset
-         * @param newValue new value
-         * @return the previous value
-         * @since 1.8
-         */
-        static Object getAndSetObject(Object o, long offset, Object newValue) {
-            Object v;
-            do {
-                v = U.getObjectVolatile(o, offset);
-            } while (!U.compareAndSwapObject(o, offset, v, newValue));
-            return v;
-        }
-
-        static long getAndSetLong(Object o, long offset, long newValue) {
-            long v;
-            do {
-                v = U.getLongVolatile(o, offset);
-            } while (!U.compareAndSwapLong(o, offset, v, newValue));
-            return v;
-        }
-
-        /**
          * Pops and executes up to limit consecutive tasks or until empty.
          *
          * @param limit max runs, or zero for no limit
@@ -1357,6 +1330,33 @@ public class ForkJoinPool extends AbstractExecutorService {
         do {
             v = U.getLongVolatile(o, offset);
         } while (!U.compareAndSwapLong(o, offset, v, v + delta));
+        return v;
+    }
+
+    /**
+     * Atomically exchanges the given reference value with the current
+     * reference value of a field or array element within the given
+     * object <code>o</code> at the given <code>offset</code>.
+     *
+     * @param o object/array to update the field/element in
+     * @param offset field/element offset
+     * @param newValue new value
+     * @return the previous value
+     * @since 1.8
+     */
+    static Object getAndSetObject(Object o, long offset, Object newValue) {
+        Object v;
+        do {
+            v = U.getObjectVolatile(o, offset);
+        } while (!U.compareAndSwapObject(o, offset, v, newValue));
+        return v;
+    }
+
+    static long getAndSetLong(Object o, long offset, long newValue) {
+        long v;
+        do {
+            v = U.getLongVolatile(o, offset);
+        } while (!U.compareAndSwapLong(o, offset, v, newValue));
         return v;
     }
 
