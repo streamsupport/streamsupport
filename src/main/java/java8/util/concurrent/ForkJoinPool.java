@@ -933,11 +933,19 @@ public class ForkJoinPool extends AbstractExecutorService {
          * @return the previous value
          * @since 1.8
          */
-        private static Object getAndSetObject(Object o, long offset, Object newValue) {
+        static Object getAndSetObject(Object o, long offset, Object newValue) {
             Object v;
             do {
                 v = U.getObjectVolatile(o, offset);
             } while (!U.compareAndSwapObject(o, offset, v, newValue));
+            return v;
+        }
+
+        static long getAndSetLong(Object o, long offset, long newValue) {
+            long v;
+            do {
+                v = U.getLongVolatile(o, offset);
+            } while (!U.compareAndSwapLong(o, offset, v, newValue));
             return v;
         }
 
