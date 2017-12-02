@@ -18,7 +18,7 @@ import java8.util.function.DoubleBinaryOperator;
  */
 @SuppressWarnings("serial")
 abstract class Striped64 extends Number {
-// CVS rev. 1.22
+// CVS rev. 1.24
     /*
      * This class maintains a lazily-initialized table of atomically
      * updated variables, plus an extra "base" field. The table size
@@ -107,6 +107,9 @@ abstract class Striped64 extends Number {
         final void reset(long identity) {
             U.putLongVolatile(this, VALUE, identity);
         }
+        final long getAndSet(long val) {
+            return getAndSetLong(this, VALUE, val);
+        }
 
         // Unsafe mechanics
         private static final sun.misc.Unsafe U = UnsafeAccess.unsafe;
@@ -151,6 +154,10 @@ abstract class Striped64 extends Number {
      */
     final boolean casBase(long cmp, long val) {
         return U.compareAndSwapLong(this, BASE, cmp, val);
+    }
+
+    final long getAndSetBase(long val) {
+        return getAndSetLong(this, BASE, val);
     }
 
     /**
@@ -369,6 +376,14 @@ abstract class Striped64 extends Number {
                 break done;
             }
         }
+    }
+
+    static long getAndSetLong(Object o, long offset, long newValue) {
+        long v;
+        do {
+            v = U.getLongVolatile(o, offset);
+        } while (!U.compareAndSwapLong(o, offset, v, newValue));
+        return v;
     }
 
     // Unsafe mechanics
