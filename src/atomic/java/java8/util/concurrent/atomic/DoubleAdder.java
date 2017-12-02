@@ -32,7 +32,7 @@ import java.io.Serializable;
  * @author Doug Lea
  */
 public class DoubleAdder extends Striped64 implements Serializable {
-// CVS rev. 1.19
+// CVS rev. 1.20
     private static final long serialVersionUID = 7249069246863182397L;
 
     /*
@@ -129,14 +129,12 @@ public class DoubleAdder extends Striped64 implements Serializable {
      */
     public double sumThenReset() {
         Cell[] as = cells;
-        double sum = Double.longBitsToDouble(base);
-        base = 0L;
+        double sum = Double.longBitsToDouble(getAndSetBase(0L));
+
         if (as != null) {
             for (Cell a : as) {
                 if (a != null) {
-                    long v = a.value;
-                    a.reset();
-                    sum += Double.longBitsToDouble(v);
+                    sum += Double.longBitsToDouble(a.getAndSet(0L));
                 }
             }
         }

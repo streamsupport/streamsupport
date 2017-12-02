@@ -51,7 +51,7 @@ import java8.util.function.LongBinaryOperator;
  * @author Doug Lea
  */
 public class LongAccumulator extends Striped64 implements Serializable {
-// CVS rev. 1.33
+// CVS rev. 1.34
     private static final long serialVersionUID = 7249069246863182397L;
 
     private final LongBinaryOperator function;
@@ -144,13 +144,12 @@ public class LongAccumulator extends Striped64 implements Serializable {
      */
     public long getThenReset() {
         Cell[] as = cells;
-        long result = base;
-        base = identity;
+        long result = getAndSetBase(identity);
+
         if (as != null) {
             for (Cell a : as) {
                 if (a != null) {
-                    long v = a.value;
-                    a.reset(identity);
+                    long v = a.getAndSet(identity);
                     result = function.applyAsLong(result, v);
                 }
             }

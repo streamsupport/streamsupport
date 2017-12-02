@@ -39,7 +39,7 @@ import java.io.Serializable;
  * @author Doug Lea
  */
 public class LongAdder extends Striped64 implements Serializable {
-// CVS rev. 1.19
+// CVS rev. 1.20
     private static final long serialVersionUID = 7249069246863182397L;
 
     /**
@@ -135,13 +135,12 @@ public class LongAdder extends Striped64 implements Serializable {
      */
     public long sumThenReset() {
         Cell[] as = cells;
-        long sum = base;
-        base = 0L;
+        long sum = getAndSetBase(0L);
+
         if (as != null) {
             for (Cell a : as) {
                 if (a != null) {
-                    sum += a.value;
-                    a.reset();
+                    sum += a.getAndSet(0L);
                 }
             }
         }
