@@ -52,7 +52,7 @@ import java8.util.function.DoubleBinaryOperator;
  * @author Doug Lea
  */
 public class DoubleAccumulator extends Striped64 implements Serializable {
-// CVS rev. 1.40
+// CVS rev. 1.41
     private static final long serialVersionUID = 7249069246863182397L;
 
     private final DoubleBinaryOperator function;
@@ -76,20 +76,20 @@ public class DoubleAccumulator extends Striped64 implements Serializable {
      * @param x the value
      */
     public void accumulate(double x) {
-        Cell[] as; long b, v, r; int m; Cell a;
-        if ((as = cells) != null
+        Cell[] cs; long b, v, r; int m; Cell c;
+        if ((cs = cells) != null
             || ((r = doubleToRawLongBits
                 (function.applyAsDouble(longBitsToDouble(b = base), x))) != b
                 && !casBase(b, r))) {
             boolean uncontended = true;
-            if (as == null
-                || (m = as.length - 1) < 0
-                || (a = as[getProbe() & m]) == null
+            if (cs == null
+                || (m = cs.length - 1) < 0
+                || (c = cs[getProbe() & m]) == null
                 || !(uncontended =
                      ((r = doubleToRawLongBits
                        (function.applyAsDouble
-                        (longBitsToDouble(v = a.value), x))) == v)
-                     || a.cas(v, r)))
+                        (longBitsToDouble(v = c.value), x))) == v)
+                     || c.cas(v, r)))
                 doubleAccumulate(x, function, uncontended);
         }
     }
@@ -104,13 +104,13 @@ public class DoubleAccumulator extends Striped64 implements Serializable {
      * @return the current value
      */
     public double get() {
-        Cell[] as = cells;
+        Cell[] cs = cells;
         double result = longBitsToDouble(base);
-        if (as != null) {
-            for (Cell a : as) {
-                if (a != null) {
+        if (cs != null) {
+            for (Cell c : cs) {
+                if (c != null) {
                     result = function.applyAsDouble
-                        (result, longBitsToDouble(a.value));
+                        (result, longBitsToDouble(c.value));
                 }
             }
         }
@@ -126,12 +126,12 @@ public class DoubleAccumulator extends Striped64 implements Serializable {
      * updating.
      */
     public void reset() {
-        Cell[] as = cells;
+        Cell[] cs = cells;
         base = identity;
-        if (as != null) {
-            for (Cell a : as) {
-                if (a != null) {
-                    a.reset(identity);
+        if (cs != null) {
+            for (Cell c : cs) {
+                if (c != null) {
+                    c.reset(identity);
                 }
             }
         }
@@ -148,13 +148,13 @@ public class DoubleAccumulator extends Striped64 implements Serializable {
      * @return the value before reset
      */
     public double getThenReset() {
-        Cell[] as = cells;
+        Cell[] cs = cells;
         double result = longBitsToDouble(getAndSetBase(identity));
 
-        if (as != null) {
-            for (Cell a : as) {
-                if (a != null) {
-                    double v = longBitsToDouble(a.getAndSet(identity));
+        if (cs != null) {
+            for (Cell c : cs) {
+                if (c != null) {
+                    double v = longBitsToDouble(c.getAndSet(identity));
                     result = function.applyAsDouble(result, v);
                 }
             }
