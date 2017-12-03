@@ -1352,12 +1352,25 @@ public class ForkJoinPool extends AbstractExecutorService {
         return v;
     }
 
-    static long getAndSetLong(Object o, long offset, long newValue) {
-        long v;
+//    static long getAndSetLong(Object o, long offset, long newValue) {
+//        long v;
+//        do {
+//            v = U.getLongVolatile(o, offset);
+//        } while (!U.compareAndSwapLong(o, offset, v, newValue));
+//        return v;
+//    }
+
+    /**
+     * Atomically sets the value of a variable to the result
+     * of bitwise OR between the variable's current value and
+     * the mask with volatile memory semantics.
+     */
+    static int getAndBitwiseOr(Object o, long offset, int mask) {
+        int oldVal;
         do {
-            v = U.getLongVolatile(o, offset);
-        } while (!U.compareAndSwapLong(o, offset, v, newValue));
-        return v;
+            oldVal = U.getIntVolatile(o, offset);
+        } while (!U.compareAndSwapInt(o, offset, oldVal, oldVal | mask));
+        return oldVal;
     }
 
     // Creating, registering and deregistering workers

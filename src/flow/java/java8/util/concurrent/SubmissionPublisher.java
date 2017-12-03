@@ -1039,7 +1039,7 @@ public class SubmissionPublisher<T> implements Publisher<T> {
         }
 
         final int getAndBitwiseOrCtl(int bits) {
-            return getAndBitwiseOr(this, CTL, bits);
+            return ForkJoinPool.getAndBitwiseOr(this, CTL, bits);
         }
 
         final long subtractDemand(int k) {
@@ -1049,19 +1049,6 @@ public class SubmissionPublisher<T> implements Publisher<T> {
 
         final boolean casDemand(long cmp, long val) {
             return U.compareAndSwapLong(this, DEMAND, cmp, val);
-        }
-
-        /**
-         * Atomically sets the value of a variable to the result
-         * of bitwise OR between the variable's current value and
-         * the mask with volatile memory semantics.
-         */
-        static int getAndBitwiseOr(Object o, long offset, int mask) {
-            int oldVal;
-            do {
-                oldVal = U.getIntVolatile(o, offset);
-            } while (!U.compareAndSwapInt(o, offset, oldVal, oldVal | mask));
-            return oldVal;
         }
 
         static Object getAndSetArrayElement(Object[] array, int index, Object newVal) {
