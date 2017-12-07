@@ -146,7 +146,7 @@ import static java8.util.concurrent.Flow.Subscription;
  * @since 9
  */
 public class SubmissionPublisher<T> implements Publisher<T> {
-// CVS rev. 1.77
+// CVS rev. 1.78
     /*
      * Most mechanics are handled by BufferedSubscription. This class
      * mainly tracks subscribers and ensures sequentiality, by using
@@ -1268,18 +1268,20 @@ public class SubmissionPublisher<T> implements Publisher<T> {
                         head = h += taken;
                         d = subtractDemand(taken);
                     }
-                    else if ((empty = (t == h)) && (c & COMPLETE) != 0) {
-                        closeOnComplete(s);          // end of stream
-                        break;
-                    }
                     else if ((d = demand) == 0L && (c & REQS) != 0)
                         weakCasCtl(c, c & ~REQS);    // exhausted demand
                     else if (d != 0L && (c & REQS) == 0)
                         weakCasCtl(c, c | REQS);     // new demand
-                    else if (t == (t = tail) && (empty || d == 0L)) {
-                        int bit = ((c & ACTIVE) != 0) ? ACTIVE : RUN;
-                        if (weakCasCtl(c, c & ~bit) && bit == RUN)
-                            break;                   // un-keep-alive or exit
+                    else if (t == (t = tail)) {      // stability check
+                        if ((empty = (t == h)) && (c & COMPLETE) != 0) {
+                            closeOnComplete(s);      // end of stream
+                            break;
+                        }
+                        else if (empty || d == 0L) {
+                            int bit = ((c & ACTIVE) != 0) ? ACTIVE : RUN;
+                            if (weakCasCtl(c, c & ~bit) && bit == RUN)
+                                break;               // un-keep-alive or exit
+                        }
                     }
                 }
             }
