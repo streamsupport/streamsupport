@@ -38,7 +38,7 @@ import org.testng.annotations.Test;
 public class LongNodeTest extends OpTestCase {
 
     // see https://sourceforge.net/p/streamsupport/tickets/149/?limit=25&page=1#145a
-    private static final int MAX_SIZE = 1000;
+    private static final int MAX_SIZE = 8000;
 
     @DataProvider(name = "nodes")
     public Object[][] createSizes() {
