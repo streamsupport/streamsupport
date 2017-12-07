@@ -392,7 +392,7 @@ package java8.util.concurrent;
  * @author Doug Lea
  */
 public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
-// CVS rev. 1.65
+// CVS rev. 1.64
 
     private static final long serialVersionUID = 5232453752276485070L;
 
@@ -707,7 +707,7 @@ public abstract class CountedCompleter<T> extends ForkJoinTask<T> {
         CountedCompleter<?> a = this, s = a;
         while (a.onExceptionalCompletion(ex, s) &&
                (a = (s = a).completer) != null && a.status >= 0 &&
-               isExceptionalStatus(a.recordExceptionalCompletion(ex)))
+               a.recordExceptionalCompletion(ex) == EXCEPTIONAL)
             ;
     }
 
