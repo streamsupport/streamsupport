@@ -45,14 +45,22 @@ public class NodeTest extends OpTestCase {
 
         for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, MAX_SIZE)) {
             Integer[] array = new Integer[size];
+            Integer[] degenerateTreeArray = new Integer[size];
             for (int i = 0; i < array.length; i++) {
                 array[i] = i;
+            }
+            if (size < MAX_SIZE) {
+                for (int i = 0; i < degenerateTreeArray.length; i++) {
+                    degenerateTreeArray[i] = i;
+                }
             }
 
             List<Node<Integer>> nodes = new ArrayList<>();
             nodes.add(Nodes.node(array));
             nodes.add(Nodes.node(Arrays.asList(array)));
-            nodes.add(degenerateTree(Arrays.asList(array).iterator()));
+            if (size < MAX_SIZE) {
+                nodes.add(degenerateTree(Arrays.asList(array).iterator()));
+            }
             nodes.add(tree(Arrays.asList(array), l -> Nodes.node(l.toArray(new Integer[l.size()]))));
             nodes.add(tree(Arrays.asList(array), l -> Nodes.node(l)));
             nodes.add(fill(array, Nodes.builder(array.length, LambdaTestHelpers.integerArrayGenerator)));
