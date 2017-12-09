@@ -1034,12 +1034,25 @@ public class SubmissionPublisher<T> implements Publisher<T> {
 
         // Wrappers for some VarHandle methods
 
+        /**
+         * Atomically sets the value of a variable to the result
+         * of bitwise OR between the variable's current value and
+         * the mask with volatile memory semantics.
+         */
+        static int getAndBitwiseOr(Object o, long offset, int mask) {
+            int oldVal;
+            do {
+                oldVal = U.getIntVolatile(o, offset);
+            } while (!U.compareAndSwapInt(o, offset, oldVal, oldVal | mask));
+            return oldVal;
+        }
+
         final boolean weakCasCtl(int cmp, int val) {
             return U.compareAndSwapInt(this, CTL, cmp, val);
         }
 
         final int getAndBitwiseOrCtl(int bits) {
-            return ForkJoinPool.getAndBitwiseOr(this, CTL, bits);
+            return getAndBitwiseOr(this, CTL, bits);
         }
 
         final long subtractDemand(int k) {
