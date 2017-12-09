@@ -44,7 +44,7 @@ public class LongNodeTest extends OpTestCase {
     public Object[][] createSizes() {
         List<Object[]> params = new ArrayList<>();
 
-        for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, MAX_SIZE)) {
+        for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, 1000, MAX_SIZE)) {
             long[] array = new long[size];
             long[] degenerateTreeArray = new long[size];
             for (int i = 0; i < array.length; i++) {
