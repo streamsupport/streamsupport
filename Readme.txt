@@ -1,6 +1,6 @@
 RELEASE NOTES
 
- - "1.5.6-stable" is the current stable release
+ - "1.6.0-stable" is the current stable release
 
 
 GENERAL
@@ -58,6 +58,16 @@ GENERAL
 
    This feature can be disabled by setting the system property
    "java8.util.Spliterators.jre.delegation.enabled" to false.
+
+ - Release 1.6.0 introduces some new methods from the Java 10 API
+   (cf. version history for details)
+
+ - As of release 1.6.0 "streamsupport-literal" has been merged into the
+   core streamsupport.jar component in order to make the new Collectors
+   for unmodifiable Lists, Sets, and Maps (JDK-8184690) possible.
+
+   streamsupport-literal-1.6.0 is still available as a standalone
+   component without any dependencies but that may change in the future.
 
 
 
@@ -121,6 +131,30 @@ KNOWN PROBLEMS
 
 
 VERSION HISTORY
+
+1.6.0-stable (2017-10-12)
+ - a first dive into Java 10 (in the sense of new API methods)
+   * JDK-8184690: Add Collectors for unmodifiable List, Set, and Map
+   * JDK-8177290: Add unmodifiable List, Set, Map copy factories
+   * JDK-8178117: Public state constructors for Int/Long/DoubleSummaryStatistics
+   * JDK-8188047: Add SplittableRandom.nextBytes
+ - backported recent improvements from the Java 10 repo
+   * JDK-8190974: Obey parallelism within custom ForkJoinPool
+   * JDK-8187947: Race condition in SubmissionPublisher
+   * JDK-8193174: SubmissionPublisher invokes the Subscriber's onComplete too early
+   * JDK-8189764: Misc. changes imported from jsr166 CVS 2017-11
+   * JDK-8192943: Optimize atomic accumulators using getAndSet
+   * JDK-8186265: Make toString() methods of "task" objects more useful
+   * JDK-8179314: CountedCompleterTest test failure
+   * JDK-8181175: Stream.concat behaves like terminal operation
+   * JDK-8015667: Stream.toArray(IntFunction) ArrayStoreException spec
+   * JDK-8191429: List.sort should specify the sort is stable
+   * JDK-8186466: Fix minor issues in java.base javadoc
+   * JDK-8186684: Fix broken links in java.base API docs
+ - streamsupport-specific changes and fixes
+   * merge literal component into streamsupport (JDK-8184690) [#328]
+   * Asynchronous tasks marker interface can't be loaded [#323]
+   * exempt spliterator-delegated LBD / LBQ from Collection8Test [#327]
 
 1.5.6-stable (2017-08-13)
  - JDK-8178409: Misc. changes imported from jsr166 CVS 2017-07
