@@ -44,7 +44,7 @@ public final class BinaryOperators {
      *         according to the supplied {@code Comparator}
      * @throws NullPointerException if the argument is null
      */
-    public static <T> BinaryOperator<T> minBy(final Comparator<? super T> comparator) {
+    public static <T> BinaryOperator<T> minBy(Comparator<? super T> comparator) {
         Objects.requireNonNull(comparator);
         return (a, b) -> comparator.compare(a, b) <= 0 ? a : b;
     }
@@ -59,7 +59,7 @@ public final class BinaryOperators {
      *         according to the supplied {@code Comparator}
      * @throws NullPointerException if the argument is null
      */
-    public static <T> BinaryOperator<T> maxBy(final Comparator<? super T> comparator) {
+    public static <T> BinaryOperator<T> maxBy(Comparator<? super T> comparator) {
         Objects.requireNonNull(comparator);
         return (a, b) -> comparator.compare(a, b) >= 0 ? a : b;
     }

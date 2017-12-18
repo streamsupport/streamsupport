@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -33,7 +33,7 @@ import java8.util.function.Consumer;
 
 // Spliterator for java.util.PriorityQueue
 final class PQueueSpliterator<E> implements Spliterator<E> {
-// CVS rev. 1.119
+// CVS rev. 1.120
     private final PriorityQueue<E> pq;
     private int index;            // current index, modified on advance/split
     private int fence;            // -1 until first use

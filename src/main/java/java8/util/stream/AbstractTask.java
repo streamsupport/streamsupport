@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2013, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,7 @@ package java8.util.stream;
 
 import java8.util.concurrent.CountedCompleter;
 import java8.util.concurrent.ForkJoinPool;
+import java8.util.concurrent.ForkJoinWorkerThread;
 
 import java8.util.Spliterator;
 
@@ -89,13 +90,7 @@ abstract class AbstractTask<P_IN, P_OUT, R,
                             K extends AbstractTask<P_IN, P_OUT, R, K>>
         extends CountedCompleter<R> {
 
-    /**
-     * Default target factor of leaf tasks for parallel decomposition.
-     * To allow load balancing, we over-partition, currently to approximately
-     * four tasks per processor, which enables others to help out
-     * if leaf tasks are uneven or some processors are otherwise busy.
-     */
-    static final int LEAF_TARGET = ForkJoinPool.getCommonPoolParallelism() << 2;
+    private static final int LEAF_TARGET = ForkJoinPool.getCommonPoolParallelism() << 2;
 
     /** The pipeline helper, common to all tasks in a computation */
     protected final PipelineHelper<P_OUT> helper;
@@ -158,6 +153,22 @@ abstract class AbstractTask<P_IN, P_OUT, R,
     }
 
     /**
+     * Default target of leaf tasks for parallel decomposition.
+     * To allow load balancing, we over-partition, currently to approximately
+     * four tasks per processor, which enables others to help out
+     * if leaf tasks are uneven or some processors are otherwise busy.
+     */
+    public static int getLeafTarget() {
+        Thread t = Thread.currentThread();
+        if (t instanceof ForkJoinWorkerThread) {
+            return ((ForkJoinWorkerThread) t).getPool().getParallelism() << 2;
+        }
+        else {
+            return LEAF_TARGET;
+        }
+    }
+
+    /**
      * Constructs a new node of type T whose parent is the receiver; must call
      * the AbstractTask(T, Spliterator) constructor with the receiver and the
      * provided Spliterator.
@@ -182,7 +193,7 @@ abstract class AbstractTask<P_IN, P_OUT, R,
      * @return suggested target leaf size
      */
     public static long suggestTargetSize(long sizeEstimate) {
-        long est = sizeEstimate / LEAF_TARGET;
+        long est = sizeEstimate / getLeafTarget();
         return est > 0L ? est : 1L;
     }
 

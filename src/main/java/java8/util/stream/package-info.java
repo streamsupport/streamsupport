@@ -415,7 +415,7 @@
  * elements -- but a properly constructed reduce operation is inherently
  * parallelizable, so long as the function(s) used to process the elements
  * are <a href="package-summary.html#Associativity">associative</a> and
- * <a href="package-summary.html#NonInterfering">stateless</a>.
+ * <a href="package-summary.html#Statelessness">stateless</a>.
  * For example, given a stream of numbers for which we want to find the sum, we
  * can write:
  * <pre>{@code
@@ -735,7 +735,7 @@
  * cannot directly supply a recommended spliterator, it may indirectly supply
  * a spliterator using a {@code Supplier}, and construct a stream via the
  * {@code Supplier}-accepting versions of
- * {@link java8.util.stream.StreamSupport#stream(Supplier, int, boolean) stream()}.
+ * {@link java8.util.stream.StreamSupport#stream(java8.util.function.Supplier, int, boolean) stream()}.
  * The spliterator is obtained from the supplier only after the terminal
  * operation of the stream pipeline commences.
  *

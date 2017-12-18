@@ -99,7 +99,6 @@ final class Nodes {
      * <p><b>Implementation Requirements:</b><br> The default implementation always throws
      * {@code IndexOutOfBoundsException}.
      *
-     * @param i the index to the child node
      * @return the child node
      * @throws IndexOutOfBoundsException if the index is less than 0 or greater
      *         than or equal to the number of child nodes
@@ -197,7 +196,7 @@ final class Nodes {
         /**
          * {@inheritDoc}
          *
-         * <p><b>Implementation Requirements:</b><br> the default implementation invokes {@link #asPrimitiveArray()}
+         * <p><b>Implementation Requirements:</b><br> the default implementation invokes {@link Node.OfDouble#asPrimitiveArray()}
          * to obtain a double[] array then and copies the elements from that
          * double[] array into the boxed Double[] array.  This is not efficient
          * and it is recommended to invoke {@link #copyInto(Object, int)}.
@@ -266,7 +265,7 @@ final class Nodes {
         /**
          * {@inheritDoc}
          *
-         * <p><b>Implementation Requirements:</b><br> the default implementation invokes {@link #asPrimitiveArray()}
+         * <p><b>Implementation Requirements:</b><br> the default implementation invokes {@link Node.OfLong#asPrimitiveArray()}
          * to obtain a long[] array then and copies the elements from that
          * long[] array into the boxed Long[] array.  This is not efficient and
          * it is recommended to invoke {@link #copyInto(Object, int)}.
@@ -334,7 +333,7 @@ final class Nodes {
         /**
          * {@inheritDoc}
          *
-         * <p><b>Implementation Requirements:</b><br> the default implementation invokes {@link #asPrimitiveArray()} to
+         * <p><b>Implementation Requirements:</b><br> the default implementation invokes {@link Node.OfInt#asPrimitiveArray()} to
          * obtain an int[] array then and copies the elements from that int[]
          * array into the boxed Integer[] array.  This is not efficient and it
          * is recommended to invoke {@link #copyInto(Object, int)}.
@@ -528,7 +527,7 @@ final class Nodes {
      * @param array the array
      * @return a node holding an array
      */
-    static Node.OfLong node(final long[] array) {
+    static Node.OfLong node(long[] array) {
         return new LongArrayNode(array);
     }
 
@@ -565,7 +564,7 @@ final class Nodes {
      * @param array the array
      * @return a node holding an array
      */
-    static Node.OfDouble node(final double[] array) {
+    static Node.OfDouble node(double[] array) {
         return new DoubleArrayNode(array);
     }
 
@@ -1814,17 +1813,17 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -1891,17 +1890,17 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2276,12 +2275,12 @@ final class Nodes {
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2349,12 +2348,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2422,12 +2421,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2482,12 +2481,12 @@ final class Nodes {
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2587,12 +2586,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2686,12 +2685,12 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
@@ -2824,17 +2823,17 @@ final class Nodes {
 
         @Override
         public void accept(int value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(long value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         @Override
         public void accept(double value) {
-            SinkDefaults.accept(this, value);
+            SinkDefaults.reject();
         }
 
         static final class OfRef<P_IN, P_OUT>

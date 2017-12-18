@@ -194,7 +194,7 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    public final DoubleStream map(final DoubleUnaryOperator mapper) {
+    public final DoubleStream map(DoubleUnaryOperator mapper) {
         Objects.requireNonNull(mapper);
         return new StatelessOp<Double>(this, StreamShape.DOUBLE_VALUE,
                                        StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -211,13 +211,13 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    public final <U> Stream<U> mapToObj(final DoubleFunction<? extends U> mapper) {
+    public final <U> Stream<U> mapToObj(DoubleFunction<? extends U> mapper) {
         Objects.requireNonNull(mapper);
         return mapToObj(mapper, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT);
     }
 
     @Override
-    public final IntStream mapToInt(final DoubleToIntFunction mapper) {
+    public final IntStream mapToInt(DoubleToIntFunction mapper) {
         Objects.requireNonNull(mapper);
         return new IntPipeline.StatelessOp<Double>(this, StreamShape.DOUBLE_VALUE,
                                                    StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -234,7 +234,7 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    public final LongStream mapToLong(final DoubleToLongFunction mapper) {
+    public final LongStream mapToLong(DoubleToLongFunction mapper) {
         Objects.requireNonNull(mapper);
         return new LongPipeline.StatelessOp<Double>(this, StreamShape.DOUBLE_VALUE,
                                                     StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -251,7 +251,7 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    public final DoubleStream flatMap(final DoubleFunction<? extends DoubleStream> mapper) {
+    public final DoubleStream flatMap(DoubleFunction<? extends DoubleStream> mapper) {
         Objects.requireNonNull(mapper);
         return new StatelessOp<Double>(this, StreamShape.DOUBLE_VALUE,
                                         StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT | StreamOpFlag.NOT_SIZED) {
@@ -296,7 +296,7 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    public final DoubleStream filter(final DoublePredicate predicate) {
+    public final DoubleStream filter(DoublePredicate predicate) {
         Objects.requireNonNull(predicate);
         return new StatelessOp<Double>(this, StreamShape.DOUBLE_VALUE,
                                        StreamOpFlag.NOT_SIZED) {
@@ -319,7 +319,7 @@ abstract class DoublePipeline<E_IN>
     }
 
     @Override
-    public final DoubleStream peek(final DoubleConsumer action) {
+    public final DoubleStream peek(DoubleConsumer action) {
         Objects.requireNonNull(action);
         return new StatelessOp<Double>(this, StreamShape.DOUBLE_VALUE,
                                        0) {
@@ -467,7 +467,7 @@ abstract class DoublePipeline<E_IN>
 
     @Override
     public final DoubleSummaryStatistics summaryStatistics() {
-        return collect(DoubleSummaryStatistics::new, DoubleSummaryStatistics::accept,
+        return collect(Collectors.DBL_SUM_STATS, DoubleSummaryStatistics::accept,
                        DoubleSummaryStatistics::combine);
     }
 
@@ -484,7 +484,7 @@ abstract class DoublePipeline<E_IN>
     @Override
     public final <R> R collect(Supplier<R> supplier,
                                ObjDoubleConsumer<R> accumulator,
-                               final BiConsumer<R, R> combiner) {
+                               BiConsumer<R, R> combiner) {
         Objects.requireNonNull(combiner);
         BinaryOperator<R> operator = (left, right) -> {
             combiner.accept(left, right);
@@ -520,7 +520,7 @@ abstract class DoublePipeline<E_IN>
 
     @Override
     public final double[] toArray() {
-        return Nodes.flattenDouble((Node.OfDouble) evaluateToArrayNode(Double[]::new))
+        return Nodes.flattenDouble((Node.OfDouble) evaluateToArrayNode(WhileOps.DOUBLE_ARR_GEN))
                         .asPrimitiveArray();
     }
 

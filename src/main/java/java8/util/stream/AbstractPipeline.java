@@ -464,7 +464,7 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
 
     @Override
     final <P_IN> long exactOutputSizeIfKnown(Spliterator<P_IN> spliterator) {
-        return StreamOpFlag.SIZED.isKnown(getStreamAndOpFlags()) ? spliterator.getExactSizeIfKnown() : -1;
+        return StreamOpFlag.SIZED.isKnown(getStreamAndOpFlags()) ? spliterator.getExactSizeIfKnown() : -1L;
     }
 
     @Override
@@ -548,15 +548,15 @@ abstract class AbstractPipeline<E_IN, E_OUT, S extends BaseStream<E_OUT, S>>
             }
             @Override
             public void accept(int value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
             @Override
             public void accept(long value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
             @Override
             public void accept(double value) {
-                SinkDefaults.accept(this, value);
+                SinkDefaults.reject();
             }
         };
 

@@ -37,7 +37,7 @@ import java.util.Map;
  *
  * <p><b>API Note:</b><br>
  * This class is not public. Instances can be created using the
- * {@link Map#entry Map.entry(k, v)} factory method, which is public.
+ * {@link Maps#entry Map.entry(k, v)} factory method, which is public.
  *
  * <p>This class differs from AbstractMap.SimpleImmutableEntry in the following ways:
  * it is not serializable, it is final, and its key and value must be non-null.
@@ -45,7 +45,7 @@ import java.util.Map;
  * @param <K> the key type
  * @param <V> the value type
  *
- * @see Maps2#ofEntries Maps.ofEntries()
+ * @see Maps#ofEntries Maps.ofEntries()
  * @since 9
  */
 final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
@@ -53,8 +53,8 @@ final class KeyValueHolder<K,V> implements Map.Entry<K,V> {
     final V value;
 
     KeyValueHolder(K k, V v) {
-        key = J9Collections.requireNonNull(k);
-        value = J9Collections.requireNonNull(v);
+        key = Objects.requireNonNull(k);
+        value = Objects.requireNonNull(v);
     }
 
     /**

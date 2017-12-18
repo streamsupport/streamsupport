@@ -211,7 +211,7 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
-    public final LongStream map(final LongUnaryOperator mapper) {
+    public final LongStream map(LongUnaryOperator mapper) {
         Objects.requireNonNull(mapper);
         return new StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                      StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -228,13 +228,13 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
-    public final <U> Stream<U> mapToObj(final LongFunction<? extends U> mapper) {
+    public final <U> Stream<U> mapToObj(LongFunction<? extends U> mapper) {
         Objects.requireNonNull(mapper);
         return mapToObj(mapper, StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT);
     }
 
     @Override
-    public final IntStream mapToInt(final LongToIntFunction mapper) {
+    public final IntStream mapToInt(LongToIntFunction mapper) {
         Objects.requireNonNull(mapper);
         return new IntPipeline.StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                                  StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -251,7 +251,7 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
-    public final DoubleStream mapToDouble(final LongToDoubleFunction mapper) {
+    public final DoubleStream mapToDouble(LongToDoubleFunction mapper) {
         Objects.requireNonNull(mapper);
         return new DoublePipeline.StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                                     StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) {
@@ -268,7 +268,7 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
-    public final LongStream flatMap(final LongFunction<? extends LongStream> mapper) {
+    public final LongStream flatMap(LongFunction<? extends LongStream> mapper) {
         Objects.requireNonNull(mapper);
         return new StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                      StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT | StreamOpFlag.NOT_SIZED) {
@@ -314,7 +314,7 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
-    public final LongStream filter(final LongPredicate predicate) {
+    public final LongStream filter(LongPredicate predicate) {
         Objects.requireNonNull(predicate);
         return new StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                      StreamOpFlag.NOT_SIZED) {
@@ -337,7 +337,7 @@ abstract class LongPipeline<E_IN>
     }
 
     @Override
-    public final LongStream peek(final LongConsumer action) {
+    public final LongStream peek(LongConsumer action) {
         Objects.requireNonNull(action);
         return new StatelessOp<Long>(this, StreamShape.LONG_VALUE,
                                      0) {
@@ -446,7 +446,7 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public final LongSummaryStatistics summaryStatistics() {
-        return collect(LongSummaryStatistics::new, LongSummaryStatistics::accept,
+        return collect(Collectors.LNG_SUM_STATS, LongSummaryStatistics::accept,
                        LongSummaryStatistics::combine);
     }
 
@@ -463,7 +463,7 @@ abstract class LongPipeline<E_IN>
     @Override
     public final <R> R collect(Supplier<R> supplier,
                                ObjLongConsumer<R> accumulator,
-                               final BiConsumer<R, R> combiner) {
+                               BiConsumer<R, R> combiner) {
         Objects.requireNonNull(combiner);
         BinaryOperator<R> operator = (left, right) -> {
             combiner.accept(left, right);
@@ -499,7 +499,7 @@ abstract class LongPipeline<E_IN>
 
     @Override
     public final long[] toArray() {
-        return Nodes.flattenLong((Node.OfLong) evaluateToArrayNode(Long[]::new))
+        return Nodes.flattenLong((Node.OfLong) evaluateToArrayNode(WhileOps.LONG_ARR_GEN))
                 .asPrimitiveArray();
     }
 

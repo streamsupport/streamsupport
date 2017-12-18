@@ -3,11 +3,13 @@ SET JAVA6=F:/Java/sun-jdk1.6.0_45-64bit/bin/java
 
 SET JAVA7=F:/Java/sun-jdk1.7.0_80-64bit/bin/java
 
-SET JAVA8=F:/Java/jdk1.8.0_144-64bit/bin/java
+SET JAVA8=F:/Java/jdk1.8.0_152-64bit/bin/java
 
-SET JAVA9=F:/Java/jdk9_ea_b181-64bit/bin/java
+SET JAVA9=F:/Java/jdk9.0.1+11-64bit/bin/java
 
-SET TEST_JAR=streamsupport-all-tests-1.5.6.jar
+SET JAVA10=F:/Java/jdk10_ea+35-64bit/bin/java
+
+SET TEST_JAR=streamsupport-all-tests-1.6.0.jar
 
 SET ARGS=org.testng.TestNG testng_all.xml -testjar %TEST_JAR%
 
@@ -18,10 +20,6 @@ SET PAR_GC=-XX:+UseParallelGC
 SET NO_DELEG=-Djava8.util.Spliterators.jre.delegation.enabled=false
 
 SET USE_ITERATOR_SPLITERATOR=-Djava8.util.Spliterators.assume.oracle.collections.impl=false
-
-SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
-
-SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 
 
@@ -39,11 +37,13 @@ SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 %JAVA9% %PAR_GC% -cp .;./* %ARGS%
 
+%JAVA10% %PAR_GC% -cp .;./* %ARGS%
 
 
-REM %JAVA9% %NO_DELEG% %PAR_GC% -cp .;./* %ARGS%
+
+REM SET OPENS=--add-opens java.base/java.util=ALL-UNNAMED --add-opens java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED
+
+REM SET DBG_MOD_ACCESS=-Dsun.reflect.debugModuleAccessChecks=true
 
 REM %JAVA9% %DBG_MOD_ACCESS% %PAR_GC% %OPENS% -cp .;./* %ARGS%
-
-REM %JAVA9% %DBG_MOD_ACCESS% %NO_DELEG% %PAR_GC% %OPENS% -cp .;./* %ARGS%
 

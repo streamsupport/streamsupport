@@ -38,22 +38,30 @@ import org.testng.annotations.Test;
 public class LongNodeTest extends OpTestCase {
 
     // see https://sourceforge.net/p/streamsupport/tickets/149/?limit=25&page=1#145a
-    private static final int MAX_SIZE = 1000;
+    private static final int MAX_SIZE = 8000;
 
     @DataProvider(name = "nodes")
     public Object[][] createSizes() {
         List<Object[]> params = new ArrayList<>();
 
-        for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, MAX_SIZE)) {
+        for (int size : Arrays.asList(0, 1, 4, 15, 16, 17, 127, 128, 129, 1000, MAX_SIZE)) {
             long[] array = new long[size];
+            long[] degenerateTreeArray = new long[size];
             for (int i = 0; i < array.length; i++) {
                 array[i] = i;
+            }
+            if (size < MAX_SIZE) {
+                for (int i = 0; i < degenerateTreeArray.length; i++) {
+                    degenerateTreeArray[i] = i;
+                }
             }
 
             List<Node<Long>> nodes = new ArrayList<>();
 
             nodes.add(Nodes.node(array));
-            nodes.add(degenerateTree(Spliterators.iterator(J8Arrays.spliterator(array))));
+            if (size < MAX_SIZE) {
+                nodes.add(degenerateTree(Spliterators.iterator(J8Arrays.spliterator(array))));
+            }
             nodes.add(tree(toList(array), l -> Nodes.node(toLongArray(l))));
             nodes.add(fill(array, Nodes.longBuilder(array.length)));
             nodes.add(fill(array, Nodes.longBuilder()));

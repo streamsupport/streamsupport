@@ -543,7 +543,7 @@ class TimSort<T> {
             ofs += hint;
         } else { // key <= a[base + hint]
             // Gallop left until a[base+hint-ofs] < key <= a[base+hint-lastOfs]
-            final int maxOfs = hint + 1;
+            int maxOfs = hint + 1;
             while (ofs < maxOfs && c.compare(key, a[base + hint - ofs]) <= 0) {
                 lastOfs = ofs;
                 ofs = (ofs << 1) + 1;

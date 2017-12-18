@@ -27,7 +27,7 @@ package java8.util;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-final class J9Collections {
+final class FactoryUtil {
 
     /**
      * Checks that the specified object reference is not {@code null}. This
@@ -35,7 +35,7 @@ final class J9Collections {
      * and constructors, as demonstrated below:
      * <blockquote><pre>
      * public Foo(Bar bar) {
-     *     this.bar = J9Collections.requireNonNull(bar);
+     *     this.bar = FactoryUtil.requireNonNull(bar);
      * }
      * </pre></blockquote>
      *
@@ -137,6 +137,6 @@ final class J9Collections {
         }
     }
 
-    private J9Collections() {
+    private FactoryUtil() {
     }
 }

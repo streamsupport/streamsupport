@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2016, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -41,8 +41,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import java8.util.Lists;
 import java8.util.Maps;
 import java8.util.Objects;
+import java8.util.Sets;
 import java8.util.DoubleSummaryStatistics;
 import java8.util.IntSummaryStatistics;
 import java8.util.LongSummaryStatistics;
@@ -122,15 +124,56 @@ public final class Collectors {
             = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.UNORDERED,
                                                      Collector.Characteristics.IDENTITY_FINISH));
     static final Set<Collector.Characteristics> CH_NOID = Collections.emptySet();
+    static final Set<Collector.Characteristics> CH_UNORDERED_NOID
+            = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.UNORDERED));
 
     private Collectors() { }
 
-    private static <K, V> Supplier<Map<K, V>> hashMapFactory() {
+    static final Supplier<DoubleSummaryStatistics> DBL_SUM_STATS = DoubleSummaryStatistics::new;
+    static final Supplier<IntSummaryStatistics> INT_SUM_STATS = IntSummaryStatistics::new;
+    static final Supplier<LongSummaryStatistics> LNG_SUM_STATS = LongSummaryStatistics::new;
+
+    private static <K, V> Supplier<Map<K, V>> hashMapNew() {
         return HashMap::new;
     }
 
-    private static <K, V> Supplier<ConcurrentMap<K, V>> concurrentHashMapFactory() {
+    private static <K, V> Supplier<ConcurrentMap<K, V>> concHashMapNew() {
         return ConcurrentHashMap::new;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <K, V> Supplier<Map<K, V>> concHashMapNew2() {
+        return (Supplier<Map<K, V>>) (Supplier<?>) concHashMapNew();
+    }
+
+    private static <T> Supplier<List<T>> arrayListNew() {
+        return ArrayList::new;
+    }
+
+    private static <T> Supplier<Set<T>> hashSetNew() {
+        return HashSet::new;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static final Function<Map<?, ?>, Map<?, ?>> UNMOD_MAP_FINISHER = map -> Maps
+            .ofEntries(map.entrySet().toArray(new Map.Entry[0]));
+
+    @SuppressWarnings("unchecked")
+    private static final <K, U> Function<Map<K, U>, Map<K, U>> unmodMapFinisher() {
+        return (Function<Map<K, U>, Map<K, U>>) (Function<?, ?>) UNMOD_MAP_FINISHER;
+    }
+
+    private static final BiConsumer<List<Object>, ?> LIST_ADD = List::add;
+    private static final BiConsumer<Set<Object>, ?> SET_ADD = Set::add;
+
+    @SuppressWarnings("unchecked")
+    private static final <T> BiConsumer<List<T>, T> listAdd() {
+        return (BiConsumer<List<T>, T>) (BiConsumer<?, ?>) LIST_ADD;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static final <T> BiConsumer<Set<T>, T> setAdd() {
+        return (BiConsumer<Set<T>, T>) (BiConsumer<?, ?>) SET_ADD;
     }
 
     /**
@@ -364,9 +407,29 @@ public final class Collectors {
      */
     public static <T>
     Collector<T, ?, List<T>> toList() {
-        return new CollectorImpl<>((Supplier<List<T>>) ArrayList::new, List::add,
+        return new CollectorImpl<>(arrayListNew(), listAdd(),
                                    (left, right) -> { left.addAll(right); return left; },
                                    CH_ID);
+    }
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Lists#of(Object[]) unmodifiable List} in encounter
+     * order. The returned Collector disallows null values and will throw
+     * {@code NullPointerException} if it is presented with a null value.
+     *
+     * @param <T> the type of the input elements
+     * @return a {@code Collector} which collects all the input elements into an
+     * <a href="../Lists.html#unmodifiable">unmodifiable List</a>, in encounter order
+     * @since 10
+     */
+    @SuppressWarnings("unchecked")
+    public static <T>
+    Collector<T, ?, List<T>> toUnmodifiableList() {
+        return new CollectorImpl<>(arrayListNew(), listAdd(),
+                                   (left, right) -> { left.addAll(right); return left; },
+                                   list -> (List<T>) Lists.of(list.toArray()),
+                                   CH_NOID);
     }
 
     /**
@@ -385,7 +448,7 @@ public final class Collectors {
      */
     public static <T>
     Collector<T, ?, Set<T>> toSet() {
-        return new CollectorImpl<>((Supplier<Set<T>>) HashSet::new, Set::add,
+        return new CollectorImpl<>(hashSetNew(), setAdd(),
                                    (left, right) -> {
                                         if (left.size() < right.size()) {
                                            right.addAll(left); return right;
@@ -394,6 +457,36 @@ public final class Collectors {
                                         }
                                     },
                                     CH_UNORDERED_ID);
+    }
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Sets#of(Object[]) unmodifiable Set}. The returned
+     * Collector disallows null values and will throw {@code NullPointerException}
+     * if it is presented with a null value. If the input contains duplicate elements,
+     * an arbitrary element of the duplicates is preserved.
+     *
+     * <p>This is an {@link Collector.Characteristics#UNORDERED unordered}
+     * Collector.
+     *
+     * @param <T> the type of the input elements
+     * @return a {@code Collector} which collects all the input elements into an
+     * <a href="../Sets.html#unmodifiable">unmodifiable Set</a>
+     * @since 10
+     */
+    @SuppressWarnings("unchecked")
+    public static <T>
+    Collector<T, ?, Set<T>> toUnmodifiableSet() {
+        return new CollectorImpl<>(hashSetNew(), setAdd(),
+                                   (left, right) -> {
+                                       if (left.size() < right.size()) {
+                                           right.addAll(left); return right;
+                                       } else {
+                                           left.addAll(right); return left;
+                                       }
+                                   },
+                                   set -> (Set<T>) Sets.of(set.toArray()),
+                                   CH_UNORDERED_NOID);
     }
 
     /**
@@ -453,11 +546,11 @@ public final class Collectors {
      * @param <V> type of the map values
      * @param <M> type of the map
      * @param mergeFunction A merge function suitable for
-     * {@link Map#merge(Object, Object, BiFunction) Map.merge()}
+     * {@link Maps#merge(Map, Object, Object, BiFunction)}
      * @return a merge function for two maps
      */
     private static <K, V, M extends Map<K,V>>
-    BinaryOperator<M> mapMerger(final BinaryOperator<V> mergeFunction) {
+    BinaryOperator<M> mapMerger(BinaryOperator<V> mergeFunction) {
         return (m1, m2) -> {
             for (Map.Entry<K,V> e : m2.entrySet()) {
                 Maps.merge(m1, e.getKey(), e.getValue(), mergeFunction);
@@ -467,7 +560,7 @@ public final class Collectors {
     }
 
     private static <K, V, M extends ConcurrentMap<K,V>>
-    BinaryOperator<M> mapMergerConcurrent(final BinaryOperator<V> mergeFunction) {
+    BinaryOperator<M> mapMergerConcurrent(BinaryOperator<V> mergeFunction) {
         return (m1, m2) -> {
             for (Map.Entry<K,V> e : m2.entrySet()) {
                 ConcurrentMaps.merge(m1, e.getKey(), e.getValue(), mergeFunction);
@@ -928,7 +1021,7 @@ public final class Collectors {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Supplier<T[]> boxSupplier(final T identity) {
+    private static <T> Supplier<T[]> boxSupplier(T identity) {
         return () -> (T[]) new Object[] { identity };
     }
 
@@ -959,7 +1052,7 @@ public final class Collectors {
      * @see #reducing(Object, Function, BinaryOperator)
      */
     public static <T> Collector<T, ?, Optional<T>>
-    reducing(final BinaryOperator<T> op) {
+    reducing(BinaryOperator<T> op) {
         class OptionalBox implements Consumer<T> {
             T value = null;
             boolean present = false;
@@ -1114,7 +1207,7 @@ public final class Collectors {
     public static <T, K, A, D>
     Collector<T, ?, Map<K, D>> groupingBy(Function<? super T, ? extends K> classifier,
                                           Collector<? super T, A, D> downstream) {
-        return groupingBy(classifier, hashMapFactory(), downstream);
+        return groupingBy(classifier, hashMapNew(), downstream);
     }
 
     /**
@@ -1162,11 +1255,11 @@ public final class Collectors {
      * @see #groupingByConcurrent(Function, Supplier, Collector)
      */
     public static <T, K, D, A, M extends Map<K, D>>
-    Collector<T, ?, M> groupingBy(final Function<? super T, ? extends K> classifier,
+    Collector<T, ?, M> groupingBy(Function<? super T, ? extends K> classifier,
                                   Supplier<M> mapFactory,
                                   Collector<? super T, A, D> downstream) {
         Supplier<A> downstreamSupplier = downstream.supplier();
-        final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BiConsumer<Map<K, A>, T> accumulator = (m, t) -> {
             K key = Objects.requireNonNull(classifier.apply(t), "element cannot be mapped to a null key");
             A container = Maps.computeIfAbsent(m, key, k -> downstreamSupplier.get());
@@ -1228,7 +1321,7 @@ public final class Collectors {
     public static <T, K>
     Collector<T, ?, ConcurrentMap<K, List<T>>>
     groupingByConcurrent(Function<? super T, ? extends K> classifier) {
-        return groupingByConcurrent(classifier, concurrentHashMapFactory(), toList());
+        return groupingByConcurrent(classifier, concHashMapNew(), toList());
     }
 
     /**
@@ -1272,7 +1365,7 @@ public final class Collectors {
     public static <T, K, A, D>
     Collector<T, ?, ConcurrentMap<K, D>> groupingByConcurrent(Function<? super T, ? extends K> classifier,
                                                               Collector<? super T, A, D> downstream) {
-        return groupingByConcurrent(classifier, concurrentHashMapFactory(), downstream);
+        return groupingByConcurrent(classifier, concHashMapNew(), downstream);
     }
 
     /**
@@ -1316,11 +1409,11 @@ public final class Collectors {
      * @see #groupingBy(Function, Supplier, Collector)
      */
     public static <T, K, A, D, M extends ConcurrentMap<K, D>>
-    Collector<T, ?, M> groupingByConcurrent(final Function<? super T, ? extends K> classifier,
+    Collector<T, ?, M> groupingByConcurrent(Function<? super T, ? extends K> classifier,
                                             Supplier<M> mapFactory,
                                             Collector<? super T, A, D> downstream) {
         Supplier<A> downstreamSupplier = downstream.supplier();
-        final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BinaryOperator<ConcurrentMap<K, A>> merger = Collectors.<K, A, ConcurrentMap<K, A>>mapMergerConcurrent(downstream.combiner());
         @SuppressWarnings("unchecked")
         Supplier<ConcurrentMap<K, A>> mangledFactory = (Supplier<ConcurrentMap<K, A>>) mapFactory;
@@ -1414,12 +1507,12 @@ public final class Collectors {
      * @see #partitioningBy(Predicate)
      */
     public static <T, D, A>
-    Collector<T, ?, Map<Boolean, D>> partitioningBy(final Predicate<? super T> predicate,
-            final Collector<? super T, A, D> downstream) {
-        final BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
+    Collector<T, ?, Map<Boolean, D>> partitioningBy(Predicate<? super T> predicate,
+            Collector<? super T, A, D> downstream) {
+        BiConsumer<A, ? super T> downstreamAccumulator = downstream.accumulator();
         BiConsumer<Partition<A>, T> accumulator = (result, t) ->
                 downstreamAccumulator.accept(predicate.test(t) ? result.forTrue : result.forFalse, t);
-                final BinaryOperator<A> op = downstream.combiner();
+        BinaryOperator<A> op = downstream.combiner();
         BinaryOperator<Partition<A>> merger = (left, right) ->
                 new Partition<>(op.apply(left.forTrue, right.forTrue),
                                 op.apply(left.forFalse, right.forFalse));
@@ -1445,7 +1538,7 @@ public final class Collectors {
      * <p>If the mapped keys contain duplicates (according to
      * {@link Object#equals(Object)}), an {@code IllegalStateException} is
      * thrown when the collection operation is performed.  If the mapped keys
-     * may have duplicates, use {@link #toMap(Function, Function, BinaryOperator)}
+     * might have duplicates, use {@link #toMap(Function, Function, BinaryOperator)}
      * instead.
      * 
      * <p>There are no guarantees on the type, mutability, serializability,
@@ -1494,10 +1587,48 @@ public final class Collectors {
     public static <T, K, U>
     Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
                                     Function<? super T, ? extends U> valueMapper) {
-        return new CollectorImpl<>(hashMapFactory(),
+        return new CollectorImpl<>(hashMapNew(),
                 uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
                 uniqKeysMapMerger(),
                 CH_ID);
+    }
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Maps#ofEntries(java.util.Map.Entry[]) unmodifiable Map},
+     * whose keys and values are the result of applying the provided
+     * mapping functions to the input elements.
+     *
+     * <p>If the mapped keys contain duplicates (according to
+     * {@link Object#equals(Object)}), an {@code IllegalStateException} is
+     * thrown when the collection operation is performed.  If the mapped keys
+     * might have duplicates, use {@link #toUnmodifiableMap(Function, Function, BinaryOperator)}
+     * to handle merging of the values.
+     *
+     * <p>The returned Collector disallows null keys and values. If either mapping function
+     * returns null, {@code NullPointerException} will be thrown.
+     *
+     * @param <T> the type of the input elements
+     * @param <K> the output type of the key mapping function
+     * @param <U> the output type of the value mapping function
+     * @param keyMapper a mapping function to produce keys, must be non-null
+     * @param valueMapper a mapping function to produce values, must be non-null
+     * @return a {@code Collector} which collects elements into an <a href="../Maps.html#unmodifiable">unmodifiable Map</a>
+     * whose keys and values are the result of applying mapping functions to
+     * the input elements
+     * @throws NullPointerException if either keyMapper or valueMapper is null
+     *
+     * @see #toUnmodifiableMap(Function, Function, BinaryOperator)
+     * @since 10
+     */
+    public static <T, K, U>
+    Collector<T, ?, Map<K,U>> toUnmodifiableMap(Function<? super T, ? extends K> keyMapper,
+                                                Function<? super T, ? extends U> valueMapper) {
+        Objects.requireNonNull(keyMapper, "keyMapper");
+        Objects.requireNonNull(valueMapper, "valueMapper");
+        return collectingAndThen(
+                toMap(keyMapper, valueMapper),
+                unmodMapFinisher());
     }
 
     /**
@@ -1558,7 +1689,52 @@ public final class Collectors {
     Collector<T, ?, Map<K,U>> toMap(Function<? super T, ? extends K> keyMapper,
                                     Function<? super T, ? extends U> valueMapper,
                                     BinaryOperator<U> mergeFunction) {
-        return toMap(keyMapper, valueMapper, mergeFunction, hashMapFactory());
+        return toMap(keyMapper, valueMapper, mergeFunction, hashMapNew());
+    }
+
+    /**
+     * Returns a {@code Collector} that accumulates the input elements into an
+     * {@link Maps#ofEntries(java.util.Map.Entry[]) unmodifiable Map},
+     * whose keys and values are the result of applying the provided
+     * mapping functions to the input elements.
+     *
+     * <p>If the mapped
+     * keys contain duplicates (according to {@link Object#equals(Object)}),
+     * the value mapping function is applied to each equal element, and the
+     * results are merged using the provided merging function.
+     *
+     * <p>The returned Collector disallows null keys and values. If either mapping function
+     * returns null, {@code NullPointerException} will be thrown.
+     *
+     * @param <T> the type of the input elements
+     * @param <K> the output type of the key mapping function
+     * @param <U> the output type of the value mapping function
+     * @param keyMapper a mapping function to produce keys, must be non-null
+     * @param valueMapper a mapping function to produce values, must be non-null
+     * @param mergeFunction a merge function, used to resolve collisions between
+     *                      values associated with the same key, as supplied
+     *                      to {@link Maps#merge(Map, Object, Object, BiFunction)},
+     *                      must be non-null
+     * @return a {@code Collector} which collects elements into an <a href="../Maps.html#unmodifiable">unmodifiable Map</a>
+     * whose keys are the result of applying a key mapping function to the input
+     * elements, and whose values are the result of applying a value mapping
+     * function to all input elements equal to the key and combining them
+     * using the merge function
+     * @throws NullPointerException if the keyMapper, valueMapper, or mergeFunction is null
+     *
+     * @see #toUnmodifiableMap(Function, Function)
+     * @since 10
+     */
+    public static <T, K, U>
+    Collector<T, ?, Map<K,U>> toUnmodifiableMap(Function<? super T, ? extends K> keyMapper,
+                                                Function<? super T, ? extends U> valueMapper,
+                                                BinaryOperator<U> mergeFunction) {
+        Objects.requireNonNull(keyMapper, "keyMapper");
+        Objects.requireNonNull(valueMapper, "valueMapper");
+        Objects.requireNonNull(mergeFunction, "mergeFunction");
+        return collectingAndThen(
+                toMap(keyMapper, valueMapper, mergeFunction, hashMapNew()),
+                Collectors.<K, U>unmodMapFinisher());
     }
 
     /**
@@ -1601,9 +1777,9 @@ public final class Collectors {
      * @see #toConcurrentMap(Function, Function, BinaryOperator, Supplier)
      */
     public static <T, K, U, M extends Map<K, U>>
-    Collector<T, ?, M> toMap(final Function<? super T, ? extends K> keyMapper,
-                             final Function<? super T, ? extends U> valueMapper,
-                             final BinaryOperator<U> mergeFunction,
+    Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
+                             Function<? super T, ? extends U> valueMapper,
+                             BinaryOperator<U> mergeFunction,
                              Supplier<M> mapFactory) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> Maps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
@@ -1663,7 +1839,7 @@ public final class Collectors {
     public static <T, K, U>
     Collector<T, ?, ConcurrentMap<K,U>> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
                                                         Function<? super T, ? extends U> valueMapper) {
-        return new CollectorImpl<>(ConcurrentHashMap::new,
+        return new CollectorImpl<>(concHashMapNew2(),
                 uniqKeysMapAccumulator((Function<T, K>) keyMapper, (Function<T, U>) valueMapper),
                 uniqKeysMapMerger(),
                 CH_CONCURRENT_ID);
@@ -1723,7 +1899,7 @@ public final class Collectors {
     toConcurrentMap(Function<? super T, ? extends K> keyMapper,
                     Function<? super T, ? extends U> valueMapper,
                     BinaryOperator<U> mergeFunction) {
-        return toConcurrentMap(keyMapper, valueMapper, mergeFunction, concurrentHashMapFactory());
+        return toConcurrentMap(keyMapper, valueMapper, mergeFunction, concHashMapNew());
     }
 
     /**
@@ -1761,9 +1937,9 @@ public final class Collectors {
      * @see #toMap(Function, Function, BinaryOperator, Supplier)
      */
     public static <T, K, U, M extends ConcurrentMap<K, U>>
-    Collector<T, ?, M> toConcurrentMap(final Function<? super T, ? extends K> keyMapper,
-                                       final Function<? super T, ? extends U> valueMapper,
-                                       final BinaryOperator<U> mergeFunction,
+    Collector<T, ?, M> toConcurrentMap(Function<? super T, ? extends K> keyMapper,
+                                       Function<? super T, ? extends U> valueMapper,
+                                       BinaryOperator<U> mergeFunction,
                                        Supplier<M> mapFactory) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> ConcurrentMaps.merge(map, keyMapper.apply(element), valueMapper.apply(element), mergeFunction);
@@ -1785,7 +1961,7 @@ public final class Collectors {
     public static <T>
     Collector<T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction<? super T> mapper) {
         return new CollectorImpl<T, IntSummaryStatistics, IntSummaryStatistics>(
-                IntSummaryStatistics::new,
+                INT_SUM_STATS,
                 (r, t) -> r.accept(mapper.applyAsInt(t)),
                 (l, r) -> { l.combine(r); return l; }, CH_ID);
     }
@@ -1805,7 +1981,7 @@ public final class Collectors {
     public static <T>
     Collector<T, ?, LongSummaryStatistics> summarizingLong(ToLongFunction<? super T> mapper) {
         return new CollectorImpl<T, LongSummaryStatistics, LongSummaryStatistics>(
-                LongSummaryStatistics::new,
+                LNG_SUM_STATS,
                 (r, t) -> r.accept(mapper.applyAsLong(t)),
                 (l, r) -> { l.combine(r); return l; }, CH_ID);
     }
@@ -1825,7 +2001,7 @@ public final class Collectors {
     public static <T>
     Collector<T, ?, DoubleSummaryStatistics> summarizingDouble(ToDoubleFunction<? super T> mapper) {
         return new CollectorImpl<T, DoubleSummaryStatistics, DoubleSummaryStatistics>(
-                DoubleSummaryStatistics::new,
+                DBL_SUM_STATS,
                 (r, t) -> r.accept(mapper.applyAsDouble(t)),
                 (l, r) -> { l.combine(r); return l; }, CH_ID);
     }

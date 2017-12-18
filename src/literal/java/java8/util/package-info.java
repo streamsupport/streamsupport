@@ -25,7 +25,26 @@
 
 /**
  * Provides the <a href="http://openjdk.java.net/jeps/269">JEP 269: Convenience Factory Methods for Collections</a>.
- * 
+ *
+ * <h2><a id="unmodifiable"><b>Unmodifiable collections</b></a></h2>
+ * <p>
+ * An <i>unmodifiable collection</i> is a collection, all of whose mutator
+ * methods are specified to throw {@code UnsupportedOperationException}. Such a
+ * collection thus cannot be modified by calling any methods on it. For a
+ * collection to be properly unmodifiable, any view collections derived from it
+ * must also be unmodifiable. For example, if a List is unmodifiable, the List
+ * returned by {@link java.util.List#subList List.subList} is also unmodifiable.
+ *
+ * <p>
+ * An unmodifiable collection is not necessarily immutable. If the contained
+ * elements are mutable, the entire collection is clearly mutable, even though
+ * it might be unmodifiable. For example, consider two unmodifiable lists
+ * containing mutable elements. The result of calling
+ * {@code list1.equals(list2)} might differ from one call to the next if the
+ * elements had been mutated, even though both lists are unmodifiable. However,
+ * if an unmodifiable collection contains all immutable elements, it can be
+ * considered effectively immutable.
+ *
  * <h2><a id="Value-based-Classes">Value-based Classes</a></h2>
  * <p>
  * Some classes, such as {@code java8.util.Optional}, are value-based. Instances

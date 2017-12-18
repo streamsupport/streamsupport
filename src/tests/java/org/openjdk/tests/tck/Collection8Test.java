@@ -62,7 +62,7 @@ import java8.util.stream.StreamSupport;
  */
 @Test
 public final class Collection8Test extends JSR166TestCase {
-// CVS rev. 1.46
+// CVS rev. 1.47
 
     Collection8Test() {
     }
@@ -80,9 +80,9 @@ public final class Collection8Test extends JSR166TestCase {
 
     static Object bomb() {
         return new Object() {
-                public boolean equals(Object x) { throw new AssertionError(); }
-                public int hashCode() { throw new AssertionError(); }
-            };
+            public boolean equals(Object x) { throw new AssertionError(); }
+            public int hashCode() { throw new AssertionError(); }
+        };
     }
 
     /** Checks properties of empty collections. */
@@ -440,6 +440,15 @@ public final class Collection8Test extends JSR166TestCase {
         CollectionImplementation impl = sci.get();
         if (CopyOnWriteArrayList.class.equals(impl.klazz())
                 || CopyOnWriteArraySet.class.equals(impl.klazz())) {
+            return;
+        }
+        if (HAS_JAVA8_SPLITERATOR_BUG
+                && (LinkedBlockingDeque.class.equals(impl.klazz()))
+                || LinkedBlockingQueue.class.equals(impl.klazz())) {
+            // LinkedBlockingDeque spliterator needs to support node self-linking
+            // https://bugs.openjdk.java.net/browse/JDK-8169739
+            // LinkedBlockingQueue spliterator needs to support node self-linking
+            // https://bugs.openjdk.java.net/browse/JDK-8171051
             return;
         }
         Collection c = impl.emptyCollection();

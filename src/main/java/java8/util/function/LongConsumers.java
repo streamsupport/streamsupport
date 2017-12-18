@@ -46,7 +46,7 @@ public final class LongConsumers {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if {@code after} is null
      */
-    public static LongConsumer andThen(final LongConsumer this_, final LongConsumer after) {
+    public static LongConsumer andThen(LongConsumer this_, LongConsumer after) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (long t) -> { this_.accept(t); after.accept(t); };

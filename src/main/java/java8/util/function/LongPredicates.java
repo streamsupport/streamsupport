@@ -50,7 +50,7 @@ public final class LongPredicates {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if other is null
      */
-    public static LongPredicate and(final LongPredicate this_, final LongPredicate other) {
+    public static LongPredicate and(LongPredicate this_, LongPredicate other) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (value) -> this_.test(value) && other.test(value);
@@ -65,7 +65,7 @@ public final class LongPredicates {
      * predicate
      * @throws NullPointerException if {@code this_} is null
      */
-    public static LongPredicate negate(final LongPredicate this_) {
+    public static LongPredicate negate(LongPredicate this_) {
         Objects.requireNonNull(this_);
         return (value) -> !this_.test(value);
     }
@@ -88,7 +88,7 @@ public final class LongPredicates {
      * @throws NullPointerException if {@code this_} is null
      * @throws NullPointerException if other is null
      */
-    public static LongPredicate or(final LongPredicate this_, final LongPredicate other) {
+    public static LongPredicate or(LongPredicate this_, LongPredicate other) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(other);
         return (value) -> this_.test(value) || other.test(value);

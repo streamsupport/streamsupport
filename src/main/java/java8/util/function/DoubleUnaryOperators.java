@@ -47,7 +47,7 @@ public final class DoubleUnaryOperators {
      *
      * @see #andThen(DoubleUnaryOperator, DoubleUnaryOperator)
      */
-    public static DoubleUnaryOperator compose(final DoubleUnaryOperator this_, final DoubleUnaryOperator before) {
+    public static DoubleUnaryOperator compose(DoubleUnaryOperator this_, DoubleUnaryOperator before) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(before);
         return (double v) -> this_.applyAsDouble(before.applyAsDouble(v));
@@ -68,7 +68,7 @@ public final class DoubleUnaryOperators {
      *
      * @see #compose(DoubleUnaryOperator, DoubleUnaryOperator)
      */
-    public static DoubleUnaryOperator andThen(final DoubleUnaryOperator this_, final DoubleUnaryOperator after) {
+    public static DoubleUnaryOperator andThen(DoubleUnaryOperator this_, DoubleUnaryOperator after) {
         Objects.requireNonNull(this_);
         Objects.requireNonNull(after);
         return (double t) -> after.applyAsDouble(this_.applyAsDouble(t));

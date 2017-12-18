@@ -132,10 +132,11 @@ import java8.util.Optional;
  * <p>Streams have a {@link #close()} method and implement {@link AutoCloseable},
  * but nearly all stream instances do not actually need to be closed after use.
  * Generally, only streams whose source is an IO channel (such as those returned
- * by {@link java.nio.file.Files#lines(Path, Charset)}) will require closing.  Most streams
- * are backed by collections, arrays, or generating functions, which require no
- * special resource management.  (If a stream does require closing, it can be
- * declared as a resource in a {@code try}-with-resources statement.)
+ * by {@link java.nio.file.Files#lines(java.nio.file.Path, java.nio.charset.Charset)})
+ * will require closing.  Most streams are backed by collections, arrays, or
+ * generating functions, which require no special resource management.  (If a
+ * stream does require closing, it can be declared as a resource in a
+ * {@code try}-with-resources statement.)
  *
  * <p>Stream pipelines may execute either sequentially or in
  * <a href="package-summary.html#Parallelism">parallel</a>.  This
@@ -660,7 +661,8 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      * <p>This is a <a href="package-summary.html#StreamOps">terminal
      * operation</a>.
      *
-     * @return an array containing the elements of this stream
+     * @return an array, whose {@linkplain Class#getComponentType runtime component
+     * type} is {@code Object}, containing the elements of this stream
      */
     Object[] toArray();
 
@@ -683,13 +685,13 @@ public interface Stream<T> extends BaseStream<T, Stream<T>> {
      *                          .toArray(Person[]::new);
      * }</pre>
      *
-     * @param <A> the element type of the resulting array
+     * @param <A> the component type of the resulting array
      * @param generator a function which produces a new array of the desired
      *                  type and the provided length
      * @return an array containing the elements in this stream
-     * @throws ArrayStoreException if the runtime type of the array returned
-     * from the array generator is not a supertype of the runtime type of every
-     * element in this stream
+     * @throws ArrayStoreException if the runtime type of any element of this
+     *         stream is not assignable to the {@linkplain Class#getComponentType
+     *         runtime component type} of the generated array
      */
     <A> A[] toArray(IntFunction<A[]> generator);
 

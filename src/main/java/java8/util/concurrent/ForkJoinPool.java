@@ -93,21 +93,21 @@ import java8.util.function.Predicate;
  * <caption>Summary of task execution methods</caption>
  *  <tr>
  *    <td></td>
- *    <td style="text-align:center"> <b>Call from non-fork/join clients</b></td>
- *    <td style="text-align:center"> <b>Call from within fork/join computations</b></td>
+ *    <th scope="col"> Call from non-fork/join clients</th>
+ *    <th scope="col"> Call from within fork/join computations</th>
  *  </tr>
  *  <tr>
- *    <td> <b>Arrange async execution</b></td>
+ *    <th scope="row" style="text-align:left"> Arrange async execution</th>
  *    <td> {@link #execute(ForkJoinTask)}</td>
  *    <td> {@link ForkJoinTask#fork}</td>
  *  </tr>
  *  <tr>
- *    <td> <b>Await and obtain result</b></td>
+ *    <th scope="row" style="text-align:left"> Await and obtain result</th>
  *    <td> {@link #invoke(ForkJoinTask)}</td>
  *    <td> {@link ForkJoinTask#invoke}</td>
  *  </tr>
  *  <tr>
- *    <td> <b>Arrange exec and obtain Future</b></td>
+ *    <th scope="row" style="text-align:left"> Arrange exec and obtain Future</th>
  *    <td> {@link #submit(ForkJoinTask)}</td>
  *    <td> {@link ForkJoinTask#fork} (ForkJoinTasks <em>are</em> Futures)</td>
  *  </tr>
@@ -156,7 +156,7 @@ import java8.util.function.Predicate;
  * @author Doug Lea
  */
 public class ForkJoinPool extends AbstractExecutorService {
-// CVS rev. 1.337
+// CVS rev. 1.338
     /*
      * Implementation Overview
      *
@@ -923,25 +923,6 @@ public class ForkJoinPool extends AbstractExecutorService {
         // Specialized execution methods
 
         /**
-         * Atomically exchanges the given reference value with the current
-         * reference value of a field or array element within the given
-         * object <code>o</code> at the given <code>offset</code>.
-         *
-         * @param o object/array to update the field/element in
-         * @param offset field/element offset
-         * @param newValue new value
-         * @return the previous value
-         * @since 1.8
-         */
-        private static Object getAndSetObject(Object o, long offset, Object newValue) {
-            Object v;
-            do {
-                v = U.getObjectVolatile(o, offset);
-            } while (!U.compareAndSwapObject(o, offset, v, newValue));
-            return v;
-        }
-
-        /**
          * Pops and executes up to limit consecutive tasks or until empty.
          *
          * @param limit max runs, or zero for no limit
@@ -1351,6 +1332,46 @@ public class ForkJoinPool extends AbstractExecutorService {
         } while (!U.compareAndSwapLong(o, offset, v, v + delta));
         return v;
     }
+
+    /**
+     * Atomically exchanges the given reference value with the current
+     * reference value of a field or array element within the given
+     * object <code>o</code> at the given <code>offset</code>.
+     *
+     * @param o object/array to update the field/element in
+     * @param offset field/element offset
+     * @param newValue new value
+     * @return the previous value
+     * @since 1.8
+     */
+    static Object getAndSetObject(Object o, long offset, Object newValue) {
+        Object v;
+        do {
+            v = U.getObjectVolatile(o, offset);
+        } while (!U.compareAndSwapObject(o, offset, v, newValue));
+        return v;
+    }
+
+//    static long getAndSetLong(Object o, long offset, long newValue) {
+//        long v;
+//        do {
+//            v = U.getLongVolatile(o, offset);
+//        } while (!U.compareAndSwapLong(o, offset, v, newValue));
+//        return v;
+//    }
+
+    /**
+     * Atomically sets the value of a variable to the result
+     * of bitwise OR between the variable's current value and
+     * the mask with volatile memory semantics.
+     */
+//    static int getAndBitwiseOr(Object o, long offset, int mask) {
+//        int oldVal;
+//        do {
+//            oldVal = U.getIntVolatile(o, offset);
+//        } while (!U.compareAndSwapInt(o, offset, oldVal, oldVal | mask));
+//        return oldVal;
+//    }
 
     // Creating, registering and deregistering workers
 
@@ -3330,7 +3351,7 @@ public class ForkJoinPool extends AbstractExecutorService {
             Class<?> c = null;
             try {
                 c = Class
-                        .forName("java8.util.concurrent.CompletableFuture.AsynchronousCompletionTask");
+                        .forName("java8.util.concurrent.CompletableFuture$AsynchronousCompletionTask");
             } catch (Exception ign) {
                 // ignore
             } finally {

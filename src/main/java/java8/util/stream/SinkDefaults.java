@@ -57,35 +57,13 @@ final class SinkDefaults {
     }
 
     /**
-     * Accepts an int value.
+     * Doesn't accept a primitive value of a particular type (either int, long or double).
      *
-     * <p><b>Implementation Requirements:</b><br> The default implementation throws IllegalStateException.
+     * <p><b>Implementation Requirements:</b><br> The implementation must throw an IllegalStateException.
      *
-     * @throws IllegalStateException if this sink does not accept int values
+     * @throws IllegalStateException if the sink doesn't accept a primitive value of a particular type
      */
-    static <T> void accept(Sink<T> this_, int value) {
-        throw new IllegalStateException("called wrong accept method");
-    }
-
-    /**
-     * Accepts a long value.
-     *
-     * <p><b>Implementation Requirements:</b><br> The default implementation throws IllegalStateException.
-     *
-     * @throws IllegalStateException if this sink does not accept long values
-     */
-    static <T> void accept(Sink<T> this_, long value) {
-        throw new IllegalStateException("called wrong accept method");
-    }
-
-    /**
-     * Accepts a double value.
-     *
-     * <p><b>Implementation Requirements:</b><br> The default implementation throws IllegalStateException.
-     *
-     * @throws IllegalStateException if this sink does not accept double values
-     */
-    static <T> void accept(Sink<T> this_, double value) {
+    static <T> void reject() {
         throw new IllegalStateException("called wrong accept method");
     }
 

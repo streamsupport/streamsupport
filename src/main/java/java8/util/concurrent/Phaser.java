@@ -343,7 +343,7 @@ public class Phaser {
      *               ONE_DEREGISTER for arriveAndDeregister
      */
     private int doArrive(int adjust) {
-        final Phaser root = this.root;
+        Phaser root = this.root;
         for (;;) {
             long s = (root == this) ? state : reconcileState();
             int phase = (int) (s >>> PHASE_SHIFT);
@@ -390,7 +390,7 @@ public class Phaser {
     private int doRegister(int registrations) {
         // adjustment to state
         long adjust = ((long) registrations << PARTIES_SHIFT) | registrations;
-        final Phaser parent = this.parent;
+        Phaser parent = this.parent;
         int phase;
         for (;;) {
             long s = (parent == null) ? state : reconcileState();
@@ -448,7 +448,7 @@ public class Phaser {
      * @return reconciled state
      */
     private long reconcileState() {
-        final Phaser root = this.root;
+        Phaser root = this.root;
         long s = state;
         if (root != this) {
             int phase, p;
@@ -515,7 +515,7 @@ public class Phaser {
         int phase = 0;
         this.parent = parent;
         if (parent != null) {
-            final Phaser root = parent.root;
+            Phaser root = parent.root;
             this.root = root;
             this.evenQ = root.evenQ;
             this.oddQ = root.oddQ;
@@ -635,7 +635,7 @@ public class Phaser {
      */
     public int arriveAndAwaitAdvance() {
         // Specialization of doArrive+awaitAdvance eliminating some reads/paths
-        final Phaser root = this.root;
+        Phaser root = this.root;
         for (;;) {
             long s = (root == this) ? state : reconcileState();
             int phase = (int) (s >>> PHASE_SHIFT);
@@ -681,7 +681,7 @@ public class Phaser {
      * if terminated
      */
     public int awaitAdvance(int phase) {
-        final Phaser root = this.root;
+        Phaser root = this.root;
         long s = (root == this) ? state : reconcileState();
         int p = (int) (s >>> PHASE_SHIFT);
         if (phase < 0)
@@ -708,7 +708,7 @@ public class Phaser {
      */
     public int awaitAdvanceInterruptibly(int phase)
         throws InterruptedException {
-        final Phaser root = this.root;
+        Phaser root = this.root;
         long s = (root == this) ? state : reconcileState();
         int p = (int) (s >>> PHASE_SHIFT);
         if (phase < 0)
@@ -746,7 +746,7 @@ public class Phaser {
                                          long timeout, TimeUnit unit)
         throws InterruptedException, TimeoutException {
         long nanos = unit.toNanos(timeout);
-        final Phaser root = this.root;
+        Phaser root = this.root;
         long s = (root == this) ? state : reconcileState();
         int p = (int) (s >>> PHASE_SHIFT);
         if (phase < 0)
@@ -773,7 +773,7 @@ public class Phaser {
      */
     public void forceTermination() {
         // Only need to change root state
-        final Phaser root = this.root;
+        Phaser root = this.root;
         long s;
         while ((s = root.state) >= 0) {
             if (U.compareAndSwapLong(root, STATE, s, s | TERMINATION_BIT)) {

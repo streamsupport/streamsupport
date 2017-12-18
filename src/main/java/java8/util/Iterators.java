@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2015, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2017, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
  * This code is free software; you can redistribute it and/or modify it
@@ -26,6 +26,7 @@ package java8.util;
 
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import java8.util.function.Consumer;
 import java8.util.function.DoubleConsumer;
@@ -216,7 +217,7 @@ public final class Iterators {
      */
     public static <E> Iterator<E> asIterator(Enumeration<E> en) {
         Objects.requireNonNull(en);
-        return new Iterator<E>() {
+        return new ImmutableIt<E>() {
             @Override
             public boolean hasNext() {
                 return en.hasMoreElements();
@@ -225,11 +226,67 @@ public final class Iterators {
             public E next() {
                 return en.nextElement();
             }
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException("remove");
+        };
+    }
+
+    /**
+     * Returns an iterator that has no elements. More precisely,
+     *
+     * <ul>
+     * <li>{@link Iterator#hasNext hasNext} always returns {@code false}.</li>
+     * <li>{@link Iterator#next next} always throws
+     * {@link NoSuchElementException}.</li>
+     * <li>{@link Iterator#remove remove} always throws
+     * {@link IllegalStateException}.</li>
+     * </ul>
+     *
+     * <p>
+     * Implementations of this method are permitted, but not required, to return
+     * the same object from multiple invocations.
+     *
+     * @param <T>
+     *            type of elements, if there were any, in the iterator
+     * @return an empty iterator
+     * @since 1.7
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Iterator<T> emptyIterator() {
+        return (Iterator<T>) EmptyIt.EMPTY_ITERATOR;
+    }
+
+    static <E> Iterator<E> singletonIterator(E e) {
+        return new ImmutableIt<E>() {
+            private boolean hasNext = true;
+            public boolean hasNext() {
+                return hasNext;
+            }
+            public E next() {
+                if (hasNext) {
+                    hasNext = false;
+                    return e;
+                }
+                throw new NoSuchElementException();
             }
         };
+    }
+
+    static final class EmptyIt<E> extends ImmutableIt<E> {
+        static final EmptyIt<Object> EMPTY_ITERATOR = new EmptyIt<Object>();
+
+        public boolean hasNext() {
+            return false;
+        }
+
+        public E next() {
+            throw new NoSuchElementException();
+        }
+    }
+
+    static abstract class ImmutableIt<T> implements Iterator<T> {
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("remove");
+        }
     }
 
     private Iterators() {
