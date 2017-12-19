@@ -77,11 +77,11 @@ repositories {
 }
 
 dependencies {
-    compile 'net.sourceforge.streamsupport:streamsupport:1.5.6'
-    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.5.6'
-    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.5.6'
-    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.5.6'
-    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.5.6'
+    compile 'net.sourceforge.streamsupport:streamsupport:1.6.0'
+    compile 'net.sourceforge.streamsupport:streamsupport-cfuture:1.6.0'
+    compile 'net.sourceforge.streamsupport:streamsupport-atomic:1.6.0'
+    compile 'net.sourceforge.streamsupport:streamsupport-flow:1.6.0'
+    compile 'net.sourceforge.streamsupport:streamsupport-literal:1.6.0'
 
     //compile 'com.github.streamsupport.streamsupport:streamsupport-pro:-SNAPSHOT' // proguard config for android
 }
@@ -127,7 +127,7 @@ dependencies {
 ## Importing
 
 ```sh
-GIT_COMMITTER_NAME="" GIT_COMMITTER_EMAIL="" git rebase --committer-date-is-author-date 1.5.5 1.5.6 --onto _1.5.5
+GIT_COMMITTER_NAME="" GIT_COMMITTER_EMAIL="" git rebase --committer-date-is-author-date 1.5.6 1.6.0 --onto _1.5.6
 ```
 
 ## Release Notes
