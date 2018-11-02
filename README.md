@@ -9,7 +9,11 @@
 
 ![](art/streamsupport.png)
 
-Import from http://hg.code.sf.net/p/streamsupport/code
+## This repo is severely outdated!
+
+Please use the up-to-date site https://github.com/stefan-zobel/streamsupport for current versions.
+
+Originally imported from http://hg.code.sf.net/p/streamsupport/code
 
 streamsupport is a backport of the Java 8 java.util.function (functional interfaces) and java.util.stream (streams) API for users of Java 6 or 7 supplemented with selected additions from java.util.concurrent which didn't exist back in Java 6.
 
